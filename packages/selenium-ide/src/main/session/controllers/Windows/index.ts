@@ -7,7 +7,7 @@ import { Session } from 'main/types'
 import { join } from 'path'
 
 const mainWindowName = 'playback-window'
-const childWindowNames = ['playback-controls', 'project-editor']
+const childWindowNames = ['project-editor']
 const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
 
 export type WindowLoader = (

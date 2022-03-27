@@ -2,15 +2,17 @@ import { PluginShape } from '@seleniumhq/side-runtime'
 
 const plugin: PluginShape = {
   commands: {
-    exampleCommand: {
-      name: 'Example command',
+    customClick: {
+      name: 'custom click',
       description:
-        'This command exists as an example of what these commands can do',
+        'This command should replace the standard click command when recording',
       target: {
         name: 'locator',
-        description: 'This is the locator used by the custom command',
+        description: 'The target of the original recorded click',
       },
-      execute: async (_command, _driver) => true,
+      execute: async (command, driver) => {
+        await driver.doClick(command.target, command.target, command)
+      },
     },
   },
   hooks: {
@@ -19,6 +21,9 @@ const plugin: PluginShape = {
     },
     onBeforeCommand: (input) => {
       console.log('Before command', input)
+    },
+    onMessage: (...args) => {
+      console.log('Received message!', ...args)
     },
   },
 }

@@ -8,9 +8,7 @@ interface TabPanelProps {
 }
 
 const TabPanel = ({ children, value, index }: TabPanelProps) => (
-  <>
-    {value === index && children}
-  </>
+  <>{value === index && children}</>
 )
 
-export default TabPanel;
+export default TabPanel

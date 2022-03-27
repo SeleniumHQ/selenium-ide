@@ -10,8 +10,14 @@ export const window: WindowConfig['window'] = () => {
   return {
     ...dimensions,
     focusable: true,
-    x: Math.floor(display.bounds.width / 2) - Math.floor(dimensions.width / 2) - 275,
-    y: Math.floor(display.bounds.height / 2) - Math.floor(dimensions.height / 2) - 50,
+    x:
+      Math.floor(display.bounds.width / 2) -
+      Math.floor(dimensions.width / 2) -
+      275,
+    y:
+      Math.floor(display.bounds.height / 2) -
+      Math.floor(dimensions.height / 2) -
+      50,
     title: 'Playback Window',
   }
 }

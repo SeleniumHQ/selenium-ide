@@ -1,16 +1,16 @@
-import { ArgNames } from '@seleniumhq/side-model/src/ArgTypes';
+import { ArgNames } from '@seleniumhq/side-model/src/ArgTypes'
 import React, { FC } from 'react'
-import CommandLocatorField from './LocatorField';
-import CommandTextField from './TextField';
+import CommandLocatorField from './LocatorField'
+import CommandTextField from './TextField'
 import { CommandArgFieldProps } from '../types'
 
 const ArgField: FC<CommandArgFieldProps> = (props) => {
   const {
     commands,
-    command,
+    command: { command },
     fieldName,
-  } = props;
-  const arg = commands[command.command][fieldName]?.name as ArgNames;
+  } = props
+  const arg = commands[command][fieldName]?.name as ArgNames
   switch (arg) {
     case 'alert text':
     case 'answer':

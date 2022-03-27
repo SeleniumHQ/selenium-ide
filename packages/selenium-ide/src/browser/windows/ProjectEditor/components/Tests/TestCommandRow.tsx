@@ -80,11 +80,13 @@ const CommandRow: React.FC<CommandRowProps> = ({
     <ReorderableListItem
       className="pos-rel"
       divider
-      dragType='COMMAND'
+      dragType="COMMAND"
       id={id}
       index={index}
       onClick={() => setActiveCommand(id)}
-      reorder={(...args) => window.sideAPI.tests.reorderStep(activeTest, ...args)}
+      reorder={(...args) =>
+        window.sideAPI.tests.reorderStep(activeTest, ...args)
+      }
       secondaryAction={
         <IconButton
           color={isBreakpoint ? 'success' : 'default'}

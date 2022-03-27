@@ -1,3 +1,5 @@
+const pkg = require('./package.json')
+
 module.exports = {
   extends: './../../.eslintrc.js',
   rules: {
@@ -5,11 +7,7 @@ module.exports = {
     'node/no-unpublished-import': [
       'error',
       {
-        allowModules: [
-          '@medv/finder',
-          'electron',
-          'scroll-into-view-if-needed',
-        ],
+        allowModules: Object.keys(pkg.devDependencies),
       },
     ],
     'import/no-unresolved': ['off'],

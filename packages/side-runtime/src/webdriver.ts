@@ -33,6 +33,7 @@ import { AssertionError, VerificationError } from './errors'
 import Variables from './variables'
 import { Fn } from '@seleniumhq/side-commons'
 import { CommandShape } from '@seleniumhq/side-model'
+import { PluginShape } from './types'
 
 const {
   By,
@@ -70,8 +71,9 @@ export interface WindowAPI {
 
 export interface WebDriverExecutorConstructorArgs {
   capabilities?: ExpandedCapabilities
+  customCommands?: PluginShape['commands']
   driver?: WebDriver
-  hooks?: any
+  hooks?: WebDriverExecutorHooks
   implicitWait?: number
   server?: string
   windowAPI?: WindowAPI
@@ -87,6 +89,34 @@ export interface WebDriverExecutorCondEvalResult {
   value: boolean
 }
 
+export interface CommandHookInput {
+  command: CommandShape
+}
+
+export interface StoreWindowHandleHookInput {
+  windowHandle: string
+  windowHandleName: string
+}
+
+export interface WindowAppearedHookInput {
+  command: CommandShape
+  windowHandleName: CommandShape['windowHandleName']
+  windowHandle: string
+}
+
+export interface WindowSwitchedHookInput {
+  windowHandle: string
+}
+
+export interface WebDriverExecutorHooks {
+  onBeforePlay?: (input: { driver: WebDriverExecutor }) => void
+  onAfterCommand?: (input: CommandHookInput) => void
+  onBeforeCommand?: (input: CommandHookInput) => void
+  onStoreWindowHandle?: (input: StoreWindowHandleHookInput) => void
+  onWindowAppeared?: (input: WindowAppearedHookInput) => void
+  onWindowSwitched?: (input: WindowSwitchedHookInput) => void
+}
+
 export interface ScriptShape {
   script: string
   argv: any[]
@@ -100,10 +130,11 @@ const defaultWindowAPI: WindowAPI = {
 
 export default class WebDriverExecutor {
   constructor({
+    customCommands = {},
     driver,
     capabilities,
     server,
-    hooks,
+    hooks = {},
     implicitWait,
     windowAPI = defaultWindowAPI,
   }: WebDriverExecutorConstructorArgs) {
@@ -117,6 +148,7 @@ export default class WebDriverExecutor {
     this.implicitWait = implicitWait || 5 * 1000
     this.hooks = hooks
     this.waitForNewWindow = this.waitForNewWindow.bind(this)
+    this.customCommands = customCommands
     this.windowAPI = windowAPI
   }
   baseUrl?: string
@@ -124,12 +156,13 @@ export default class WebDriverExecutor {
   variables: Variables
   cancellable?: { cancel: () => void }
   capabilities?: ExpandedCapabilities
+  customCommands: Required<PluginShape>['commands']
   // @ts-expect-error
   driver: WebDriver
   server?: string
   windowAPI: WindowAPI
   windowHandle?: string
-  hooks: any
+  hooks: WebDriverExecutorHooks
   implicitWait: number
   initialized: boolean
   logger?: Console;
@@ -188,10 +221,11 @@ export default class WebDriverExecutor {
     return func
   }
 
-  async executeHook(hook: string, ...args: any[]) {
-    if (this.hooks && this.hooks[hook]) {
-      await this.hooks[hook].apply(this, args)
-    }
+  async executeHook(hook: keyof WebDriverExecutorHooks, ...args: any[]) {
+    const fn = this.hooks[hook]
+    if (!fn) return
+    // @ts-expect-error
+    await fn.apply(this, args)
   }
 
   async beforeCommand(commandObject: CommandShape) {

@@ -89,10 +89,12 @@ const rendererConfig: Configuration = {
         getBrowserPlugin(filename) as unknown as WebpackPluginInstance
     ),
     new CopyWebpackPlugin({
-      patterns: [{
-        from: "src/browser/*.css",
-        to: "[name].css"
-      }]
+      patterns: [
+        {
+          from: 'src/browser/*.css',
+          to: '[name].css',
+        },
+      ],
     })
   ),
   target: 'electron-renderer',

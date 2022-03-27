@@ -53,6 +53,10 @@ export default class DriverController {
         browserName: browser === 'electron' ? 'chrome' : browser,
         ...capabilities,
       },
+      customCommands: this.session.commands.customCommands,
+      hooks: {
+        onBeforePlay: async ({ driver }) => this.onPlaybackStart(driver),
+      },
       server,
       windowAPI: {
         setWindowSize: async (_executor, width, height) => {
@@ -69,7 +73,7 @@ export default class DriverController {
       },
     })
   }
-  async onPlaybackStart() {
+  async onPlaybackStart(driver: WebDriverExecutor) {
     const playbackWindow = await this.session.windows.get('playback-window')
     // Figure out playback window from document.title
     if (!this.windowHandle) {

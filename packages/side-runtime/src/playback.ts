@@ -115,7 +115,6 @@ export default class Playback {
     test: TestShape,
     { pauseImmediately, startingCommandIndex }: PlayOptions = {}
   ) {
-    await this._beforePlay()
     this.commands = test.commands
     this.playbackTree = createPlaybackTree(test.commands, {
       emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
@@ -126,6 +125,7 @@ export default class Playback {
       this.currentExecutingNode = this.playbackTree.startingCommandNode
     }
     if (!this[state].initialized) await this.init()
+    await this._beforePlay()
     const callstack = new Callstack()
     callstack.call({
       callee: test,

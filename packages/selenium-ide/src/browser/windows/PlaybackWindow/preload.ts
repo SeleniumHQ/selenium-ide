@@ -16,7 +16,28 @@
 // under the License.
 import api from 'browser/api'
 import apiMutators from 'browser/api/mutator'
+import { ipcRenderer } from 'electron'
+import { identity } from 'lodash/fp'
+import path from 'path'
 import Recorder from './preload/recorder'
+
+const pluginFromPath = (pluginPath: string) => {
+  const actualPluginPath = __non_webpack_require__.resolve(pluginPath)
+  const preloadPath = path.join(actualPluginPath, '..', 'preload', 'index.js')
+  try {
+    const pluginPreload = __non_webpack_require__(preloadPath)
+    const pluginHandler =
+      typeof pluginPreload === 'function'
+        ? pluginPreload
+        : pluginPreload.default
+    return pluginHandler((...args: any[]) =>
+      ipcRenderer.send(`message-${pluginPath}`, ...args)
+    )
+  } catch (e) {
+    console.error(e)
+    return null
+  }
+}
 
 /**
  * Binds our API on initialization
@@ -25,15 +46,17 @@ process.once('loaded', async () => {
   /**
    * Expose it in the main context
    */
-  window.addEventListener('DOMContentLoaded', () => {
+  window.addEventListener('DOMContentLoaded', async () => {
     window.sideAPI = {
       recorder: api.recorder,
       // @ts-expect-error
       mutators: { recorder: apiMutators.recorder },
     }
-    console.log('Initializing the recorder')
-    setTimeout(() => {
-      new Recorder(window)
-    }, 500);
+    const pluginPaths = await api.plugins.list()
+    const plugins = pluginPaths.map(pluginFromPath).filter(identity)
+    setTimeout(async () => {
+      console.log('Initializing the recorder')
+      new Recorder(window, plugins)
+    }, 500)
   })
 })

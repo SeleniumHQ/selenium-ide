@@ -1,6 +1,5 @@
 import Tooltip from '@mui/material/Tooltip'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
-import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import PauseIcon from '@mui/icons-material/Pause'
 import StopIcon from '@mui/icons-material/Stop'
 import RecordIcon from '@mui/icons-material/FiberManualRecord'
@@ -41,12 +40,6 @@ const TestControls: FC<TestControlsProps> = ({ state }) => (
                 ? window.sideAPI.playback.play(state.activeTestID)
                 : window.sideAPI.playback.resume()
             }}
-          />
-        </Tooltip>
-        <Tooltip title="Play Suite" aria-label="play-suite">
-          <PlaylistPlayIcon
-            className="button m-2"
-            onClick={() => window.sideAPI.playback.play(state.activeTestID)}
           />
         </Tooltip>
         <Tooltip title="Record" aria-label="record">
