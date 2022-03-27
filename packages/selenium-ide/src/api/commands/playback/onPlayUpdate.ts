@@ -38,7 +38,6 @@ export const mutator: EventMutator<OnPlayUpdatePlayback> = (
     },
     status: playStatusFromPlaybackState[data.state],
   }
-  console.log('State update', data.state)
   switch (data.state) {
     case 'playing':
       if (session.state.playback.currentIndex === badIndex) {
@@ -48,14 +47,22 @@ export const mutator: EventMutator<OnPlayUpdatePlayback> = (
     case 'prep':
       state.playback = defaultPlaybackState
       break
-    case 'stopped':
+    case 'paused':
+    case 'breakpoint':
+      state.status = 'paused'
+      break
+    case 'aborted':
+    case 'errored':
+    case 'failed':
     case 'finished':
+    case 'stopped':
+      state.status = 'idle'
       state.playback.currentIndex = badIndex
       break
   }
   return {
     ...session,
-    state
+    state,
   }
 }
 

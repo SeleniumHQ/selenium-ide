@@ -1,10 +1,10 @@
 import { ipcMain } from 'electron'
 import { ApiHandler, EmptyApiHandler, Mutator } from 'api/types'
-import { debuglog } from 'util'
 import { Session, SessionControllerKeys } from '../../types'
 import getCore from '../helpers/getCore'
+import { COLOR_CYAN, vdebuglog } from 'main/util'
 
-const apiDebugLog = debuglog('api')
+const apiDebugLog = vdebuglog('api', COLOR_CYAN)
 
 export type AsyncHandler<HANDLER extends ApiHandler> = (
   ...args: Parameters<HANDLER>
@@ -54,9 +54,9 @@ const Handler =
       return result
     }
     ipcMain.on(path, async (_event, ...args) => {
-      apiDebugLog(`Received API Request ${path} %d`, args)
+      apiDebugLog('Received API Request', path, args)
       const result = await doAPI(...(args as Parameters<HANDLER>))
-      apiDebugLog(`Resolved API Request ${path} %d`, result)
+      apiDebugLog('Resolved API Request', path, result)
       _event.sender.send(`${path}.complete`, result)
     })
     return doAPI

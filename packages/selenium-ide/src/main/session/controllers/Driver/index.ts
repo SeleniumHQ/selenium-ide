@@ -55,7 +55,7 @@ export default class DriverController {
       },
       customCommands: this.session.commands.customCommands,
       hooks: {
-        onBeforePlay: async ({ driver }) => this.onPlaybackStart(driver),
+        onBeforePlay: async () => this.onPlaybackStart(),
       },
       server,
       windowAPI: {
@@ -73,7 +73,7 @@ export default class DriverController {
       },
     })
   }
-  async onPlaybackStart(driver: WebDriverExecutor) {
+  async onPlaybackStart() {
     const playbackWindow = await this.session.windows.get('playback-window')
     // Figure out playback window from document.title
     if (!this.windowHandle) {
