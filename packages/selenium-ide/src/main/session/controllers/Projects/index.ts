@@ -21,17 +21,29 @@ export default class ProjectsController {
     await this.session.windows.closeAll()
   }
 
-  async onProjectLoaded(project: ProjectShape, filepath?: string): Promise<void> {
+  async onProjectLoaded(
+    project: ProjectShape,
+    filepath?: string
+  ): Promise<void> {
     const {
-      session: { commands, menu, windows },
+      session: { commands, menu, plugins, windows },
     } = this
-    commands.init()
     this.filepath = filepath
+    // Drop the reference to the old api
+    // so that the event listeners don't build up too much
+    // NOTE: This needs to be run first
     this.session.api = await Api(this.session)
-    this.session.driver.build({});
-    await menu.onProjectLoaded()
-    await windows.onProjectLoaded()
     this.project = project
+    // First we need to load any custom commands and hooks
+    await plugins.onProjectLoaded()
+    // Next we need to load our full command list into state
+    await commands.onProjectLoaded()
+    // Build our webdriver with custom commands
+    this.session.driver.build({})
+    // Set up our application menu
+    await menu.onProjectLoaded()
+    // Display our playback and editor windows
+    await windows.onProjectLoaded()
   }
 
   async getActive(): Promise<ProjectShape> {
@@ -99,14 +111,18 @@ export default class ProjectsController {
 
   async update(
     _updates: Partial<Pick<ProjectShape, 'name' | 'url'>>
-  ): Promise<boolean> { 
+  ): Promise<boolean> {
     return true
   }
 
   async load_v3(filepath: string): Promise<ProjectShape> {
     const fileContents = await fs.readFile(filepath, 'utf-8')
     this.recentProjects.add(filepath)
-    return JSON.parse(fileContents)
+    const project: ProjectShape = JSON.parse(fileContents)
+    project.plugins = project.plugins.filter(
+      (plugin) => typeof plugin === 'string'
+    )
+    return project
   }
   async save_v3(filepath: string): Promise<boolean> {
     await fs.writeFile(filepath, JSON.stringify(this.project, undefined, 2))

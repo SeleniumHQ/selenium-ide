@@ -12,7 +12,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   minHeight: '47px !important',
   position: 'sticky',
   top: 0,
-  zIndex: 100
+  zIndex: 100,
 }))
 
 export default DrawerHeader

@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { BrowserWindow } from 'electron'
 import webdriver, {
   Capabilities,
   Condition as ConditionShape,
@@ -34,6 +33,7 @@ import { AssertionError, VerificationError } from './errors'
 import Variables from './variables'
 import { Fn } from '@seleniumhq/side-commons'
 import { CommandShape } from '@seleniumhq/side-model'
+import { PluginShape } from './types'
 
 const {
   By,
@@ -57,23 +57,64 @@ const DEFAULT_CAPABILITIES: ExpandedCapabilities = {
 
 const state = Symbol('state')
 
+/**
+ * This is a polyfill type to allow for unsupported electron
+ * driver methods to override with their own custom implementations
+ */
+export interface WindowAPI {
+  setWindowSize: (
+    executor: WebDriverExecutor,
+    width: number,
+    height: number
+  ) => Promise<void>
+}
+
 export interface WebDriverExecutorConstructorArgs {
   capabilities?: ExpandedCapabilities
+  customCommands?: PluginShape['commands']
   driver?: WebDriver
-  hooks?: any
+  hooks?: WebDriverExecutorHooks
   implicitWait?: number
   server?: string
+  windowAPI?: WindowAPI
 }
 
 export interface WebDriverExecutorInitOptions {
   baseUrl: string
   logger: Console
   variables: Variables
-  window: BrowserWindow
 }
 
 export interface WebDriverExecutorCondEvalResult {
   value: boolean
+}
+
+export interface CommandHookInput {
+  command: CommandShape
+}
+
+export interface StoreWindowHandleHookInput {
+  windowHandle: string
+  windowHandleName: string
+}
+
+export interface WindowAppearedHookInput {
+  command: CommandShape
+  windowHandleName: CommandShape['windowHandleName']
+  windowHandle: string
+}
+
+export interface WindowSwitchedHookInput {
+  windowHandle: string
+}
+
+export interface WebDriverExecutorHooks {
+  onBeforePlay?: (input: { driver: WebDriverExecutor }) => void
+  onAfterCommand?: (input: CommandHookInput) => void
+  onBeforeCommand?: (input: CommandHookInput) => void
+  onStoreWindowHandle?: (input: StoreWindowHandleHookInput) => void
+  onWindowAppeared?: (input: WindowAppearedHookInput) => void
+  onWindowSwitched?: (input: WindowSwitchedHookInput) => void
 }
 
 export interface ScriptShape {
@@ -81,13 +122,21 @@ export interface ScriptShape {
   argv: any[]
 }
 
+const defaultWindowAPI: WindowAPI = {
+  setWindowSize: async (executor: WebDriverExecutor, width, height) => {
+    await executor.driver.manage().window().setSize(width, height)
+  },
+}
+
 export default class WebDriverExecutor {
   constructor({
+    customCommands = {},
     driver,
     capabilities,
     server,
-    hooks,
+    hooks = {},
     implicitWait,
+    windowAPI = defaultWindowAPI,
   }: WebDriverExecutorConstructorArgs) {
     if (driver) {
       this.driver = driver
@@ -98,31 +147,31 @@ export default class WebDriverExecutor {
     this.initialized = false
     this.implicitWait = implicitWait || 5 * 1000
     this.hooks = hooks
-
     this.waitForNewWindow = this.waitForNewWindow.bind(this)
+    this.customCommands = customCommands
+    this.windowAPI = windowAPI
   }
   baseUrl?: string
   // @ts-expect-error
   variables: Variables
   cancellable?: { cancel: () => void }
   capabilities?: ExpandedCapabilities
+  customCommands: Required<PluginShape>['commands']
   // @ts-expect-error
   driver: WebDriver
   server?: string
-  // @ts-expect-error
-  window: BrowserWindow
+  windowAPI: WindowAPI
   windowHandle?: string
-  hooks: any
+  hooks: WebDriverExecutorHooks
   implicitWait: number
   initialized: boolean
   logger?: Console;
   [state]?: any
 
-  async init({ baseUrl, logger, variables, window }: WebDriverExecutorInitOptions) {
+  async init({ baseUrl, logger, variables }: WebDriverExecutorInitOptions) {
     this.baseUrl = baseUrl
     this.logger = logger
     this.variables = variables
-    this.window = window
     this[state] = {}
 
     if (!this.driver) {
@@ -133,21 +182,6 @@ export default class WebDriverExecutor {
         .usingServer(this.server as string)
         .forBrowser(browserName)
         .build()
-    }
-    // Figure out playback window from document.title
-    if (!this.windowHandle) {
-      const handles = await this.driver.getAllWindowHandles()
-      for (let i = 0, ii = handles.length; i !== ii; i++) {
-        await this.driver.switchTo().window(handles[i])
-        const title = await this.driver.getTitle()
-        const url = await this.driver.getCurrentUrl()
-        if (title === this.window.getTitle() && url === this.window.webContents.getURL()) {
-          this.windowHandle = handles[i]
-          break
-        }
-      }
-    } else {
-      this.driver.switchTo().window(this.windowHandle)
     }
     this.initialized = true
   }
@@ -187,10 +221,11 @@ export default class WebDriverExecutor {
     return func
   }
 
-  async executeHook(hook: string, ...args: any[]) {
-    if (this.hooks && this.hooks[hook]) {
-      await this.hooks[hook].apply(this, args)
-    }
+  async executeHook(hook: keyof WebDriverExecutorHooks, ...args: any[]) {
+    const fn = this.hooks[hook]
+    if (!fn) return
+    // @ts-expect-error
+    await fn.apply(this, args)
   }
 
   async beforeCommand(commandObject: CommandShape) {
@@ -245,13 +280,7 @@ export default class WebDriverExecutor {
 
   async doSetWindowSize(widthXheight: string) {
     const [width, height] = widthXheight.split('x').map((v) => parseInt(v))
-    const bounds = await this.window.getBounds()
-    await this.window.setBounds({
-      x: bounds.x + Math.floor(bounds.width / 2) - Math.floor(width / 2),
-      y: bounds.y + Math.floor(bounds.height / 2) - Math.floor(height / 2),
-      height,
-      width,
-    })
+    await this.windowAPI.setWindowSize(this, width, height)
   }
 
   async doSelectWindow(handleLocator: string) {

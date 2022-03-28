@@ -2,6 +2,7 @@ import clone from 'lodash/fp/clone'
 import defaultState from 'api/models/state'
 import { CoreSessionData, StateShape } from 'api/types'
 import { Session } from 'main/types'
+import { getCommandIndex } from 'api/helpers/getActiveData'
 
 export default class StateController {
   constructor(session: Session) {
@@ -16,7 +17,10 @@ export default class StateController {
       state: this.state,
     }
   }
-  async setActiveCommand(_commandID: string): Promise<boolean> {
+  async setActiveCommand(commandID: string): Promise<boolean> {
+    const session = await this.session.state.get()
+    const commandIndex = getCommandIndex(session, commandID)
+    this.session.playback.currentStepIndex = commandIndex
     return true
   }
   async setActiveSuite(_suiteID: string): Promise<boolean> {

@@ -46,7 +46,6 @@ const CommandList: FC<CommandListProps> = ({
     sx={{
       borderColor: 'primary.main',
       marginBottom: `${bottomOffset}px`,
-      marginTop: '48px',
     }}
   >
     {commands.map((command, index) => {

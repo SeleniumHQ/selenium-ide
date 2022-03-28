@@ -103,7 +103,10 @@ export class CommandNode {
     })
   }
 
-  _executeCommand(commandExecutor: WebDriverExecutor, { executorOverride }: CommandExecutorOptions = {}) {
+  _executeCommand(
+    commandExecutor: WebDriverExecutor,
+    { executorOverride }: CommandExecutorOptions = {}
+  ) {
     if (executorOverride) {
       return executorOverride(this.command.target, this.command.value)
     } else if (this.isControlFlow()) {
@@ -111,6 +114,12 @@ export class CommandNode {
     } else if (this.isTerminal()) {
       return Promise.resolve()
     } else {
+      if (commandExecutor.customCommands[this.command.command]) {
+        return commandExecutor.customCommands[this.command.command].execute(
+          this.command,
+          commandExecutor
+        )
+      }
       // @ts-expect-error
       return commandExecutor[commandExecutor.name(this.command.command)](
         this.command.target,
@@ -132,8 +141,7 @@ export class CommandNode {
     let collection = variables.get(
       interpolateScript(this.command.target, variables).script
     )
-    if (!collection)
-      return 'Invalid variable provided.'
+    if (!collection) return 'Invalid variable provided.'
     variables.set(
       interpolateScript(this.command.value, variables).script,
       collection[this.timesVisited]

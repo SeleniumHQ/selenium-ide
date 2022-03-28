@@ -5,3 +5,4 @@
 **/tsconfig.tsbuildinfo
 **/gen
 **/trace
+**/.eslintrc.js

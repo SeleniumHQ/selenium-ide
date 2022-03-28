@@ -11,8 +11,10 @@ import subscribeToSession from 'browser/helpers/subscribeToSession'
 import React from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import SuiteControls from './components/Suites/Controls'
 import SuitesDrawer from './components/Suites/SuitesDrawer'
 import SuitesTab from './components/Suites/SuitesTab'
+import TestControls from './components/Tests/Controls'
 import TestsDrawer from './components/Tests/TestsDrawer'
 import TestsTab from './components/Tests/TestsTab'
 import Main from './components/Main'
@@ -29,17 +31,23 @@ function a11yProps(index: number) {
   }
 }
 
+const TESTS_TAB = 0
+const SUITES_TAB = 1
+const PROJECT_TAB = 2
+
 const ProjectTestCommandList = () => {
   const session = subscribeToSession()
   const {
     project: { id, suites, tests },
-    state: { activeSuiteID, activeTestID },
+    state,
   } = session
+  const { activeSuiteID, activeTestID } = state
 
   const [tab, setTab] = React.useState(0)
   const [_openDrawer, setOpenDrawer] = React.useState(true)
   const openDrawer = _openDrawer && tab !== 2
 
+  console.log(session)
   if (id == loadingID) {
     return null
   }
@@ -50,7 +58,7 @@ const ProjectTestCommandList = () => {
         <Box sx={{ display: 'flex' }}>
           <AppBar className="draggable" position="fixed" open={openDrawer}>
             <Toolbar className="" variant="dense">
-              <TabPanelMulti indexes={[0, 1]} value={tab}>
+              <TabPanelMulti indexes={[TESTS_TAB, SUITES_TAB]} value={tab}>
                 <IconButton
                   color="inherit"
                   aria-label="openDrawer drawer"
@@ -61,10 +69,18 @@ const ProjectTestCommandList = () => {
                   <MenuIcon />
                 </IconButton>
               </TabPanelMulti>
-              <TabPanel index={2} value={tab} />
+              <TabPanel index={PROJECT_TAB} value={tab} />
               <Typography variant="h6" noWrap component="div">
                 Selenium IDE
               </Typography>
+              <div className="flex-1" />
+              <TabPanel index={TESTS_TAB} value={tab}>
+                <TestControls state={state} />
+              </TabPanel>
+              <TabPanel index={SUITES_TAB} value={tab}>
+                <SuiteControls state={state} />
+              </TabPanel>
+              <TabPanel index={PROJECT_TAB} value={tab} />
             </Toolbar>
             <Tabs
               value={tab}
@@ -74,12 +90,12 @@ const ProjectTestCommandList = () => {
               variant="fullWidth"
               aria-label="Selenium IDE workflows"
             >
-              <Tab label="Tests" {...a11yProps(0)} />
-              <Tab label="Suites" {...a11yProps(1)} />
-              <Tab label="Config" {...a11yProps(2)} />
+              <Tab label="Tests" {...a11yProps(TESTS_TAB)} />
+              <Tab label="Suites" {...a11yProps(SUITES_TAB)} />
+              <Tab label="Config" {...a11yProps(PROJECT_TAB)} />
             </Tabs>
           </AppBar>
-          <TabPanel index={0} value={tab}>
+          <TabPanel index={TESTS_TAB} value={tab}>
             <TestsDrawer
               activeTest={activeTestID}
               open={openDrawer}
@@ -87,7 +103,7 @@ const ProjectTestCommandList = () => {
               tests={tests}
             />
           </TabPanel>
-          <TabPanel index={1} value={tab}>
+          <TabPanel index={SUITES_TAB} value={tab}>
             <SuitesDrawer
               activeSuite={activeSuiteID}
               open={openDrawer}
@@ -95,15 +111,18 @@ const ProjectTestCommandList = () => {
               suites={suites}
             />
           </TabPanel>
-          <Main className="fill no-select" open={openDrawer}>
-            <TabPanel index={0} value={tab}>
+          <Main
+            className="fill no-select"
+            open={tab === PROJECT_TAB || openDrawer}
+          >
+            <TabPanel index={TESTS_TAB} value={tab}>
               <TestsTab session={session} />
             </TabPanel>
-            <TabPanel index={1} value={tab}>
+            <TabPanel index={SUITES_TAB} value={tab}>
               <SuitesTab session={session} />
             </TabPanel>
-            <TabPanel index={2} value={tab}>
-              <ProjectTab open={openDrawer} session={session} />
+            <TabPanel index={PROJECT_TAB} value={tab}>
+              <ProjectTab session={session} />
             </TabPanel>
           </Main>
         </Box>

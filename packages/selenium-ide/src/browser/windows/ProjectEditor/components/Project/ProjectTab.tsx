@@ -1,14 +1,17 @@
+import CloseIcon from '@mui/icons-material/Close'
 import FormControl from '@mui/material/FormControl'
+import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import React, { FC } from 'react'
 import { CoreSessionData } from 'api/types'
-import DrawerHeader from '../Drawer/Header'
-import { Paper } from '@mui/material'
-import { drawerWidth } from '../Drawer'
+import EditorToolbar from '../Drawer/EditorToolbar'
+import MainHeader from '../Main/Header'
 
 export interface ProjectTabProps {
-  open: boolean
   session: CoreSessionData
 }
 
@@ -17,49 +20,72 @@ export interface MiniProjectShape {
   name: string
 }
 
-const ProjectTab: FC<ProjectTabProps> = ({ open, session: { project } }) => (
-  <Paper
-    elevation={1}
-    id="project-editor"
-    square
-    sx={{
-      position: 'fixed',
-      top: 0,
-      left: open ? drawerWidth : 0,
-      right: 0,
-    }}
-  >
-    <DrawerHeader />
-    <DrawerHeader />
-    <Stack className="p-4" spacing={1}>
-      <FormControl>
-        <TextField
-          label="Name"
-          name="name"
-          onChange={(e: any) => {
-            window.sideAPI.projects.update({
-              name: e.target.value,
-            })
-          }}
-          size="small"
-          value={project.name}
-        />
-      </FormControl>
-      <FormControl>
-        <TextField
-          label="URL"
-          name="url"
-          onChange={(e: any) => {
-            window.sideAPI.projects.update({
-              url: e.target.value,
-            })
-          }}
-          size="small"
-          value={project.url}
-        />
-      </FormControl>
-    </Stack>
-  </Paper>
+const {
+  plugins: { projectCreate, projectDelete, projectEdit },
+  projects: { update },
+} = window.sideAPI
+const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
+  <>
+    <MainHeader />
+    <Paper elevation={1} id="project-editor" square>
+      <Stack className="p-4" spacing={1}>
+        <FormControl>
+          <TextField
+            label="Name"
+            name="name"
+            onChange={(e: any) => {
+              update({
+                name: e.target.value,
+              })
+            }}
+            size="small"
+            value={project.name}
+          />
+        </FormControl>
+        <FormControl>
+          <TextField
+            label="URL"
+            name="url"
+            onChange={(e: any) => {
+              update({
+                url: e.target.value,
+              })
+            }}
+            size="small"
+            value={project.url}
+          />
+        </FormControl>
+      </Stack>
+      <List
+        dense
+        subheader={
+          <EditorToolbar
+            disableGutters={false}
+            sx={{ top: '96px', zIndex: 100 }}
+            onAdd={() => projectCreate()}
+            text="Project Plugins"
+          />
+        }
+        sx={{
+          borderColor: 'primary.main',
+        }}
+      >
+        {project.plugins.map((plugin, index) => (
+          <ListItem className="py-3" key={index}>
+            <TextField
+              defaultValue={typeof plugin === 'string' ? plugin : ''}
+              fullWidth
+              onBlur={(e) => projectEdit(index, e.target.value)}
+              size="small"
+            />
+            <IconButton className="ml-4" onClick={() => projectDelete(index)}>
+              <CloseIcon />
+            </IconButton>
+          </ListItem>
+        ))}
+      </List>
+    </Paper>
+  </>
 )
 
 export default ProjectTab

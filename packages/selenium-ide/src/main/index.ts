@@ -1,6 +1,5 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, MenuItemConstructorOptions } from 'electron'
 import contextMenu from 'electron-context-menu'
-import { MenuItemConstructorOptions } from 'electron/main'
 import store from './store'
 import createSession from './session'
 import { Session } from './types'
@@ -9,7 +8,7 @@ import { ChildProcess } from 'child_process'
 // Enable local debugging
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
-let session: Session;
+let session: Session
 contextMenu({
   prepend: (defaultActions, _parameters, browserWindow, _event) => {
     const actions: MenuItemConstructorOptions[] = []
@@ -34,7 +33,6 @@ app.on('before-quit', () => {
   const driverProcess = session.driver.driverProcess as ChildProcess
   driverProcess.kill()
 })
-
 
 let allWindowsClosed = false
 // Respect the OSX convention of having the application in memory even

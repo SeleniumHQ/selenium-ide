@@ -28,7 +28,6 @@
     "@seleniumhq/side-model": "^3.5.10",
     "@seleniumhq/side-testkit": "^3.5.10",
     "@seleniumhq/webdriver-testkit": "^3.5.10",
-    "@types/electron": "1.6.10",
     "selenium-webdriver": "^4.1.0"
   },
   "dependencies": {

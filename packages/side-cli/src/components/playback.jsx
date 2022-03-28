@@ -15,8 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import util from 'util'
 import React from 'react'
+import util from 'util'
 import TestSelector from './test-selector'
 import TestTitle from './test-title'
 import TestResults from './test-results'
@@ -41,7 +41,7 @@ export default class Playback extends React.Component {
     }
     this.props.playback.on(
       PlaybackEvents.COMMAND_STATE_CHANGED,
-      ({ id, _callstackIndex, state, message }) => {
+      ({ id, state, message }) => {
         this.setState({
           results: { ...this.state.results, [id]: { state, message } },
         })

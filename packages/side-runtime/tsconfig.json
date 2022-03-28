@@ -17,5 +17,6 @@
     {
       "path": "../webdriver-testkit"
     }
-  ]
+  ],
+  "types": ["node", "jest"]
 }

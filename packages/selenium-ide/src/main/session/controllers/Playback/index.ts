@@ -24,28 +24,43 @@ export default class PlaybackController {
     this.isPlaying = false
     await this.playback.pause()
   }
+
+  async stop() {
+    await this.pause()
+    this.currentStepIndex = 0
+    this.playRange = PlaybackController.defaultPlayRange
+    this.playingTest = ''
+  }
+
   async resume() {
     this.isPlaying = true
     this.playback.resume()
   }
+
   async play(testID: string, playRange = PlaybackController.defaultPlayRange) {
     this.playingTest = testID
     this.playRange = playRange
     this.isPlaying = true
-    const playback = new Playback({
-      baseUrl: this.session.projects.project.url,
-      executor: this.session.driver.driver,
-      getTestByName: (name: string) => this.session.tests.getByName(name),
-      logger: console,
-      playbackWindow: await this.session.windows.get('playback-window'),
-      variables: new Variables(),
-    })
-    this.playback = playback
-    playback['event-emitter'].addListener(
-      PlaybackEvents.PLAYBACK_STATE_CHANGED,
-      this.handlePlaybackStateChanged
-    )
-    playback.play(this.session.tests.getByID(testID), {
+    if (!this.playback) {
+      const playback = new Playback({
+        baseUrl: this.session.projects.project.url,
+        executor: this.session.driver.driver,
+        getTestByName: (name: string) => this.session.tests.getByName(name),
+        logger: console,
+        variables: new Variables(),
+      })
+      const EE = playback['event-emitter']
+      EE.addListener(
+        PlaybackEvents.PLAYBACK_STATE_CHANGED,
+        this.handlePlaybackStateChanged
+      )
+      EE.addListener(
+        PlaybackEvents.COMMAND_STATE_CHANGED,
+        this.handleCommandStateChanged
+      )
+      this.playback = playback
+    }
+    this.playback.play(this.session.tests.getByID(testID), {
       startingCommandIndex: playRange[0],
     })
   }
@@ -57,31 +72,6 @@ export default class PlaybackController {
   handlePlaybackStateChanged = (
     e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']
   ) => {
-    switch (e.state) {
-      case 'prep':
-        this.playback['event-emitter'].addListener(
-          PlaybackEvents.COMMAND_STATE_CHANGED,
-          this.handleCommandStateChanged
-        )
-        break
-      case 'aborted':
-      case 'breakpoint':
-      case 'errored':
-      case 'failed':
-      case 'finished':
-      case 'stopped':
-        this.playback['event-emitter'].removeListener(
-          PlaybackEvents.COMMAND_STATE_CHANGED,
-          this.handleCommandStateChanged
-        )
-    }
     this.session.api.playback.onPlayUpdate.dispatchEvent(e)
-  }
-
-  async stop() {
-    this.isPlaying = false
-    this.currentStepIndex = 0
-    this.playRange = PlaybackController.defaultPlayRange
-    this.playingTest = ''
   }
 }

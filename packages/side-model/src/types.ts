@@ -14,9 +14,9 @@ export interface CommandShape {
   valueFallback?: [string, string][]
   isBreakpoint?: boolean
   skip?: boolean
-  opensWindow?: boolean,
-  windowHandleName?: string,
-  windowTimeout?: number,
+  opensWindow?: boolean
+  windowHandleName?: string
+  windowTimeout?: number
 }
 
 export interface SnapshotTestShape {

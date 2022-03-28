@@ -4,6 +4,7 @@ import * as fs from 'fs-extra'
 import { BrowserInfo, Session } from 'main/types'
 import * as path from 'path'
 import * as os from 'os'
+import { COLOR_MAGENTA, COLOR_YELLOW, vdebuglog } from 'main/util'
 
 const successMessage = 'was started successfully.'
 export interface DriverStartSuccess {
@@ -23,16 +24,17 @@ export interface DriverStartFailure {
  *   4. When Electron is quitting, close the child driver process
  */
 
+const WebdriverDebugLog = vdebuglog('webdriver', COLOR_MAGENTA)
+const WebdriverDebugLogErr = vdebuglog('webdriver-error', COLOR_YELLOW)
 export type StartDriver = (
   session: Session
 ) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
 const startDriver: StartDriver =
-  ({ store }) =>
+  () =>
   ({ browser, version }) =>
     new Promise((resolve, reject) => {
       let initialized = false
-      const logDriver = store.get('config.logDriver')
-      const args = logDriver ? ['--verbose'] : []
+      const args = ['--verbose']
       const driverPath =
         browser === 'electron'
           ? path.resolve(
@@ -68,20 +70,18 @@ const startDriver: StartDriver =
         })
         driver.stdout.on('data', (out: string) => {
           const outStr = `${out}`
+          WebdriverDebugLog(outStr)
           const fullyStarted = outStr.includes(successMessage)
           if (fullyStarted) {
             initialized = true
             console.log('Driver has initialized!')
             resolve({ success: true, driver: driver })
           }
-          if (logDriver) {
-            console.log('Driver (stdout):', outStr)
-          }
         })
         driver.stderr.on('data', (err: string) => {
           const errStr = `${err}`
-          if (logDriver || !initialized) {
-            console.log('Driver (stderr):', errStr)
+          WebdriverDebugLogErr(errStr)
+          if (!initialized) {
             resolve({ success: false, error: errStr })
           }
         })

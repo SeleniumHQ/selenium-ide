@@ -1,5 +1,4 @@
 import { BaseApi } from './types'
-import * as commands from './commands/commands'
 import * as dialogs from './commands/dialogs'
 import * as driver from './commands/driver'
 import * as playback from './commands/playback'
@@ -14,7 +13,6 @@ import * as windows from './commands/windows'
 export * as models from './models'
 
 export interface Api extends BaseApi {
-  commands: typeof commands
   dialogs: typeof dialogs
   driver: typeof driver
   playback: typeof playback
@@ -29,7 +27,6 @@ export interface Api extends BaseApi {
 }
 
 export const api: Api = {
-  commands,
   dialogs,
   driver,
   playback,

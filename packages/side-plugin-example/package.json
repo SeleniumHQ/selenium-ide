@@ -1,0 +1,22 @@
+{
+  "name": "@seleniumhq/side-plugin-example",
+  "version": "1.0.0",
+  "description": "Selenium IDE example plugin",
+  "author": "Todd <tarsitodd@gmail.com>",
+  "homepage": "http://github.com/SeleniumHQ/selenium-ide",
+  "license": "Apache-2.0",
+  "main": "dist/main/index.js",
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@seleniumhq/side-runtime": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
+  }
+}

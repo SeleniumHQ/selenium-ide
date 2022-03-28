@@ -15,7 +15,10 @@ const CommandSelector: FC<CommandEditorProps> = ({
   testID,
 }) => {
   const commandsList = useMemo(
-    () => Object.entries(commands).map(([id, { name }]) => ({ id, name })),
+    () =>
+      Object.entries(commands)
+        .map(([id, { name }]) => ({ id, name }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
     []
   )
   if (commandsList.length === 0) {

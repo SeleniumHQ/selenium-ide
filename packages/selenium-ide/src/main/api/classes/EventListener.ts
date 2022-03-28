@@ -2,6 +2,9 @@ import { ipcMain, WebContents } from 'electron'
 import { BaseListener, EventMutator, ListenerFn, VariadicArgs } from 'api/types'
 import { Session } from 'main/types'
 import getCore from '../helpers/getCore'
+import { COLOR_CYAN, vdebuglog } from 'main/util'
+
+const apiDebugLog = vdebuglog('api', COLOR_CYAN)
 
 const baseListener = <ARGS extends VariadicArgs>(
   path: string,
@@ -11,10 +14,11 @@ const baseListener = <ARGS extends VariadicArgs>(
   const listeners: any[] = []
   return {
     addListener(listener) {
-      console.debug(path, 'listener added')
+      apiDebugLog('Listener added', path)
       listeners.push(listener)
     },
     dispatchEvent(...args) {
+      apiDebugLog('Dispatch event', path, args)
       if (mutator) {
         const newState = mutator(getCore(session), args)
         session.projects.project = newState.project
@@ -32,7 +36,7 @@ const baseListener = <ARGS extends VariadicArgs>(
       if (index === -1) {
         throw new Error(`Unable to remove listener for ${path} ${listener}`)
       }
-      console.debug(path, 'listener removed')
+      apiDebugLog('Listener removed', path)
       listeners.splice(index, 1)
     },
   }

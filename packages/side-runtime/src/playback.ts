@@ -24,7 +24,6 @@ import Variables from './variables'
 import { WebDriverExecutor } from '.'
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import { CommandNode, CommandType } from './playback-tree/command-node'
-import { BrowserWindow } from 'electron/main'
 
 const EE = 'event-emitter'
 const state = Symbol('state')
@@ -36,7 +35,6 @@ export interface PlaybackConstructorArgs {
   getTestByName: (name: string) => TestShape
   logger: Console
   options?: Partial<PlaybackConstructorOptions>
-  playbackWindow: BrowserWindow
   variables: Variables
 }
 export interface PlaybackConstructorOptions {
@@ -62,7 +60,6 @@ export default class Playback {
     getTestByName,
     logger,
     options = {},
-    playbackWindow,
     variables,
   }: PlaybackConstructorArgs) {
     this.baseUrl = baseUrl
@@ -77,7 +74,6 @@ export default class Playback {
       },
       options
     )
-    this.playbackWindow = playbackWindow
     this.variables = variables || new Variables()
     this[state] = {}
     // @ts-expect-error
@@ -96,9 +92,8 @@ export default class Playback {
   executor: WebDriverExecutor
   getTestByName: PlaybackConstructorArgs['getTestByName']
   logger: Console
-  options: PlaybackConstructorOptions;
-  playbackWindow: BrowserWindow
-  variables: Variables
+  options: PlaybackConstructorOptions
+  variables: Variables;
   [state]: {
     initialized?: boolean
     lastSentCommandState?: PlaybackEventShapes['COMMAND_STATE_CHANGED']
@@ -120,7 +115,6 @@ export default class Playback {
     test: TestShape,
     { pauseImmediately, startingCommandIndex }: PlayOptions = {}
   ) {
-    this._beforePlay()
     this.commands = test.commands
     this.playbackTree = createPlaybackTree(test.commands, {
       emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
@@ -131,6 +125,7 @@ export default class Playback {
       this.currentExecutingNode = this.playbackTree.startingCommandNode
     }
     if (!this[state].initialized) await this.init()
+    await this._beforePlay()
     const callstack = new Callstack()
     callstack.call({
       callee: test,
@@ -199,7 +194,7 @@ export default class Playback {
         })
       }
     } else {
-      this._beforePlay()
+      await this._beforePlay()
       this.playbackTree = createPlaybackTree([command], {
         emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
       })
@@ -297,16 +292,18 @@ export default class Playback {
       baseUrl: this.baseUrl,
       logger: this.logger,
       variables: this.variables,
-      window: this.playbackWindow,
     })
   }
 
-  _beforePlay() {
+  async _beforePlay() {
     if (this[state].isPlaying) {
       throw new Error(
         "Can't start playback while a different playback is running"
       )
     } else {
+      await this.executor.executeHook('onBeforePlay', {
+        driver: this.executor,
+      })
       this[state].isPlaying = true
     }
   }
@@ -669,7 +666,9 @@ export default class Playback {
       this[state].exitCondition = condition
     } else if (
       PlaybackStatesPriorities[condition] >
-      PlaybackStatesPriorities[this[state].exitCondition as keyof typeof PlaybackStatesPriorities]
+      PlaybackStatesPriorities[
+        this[state].exitCondition as keyof typeof PlaybackStatesPriorities
+      ]
     ) {
       this[state].exitCondition = condition
     }

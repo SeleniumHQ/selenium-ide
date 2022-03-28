@@ -11,7 +11,7 @@ interface WindowPositionBound {
 
 export interface StorageSchema {
   config: typeof config
-  browserInfo: BrowserInfo,
+  browserInfo: BrowserInfo
   plugins: string[]
   recentProjects: string[]
   windowPositionBounds: {
@@ -23,7 +23,7 @@ const store = new Store<StorageSchema>({
   defaults: {
     browserInfo: {
       browser: 'chrome',
-      version: ''
+      version: '',
     },
     config,
     plugins: [],

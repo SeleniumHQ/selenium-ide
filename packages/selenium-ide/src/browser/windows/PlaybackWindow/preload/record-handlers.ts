@@ -45,7 +45,12 @@ handlers.push([
       let type = target.type
       if ('input' == tagName && this.inputTypes.indexOf(type) >= 0) {
         if (target.value.length > 0) {
-          this.record('type', locatorBuilders.buildAll(target), target.value)
+          this.record(
+            event,
+            'type',
+            locatorBuilders.buildAll(target),
+            target.value
+          )
 
           // © Chen-Chieh Ping, SideeX Team
           if (this.recordingState.enterTarget != null) {
@@ -57,6 +62,7 @@ handlers.push([
             }
 
             this.record(
+              event,
               'sendKeys',
               locatorBuilders.buildAll(
                 this.recordingState.enterTarget as HTMLElement
@@ -67,10 +73,20 @@ handlers.push([
           }
           // END
         } else {
-          this.record('type', locatorBuilders.buildAll(target), target.value)
+          this.record(
+            event,
+            'type',
+            locatorBuilders.buildAll(target),
+            target.value
+          )
         }
       } else if ('textarea' == tagName) {
-        this.record('type', locatorBuilders.buildAll(target), target.value)
+        this.record(
+          event,
+          'type',
+          locatorBuilders.buildAll(target),
+          target.value
+        )
       }
     }
     this.recordingState.typeLock = 0
@@ -98,6 +114,7 @@ handlers.push([
     ) {
       if (!this.recordingState.preventClickTwice) {
         this.record(
+          event,
           'click',
           locatorBuilders.buildAll(event.target as HTMLElement),
           ''
@@ -119,6 +136,7 @@ handlers.push([
   'dblclick',
   function (this: Recorder, event) {
     this.record(
+      event,
       'doubleClick',
       locatorBuilders.buildAll(event.target as HTMLElement),
       ''
@@ -150,6 +168,7 @@ handlers.push([
             this.recordingState.tabCheck == this.recordingState.enterTarget
           ) {
             this.record(
+              event,
               'sendKeys',
               locatorBuilders.buildAll(this.recordingState.enterTarget),
               '${KEY_ENTER}'
@@ -164,6 +183,7 @@ handlers.push([
               formChk = tempTarget.tagName.toLowerCase()
             }
             this.record(
+              event,
               'sendKeys',
               locatorBuilders.buildAll(
                 this.recordingState.enterTarget as HTMLElement
@@ -185,6 +205,7 @@ handlers.push([
             if ('input' == tagName && this.inputTypes.indexOf(type) >= 0) {
               if (typeTarget.value.length > 0) {
                 this.record(
+                  event,
                   'type',
                   locatorBuilders.buildAll(typeTarget),
                   typeTarget.value
@@ -199,6 +220,7 @@ handlers.push([
                     formChk = tempTarget.tagName.toLowerCase()
                   }
                   this.record(
+                    event,
                     'sendKeys',
                     locatorBuilders.buildAll(
                       this.recordingState.enterTarget as HTMLElement
@@ -210,6 +232,7 @@ handlers.push([
                 // END
               } else {
                 this.record(
+                  event,
                   'type',
                   locatorBuilders.buildAll(typeTarget),
                   typeTarget.value
@@ -217,6 +240,7 @@ handlers.push([
               }
             } else if ('textarea' == tagName) {
               this.record(
+                event,
                 'type',
                 locatorBuilders.buildAll(typeTarget),
                 typeTarget.value
@@ -246,6 +270,7 @@ handlers.push([
           }
           if (tempbool) {
             this.record(
+              event,
               'type',
               locatorBuilders.buildAll(target),
               this.recordingState.tempValue as string
@@ -260,12 +285,14 @@ handlers.push([
 
           if (key == 38)
             this.record(
+              event,
               'sendKeys',
               locatorBuilders.buildAll(target),
               '${KEY_UP}'
             )
           else
             this.record(
+              event,
               'sendKeys',
               locatorBuilders.buildAll(target),
               '${KEY_DOWN}'
@@ -275,6 +302,7 @@ handlers.push([
         if (key == 9) {
           if (this.recordingState.tabCheck == target) {
             this.record(
+              event,
               'sendKeys',
               locatorBuilders.buildAll(target),
               '${KEY_TAB}'
@@ -390,16 +418,19 @@ handlers.push([
           targetRelateY =
             event.pageY - q1Target.getBoundingClientRect().top - window.scrollY
           this.record(
+            event,
             'mouseDownAt',
             locatorBuilders.buildAll(target),
             sourceRelateX + ',' + sourceRelateY
           )
           this.record(
+            event,
             'mouseMoveAt',
             locatorBuilders.buildAll(q1Target),
             targetRelateX + ',' + targetRelateY
           )
           this.record(
+            event,
             'mouseUpAt',
             locatorBuilders.buildAll(q1Target),
             targetRelateX + ',' + targetRelateY
@@ -414,16 +445,19 @@ handlers.push([
             currentTarget.getBoundingClientRect().top -
             window.scrollY
           this.record(
+            event,
             'mouseDownAt',
             locatorBuilders.buildAll(currentTarget),
             targetRelateX + ',' + targetRelateY
           )
           this.record(
+            event,
             'mouseMoveAt',
             locatorBuilders.buildAll(currentTarget),
             targetRelateX + ',' + targetRelateY
           )
           this.record(
+            event,
             'mouseUpAt',
             locatorBuilders.buildAll(currentTarget),
             targetRelateX + ',' + targetRelateY
@@ -436,16 +470,22 @@ handlers.push([
 
       if (mousedown && mousedown.target !== event.target && !(x + y)) {
         this.record(
+          event,
           'mouseDown',
           locatorBuilders.buildAll(mousedown.target as HTMLElement),
           ''
         )
-        this.record('mouseUp', locatorBuilders.buildAll(currentTarget), '')
+        this.record(
+          event,
+          'mouseUp',
+          locatorBuilders.buildAll(currentTarget),
+          ''
+        )
       } else if (mousedown && mousedown.target === currentTarget) {
         // let target = locatorBuilders.buildAll(mousedown.target as HTMLElement)
         // setTimeout(function() {
         //     if (!self.clickLocator)
-        //         this.record("click", target, '');
+        //         this.record(event, "click", target, '');
         // }.bind(this), 100);
       }
     }
@@ -486,6 +526,7 @@ handlers.push([
     ) {
       //value no option
       this.record(
+        event,
         'dragAndDropToObject',
         locatorBuilders.buildAll(dragstartLocator.target as HTMLElement),
         locatorBuilders.buildAll(event.target as HTMLElement)
@@ -558,7 +599,12 @@ handlers.push([
   'mouseout',
   function (this: Recorder, event) {
     if (mouseoutLocator !== null && event.target === mouseoutLocator) {
-      this.record('mouseOut', locatorBuilders.buildAll(event.target as HTMLElement), '')
+      this.record(
+        event,
+        'mouseOut',
+        locatorBuilders.buildAll(event.target as HTMLElement),
+        ''
+      )
     }
     mouseoutLocator = undefined
   },
@@ -572,7 +618,7 @@ observers.push([
     mutations.forEach(async (mutation) => {
       const removedNodes = await mutation.removedNodes
       if (removedNodes.length && removedNodes[0].nodeName === 'IFRAME') {
-        window.sideAPI.recorder.onFrameDeleted.dispatchEvent();
+        window.sideAPI.recorder.onFrameDeleted.dispatchEvent()
       }
     })
   },
@@ -602,6 +648,7 @@ observers.push([
       if (scrollDetector) {
         //TODO: fix target
         this.record(
+          event,
           'runScript',
           'window.scrollTo(0,' + window.scrollY + ')',
           ''
@@ -614,7 +661,12 @@ observers.push([
         nodeInsertedLocator = undefined
       }
       if (nodeInsertedLocator) {
-        this.record('mouseOver', nodeInsertedAttrChange as [string, string][], '')
+        this.record(
+          event,
+          'mouseOver',
+          nodeInsertedAttrChange as [string, string][],
+          ''
+        )
         mouseoutLocator = nodeInsertedLocator
         nodeInsertedLocator = undefined
         nodeInsertedAttrChange = undefined
@@ -674,6 +726,7 @@ handlers.push([
       if (event.target == getEle) {
         if (getEle.innerHTML != contentTest) {
           this.record(
+            event,
             'editContent',
             locatorBuilders.buildAll(event.target as HTMLElement),
             getEle.innerHTML
@@ -748,6 +801,7 @@ handlers.push([
         if (!target.multiple) {
           let option = target.options[target.selectedIndex]
           this.record(
+            event,
             'select',
             locatorBuilders.buildAll(target),
             getOptionLocator(option)
@@ -760,12 +814,14 @@ handlers.push([
               let value = getOptionLocator(options[i])
               if (options[i].selected) {
                 this.record(
+                  event,
                   'addSelection',
                   locatorBuilders.buildAll(target),
                   value
                 )
               } else {
                 this.record(
+                  event,
                   'removeSelection',
                   locatorBuilders.buildAll(target),
                   value

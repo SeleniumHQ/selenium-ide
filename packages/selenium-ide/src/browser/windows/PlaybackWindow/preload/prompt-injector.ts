@@ -47,6 +47,7 @@ function attachPromptRecorder(record: Recorder['record']) {
           switch (event.data.recordedType) {
             case 'prompt':
               record(
+                event,
                 'assertPrompt',
                 event.data.recordedMessage,
                 '',
@@ -55,6 +56,7 @@ function attachPromptRecorder(record: Recorder['record']) {
               )
               if (event.data.recordedResult != null) {
                 record(
+                  event,
                   'answerPrompt',
                   event.data.recordedResult,
                   '',
@@ -62,11 +64,19 @@ function attachPromptRecorder(record: Recorder['record']) {
                   event.data.frameLocation
                 )
               } else {
-                record('dismissPrompt', '', '', false, event.data.frameLocation)
+                record(
+                  event,
+                  'dismissPrompt',
+                  '',
+                  '',
+                  false,
+                  event.data.frameLocation
+                )
               }
               break
             case 'confirm':
               record(
+                event,
                 'assertConfirmation',
                 event.data.recordedMessage,
                 '',
@@ -75,6 +85,7 @@ function attachPromptRecorder(record: Recorder['record']) {
               )
               if (event.data.recordedResult == true) {
                 record(
+                  event,
                   'acceptConfirmation',
                   '',
                   '',
@@ -83,6 +94,7 @@ function attachPromptRecorder(record: Recorder['record']) {
                 )
               } else {
                 record(
+                  event,
                   'dismissConfirmation',
                   '',
                   '',
@@ -93,13 +105,21 @@ function attachPromptRecorder(record: Recorder['record']) {
               break
             case 'alert':
               record(
+                event,
                 'assertAlert',
                 event.data.recordedMessage,
                 '',
                 false,
                 event.data.frameLocation
               )
-              record('acceptAlert', '', '', false, event.data.frameLocation)
+              record(
+                event,
+                'acceptAlert',
+                '',
+                '',
+                false,
+                event.data.frameLocation
+              )
               break
           }
         }

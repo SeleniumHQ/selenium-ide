@@ -19,7 +19,7 @@ export interface MiniCommandShape {
 }
 
 const CommandEditor: FC<CommandEditorProps> = (props) => {
-  const { command } = props 
+  const { command } = props
   if (command.id === '-1') {
     return (
       <Stack className="p-4" spacing={1}>
@@ -32,18 +32,9 @@ const CommandEditor: FC<CommandEditorProps> = (props) => {
   return (
     <Stack className="p-4" spacing={1}>
       <CommandSelector {...props} />
-      <ArgField
-        {...props}
-        fieldName="target"
-      />
-      <ArgField
-        {...props}
-        fieldName="value"
-      />
-      <CommandTextField
-        {...props}
-        fieldName="comment"
-      />
+      <ArgField {...props} fieldName="target" />
+      <ArgField {...props} fieldName="value" />
+      <CommandTextField {...props} fieldName="comment" />
     </Stack>
   )
 }

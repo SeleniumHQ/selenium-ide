@@ -34,6 +34,7 @@ module.exports = {
           { argsIgnorePattern: '^_' },
         ],
         'no-dupe-class-members': 'off',
+        'no-undef': 'off',
         'no-unused-vars': 'off',
         'no-inner-declarations': 0, // for typescript namespace
       },

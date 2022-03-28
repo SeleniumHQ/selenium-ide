@@ -3,7 +3,7 @@
   "version": "4.0.1",
   "private": true,
   "description": "Selenium IDE electron app",
-  "author": "Tomer <tomer@corevo.io>",
+  "author": "Todd <tarsitodd@gmail.com>",
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
@@ -26,7 +26,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": "16.x"
   },
   "build": {
     "appId": "org.seleniumhq.selenium-ide",
@@ -65,6 +65,7 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@seleniumhq/get-driver": "^3.5.10",
     "@seleniumhq/side-model": "^3.5.10",
+    "@seleniumhq/side-plugin-example": "*",
     "@seleniumhq/side-recorder-postprocessor": "^3.5.10",
     "@seleniumhq/side-runtime": "^3.5.10",
     "electron-context-menu": "^3.1.2",

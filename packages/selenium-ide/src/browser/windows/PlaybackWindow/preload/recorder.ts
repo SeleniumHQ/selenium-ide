@@ -23,6 +23,7 @@ import {
   ExpandedMutationObserver,
 } from 'browser/types'
 import initFindSelect from './find-select'
+import { PluginPreloadOutputShape } from '@seleniumhq/side-runtime'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null
@@ -42,8 +43,9 @@ export interface RecordingState {
  * @param {Window} window
  */
 export default class Recorder {
-  constructor(window: Window) {
+  constructor(window: Window, plugins: PluginPreloadOutputShape[]) {
     this.window = window
+    this.plugins = plugins
     this.eventListeners = {}
     this.attached = false
     this.frameLocation = ''
@@ -70,6 +72,7 @@ export default class Recorder {
     // e.g., once on load
     this.getFrameLocation()
   }
+  plugins: PluginPreloadOutputShape[]
   window: Window
   eventListeners: Record<string, EventListener[]>
   attached: boolean = false
@@ -80,15 +83,15 @@ export default class Recorder {
     this.window.document.body.setAttribute('data-side-attach-once-loaded', '')
   }
 
-  /* record */
   record(
+    event: Event | KeyboardEvent | MouseEvent | undefined,
     command: string,
     target: string | [string, string][],
     value: string | [string, string][],
     insertBeforeLastCommand: boolean = false,
     actualFrameLocation?: string
   ) {
-    window.sideAPI.recorder.recordNewCommand({
+    let newCommand = {
       command,
       target,
       value,
@@ -97,7 +100,21 @@ export default class Recorder {
         actualFrameLocation != undefined
           ? actualFrameLocation
           : this.frameLocation,
-    })
+    }
+    const plugins = this.plugins
+    for (let i = 0, ii = plugins.length; i !== ii; i++) {
+      const plugin = plugins[i]
+      if (!plugin.hooks.onCommandRecorded) continue
+      const result = plugin.hooks.onCommandRecorded(newCommand, event)
+      if (!result) continue
+      switch (result.action) {
+        case 'drop':
+          return
+        case 'update':
+          newCommand = result.command
+      }
+    }
+    window.sideAPI.recorder.recordNewCommand(newCommand)
   }
 
   setWindowHandle(event: ExpandedMessageEvent) {

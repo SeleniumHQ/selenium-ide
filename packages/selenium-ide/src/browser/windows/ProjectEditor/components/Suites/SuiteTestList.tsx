@@ -22,7 +22,6 @@ const SuiteTestList: FC<SuiteTestListProps> = ({
     sx={{
       borderColor: 'primary.main',
       marginBottom: `${bottomOffset}px`,
-      marginTop: '48px',
     }}
     subheader={
       <ListSubheader className="lh-36" sx={{ top: '96px', zIndex: 100 }}>
@@ -35,6 +34,7 @@ const SuiteTestList: FC<SuiteTestListProps> = ({
       return (
         <SuiteTestRow
           activeSuite={activeSuite}
+          key={id}
           test={test}
           selected={tests.includes(id)}
         />

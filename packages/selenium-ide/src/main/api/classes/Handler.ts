@@ -2,6 +2,9 @@ import { ipcMain } from 'electron'
 import { ApiHandler, EmptyApiHandler, Mutator } from 'api/types'
 import { Session, SessionControllerKeys } from '../../types'
 import getCore from '../helpers/getCore'
+import { COLOR_CYAN, vdebuglog } from 'main/util'
+
+const apiDebugLog = vdebuglog('api', COLOR_CYAN)
 
 export type AsyncHandler<HANDLER extends ApiHandler> = (
   ...args: Parameters<HANDLER>
@@ -27,7 +30,7 @@ const defaultHandler = <HANDLER extends ApiHandler>(
 
 const passThroughHandler = <HANDLER extends EmptyApiHandler>(
   _path: string,
-  _session: Session,
+  _session: Session
 ): AsyncHandler<HANDLER> => {
   const handler = async (..._args: Parameters<HANDLER>) => {}
   return handler as unknown as AsyncHandler<HANDLER>
@@ -49,11 +52,11 @@ const Handler =
         session.api.state.onMutate.dispatchEvent(path, { params, result })
       }
       return result
-    };
+    }
     ipcMain.on(path, async (_event, ...args) => {
-      console.debug('Received API Request', path, ...args)
-      const result = await doAPI(...args as Parameters<HANDLER>)
-      console.debug('Resolved API Request', path, result)
+      apiDebugLog('Received API Request', path, args)
+      const result = await doAPI(...(args as Parameters<HANDLER>))
+      apiDebugLog('Resolved API Request', path, result)
       _event.sender.send(`${path}.complete`, result)
     })
     return doAPI
