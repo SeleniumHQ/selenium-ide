@@ -720,6 +720,8 @@ export const PlaybackStates = {
   ABORTED: 'aborted',
 } as const
 
+export type PlaybackState = typeof PlaybackStates[keyof typeof PlaybackStates]
+
 const PlaybackStatesPriorities = {
   [PlaybackStates.FINISHED]: 0,
   [PlaybackStates.FAILED]: 1,
@@ -737,6 +739,8 @@ export const CommandStates = {
   FAILED: 'failed',
   ERRORED: 'errored',
 } as const
+
+export type CommandState = typeof CommandStates[keyof typeof CommandStates]
 
 export const CallstackChange = {
   CALLED: 'called',

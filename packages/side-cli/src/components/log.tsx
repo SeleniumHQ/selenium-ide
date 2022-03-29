@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // Licensed to the Software Freedom Conservancy (SFC) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -17,14 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import fs from 'fs'
 import React from 'react'
-import { render } from 'ink'
-import PlaybackComponent from './components/playback'
-import { Playback, WebDriverExecutor } from '@seleniumhq/side-runtime'
+import { Static, Box } from 'ink'
 
-const projectPath = process.argv[2]
-const project = JSON.parse(fs.readFileSync(projectPath).toString())
-const executor = new WebDriverExecutor()
-const playback = new Playback({ executor, baseUrl: project.url })
-render(<PlaybackComponent project={project} playback={playback} />)
+const Logs: React.FC<{ logs: string[] }> = ({ logs }) => (
+  <Static>
+    {/* @ts-expect-error */}
+    {logs.map((log, index) => (
+      <Box key={index}>{log}</Box>
+    ))}
+  </Static>
+)
+
+export default Logs

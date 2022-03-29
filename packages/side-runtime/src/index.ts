@@ -23,6 +23,7 @@ import createRecorderSyncronizer from './recording-syncronizer'
 import createRecorderSyncronizerForWebdriverExecutor from './recording-syncronizer-webdriver'
 
 export * from './playback'
+export * from './plugins'
 export * from './types'
 export const CommandType = _CommandType
 export const RecordingSyncronizers = {

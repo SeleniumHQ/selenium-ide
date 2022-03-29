@@ -18,23 +18,19 @@
 import React from 'react'
 import { Box } from 'ink'
 import Step from './step'
+import { CommandShape } from '@seleniumhq/side-model'
 
-export default class TestResults extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-  render() {
-    return (
-      <Box flexDirection="column">
-        {this.props.commands.map(command => (
-          <Step
-            key={command.id}
-            command={command}
-            result={this.props.results[command.id]}
-          />
-        ))}
-      </Box>
-    )
-  }
+export type TestResultsProps = {
+  commands: CommandShape[]
+  results: Record<string, any>
 }
+
+const TestResults: React.FC<TestResultsProps> = ({ commands, results }) => (
+  <Box flexDirection="column">
+    {commands.map((command) => (
+      <Step key={command.id} command={command} result={results[command.id]} />
+    ))}
+  </Box>
+)
+
+export default TestResults
