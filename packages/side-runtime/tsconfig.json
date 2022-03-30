@@ -9,6 +9,9 @@
   "exclude": ["**/__mocks__", "**/__tests__"],
   "references": [
     {
+      "path": "../side-commons"
+    },
+    {
       "path": "../side-model"
     },
     {
