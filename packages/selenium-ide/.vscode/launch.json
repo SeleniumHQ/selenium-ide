@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Main Process",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+            "windows": {
+                "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron"
+            },
+            "args": [
+                "./dist/main-bundle.js"
+            ],
+            // "program": "${workspaceRoot}/src/main/index.ts",
+            // "outFiles": [
+            //     "${workspaceRoot}/app/main.js"
+            // ],
+            "outputCapture": "std",
+            "sourceMaps": true,
+            "trace": true,
+            // "sourceMapPathOverrides": {
+            //     "webpack:///./*": "${workspaceFolder}/src/*",
+            //     "webpack:///src/*": "${workspaceFolder}/src/*"
+            // },
+            // "webRoot": "${workspaceFolder}/dist"
+        }
+    ]
+}
