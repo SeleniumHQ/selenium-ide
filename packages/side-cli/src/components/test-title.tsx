@@ -51,11 +51,12 @@ const TestTitle: React.FC<TestTitleProps> = ({ name, state }) => {
         </Text>
       )
     }
-    return ''
+    return <Text />
   }
   return (
     <Box>
-      {renderPrefix()} <Text bold>{name}</Text>
+      {renderPrefix()}
+      <Text bold>{name}</Text>
     </Box>
   )
 }

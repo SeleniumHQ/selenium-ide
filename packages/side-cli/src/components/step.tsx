@@ -27,72 +27,72 @@ export interface StepProps {
 }
 
 const Step: React.FC<StepProps> = ({ command, result }) => {
-  const children = `${command.command} | ${command.target} | ${command.value}`
+  const TextBody = (
+    <Text>
+      {command.command} | {command.target} | {command.value}
+    </Text>
+  )
   const state = result ? result.state : undefined
   return (
     <Box>
       {(state === CommandStates.EXECUTING ||
         state === CommandStates.PENDING) && (
-        <PendingStep>{children}</PendingStep>
+        <>
+          <PendingStep />
+          {TextBody}
+        </>
       )}
-      {state === CommandStates.PASSED && <PassedStep>{children}</PassedStep>}
+      {state === CommandStates.PASSED && (
+        <>
+          <PassedStep />
+          {TextBody}
+        </>
+      )}
       {state === CommandStates.UNDETERMINED && (
-        <UndeterminedStep>{children}</UndeterminedStep>
+        <>
+          <UndeterminedStep />
+          {TextBody}
+        </>
       )}
       {(state === CommandStates.FAILED || state === CommandStates.ERRORED) && (
-        <FailedStep>{children}</FailedStep>
+        <>
+          <FailedStep />
+          {TextBody}
+        </>
       )}
-      {!state && <NoStateStep>{children}</NoStateStep>}
+      {!state && (
+        <>
+          <NoStateStep />
+          {TextBody}
+        </>
+      )}
     </Box>
   )
 }
 
-const PendingStep: React.FC = (props) => {
+const PendingStep: React.FC = () => {
   return (
-    <>
-      {'  '}
-      <Text color="yellow">
-        <Spinner type="dots" />
-      </Text>{' '}
-      {props.children}
-    </>
+    <Text color="yellow">
+      &nbsp;&nbsp;
+      <Spinner type="dots" />
+    </Text>
   )
 }
 
-const PassedStep: React.FC = (props) => {
-  return (
-    <>
-      {'  '}
-      <Text color="green">✓</Text> {props.children}
-    </>
-  )
+const PassedStep: React.FC = () => {
+  return <Text color="green">&nbsp;&nbsp;✓</Text>
 }
 
-const FailedStep: React.FC = (props) => {
-  return (
-    <>
-      {'  '}
-      <Text color="red">✕</Text> {props.children}
-    </>
-  )
+const FailedStep: React.FC = () => {
+  return <Text color="red">&nbsp;&nbsp;✕</Text>
 }
 
-const UndeterminedStep: React.FC = (props) => {
-  return (
-    <>
-      {'  '}
-      <Text color="yellowBright">○</Text> {props.children}
-    </>
-  )
+const UndeterminedStep: React.FC = () => {
+  return <Text color="yellowBright">&nbsp;&nbsp;○</Text>
 }
 
-const NoStateStep: React.FC = (props) => {
-  return (
-    <>
-      {'    '}
-      {props.children}
-    </>
-  )
+const NoStateStep: React.FC = () => {
+  return <Text>&nbsp;&nbsp;&nbsp;&nbsp;</Text>
 }
 
 export default Step

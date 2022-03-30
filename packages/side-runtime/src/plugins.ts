@@ -3,6 +3,7 @@ import { join } from 'path'
 import { CustomCommandShape, PluginShape } from './types'
 
 export const loadPlugins = (
+  importer: NodeRequire,
   projectPath: string,
   project: ProjectShape
 ): PluginShape[] => {
@@ -10,7 +11,7 @@ export const loadPlugins = (
     const correctedPluginPath = pluginPath.startsWith('.')
       ? join(projectPath, pluginPath)
       : pluginPath
-    const pluginFile = require(correctedPluginPath)
+    const pluginFile = importer(correctedPluginPath)
     const plugin = pluginFile.default ? pluginFile.default : pluginFile
     return plugin
   })

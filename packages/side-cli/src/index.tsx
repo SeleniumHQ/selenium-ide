@@ -15,10 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import fs from 'fs'
-import React from 'react'
-import { render } from 'ink'
-import PlaybackComponent from './components/playback'
+import { ProjectShape, TestShape } from '@seleniumhq/side-model'
 import {
   getCustomCommands,
   loadPlugins,
@@ -26,17 +23,27 @@ import {
   Variables,
   WebDriverExecutor,
 } from '@seleniumhq/side-runtime'
-import { ProjectShape, TestShape } from '@seleniumhq/side-model'
+import fs from 'fs'
+import { render } from 'ink'
+import path from 'path'
+import React from 'react'
+import PlaybackComponent from './components/playback'
 
-const projectPath = process.argv[2]
+let projectPath = process.argv[2]
+if (projectPath.startsWith('.')) {
+  projectPath = path.join(process.cwd(), projectPath)
+}
+
 const project: ProjectShape = JSON.parse(
   fs.readFileSync(projectPath).toString()
 )
-const plugins = loadPlugins(projectPath, project)
+
+const plugins = loadPlugins(require, projectPath, project)
 const customCommands = getCustomCommands(plugins)
 const executor = new WebDriverExecutor({
   customCommands,
 })
+
 const playback = new Playback({
   baseUrl: project.url,
   getTestByName: (name: string) =>

@@ -79,6 +79,7 @@ const PlaybackComponent: React.FC<PlaybackProps> = ({ playback, project }) => {
       }
     )
   }, [])
+
   const handleTestSelected = async (test: TestShape) => {
     setState({ test })
     try {
@@ -93,6 +94,7 @@ const PlaybackComponent: React.FC<PlaybackProps> = ({ playback, project }) => {
       await playback.cleanup()
     }
   }
+
   return state.test ? (
     <>
       <TestTitle name={state.test.name} state={state.testState} />

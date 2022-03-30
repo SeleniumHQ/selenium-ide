@@ -73,7 +73,7 @@ const DriverSelector = () => {
     }
   }, [driverStatus])
 
-  const processBrowserSelection = (e: SelectChangeEvent<{ value: string }>) => {
+  const processBrowserSelection = (e: SelectChangeEvent<string>) => {
     const browser = browserFromString(e.target.value as string)
     if (browser.version) {
       console.log('Setting version', browser)
@@ -105,7 +105,7 @@ const DriverSelector = () => {
                 size="small"
                 onChange={processBrowserSelection}
                 placeholder="Please select a browser"
-                value={browserToString(browserInfo.selected) as unknown as undefined}
+                value={browserToString(browserInfo.selected)}
               >
                 <MenuItem key={-1} value={'chrome|'}>
                   Please select a browser

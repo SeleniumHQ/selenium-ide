@@ -1,8 +1,7 @@
-import { PluginShape } from '@seleniumhq/side-runtime'
+import { loadPlugins, PluginShape } from '@seleniumhq/side-runtime'
 import { ipcMain } from 'electron'
 import storage from 'main/store'
 import { Session } from 'main/types'
-import { join } from 'path'
 
 export default class PluginsController {
   constructor(session: Session) {
@@ -31,14 +30,15 @@ export default class PluginsController {
     return systemPlugins.concat(projectPlugins)
   }
   async onProjectLoaded() {
-    const baseProjectPath = this.session.projects.filepath as string
-    const plugins = await this.list()
-    return plugins.map((pluginPath) => {
-      const correctedPluginPath = pluginPath.startsWith('.')
-        ? join(baseProjectPath, pluginPath)
-        : pluginPath
-      const pluginFile = __non_webpack_require__(correctedPluginPath)
-      const plugin = pluginFile.default ? pluginFile.default : pluginFile
+    const projectPath = this.session.projects.filepath as string
+    const pluginPaths = await this.list()
+    const plugins = loadPlugins(
+      __non_webpack_require__,
+      projectPath,
+      await this.session.projects.getActive()
+    )
+    return plugins.map((plugin, index) => {
+      const pluginPath = pluginPaths[index]
       return this.run(pluginPath, plugin)
     })
   }

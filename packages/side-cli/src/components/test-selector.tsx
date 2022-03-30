@@ -30,7 +30,6 @@ const TestSelector: React.FC<TestSelectorProps> = ({
 }) => (
   <SelectInput
     items={tests.map((test) => ({
-      key: test.name,
       label: test.name,
       value: test.id,
     }))}

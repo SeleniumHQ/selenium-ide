@@ -16,15 +16,10 @@
 // under the License.
 
 import React from 'react'
-import { Static, Box } from 'ink'
+import { Static, Text } from 'ink'
 
 const Logs: React.FC<{ logs: string[] }> = ({ logs }) => (
-  <Static>
-    {/* @ts-expect-error */}
-    {logs.map((log, index) => (
-      <Box key={index}>{log}</Box>
-    ))}
-  </Static>
+  <Static items={logs}>{(log) => <Text>{log}</Text>}</Static>
 )
 
 export default Logs
