@@ -8,6 +8,8 @@ import { ChildProcess } from 'child_process'
 // Enable local debugging
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
+debugger;
+
 let session: Session
 contextMenu({
   prepend: (defaultActions, _parameters, browserWindow, _event) => {
