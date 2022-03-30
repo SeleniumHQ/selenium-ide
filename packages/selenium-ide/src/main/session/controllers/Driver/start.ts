@@ -46,7 +46,7 @@ const startDriver: StartDriver =
                 'node_modules',
                 'electron-chromedriver',
                 'bin',
-                'chromedriver.exe'
+                'chromedriver' + os.platform() === 'win32' ? '.exe' : ''
               )
             )
           : path.resolve(

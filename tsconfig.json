@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "strictNullChecks": false
+    "strictNullChecks": false,
+        "inlineSourceMap": true,
+        "inlineSources": true,
   },
   "include": [],
   "references": [
