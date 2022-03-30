@@ -54,8 +54,7 @@
     "node-fetch": "^3.2.3",
     "selenium-webdriver": "^4.1.1",
     "tar": "^6.1.11",
-    "unzipper": "^0.10.11",
-    "source-map-support": "^0.5.21"
+    "unzipper": "^0.10.11"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
