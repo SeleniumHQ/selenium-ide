@@ -7,7 +7,7 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "clean": "rm -rf dist files",
+    "clean": "rm -rf dist files tsconfig.tsbuildinfo node_modules",
     "copy:tsconfig": "cp ./tsconfig.json ./dist/tsconfig.json",
     "start": "electron dist/main-bundle.js",
     "build": "run-s build:webpack build:electron",
@@ -76,7 +76,6 @@
     "react-dnd": "^15.1.1",
     "react-dnd-html5-backend": "^15.1.2",
     "react-dom": "^17.0.2",
-    "selenium-webdriver": "^4.1.0",
     "spectron": "15.0.0",
     "ua-parser-js": "^0.7.19"
   },
