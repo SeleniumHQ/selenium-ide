@@ -7,7 +7,7 @@ import { Mutator } from 'api/types'
 export type Shape = Session['playback']['stop']
 
 const setToIdle = set('state.status', 'idle')
-export const mutator: Mutator<Shape> = (session) => setToIdle(session)
+export const mutator: Mutator<Shape> = setToIdle
 
 export const browser = browserHandler<Shape>()
 

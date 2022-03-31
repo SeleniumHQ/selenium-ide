@@ -16,25 +16,10 @@
 // under the License.
 
 import React from 'react'
-import { Box } from 'ink'
-import Step from './step'
+import { Static, Text } from 'ink'
 
-export default class TestResults extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
-  render() {
-    return (
-      <Box flexDirection="column">
-        {this.props.commands.map(command => (
-          <Step
-            key={command.id}
-            command={command}
-            result={this.props.results[command.id]}
-          />
-        ))}
-      </Box>
-    )
-  }
-}
+const Logs: React.FC<{ logs: string[] }> = ({ logs }) => (
+  <Static items={logs}>{(log) => <Text>{log}</Text>}</Static>
+)
+
+export default Logs

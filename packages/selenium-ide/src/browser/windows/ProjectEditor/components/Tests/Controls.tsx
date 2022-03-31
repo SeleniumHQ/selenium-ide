@@ -29,8 +29,8 @@ const TestControls: FC<TestControlsProps> = ({ state }) => {
     case 'playing':
       return (
         <>
-          <PauseButton />
           <StopButton />
+          <PauseButton />
           <RecordButton />
         </>
       )

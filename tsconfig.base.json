@@ -7,7 +7,9 @@
     "declarationMap": true,
     "composite": true,
     "strict": true,
-
+    /* Dont fail over type things in node_modules */
+    "skipLibCheck": true,
+    
     /* Additional Checks */
     "noUnusedLocals": true,
     "noUnusedParameters": true,

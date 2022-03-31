@@ -26,7 +26,9 @@ export default class PlaybackController {
   }
 
   async stop() {
-    await this.pause()
+    if (this.isPlaying) {
+      await this.pause()
+    }
     this.currentStepIndex = 0
     this.playRange = PlaybackController.defaultPlayRange
     this.playingTest = ''

@@ -16,16 +16,27 @@
 // under the License.
 
 import React from 'react'
-import { Static, Box } from 'ink'
+import SelectInput from 'ink-select-input'
+import { TestShape } from '@seleniumhq/side-model'
 
-export default class Logs extends React.Component {
-  render() {
-    return (
-      <Static>
-        {this.props.children.map((log, index) => (
-          <Box key={index}>{log}</Box>
-        ))}
-      </Static>
-    )
-  }
+export interface TestSelectorProps {
+  tests: TestShape[]
+  onTestSelected: (test: TestShape) => void
 }
+
+const TestSelector: React.FC<TestSelectorProps> = ({
+  onTestSelected,
+  tests,
+}) => (
+  <SelectInput
+    items={tests.map((test) => ({
+      label: test.name,
+      value: test.id,
+    }))}
+    onSelect={({ value }) =>
+      onTestSelected(tests.find(({ id }) => id === value) as TestShape)
+    }
+  />
+)
+
+export default TestSelector

@@ -8,8 +8,9 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "babel --root-mode upward -d dist src --extensions \".js,.jsx,.ts,.tsx\" --source-maps true",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
     "prepublishOnly": "yarn clean && yarn build",
+    "start": "node dist/index.js",
     "watch": "yarn build -w"
   },
   "main": "dist/index.js",
@@ -30,11 +31,11 @@
     "@babel/preset-react": "^7.0.0"
   },
   "dependencies": {
+    "@seleniumhq/side-model": "^3.5.10",
     "@seleniumhq/side-runtime": "^3.5.10",
-    "ink": "^2.4.0",
-    "ink-select-input": "^3.1.0",
-    "ink-spinner": "^3.0.0",
-    "react": "^16.10.1",
-    "selenium-webdriver": "^4.1.0"
+    "ink": "^3.2.0",
+    "ink-select-input": "^4.2.1",
+    "ink-spinner": "^4.0.3",
+    "react": "^17.0.2"
   }
 }

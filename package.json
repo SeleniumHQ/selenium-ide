@@ -6,7 +6,6 @@
   "scripts": {
     "start": "cd packages/selenium-ide && yarn start",
     "build": "yarn build:ts && yarn build:ide",
-    "build:ide:fast": "lerna run --scope @seleniumhq/selenium-ide --loglevel verbose build:webpack",
     "build:ide": "lerna run --scope @seleniumhq/selenium-ide --loglevel verbose build:webpack",
     "build:ts": "tsc --build --verbose",
     "clean": "lerna run clean --loglevel verbose",
@@ -18,9 +17,7 @@
     "typecheck": "tsc --noEmit --composite false",
     "watch": "yarn watch:ts & yarn watch:webpack",
     "watch:webpack": "lerna run --parallel --stream --scope @seleniumhq/selenium-ide --loglevel verbose watch",
-    "watch:ts": "tsc --build --verbose --watch",
-    "preinstall": "node ./scripts/check-yarn.js",
-    "download-drivers": "cd packages/webdriver-testkit && yarn download-drivers"
+    "watch:ts": "tsc --build --verbose --watch"
   },
   "engines": {
     "node": "16.x"
@@ -48,14 +45,6 @@
   "workspaces": [
     "packages/*"
   ],
-  "dependencies": {
-    "@seleniumhq/get-driver": "^3.5.10",
-    "fs-extra": "^10.0.1",
-    "node-fetch": "^3.2.3",
-    "selenium-webdriver": "^4.1.1",
-    "tar": "^6.1.11",
-    "unzipper": "^0.10.11"
-  },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
     "@babel/core": "^7.17.8",
@@ -69,10 +58,8 @@
     "@bazel/jasmine": "^5.3.0",
     "@bazel/typescript": "^5.3.0",
     "@testing-library/jest-dom": "^5.16.2",
-    "@types/fs-extra": "^9.0.13",
     "@types/jest": "^27.4.1",
     "@types/node": "^17.0.21",
-    "@types/selenium-webdriver": "^4.0.18",
     "@typescript-eslint/eslint-plugin": "^5.15.0",
     "@typescript-eslint/parser": "^5.15.0",
     "babel-eslint": "^10.1.0",

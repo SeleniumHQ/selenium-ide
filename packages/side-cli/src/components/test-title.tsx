@@ -16,27 +16,29 @@
 // under the License.
 
 import React from 'react'
-import { Box, Text, Color } from 'ink'
-import { PlaybackStates } from '@seleniumhq/side-runtime'
+import { Box, Text } from 'ink'
+import { PlaybackState, PlaybackStates } from '@seleniumhq/side-runtime'
 
-export default class Playback extends React.Component {
-  renderPrefix(state) {
+interface TestTitleProps {
+  name: string
+  state?: PlaybackState
+}
+const TestTitle: React.FC<TestTitleProps> = ({ name, state }) => {
+  const renderPrefix = () => {
     if (
       state === PlaybackStates.PREPARATION ||
       state === PlaybackStates.PLAYING
     ) {
       return (
-        <Color black bgYellow>
-          {' '}
-          RUNS{' '}
-        </Color>
+        <Text color="black" backgroundColor="bgYellow">
+          RUNS
+        </Text>
       )
     } else if (state === PlaybackStates.FINISHED) {
       return (
-        <Color black bgGreen>
-          {' '}
-          PASS{' '}
-        </Color>
+        <Text color="black" backgroundColor="bgGreen">
+          PASS
+        </Text>
       )
     } else if (
       state === PlaybackStates.FAILED ||
@@ -44,19 +46,19 @@ export default class Playback extends React.Component {
       state === PlaybackStates.ABORTED
     ) {
       return (
-        <Color black bgRed>
-          {' '}
-          FAIL{' '}
-        </Color>
+        <Text color="black" backgroundColor="bgRed">
+          FAIL
+        </Text>
       )
     }
+    return <Text />
   }
-  render() {
-    return (
-      <Box>
-        {this.renderPrefix(this.props.state)}{' '}
-        <Text bold>{this.props.name}</Text>
-      </Box>
-    )
-  }
+  return (
+    <Box>
+      {renderPrefix()}
+      <Text bold>{name}</Text>
+    </Box>
+  )
 }
+
+export default TestTitle

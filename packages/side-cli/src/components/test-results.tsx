@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // Licensed to the Software Freedom Conservancy (SFC) under one
 // or more contributor license agreements.  See the NOTICE file
 // distributed with this work for additional information
@@ -17,14 +15,22 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import fs from 'fs'
 import React from 'react'
-import { render } from 'ink'
-import PlaybackComponent from './components/playback'
-import { Playback, WebDriverExecutor } from '@seleniumhq/side-runtime'
+import { Box } from 'ink'
+import Step from './step'
+import { CommandShape } from '@seleniumhq/side-model'
 
-const projectPath = process.argv[2]
-const project = JSON.parse(fs.readFileSync(projectPath).toString())
-const executor = new WebDriverExecutor()
-const playback = new Playback({ executor, baseUrl: project.url })
-render(<PlaybackComponent project={project} playback={playback} />)
+export type TestResultsProps = {
+  commands: CommandShape[]
+  results: Record<string, any>
+}
+
+const TestResults: React.FC<TestResultsProps> = ({ commands, results }) => (
+  <Box flexDirection="column">
+    {commands.map((command) => (
+      <Step key={command.id} command={command} result={results[command.id]} />
+    ))}
+  </Box>
+)
+
+export default TestResults
