@@ -61,11 +61,10 @@ export default class DriverController {
       windowAPI: {
         setWindowSize: async (_executor, width, height) => {
           const window = this.session.windows.getLastPlaybackWindow()
-          const bounds = await window.getBounds()
+          const b = await window.getBounds()
           await window.setBounds({
-            x: bounds.x + Math.floor(bounds.width / 2) - Math.floor(width / 2),
-            y:
-              bounds.y + Math.floor(bounds.height / 2) - Math.floor(height / 2),
+            x: b.x + Math.floor(b.width / 2) - Math.floor(width / 2),
+            y: b.y + Math.floor(b.height / 2) - Math.floor(height / 2),
             height,
             width,
           })

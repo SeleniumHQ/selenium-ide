@@ -5,7 +5,7 @@ import React, { FC } from 'react'
 const StopButton: FC = () => (
   <Tooltip title="Stop" aria-label="stop">
     <StopIcon
-      className="button m-2"
+      className="button m-2 not-draggable"
       onClick={() => window.sideAPI.playback.stop()}
     />
   </Tooltip>

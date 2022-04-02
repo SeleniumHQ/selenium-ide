@@ -164,6 +164,7 @@ export type ArgNames = ArgTypes[keyof ArgTypes]['name']
 export interface ArgType {
   name: ArgNames
   description: string
+  isOptional?: boolean
 }
 
 export default argTypes

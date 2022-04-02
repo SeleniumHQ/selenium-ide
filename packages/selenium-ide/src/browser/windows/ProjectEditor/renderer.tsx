@@ -57,7 +57,7 @@ const ProjectTestCommandList = () => {
       <DndProvider backend={HTML5Backend}>
         <Box sx={{ display: 'flex' }}>
           <AppBar className="draggable" position="fixed" open={openDrawer}>
-            <Toolbar className="" variant="dense">
+            <Toolbar variant="dense">
               <TabPanelMulti indexes={[TESTS_TAB, SUITES_TAB]} value={tab}>
                 <IconButton
                   color="inherit"
@@ -83,12 +83,13 @@ const ProjectTestCommandList = () => {
               <TabPanel index={PROJECT_TAB} value={tab} />
             </Toolbar>
             <Tabs
-              value={tab}
-              onChange={(_e, v) => setTab(v)}
+              aria-label="Selenium IDE workflows"
+              className="not-draggable"
               indicatorColor="secondary"
+              onChange={(_e, v) => setTab(v)}
               textColor="inherit"
               variant="fullWidth"
-              aria-label="Selenium IDE workflows"
+              value={tab}
             >
               <Tab label="Tests" {...a11yProps(TESTS_TAB)} />
               <Tab label="Suites" {...a11yProps(SUITES_TAB)} />

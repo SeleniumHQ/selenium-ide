@@ -34,8 +34,5 @@
     "@seleniumhq/browser-info": "*",
     "@seleniumhq/get-driver": "*",
     "fs-extra": "^8.1.0"
-  },
-  "peerDependencies": {
-    "selenium-webdriver": "^4.1.0"
   }
 }

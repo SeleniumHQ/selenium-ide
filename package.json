@@ -74,6 +74,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.29.4",
     "identity-obj-proxy": "^3.0.0",
+    "jasmine": "^4.0.2",
+    "jasmine-core": "^4.0.1",
     "jest": "^27.5.1",
     "jest-cli": "27.5.1",
     "lerna": "^4.0.0",

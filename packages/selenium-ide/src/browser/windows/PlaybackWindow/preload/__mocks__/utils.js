@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const isFirefox = jest.fn()
 const isTest = true
 
-export { isFirefox, isTest }
+export { isTest }

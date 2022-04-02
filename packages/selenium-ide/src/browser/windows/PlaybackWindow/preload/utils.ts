@@ -15,19 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import parser from 'ua-parser-js'
-
 export const isTest = process.env.NODE_ENV === 'test'
-
-export const userAgent = parser(window.navigator.userAgent)
-
-export function isChrome() {
-  userAgent.browser.name === 'Chrome'
-}
-
-export function isFirefox() {
-  userAgent.browser.name === 'Firefox'
-}
 
 /**
  * Parses a Selenium locator, returning its type and the unprefixed locator

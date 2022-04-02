@@ -32,13 +32,13 @@ export default class ArgType<T extends Argument<any, any>[]> {
   }
 
   identify(value: ExtractArgument<T[number]>): T[number] {
-    const result = this.args.find(arg => arg.identify(value))
+    const result = this.args.find((arg) => arg.identify(value))
 
     if (!result) {
       throw new TypeError(
         `Unexpected input received, expected${
           this.args.length !== 1 ? ' one of' : ''
-        }${this.args.map(arg => ' ' + arg.name)}.`
+        }${this.args.map((arg) => ' ' + arg.name)}.`
       )
     }
 
