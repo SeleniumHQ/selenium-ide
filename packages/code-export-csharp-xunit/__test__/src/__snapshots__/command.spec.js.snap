@@ -1,0 +1,153 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command code emitter should emit 'assert selected label' command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"test\\"));
+  String value = element.GetAttribute(\\"value\\");
+  String locator = String.Format(\\"option[@value='%s']\\", \\"value\\");
+  String selectedText = element.FindElement(By.XPath(locator)).Text;
+  Assert.Equal(selectedText, \\"test\\");
+}"
+`;
+
+exports[`command code emitter should emit 'verify selected label' command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"test\\"));
+  String value = element.GetAttribute(\\"value\\");
+  String locator = String.Format(\\"option[@value='%s']\\", \\"value\\");
+  String selectedText = element.FindElement(By.XPath(locator)).Text;
+  Assert.Equal(selectedText, \\"test\\");
+}"
+`;
+
+exports[`command code emitter should emit \`assert alert\` command 1`] = `"Assert.Equal(driver.SwitchTo().Alert().Text, \\"an alert\\");"`;
+
+exports[`command code emitter should emit \`assert checked\` command 1`] = `"Assert.True(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
+
+exports[`command code emitter should emit \`assert confirmation\` command 1`] = `"Assert.Equal(driver.SwitchTo().Alert().Text, \\"a confirmation\\");"`;
+
+exports[`command code emitter should emit \`assert editable\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"text\\"));
+  Boolean isEditable = element.Enabled && element.GetAttribute(\\"readonly\\") == null;
+  Assert.True(isEditable);
+}"
+`;
+
+exports[`command code emitter should emit \`assert element not present\` command 1`] = `
+"{
+  IReadOnlyCollection<IWebElement> elements = driver.FindElements(By.Id(\\"element\\"));
+  Assert.True(elements.Count == 0);
+}"
+`;
+
+exports[`command code emitter should emit \`assert element present\` command 1`] = `
+"{
+  IReadOnlyCollection<IWebElement> elements = driver.FindElements(By.Id(\\"element\\"));
+  Assert.True(elements.Count > 0);
+}"
+`;
+
+exports[`command code emitter should emit \`assert not checked\` command 1`] = `"Assert.False(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
+
+exports[`command code emitter should emit \`assert not editable\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"text\\"));
+  Boolean isEditable = element.Enabled && element.GetAttribute(\\"readonly\\") == null;
+  Assert.False(isEditable);
+}"
+`;
+
+exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
+"{
+  String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.NotEqual(value, test);
+}"
+`;
+
+exports[`command code emitter should emit \`assert not text\` command 1`] = `"Assert.NotEqual(driver.FindElement(By.Id(\\"test\\")).Text, \\"text\\");"`;
+
+exports[`command code emitter should emit \`assert prompt\` command 1`] = `"Assert.Equal(driver.SwitchTo().Alert().Text, \\"a prompt\\");"`;
+
+exports[`command code emitter should emit \`assert selected value\` command 1`] = `
+"{
+  String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.Equal(value, \\"test\\");
+}"
+`;
+
+exports[`command code emitter should emit \`assert text\` command 1`] = `"Assert.Equal(driver.FindElement(By.Id(\\"test\\")).Text, \\"some text that should be here\\");"`;
+
+exports[`command code emitter should emit \`assert title\` command 1`] = `"Assert.Equal(driver.Title, \\"example title\\");"`;
+
+exports[`command code emitter should emit \`assert value\` command 1`] = `
+"{
+  String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.Equal(value, \\"test\\");
+}"
+`;
+
+exports[`command code emitter should emit \`assert\` command 1`] = `"Assert.Equal(vars[\\"varrrName\\"].ToString(), \\"blah\\");"`;
+
+exports[`command code emitter should emit \`verify checked\` command 1`] = `"Assert.True(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
+
+exports[`command code emitter should emit \`verify editable\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"text\\"));
+  Boolean isEditable = element.Enabled && element.GetAttribute(\\"readonly\\") == null;
+  Assert.True(isEditable);
+}"
+`;
+
+exports[`command code emitter should emit \`verify element not present\` command 1`] = `
+"{
+  IReadOnlyCollection<IWebElement> elements = driver.FindElements(By.Id(\\"element\\"));
+  Assert.True(elements.Count == 0);
+}"
+`;
+
+exports[`command code emitter should emit \`verify element present\` command 1`] = `
+"{
+  IReadOnlyCollection<IWebElement> elements = driver.FindElements(By.Id(\\"element\\"));
+  Assert.True(elements.Count > 0);
+}"
+`;
+
+exports[`command code emitter should emit \`verify not checked\` command 1`] = `"Assert.False(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
+
+exports[`command code emitter should emit \`verify not editable\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"text\\"));
+  Boolean isEditable = element.Enabled && element.GetAttribute(\\"readonly\\") == null;
+  Assert.False(isEditable);
+}"
+`;
+
+exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
+"{
+  String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.NotEqual(value, test);
+}"
+`;
+
+exports[`command code emitter should emit \`verify not text\` command 1`] = `"Assert.NotEqual(driver.FindElement(By.Id(\\"test\\")).Text, \\"text\\");"`;
+
+exports[`command code emitter should emit \`verify selected value\` command 1`] = `
+"{
+  String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.Equal(value, \\"test\\");
+}"
+`;
+
+exports[`command code emitter should emit \`verify text\` command 1`] = `"Assert.Equal(driver.FindElement(By.Id(\\"test\\")).Text, \\"some text that should be here\\");"`;
+
+exports[`command code emitter should emit \`verify title\` command 1`] = `"Assert.Equal(driver.Title, \\"example title\\");"`;
+
+exports[`command code emitter should emit \`verify value\` command 1`] = `
+"{
+  string value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.That(value, Is.EqualTo(\\"test\\"));
+}"
+`;
+
+exports[`command code emitter should emit \`verify\` command 1`] = `"Assert.Equal(vars[\\"varrrName\\"].ToString(), \\"blah\\");"`;

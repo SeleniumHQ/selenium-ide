@@ -1,0 +1,431 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command code emitter should emit 'assert selected label' command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"test\\"))
+  const locator = \`option[@value='\${await element.getAttribute(\\"value\\")}']\`
+  const selectedText = await element.findElement(By.xpath(locator)).getText()
+  assert(selectedText == \\"test\\")
+}"
+`;
+
+exports[`command code emitter should emit 'verify selected label' command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"test\\"))
+  const locator = \`option[@value='\${await element.getAttribute(\\"value\\")}']\`
+  const selectedText = await element.findElement(By.xpath(locator)).getText()
+  assert(selectedText == \\"test\\")
+}"
+`;
+
+exports[`command code emitter should emit \`add selection\` command 1`] = `
+"{
+  const dropdown = await driver.findElement(By.css(\\"select\\"))
+  await dropdown.findElement(By.xpath(\\"//option[. = 'A label']\\")).click()
+}"
+`;
+
+exports[`command code emitter should emit \`answer on visible prompt\` command 1`] = `
+"{
+  const alert = await driver.switchTo().alert()
+  await alert.sendKeys(\\"an answer\\")
+  await alert.accept()
+}"
+`;
+
+exports[`command code emitter should emit \`assert alert\` command 1`] = `"assert(await driver.switchTo().alert().getText() == \\"an alert\\")"`;
+
+exports[`command code emitter should emit \`assert checked\` command 1`] = `"assert(await driver.findElement(By.id(\\"check\\")).isSelected())"`;
+
+exports[`command code emitter should emit \`assert confirmation\` command 1`] = `"assert(await driver.switchTo().alert().getText() == \\"a confirmation\\")"`;
+
+exports[`command code emitter should emit \`assert editable\` command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"text\\"))
+  assert(await element.isEnabled())
+}"
+`;
+
+exports[`command code emitter should emit \`assert element not present\` command 1`] = `
+"{
+  const elements = await driver.findElements(By.id(\\"element\\"))
+  assert(!elements.length)
+}"
+`;
+
+exports[`command code emitter should emit \`assert element present\` command 1`] = `
+"{
+  const elements = await driver.findElements(By.id(\\"element\\"))
+  assert(elements.length)
+}"
+`;
+
+exports[`command code emitter should emit \`assert not checked\` command 1`] = `"assert(!await driver.findElement(By.id(\\"check\\")).isSelected())"`;
+
+exports[`command code emitter should emit \`assert not editable\` command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"text\\"))
+  assert(!await element.isEnabled())
+}"
+`;
+
+exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
+"{
+  const value = await driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\")
+  assert(value !== \\"test\\")
+}"
+`;
+
+exports[`command code emitter should emit \`assert not text\` command 1`] = `
+"{
+  const text = await driver.findElement(By.id(\\"test\\")).getText()
+  assert(text !== \\"text\\")
+}"
+`;
+
+exports[`command code emitter should emit \`assert prompt\` command 1`] = `"assert(await driver.switchTo().alert().getText() == \\"a prompt\\")"`;
+
+exports[`command code emitter should emit \`assert selected value\` command 1`] = `
+"{
+  const value = await driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\")
+  assert(value == \\"test\\")
+}"
+`;
+
+exports[`command code emitter should emit \`assert text\` command 1`] = `"assert(await driver.findElement(By.id(\\"test\\")).getText() == \\"some text that should be here\\")"`;
+
+exports[`command code emitter should emit \`assert title\` command 1`] = `"assert(await driver.getTitle() == \\"example title\\")"`;
+
+exports[`command code emitter should emit \`assert value\` command 1`] = `
+"{
+  const value = await driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\")
+  assert(value == \\"test\\")
+}"
+`;
+
+exports[`command code emitter should emit \`assert\` command 1`] = `"assert(vars[\\"varrrName\\"].toString() == \\"blah\\")"`;
+
+exports[`command code emitter should emit \`check\` command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"f\\"))
+  if (!(await element.isSelected())) await element.click()
+}"
+`;
+
+exports[`command code emitter should emit \`choose cancel on visible prompt\` command 1`] = `"await driver.switchTo().alert().dismiss()"`;
+
+exports[`command code emitter should emit \`choose ok on visible confirmation\` command 1`] = `"await driver.switchTo().alert().accept()"`;
+
+exports[`command code emitter should emit \`click at\` command 1`] = `"await driver.findElement(By.linkText(\\"button\\")).click()"`;
+
+exports[`command code emitter should emit \`click\` command 1`] = `"await driver.findElement(By.linkText(\\"button\\")).click()"`;
+
+exports[`command code emitter should emit \`close\` command 1`] = `"await driver.close()"`;
+
+exports[`command code emitter should emit \`do\` command 1`] = `
+Object {
+  "body": "do {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`double click at\` command 1`] = `
+"{
+  const element = await driver.findElement(By.linkText(\\"button\\"))
+  await driver.actions({ bridge: true}).doubleClick(element).perform()
+}"
+`;
+
+exports[`command code emitter should emit \`double click\` command 1`] = `
+"{
+  const element = await driver.findElement(By.linkText(\\"button\\"))
+  await driver.actions({ bridge: true}).doubleClick(element).perform()
+}"
+`;
+
+exports[`command code emitter should emit \`drag and drop to object\` command 1`] = `
+"{
+  const dragged = await driver.findElement(By.linkText(\\"dragged\\"))
+  const dropped = await driver.findElement(By.linkText(\\"dropped\\"))
+  await driver.actions({ bridge: true }).dragAndDrop(dragged, dropped).perform()
+}"
+`;
+
+exports[`command code emitter should emit \`echo\` command 1`] = `"console.log(\\"blah\\")"`;
+
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"console.log(vars[\\"blah\\"])"`;
+
+exports[`command code emitter should emit \`edit content\` command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"contentEditable\\"))
+  await driver.executeScript(\\"if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}\\", element)
+}"
+`;
+
+exports[`command code emitter should emit \`else if\` command 1`] = `
+Object {
+  "body": "} else if (!!await driver.executeScript(\\"return (true)\\")) {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`else\` command 1`] = `
+Object {
+  "body": "} else {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`end\` command 1`] = `
+Object {
+  "body": "}",
+  "endingLevel": 0,
+}
+`;
+
+exports[`command code emitter should emit \`execute async script\` command 1`] = `"vars[\\"myVar\\"] = await driver.executeAsyncScript(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\")"`;
+
+exports[`command code emitter should emit \`execute script\` command 1`] = `"vars[\\"myVar\\"] = await driver.executeScript(\\"javascript\\")"`;
+
+exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"vars[\\"myVar\\"] = await driver.executeScript(\\"return 'a'\\")"`;
+
+exports[`command code emitter should emit \`forEach\` command 1`] = `
+Object {
+  "body": "const collection = vars[\\"collection\\"]
+for (let i = 0; i < collection.length - 1; i++) {
+  vars[\\"iteratorVar\\"] = vars[\\"collection\\"][i]",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`if\` command 1`] = `
+Object {
+  "body": "if (!!await driver.executeScript(\\"return (true)\\")) {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`mouse down at\` event 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"button\\"))
+  await driver.actions({ bridge: true }).moveToElement(element).clickAndHold().perform()
+}"
+`;
+
+exports[`command code emitter should emit \`mouse down\` command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"button\\"))
+  await driver.actions({ bridge: true }).moveToElement(element).clickAndHold().perform()
+}"
+`;
+
+exports[`command code emitter should emit \`mouse move at\` event 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"button\\"))
+  await driver.actions({ bridge: true }).moveToElement(element).perform()
+}"
+`;
+
+exports[`command code emitter should emit \`mouse move\` event 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"button\\"))
+  await driver.actions({ bridge: true }).moveToElement(element).perform()
+}"
+`;
+
+exports[`command code emitter should emit \`mouse out\` event 1`] = `
+"{
+  const element = await driver.findElement(By.CSS_SELECTOR, \\"body\\")
+  await driver.actions({ bridge: true }).moveToElement(element, 0, 0).perform()
+}"
+`;
+
+exports[`command code emitter should emit \`mouse over\` event 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"button\\"))
+  await driver.actions({ bridge: true }).moveToElement(element).perform()
+}"
+`;
+
+exports[`command code emitter should emit \`mouse up at\` event 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"button\\"))
+  await driver.actions({ bridge: true }).moveToElement(element).release().perform()
+}"
+`;
+
+exports[`command code emitter should emit \`mouse up\` event 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"button\\"))
+  await driver.actions({ bridge: true }).moveToElement(element).release().perform()
+}"
+`;
+
+exports[`command code emitter should emit \`open\` with absolute url 1`] = `"await driver.get(\\"https://www.seleniumhq.org/\\")"`;
+
+exports[`command code emitter should emit \`pause\` command 1`] = `"await driver.sleep(300)"`;
+
+exports[`command code emitter should emit \`remove selection\` command 1`] = `
+"{
+  const dropdown = await driver.findElement(By.css(\\"select\\"))
+  await dropdown.findElement(By.xpath(\\"//option[. = 'A label']\\")).click()
+}"
+`;
+
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `"} while(!!await driver.executeScript(\\"return (true)\\"))"`;
+
+exports[`command code emitter should emit \`run script\` command 1`] = `"await driver.executeScript(\\"alert('test');alert('Im annoying');\\")"`;
+
+exports[`command code emitter should emit \`run\` command 1`] = `"sometestcase()"`;
+
+exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"await driver.switchTo().defaultContent()"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"await driver.switchTo().window(vars[\\"window\\"])"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `"await driver.switchTo().window(await driver.getAllWindowHandles()[12])"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by name 1`] = `"await driver.switchTo().window(\\"window\\")"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by the local keyword 1`] = `"await driver.switchTo().window(await driver.getAllWindowHandles()[0])"`;
+
+exports[`command code emitter should emit \`select\` command 1`] = `
+"{
+  const dropdown = await driver.findElement(By.css(\\"select\\"))
+  await dropdown.findElement(By.xpath(\\"//option[. = 'A label']\\")).click()
+}"
+`;
+
+exports[`command code emitter should emit \`send keys\` command 1`] = `"await driver.findElement(By.id(\\"input\\")).sendKeys(\\"example input\\")"`;
+
+exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"await driver.findElement(By.id(\\"input\\")).sendKeys(\\"SuperSecretPassword!\\", Key.ENTER)"`;
+
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"await driver.findElement(By.id(\\"input\\")).sendKeys(vars[\\"blah\\"])"`;
+
+exports[`command code emitter should emit \`set speed\` 1`] = `"console.log(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\")"`;
+
+exports[`command code emitter should emit \`setWindowSize\` 1`] = `"await driver.manage().window().setRect({ width: 1440, height: 1177 })"`;
+
+exports[`command code emitter should emit \`store attribute\` command 1`] = `
+"{
+  const attribute = await driver.findElement(By.xpath(\\"button[3]\\")).getAttribute(\\"id\\")
+  vars[\\"myVar\\"] = attribute
+}"
+`;
+
+exports[`command code emitter should emit \`store json\` command 1`] = `"vars[\\"myVar\\"] = JSON.parse('[{\\"a\\":0}]')"`;
+
+exports[`command code emitter should emit \`store text\` command 1`] = `"vars[\\"myVar\\"] = await driver.findElement(By.id(\\"someElement\\")).getText()"`;
+
+exports[`command code emitter should emit \`store title\` command 1`] = `"vars[\\"myVar\\"] = await driver.getTitle()"`;
+
+exports[`command code emitter should emit \`store value\` command 1`] = `"vars[\\"myVar\\"] = await driver.findElement(By.id(\\"someElement\\")).getAttribute(\\"value\\")"`;
+
+exports[`command code emitter should emit \`store window handle\` command 1`] = `"vars[\\"windowName\\"] = await driver.getWindowHandle()"`;
+
+exports[`command code emitter should emit \`store xpath count\` command 1`] = `"vars[\\"myVar\\"] = await driver.findElements(By.xpath(\\"button\\")).length"`;
+
+exports[`command code emitter should emit \`store\` command 1`] = `"vars[\\"myVar\\"] = \\"some value\\""`;
+
+exports[`command code emitter should emit \`submit\` command 1`] = `"raise Exception(\\"\`submit\` is not a supported command in Selenium Webdriver. Please re-record the step in the IDE.\\")"`;
+
+exports[`command code emitter should emit \`times\` command 1`] = `
+"const times = 5
+for(let i = 0; i < times; i++) {"
+`;
+
+exports[`command code emitter should emit \`type\` command 1`] = `"await driver.findElement(By.id(\\"input\\")).sendKeys(\\"example input\\")"`;
+
+exports[`command code emitter should emit \`uncheck\` command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"f\\"))
+  if (await element.isSelected()) await element.click()
+}"
+`;
+
+exports[`command code emitter should emit \`verify checked\` command 1`] = `"assert(await driver.findElement(By.id(\\"check\\")).isSelected())"`;
+
+exports[`command code emitter should emit \`verify editable\` command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"text\\"))
+  assert(await element.isEnabled())
+}"
+`;
+
+exports[`command code emitter should emit \`verify element not present\` command 1`] = `
+"{
+  const elements = await driver.findElements(By.id(\\"element\\"))
+  assert(!elements.length)
+}"
+`;
+
+exports[`command code emitter should emit \`verify element present\` command 1`] = `
+"{
+  const elements = await driver.findElements(By.id(\\"element\\"))
+  assert(elements.length)
+}"
+`;
+
+exports[`command code emitter should emit \`verify not checked\` command 1`] = `"assert(!await driver.findElement(By.id(\\"check\\")).isSelected())"`;
+
+exports[`command code emitter should emit \`verify not editable\` command 1`] = `
+"{
+  const element = await driver.findElement(By.id(\\"text\\"))
+  assert(!await element.isEnabled())
+}"
+`;
+
+exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
+"{
+  const value = await driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\")
+  assert(value !== \\"test\\")
+}"
+`;
+
+exports[`command code emitter should emit \`verify not text\` command 1`] = `
+"{
+  const text = await driver.findElement(By.id(\\"test\\")).getText()
+  assert(text !== \\"text\\")
+}"
+`;
+
+exports[`command code emitter should emit \`verify selected value\` command 1`] = `
+"{
+  const value = await driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\")
+  assert(value == \\"test\\")
+}"
+`;
+
+exports[`command code emitter should emit \`verify text\` command 1`] = `"assert(await driver.findElement(By.id(\\"test\\")).getText() == \\"some text that should be here\\")"`;
+
+exports[`command code emitter should emit \`verify title\` command 1`] = `"assert(await driver.getTitle() == \\"example title\\")"`;
+
+exports[`command code emitter should emit \`verify value\` command 1`] = `
+"{
+  const value = await driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\")
+  assert(value == \\"test\\")
+}"
+`;
+
+exports[`command code emitter should emit \`verify\` command 1`] = `"assert(vars[\\"varrrName\\"].toString() == \\"blah\\")"`;
+
+exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `"await driver.wait(until.elementIsEnabled(await driver.findElement(By.css(\\"#blah\\"))), 5000)"`;
+
+exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `"await driver.wait(until.elementIsDisabled(await driver.findElement(By.css(\\"#blah\\"))), 5000)"`;
+
+exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `"await driver.wait(until.stalenessOf(await driver.findElement(By.css(\\"#blah\\"))), 5000)"`;
+
+exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `"await driver.wait(until.elementIsNotVisible(await driver.findElement(By.css(\\"#blah\\"))), 5000)"`;
+
+exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `"await driver.wait(until.elementLocated(By.css(\\"#blah\\")), 5000)"`;
+
+exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `"await driver.wait(until.elementIsVisible(await driver.findElement(By.css(\\"#blah\\"))), 5000)"`;
+
+exports[`command code emitter should emit \`waitForText\` command 1`] = `"await driver.wait(until.elementTextIs(await driver.findElement(By.css(\\"#blah\\")), 'text'), 30000)"`;
+
+exports[`command code emitter should emit \`while\` command 1`] = `"while(!!await driver.executeScript(\\"return (true)\\")) {"`;
+
+exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
+"vars[\\"windowHandles\\"] = await driver.getAllWindowHandles()
+await driver.findElement(By.css(\\"button\\")).click()
+vars[\\"newWin\\"] = await waitForWindow(2000)"
+`;

@@ -1,0 +1,384 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command code emitter should emit 'assert selected label' command 1`] = `
+"element = self.driver.find_element(By.ID, \\"test\\")
+locator = \\"option[@value='{}']\\".format(element.get_attribute(\\"value\\"))
+selected_text = element.find_element(By.XPATH, locator).text
+assert selected_text == \\"test\\""
+`;
+
+exports[`command code emitter should emit 'verify selected label' command 1`] = `
+"element = self.driver.find_element(By.ID, \\"test\\")
+locator = \\"option[@value='{}']\\".format(element.get_attribute(\\"value\\"))
+selected_text = element.find_element(By.XPATH, locator).text
+assert selected_text == \\"test\\""
+`;
+
+exports[`command code emitter should emit \`add selection\` command 1`] = `
+"dropdown = self.driver.find_element(By.CSS_SELECTOR, \\"select\\")
+dropdown.find_element(By.XPATH, \\"//option[. = 'A label']\\").click()"
+`;
+
+exports[`command code emitter should emit \`answer on visible prompt\` command 1`] = `
+"alert = self.driver.switch_to.alert
+alert.send_keys(\\"an answer\\")
+alert.accept()"
+`;
+
+exports[`command code emitter should emit \`assert alert\` command 1`] = `"assert self.driver.switch_to.alert.text == \\"an alert\\""`;
+
+exports[`command code emitter should emit \`assert checked\` command 1`] = `"assert self.driver.find_element(By.ID, \\"check\\").is_selected() is True"`;
+
+exports[`command code emitter should emit \`assert confirmation\` command 1`] = `"assert self.driver.switch_to.alert.text == \\"a confirmation\\""`;
+
+exports[`command code emitter should emit \`assert editable\` command 1`] = `
+"element = self.driver.find_element(By.ID, \\"text\\")
+assert element.is_enabled() is True"
+`;
+
+exports[`command code emitter should emit \`assert element not present\` command 1`] = `
+"elements = self.driver.find_elements(By.ID, \\"element\\")
+assert len(elements) == 0"
+`;
+
+exports[`command code emitter should emit \`assert element present\` command 1`] = `
+"elements = self.driver.find_elements(By.ID, \\"element\\")
+assert len(elements) > 0"
+`;
+
+exports[`command code emitter should emit \`assert not checked\` command 1`] = `"assert self.driver.find_element(By.ID, \\"check\\").is_selected() is False"`;
+
+exports[`command code emitter should emit \`assert not editable\` command 1`] = `
+"element = self.driver.find_element(By.ID, \\"text\\")
+assert element.is_enabled() is False"
+`;
+
+exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
+"value = self.driver.find_element(By.ID, \\"select\\").get_attribute(\\"value\\")
+assert value != \\"test\\""
+`;
+
+exports[`command code emitter should emit \`assert not text\` command 1`] = `
+"text = self.driver.find_element(By.ID, \\"test\\").text
+assert text != \\"text\\""
+`;
+
+exports[`command code emitter should emit \`assert prompt\` command 1`] = `"assert self.driver.switch_to.alert.text == \\"a prompt\\""`;
+
+exports[`command code emitter should emit \`assert selected value\` command 1`] = `
+"value = self.driver.find_element(By.ID, \\"select\\").get_attribute(\\"value\\")
+assert value == \\"test\\""
+`;
+
+exports[`command code emitter should emit \`assert text\` command 1`] = `"assert self.driver.find_element(By.ID, \\"test\\").text == \\"some text that should be here\\""`;
+
+exports[`command code emitter should emit \`assert title\` command 1`] = `"assert self.driver.title == \\"example title\\""`;
+
+exports[`command code emitter should emit \`assert value\` command 1`] = `
+"value = self.driver.find_element(By.ID, \\"select\\").get_attribute(\\"value\\")
+assert value == \\"test\\""
+`;
+
+exports[`command code emitter should emit \`assert\` command 1`] = `"assert(self.vars[\\"varrrName\\"] == \\"blah\\")"`;
+
+exports[`command code emitter should emit \`check\` command 1`] = `
+"element = self.driver.find_element(By.ID, \\"f\\")
+if element.is_selected() != True: element.click()"
+`;
+
+exports[`command code emitter should emit \`choose cancel on visible prompt\` command 1`] = `"self.driver.switch_to.alert.dismiss()"`;
+
+exports[`command code emitter should emit \`choose ok on visible confirmation\` command 1`] = `"self.driver.switch_to.alert.accept()"`;
+
+exports[`command code emitter should emit \`click at\` command 1`] = `"self.driver.find_element(By.LINK_TEXT, \\"button\\").click()"`;
+
+exports[`command code emitter should emit \`click\` command 1`] = `"self.driver.find_element(By.LINK_TEXT, \\"button\\").click()"`;
+
+exports[`command code emitter should emit \`close\` command 1`] = `"self.driver.close()"`;
+
+exports[`command code emitter should emit \`do\` command 1`] = `
+Object {
+  "body": "condition = True
+while condition:",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`double click at\` command 1`] = `
+"element = self.driver.find_element(By.LINK_TEXT, \\"button\\")
+actions = ActionChains(self.driver)
+actions.double_click(element).perform()"
+`;
+
+exports[`command code emitter should emit \`double click\` command 1`] = `
+"element = self.driver.find_element(By.LINK_TEXT, \\"button\\")
+actions = ActionChains(self.driver)
+actions.double_click(element).perform()"
+`;
+
+exports[`command code emitter should emit \`drag and drop to object\` command 1`] = `
+"dragged = self.driver.find_element(By.LINK_TEXT, \\"dragged\\")
+dropped = self.driver.find_element(By.LINK_TEXT, \\"dropped\\")
+actions = ActionChains(self.driver)
+actions.drag_and_drop(dragged, dropped).perform()"
+`;
+
+exports[`command code emitter should emit \`echo\` command 1`] = `"print(\\"blah\\")"`;
+
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"print(\\"blah = {}\\".format(self.vars[\\"blah\\"]))"`;
+
+exports[`command code emitter should emit \`edit content\` command 1`] = `
+"element = self.driver.find_element(By.ID, \\"contentEditable\\")
+self.driver.execute_script(\\"if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}\\", element)"
+`;
+
+exports[`command code emitter should emit \`else if\` command 1`] = `
+Object {
+  "body": "elif self.driver.execute_script(\\"return (true)\\"):",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`else\` command 1`] = `
+Object {
+  "body": "else:",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`end\` command 1`] = `
+Object {
+  "endingLevel": 0,
+  "skipEmitting": true,
+}
+`;
+
+exports[`command code emitter should emit \`execute async script\` command 1`] = `"self.vars[\\"myVar\\"] = self.driver.execute_async_script(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\")"`;
+
+exports[`command code emitter should emit \`execute script\` command 1`] = `"self.vars[\\"myVar\\"] = self.driver.execute_script(\\"javascript\\")"`;
+
+exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"self.vars[\\"myVar\\"] = self.driver.execute_script(\\"return 'a'\\")"`;
+
+exports[`command code emitter should emit \`forEach\` command 1`] = `
+Object {
+  "body": "collection = self.vars[\\"collection\\"]
+for entry in collection:
+  self.vars[\\"iteratorVar\\"] = entry",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`if\` command 1`] = `
+Object {
+  "body": "if self.driver.execute_script(\\"return (true)\\"):",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`mouse down at\` event 1`] = `
+"element = self.driver.find_element(By.ID, \\"button\\")
+actions = ActionChains(self.driver)
+actions.move_to_element(element).click_and_hold().perform()"
+`;
+
+exports[`command code emitter should emit \`mouse down\` command 1`] = `
+"element = self.driver.find_element(By.ID, \\"button\\")
+actions = ActionChains(self.driver)
+actions.move_to_element(element).click_and_hold().perform()"
+`;
+
+exports[`command code emitter should emit \`mouse move at\` event 1`] = `
+"element = self.driver.find_element(By.ID, \\"button\\")
+actions = ActionChains(self.driver)
+actions.move_to_element(element).perform()"
+`;
+
+exports[`command code emitter should emit \`mouse move\` event 1`] = `
+"element = self.driver.find_element(By.ID, \\"button\\")
+actions = ActionChains(self.driver)
+actions.move_to_element(element).perform()"
+`;
+
+exports[`command code emitter should emit \`mouse out\` event 1`] = `
+"element = self.driver.find_element(By.CSS_SELECTOR, \\"body\\")
+actions = ActionChains(self.driver)
+actions.move_to_element(element, 0, 0).perform()"
+`;
+
+exports[`command code emitter should emit \`mouse over\` event 1`] = `
+"element = self.driver.find_element(By.ID, \\"button\\")
+actions = ActionChains(self.driver)
+actions.move_to_element(element).perform()"
+`;
+
+exports[`command code emitter should emit \`mouse up at\` event 1`] = `
+"element = self.driver.find_element(By.ID, \\"button\\")
+actions = ActionChains(self.driver)
+actions.move_to_element(element).release().perform()"
+`;
+
+exports[`command code emitter should emit \`mouse up\` event 1`] = `
+"element = self.driver.find_element(By.ID, \\"button\\")
+actions = ActionChains(self.driver)
+actions.move_to_element(element).release().perform()"
+`;
+
+exports[`command code emitter should emit \`open\` with absolute url 1`] = `"self.driver.get(\\"https://www.seleniumhq.org/\\")"`;
+
+exports[`command code emitter should emit \`pause\` command 1`] = `"time.sleep(0.3)"`;
+
+exports[`command code emitter should emit \`remove selection\` command 1`] = `
+"dropdown = self.driver.find_element(By.CSS_SELECTOR, \\"select\\")
+dropdown.find_element(By.XPATH, \\"//option[. = 'A label']\\").click()"
+`;
+
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `"condition = self.driver.execute_script(\\"return (true)\\")"`;
+
+exports[`command code emitter should emit \`run script\` command 1`] = `"self.driver.execute_script(\\"alert('test');alert('Im annoying');\\")"`;
+
+exports[`command code emitter should emit \`run\` command 1`] = `"self.sometestcase()"`;
+
+exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"self.driver.switch_to.default_content()"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"self.driver.switch_to.window(self.vars[\\"window\\"])"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `"self.driver.switch_to.window(self.driver.window_handles[12])"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by name 1`] = `"self.driver.switch_to.window(\\"window\\")"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by the local keyword 1`] = `"self.driver.switch_to.window(self.driver.window_handles[0])"`;
+
+exports[`command code emitter should emit \`select\` command 1`] = `
+"dropdown = self.driver.find_element(By.CSS_SELECTOR, \\"select\\")
+dropdown.find_element(By.XPATH, \\"//option[. = 'A label']\\").click()"
+`;
+
+exports[`command code emitter should emit \`send keys\` command 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(\\"example input\\")"`;
+
+exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(\\"SuperSecretPassword!\\", Keys.ENTER)"`;
+
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(self.vars[\\"blah\\"])"`;
+
+exports[`command code emitter should emit \`set speed\` 1`] = `"print(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\")"`;
+
+exports[`command code emitter should emit \`setWindowSize\` 1`] = `"self.driver.set_window_size(1440, 1177)"`;
+
+exports[`command code emitter should emit \`store attribute\` command 1`] = `
+"attribute = self.driver.find_element(By.XPATH, \\"button[3]\\").get_attribute(\\"id\\")
+self.vars[\\"myVar\\"] = attribute"
+`;
+
+exports[`command code emitter should emit \`store json\` command 1`] = `"self.vars[\\"myVar\\"] = json.loads('[{\\"a\\":0}]')"`;
+
+exports[`command code emitter should emit \`store text\` command 1`] = `"self.vars[\\"myVar\\"] = self.driver.find_element(By.ID, \\"someElement\\").text"`;
+
+exports[`command code emitter should emit \`store title\` command 1`] = `"self.vars[\\"myVar\\"] = self.driver.title"`;
+
+exports[`command code emitter should emit \`store value\` command 1`] = `"self.vars[\\"myVar\\"] = self.driver.find_element(By.ID, \\"someElement\\").get_attribute(\\"value\\")"`;
+
+exports[`command code emitter should emit \`store window handle\` command 1`] = `"self.vars[\\"windowName\\"] = self.driver.current_window_handle"`;
+
+exports[`command code emitter should emit \`store xpath count\` command 1`] = `"self.vars[\\"myVar\\"] = len(self.driver.find_elements(By.XPATH, \\"button\\"))"`;
+
+exports[`command code emitter should emit \`store\` command 1`] = `"self.vars[\\"myVar\\"] = \\"some value\\""`;
+
+exports[`command code emitter should emit \`submit\` command 1`] = `"raise Exception(\\"'submit' is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\")"`;
+
+exports[`command code emitter should emit \`times\` command 1`] = `
+Object {
+  "body": "for i in range(0, 5):",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`type\` command 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(\\"example input\\")"`;
+
+exports[`command code emitter should emit \`uncheck\` command 1`] = `
+"element = self.driver.find_element(By.ID, \\"f\\")
+if element.is_selected: element.click()"
+`;
+
+exports[`command code emitter should emit \`verify checked\` command 1`] = `"assert self.driver.find_element(By.ID, \\"check\\").is_selected() is True"`;
+
+exports[`command code emitter should emit \`verify editable\` command 1`] = `
+"element = self.driver.find_element(By.ID, \\"text\\")
+assert element.is_enabled() is True"
+`;
+
+exports[`command code emitter should emit \`verify element not present\` command 1`] = `
+"elements = self.driver.find_elements(By.ID, \\"element\\")
+assert len(elements) == 0"
+`;
+
+exports[`command code emitter should emit \`verify element present\` command 1`] = `
+"elements = self.driver.find_elements(By.ID, \\"element\\")
+assert len(elements) > 0"
+`;
+
+exports[`command code emitter should emit \`verify not checked\` command 1`] = `"assert self.driver.find_element(By.ID, \\"check\\").is_selected() is False"`;
+
+exports[`command code emitter should emit \`verify not editable\` command 1`] = `
+"element = self.driver.find_element(By.ID, \\"text\\")
+assert element.is_enabled() is False"
+`;
+
+exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
+"value = self.driver.find_element(By.ID, \\"select\\").get_attribute(\\"value\\")
+assert value != \\"test\\""
+`;
+
+exports[`command code emitter should emit \`verify not text\` command 1`] = `
+"text = self.driver.find_element(By.ID, \\"test\\").text
+assert text != \\"text\\""
+`;
+
+exports[`command code emitter should emit \`verify selected value\` command 1`] = `
+"value = self.driver.find_element(By.ID, \\"select\\").get_attribute(\\"value\\")
+assert value == \\"test\\""
+`;
+
+exports[`command code emitter should emit \`verify text\` command 1`] = `"assert self.driver.find_element(By.ID, \\"test\\").text == \\"some text that should be here\\""`;
+
+exports[`command code emitter should emit \`verify title\` command 1`] = `"assert self.driver.title == \\"example title\\""`;
+
+exports[`command code emitter should emit \`verify value\` command 1`] = `
+"value = self.driver.find_element(By.ID, \\"select\\").get_attribute(\\"value\\")
+assert value == \\"test\\""
+`;
+
+exports[`command code emitter should emit \`verify\` command 1`] = `"assert(self.vars[\\"varrrName\\"] == \\"blah\\")"`;
+
+exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, \\"#blah\\")))"`;
+
+exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `"WebDriverWait(self.driver, 5).until_not(expected_conditions.element_to_be_clickable((By.CSS_SELECTOR, \\"#blah\\")))"`;
+
+exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.invisibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
+
+exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.invisibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
+
+exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.presence_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
+
+exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `"WebDriverWait(self.driver, 5).until(expected_conditions.visibility_of_element_located((By.CSS_SELECTOR, \\"#blah\\")))"`;
+
+exports[`command code emitter should emit \`waitForText\` command 1`] = `"WebDriverWait(self.driver, 30).until(expected_conditions.text_to_be_present_in_element((By.CSS_SELECTOR, \\"#blah\\"), \\"text\\"))"`;
+
+exports[`command code emitter should emit \`while\` command 1`] = `
+Object {
+  "body": "while self.driver.execute_script(\\"return (true)\\"):",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
+"self.vars[\\"window_handles\\"] = self.driver.window_handles
+self.driver.find_element(By.CSS_SELECTOR, \\"button\\").click()
+self.vars[\\"newWin\\"] = self.wait_for_window(2000)"
+`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 1`] = `undefined`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 2`] = `undefined`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 3`] = `undefined`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 4`] = `undefined`;
