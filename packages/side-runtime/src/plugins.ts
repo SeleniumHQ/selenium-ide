@@ -9,10 +9,7 @@ export const loadPlugins = (
 ): PluginShape[] => {
   return project.plugins.map((pluginPath) => {
     const correctedPluginPath = pluginPath.startsWith('.')
-      ? path.join(
-          projectPath,
-          pluginPath
-        )
+      ? path.join(projectPath, pluginPath)
       : pluginPath
     const pluginFile = importer(correctedPluginPath)
     const plugin = pluginFile.default ? pluginFile.default : pluginFile
