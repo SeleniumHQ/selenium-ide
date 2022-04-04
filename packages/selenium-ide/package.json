@@ -56,6 +56,9 @@
       }
     ]
   },
+  "workspaces": {
+    "nohoist": ["**/electron-chromedriver"]
+  },
   "dependencies": {
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
@@ -63,11 +66,11 @@
     "@mui/icons-material": "^5.5.0",
     "@mui/material": "^5.5.0",
     "@mui/lab": "^5.0.0-alpha.72",
-    "@seleniumhq/get-driver": "^3.5.10",
-    "@seleniumhq/side-model": "^3.5.10",
+    "@seleniumhq/get-driver": "^4.0.0",
+    "@seleniumhq/side-model": "^4.0.0",
     "@seleniumhq/side-plugin-example": "*",
-    "@seleniumhq/side-recorder-postprocessor": "^3.5.10",
-    "@seleniumhq/side-runtime": "^3.5.10",
+    "@seleniumhq/side-recorder-postprocessor": "^4.0.0",
+    "@seleniumhq/side-runtime": "^4.0.0",
     "electron-context-menu": "^3.1.2",
     "electron-store": "^8.0.0",
     "fs-extra": "^8.1.0",

@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-recorder-postprocessor",
-  "version": "3.5.10",
+  "version": "4.0.0",
   "private": true,
   "description": "Selenium IDE recorder to test sequence processor",
   "author": "Tomer <tomer@corevo.io>",
@@ -24,7 +24,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "dependencies": {
-    "@seleniumhq/side-commons": "^3.5.10",
-    "@seleniumhq/side-model": "^3.5.10"
+    "@seleniumhq/side-commons": "^4.0.0",
+    "@seleniumhq/side-model": "^4.0.0"
   }
 }

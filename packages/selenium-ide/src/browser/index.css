@@ -204,6 +204,12 @@ body,
   user-select: none;
   cursor: move;
 }
+.not-draggable {
+  -webkit-app-region: no-drag;
+  user-select: none;
+  cursor: pointer;
+}
+
 /**
  * Navbars on panel UX
  */

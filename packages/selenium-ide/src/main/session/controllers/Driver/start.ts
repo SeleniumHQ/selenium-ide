@@ -16,6 +16,9 @@ export interface DriverStartFailure {
   success: false
 }
 
+const WebdriverDebugLog = vdebuglog('webdriver', COLOR_MAGENTA)
+const WebdriverDebugLogErr = vdebuglog('webdriver-error', COLOR_YELLOW)
+
 /**
  * This module is just an async function that does the following:
  *   1. Grab driver from the node_modules, as fetched by electron-driver
@@ -24,8 +27,6 @@ export interface DriverStartFailure {
  *   4. When Electron is quitting, close the child driver process
  */
 
-const WebdriverDebugLog = vdebuglog('webdriver', COLOR_MAGENTA)
-const WebdriverDebugLogErr = vdebuglog('webdriver-error', COLOR_YELLOW)
 export type StartDriver = (
   session: Session
 ) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
@@ -41,12 +42,10 @@ const startDriver: StartDriver =
               path.join(
                 __dirname,
                 '..',
-                '..',
-                '..',
                 'node_modules',
                 'electron-chromedriver',
                 'bin',
-                'chromedriver' + os.platform() === 'win32' ? '.exe' : ''
+                'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
               )
             )
           : path.resolve(

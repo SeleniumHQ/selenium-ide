@@ -10,7 +10,7 @@ export interface PlayListButtonProps {
 const PlayListButton: FC<PlayListButtonProps> = ({ state }) => (
   <Tooltip title="Play Suite" aria-label="play-suite">
     <PlaylistPlayIcon
-      className="button m-2"
+      className="button m-2 not-draggable"
       onClick={() => window.sideAPI.playback.play(state.activeSuiteID)}
     />
   </Tooltip>

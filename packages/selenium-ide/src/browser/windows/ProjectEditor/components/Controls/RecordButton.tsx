@@ -5,7 +5,7 @@ import React, { FC } from 'react'
 const RecordButton: FC = () => (
   <Tooltip title="Record" aria-label="record">
     <RecordIcon
-      className="button m-2"
+      className="button m-2 not-draggable"
       color="error"
       onClick={() => window.sideAPI.recorder.start()}
     />

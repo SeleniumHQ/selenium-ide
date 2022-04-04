@@ -1,0 +1,384 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command code emitter should emit 'assert selected label' command 1`] = `
+"element = @driver.find_element(:id, 'test')
+locator = \\"option[@value='\\" + element.attribute('value') + \\"']\\"
+selected_text = element.find_element(:xpath, locator).text
+expect(selected_text).to eq('test')"
+`;
+
+exports[`command code emitter should emit 'verify selected label' command 1`] = `
+"element = @driver.find_element(:id, 'test')
+locator = \\"option[@value='\\" + element.attribute('value') + \\"']\\"
+selected_text = element.find_element(:xpath, locator).text
+expect(selected_text).to eq('test')"
+`;
+
+exports[`command code emitter should emit \`add selection\` command 1`] = `
+"dropdown = @driver.find_element(:css, 'select')
+dropdown.find_element(:xpath, \\"//option[. = 'A label']\\").click"
+`;
+
+exports[`command code emitter should emit \`answer on visible prompt\` command 1`] = `
+"alert = @driver.switch_to.alert
+alert.send_keys('an answer')
+alert.accept()"
+`;
+
+exports[`command code emitter should emit \`assert alert\` command 1`] = `"expect(@driver.switch_to.alert.text).to eq('an alert')"`;
+
+exports[`command code emitter should emit \`assert checked\` command 1`] = `"expect(@driver.find_element(:id, 'check').selected?).to be_truthy"`;
+
+exports[`command code emitter should emit \`assert confirmation\` command 1`] = `"expect(@driver.switch_to.alert.text).to eq('a confirmation')"`;
+
+exports[`command code emitter should emit \`assert editable\` command 1`] = `
+"element = @driver.find_element(:id, 'text')
+expect(element.enabled?).to be_truthy"
+`;
+
+exports[`command code emitter should emit \`assert element not present\` command 1`] = `
+"elements = @driver.find_elements(:id, 'element')
+expect(elements.length).to eq(0)"
+`;
+
+exports[`command code emitter should emit \`assert element present\` command 1`] = `
+"elements = @driver.find_elements(:id, 'element')
+expect(elements.length).to be > 0"
+`;
+
+exports[`command code emitter should emit \`assert not checked\` command 1`] = `"expect(@driver.find_element(:id, 'check').selected?).to be_falsey"`;
+
+exports[`command code emitter should emit \`assert not editable\` command 1`] = `
+"element = @driver.find_element(:id, 'text')
+expect(element.enabled?).to be_falsey"
+`;
+
+exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
+"value = @driver.find_element(:id, 'select').attribute('value')
+expect(value).not_to eq('test')"
+`;
+
+exports[`command code emitter should emit \`assert not text\` command 1`] = `
+"text = @driver.find_element(:id, 'test').text
+expect(text).not_to eq('text')"
+`;
+
+exports[`command code emitter should emit \`assert prompt\` command 1`] = `"expect(@driver.switch_to.alert.text).to eq('a prompt')"`;
+
+exports[`command code emitter should emit \`assert selected value\` command 1`] = `
+"value = @driver.find_element(:id, 'select').attribute('value')
+expect(value).to eq('test')"
+`;
+
+exports[`command code emitter should emit \`assert text\` command 1`] = `"expect(@driver.find_element(:id, 'test').text).to eq('some text that should be here')"`;
+
+exports[`command code emitter should emit \`assert title\` command 1`] = `"expect(@driver.title).to eq('example title')"`;
+
+exports[`command code emitter should emit \`assert value\` command 1`] = `
+"value = @driver.find_element(:id, 'select').attribute('value')
+expect(value).to eq('test')"
+`;
+
+exports[`command code emitter should emit \`assert\` command 1`] = `"expect(@vars['varrrName']).to eq('blah')"`;
+
+exports[`command code emitter should emit \`check\` command 1`] = `
+"element = @driver.find_element(:id, 'f')
+element.click if !element.selected?"
+`;
+
+exports[`command code emitter should emit \`choose cancel on visible prompt\` command 1`] = `"@driver.switch_to.alert.dismiss"`;
+
+exports[`command code emitter should emit \`choose ok on visible confirmation\` command 1`] = `"@driver.switch_to.alert.accept"`;
+
+exports[`command code emitter should emit \`click at\` command 1`] = `"@driver.find_element(:link_text, 'button').click"`;
+
+exports[`command code emitter should emit \`click\` command 1`] = `"@driver.find_element(:link_text, 'button').click"`;
+
+exports[`command code emitter should emit \`close\` command 1`] = `"@driver.close"`;
+
+exports[`command code emitter should emit \`do\` command 1`] = `
+Object {
+  "body": "loop do",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`double click at\` command 1`] = `
+"element = @driver.find_element(:link_text, 'button')
+@driver.action.double_click(element).perform"
+`;
+
+exports[`command code emitter should emit \`double click\` command 1`] = `
+"element = @driver.find_element(:link_text, 'button')
+@driver.action.double_click(element).perform"
+`;
+
+exports[`command code emitter should emit \`drag and drop to object\` command 1`] = `
+"dragged = @driver.find_element(:link_text, 'dragged')
+dropped = @driver.find_element(:link_text, 'dropped')
+@driver.action.drag_and_drop(dragged, dropped).perform"
+`;
+
+exports[`command code emitter should emit \`echo\` command 1`] = `"puts('blah')"`;
+
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"puts(@vars['blah'])"`;
+
+exports[`command code emitter should emit \`edit content\` command 1`] = `
+"element = @driver.find_element(:id, 'contentEditable')
+@driver.execute_script(\\"if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}\\", element)"
+`;
+
+exports[`command code emitter should emit \`else if\` command 1`] = `
+Object {
+  "body": "elsif @driver.execute_script(\\"return (true)\\")",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`else\` command 1`] = `
+Object {
+  "body": "else",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`end\` command 1`] = `
+Object {
+  "body": "end",
+  "endingLevel": 0,
+}
+`;
+
+exports[`command code emitter should emit \`execute async script\` command 1`] = `"@vars['myVar'] = @driver.execute_async_script(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\")"`;
+
+exports[`command code emitter should emit \`execute script\` command 1`] = `"@vars['myVar'] = @driver.execute_script('javascript')"`;
+
+exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"@vars['myVar'] = @driver.execute_script('return \\\\'a\\\\'')"`;
+
+exports[`command code emitter should emit \`forEach\` command 1`] = `
+Object {
+  "body": "collection = @vars['collection']
+collection.each do |item|
+  @vars['iteratorVar'] = item",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`if\` command 1`] = `
+Object {
+  "body": "if @driver.execute_script(\\"return (true)\\")",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`mouse down at\` event 1`] = `
+"element = @driver.find_element(:id, 'button')
+@driver.action.move_to_element(element).click_and_hold.perform"
+`;
+
+exports[`command code emitter should emit \`mouse down\` command 1`] = `
+"element = @driver.find_element(:id, 'button')
+@driver.action.move_to_element(element).click_and_hold.perform"
+`;
+
+exports[`command code emitter should emit \`mouse move at\` event 1`] = `
+"element = @driver.find_element(:id, 'button')
+@driver.action.move_to_element(element).perform"
+`;
+
+exports[`command code emitter should emit \`mouse move\` event 1`] = `
+"element = self.driver.find_element(By.ID, \\"button\\")
+actions = ActionChains(self.driver)
+actions.move_to_element(element).perform()"
+`;
+
+exports[`command code emitter should emit \`mouse out\` event 1`] = `
+"element = @driver.find_element(By.CSS_SELECTOR, 'body')
+@driver.action.move_to_element(element, 0, 0).perform"
+`;
+
+exports[`command code emitter should emit \`mouse over\` event 1`] = `
+"element = @driver.find_element(:id, 'button')
+@driver.action.move_to_element(element).perform"
+`;
+
+exports[`command code emitter should emit \`mouse up at\` event 1`] = `
+"element = @driver.find_element(:id, 'button')
+@driver.action.move_to_element(element).release.perform"
+`;
+
+exports[`command code emitter should emit \`mouse up\` event 1`] = `
+"element = @driver.find_element(:id, 'button')
+@driver.action.move_to_element(element).release.perform"
+`;
+
+exports[`command code emitter should emit \`open\` with absolute url 1`] = `"@driver.get('https://www.seleniumhq.org/')"`;
+
+exports[`command code emitter should emit \`pause\` command 1`] = `"sleep(300)"`;
+
+exports[`command code emitter should emit \`remove selection\` command 1`] = `
+"dropdown = @driver.find_element(:css, 'select')
+dropdown.find_element(:xpath, \\"//option[. = 'A label']\\").click"
+`;
+
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `
+"  break if !@driver.execute_script(\\"return (true)\\")
+end"
+`;
+
+exports[`command code emitter should emit \`run script\` command 1`] = `"@driver.execute_script(\\"alert('test');alert('Im annoying');\\")"`;
+
+exports[`command code emitter should emit \`run\` command 1`] = `"sometestcase()"`;
+
+exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"@driver.switch_to.default_content"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"@driver.switch_to.window(@vars['window'])"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `"@driver.switch_to.window(@driver.window_handles[12])"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by name 1`] = `"@driver.switch_to.window('window')"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by the local keyword 1`] = `"@driver.switch_to.window(@driver.window_handles[0])"`;
+
+exports[`command code emitter should emit \`select\` command 1`] = `
+"dropdown = @driver.find_element(:css, 'select')
+dropdown.find_element(:xpath, \\"//option[. = 'A label']\\").click"
+`;
+
+exports[`command code emitter should emit \`send keys\` command 1`] = `"@driver.find_element(:id, 'input').send_keys('example input')"`;
+
+exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"@driver.find_element(:id, 'input').send_keys('SuperSecretPassword!', :enter)"`;
+
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"@driver.find_element(:id, 'input').send_keys(@vars['blah'])"`;
+
+exports[`command code emitter should emit \`set speed\` 1`] = `"print(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\")"`;
+
+exports[`command code emitter should emit \`setWindowSize\` 1`] = `"@driver.manage.resize_to(1440, 1177)"`;
+
+exports[`command code emitter should emit \`store attribute\` command 1`] = `
+"attribute = @driver.find_element(:xpath, 'button[3]').attribute('id')
+@vars['myVar'] = attribute"
+`;
+
+exports[`command code emitter should emit \`store json\` command 1`] = `"@vars['myVar'] = JSON.parse('[{\\"a\\":0}]')"`;
+
+exports[`command code emitter should emit \`store text\` command 1`] = `"@vars['myVar'] = @driver.find_element(:id, 'someElement').text"`;
+
+exports[`command code emitter should emit \`store title\` command 1`] = `"@vars['myVar'] = @driver.title"`;
+
+exports[`command code emitter should emit \`store value\` command 1`] = `"@vars['myVar'] = @driver.find_element(:id, 'someElement').attribute('value')"`;
+
+exports[`command code emitter should emit \`store window handle\` command 1`] = `"@vars['windowName'] = @driver.window_handle"`;
+
+exports[`command code emitter should emit \`store xpath count\` command 1`] = `"@vars['myVar'] = @driver.find_elements(:xpath, 'button').length"`;
+
+exports[`command code emitter should emit \`store\` command 1`] = `"@vars['myVar'] = 'some value'"`;
+
+exports[`command code emitter should emit \`submit\` command 1`] = `"raise \\"'submit' is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\""`;
+
+exports[`command code emitter should emit \`times\` command 1`] = `
+Object {
+  "body": "5.times do",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`type\` command 1`] = `"@driver.find_element(:id, 'input').send_keys('example input')"`;
+
+exports[`command code emitter should emit \`uncheck\` command 1`] = `
+"element = @driver.find_element(:id, 'f')
+element.click if element.selected?"
+`;
+
+exports[`command code emitter should emit \`verify checked\` command 1`] = `"expect(@driver.find_element(:id, 'check').selected?).to be_truthy"`;
+
+exports[`command code emitter should emit \`verify editable\` command 1`] = `
+"element = @driver.find_element(:id, 'text')
+expect(element.enabled?).to be_truthy"
+`;
+
+exports[`command code emitter should emit \`verify element not present\` command 1`] = `
+"elements = @driver.find_elements(:id, 'element')
+expect(elements.length).to eq(0)"
+`;
+
+exports[`command code emitter should emit \`verify element present\` command 1`] = `
+"elements = @driver.find_elements(:id, 'element')
+expect(elements.length).to be > 0"
+`;
+
+exports[`command code emitter should emit \`verify not checked\` command 1`] = `"expect(@driver.find_element(:id, 'check').selected?).to be_falsey"`;
+
+exports[`command code emitter should emit \`verify not editable\` command 1`] = `
+"element = @driver.find_element(:id, 'text')
+expect(element.enabled?).to be_falsey"
+`;
+
+exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
+"value = @driver.find_element(:id, 'select').attribute('value')
+expect(value).not_to eq('test')"
+`;
+
+exports[`command code emitter should emit \`verify not text\` command 1`] = `
+"text = @driver.find_element(:id, 'test').text
+expect(text).not_to eq('text')"
+`;
+
+exports[`command code emitter should emit \`verify selected value\` command 1`] = `
+"value = @driver.find_element(:id, 'select').attribute('value')
+expect(value).to eq('test')"
+`;
+
+exports[`command code emitter should emit \`verify text\` command 1`] = `"expect(@driver.find_element(:id, 'test').text).to eq('some text that should be here')"`;
+
+exports[`command code emitter should emit \`verify title\` command 1`] = `"expect(@driver.title).to eq('example title')"`;
+
+exports[`command code emitter should emit \`verify value\` command 1`] = `
+"value = @driver.find_element(:id, 'select').attribute('value')
+expect(value).to eq('test')"
+`;
+
+exports[`command code emitter should emit \`verify\` command 1`] = `"expect(@vars['varrrName']).to eq('blah')"`;
+
+exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { @driver.find_element(:css, '#blah').enabled? }"`;
+
+exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { !@driver.find_element(:css, '#blah').enabled? }"`;
+
+exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `
+"Selenium::WebDriver::Wait.new(timeout: 5).until do
+  begin
+    !@driver.find_element(:css, '#blah')
+  rescue Selenium::WebDriver::Error::NoSuchElementError
+    true
+  end
+end"
+`;
+
+exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { !@driver.find_element(:css, '#blah').displayed? }"`;
+
+exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { @driver.find_element(:css, '#blah') }"`;
+
+exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 5).until { @driver.find_element(:css, '#blah').displayed? }"`;
+
+exports[`command code emitter should emit \`waitForText\` command 1`] = `"Selenium::WebDriver::Wait.new(timeout: 30).until { @driver.find_element(:css, '#blah').text == \\"text\\" }"`;
+
+exports[`command code emitter should emit \`while\` command 1`] = `
+Object {
+  "body": "while @driver.execute_script(\\"return (true)\\") do",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
+"@vars['window_handles'] = @driver.window_handles
+@driver.find_element(:css, 'button').click
+@vars['newWin'] = wait_for_window(2000)"
+`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 1`] = `undefined`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 2`] = `undefined`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 3`] = `undefined`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 4`] = `undefined`;

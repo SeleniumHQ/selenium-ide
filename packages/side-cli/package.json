@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-cli",
-  "version": "3.5.10",
+  "version": "4.0.0",
   "private": true,
   "description": "Selenium IDE cli",
   "author": "Tomer <tomer@corevo.io>",
@@ -31,8 +31,8 @@
     "@babel/preset-react": "^7.0.0"
   },
   "dependencies": {
-    "@seleniumhq/side-model": "^3.5.10",
-    "@seleniumhq/side-runtime": "^3.5.10",
+    "@seleniumhq/side-model": "^4.0.0",
+    "@seleniumhq/side-runtime": "^4.0.0",
     "ink": "^3.2.0",
     "ink-select-input": "^4.2.1",
     "ink-spinner": "^4.0.3",

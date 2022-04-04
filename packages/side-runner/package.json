@@ -1,0 +1,47 @@
+{
+  "name": "@seleniumhq/side-runner",
+  "version": "4.0.0",
+  "description": "Run Selenium IDE projects in cli",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
+    "prepublishOnly": "yarn clean && yarn build",
+    "start": "node dist/index.js",
+    "watch": "tsc --watch"
+  },
+  "bin": {
+    "selenium-side-runner": "dist/index.js"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "keywords": [
+    "selenium",
+    "command",
+    "line"
+  ],
+  "license": "Apache-2.0",
+  "private": false,
+  "dependencies": {
+    "@seleniumhq/side-model": "^4.0.0",
+    "@seleniumhq/side-runtime": "^4.0.0",
+    "commander": "^9.1.0",
+    "glob": "^7.2.0",
+    "global-npm": "^0.5.0",
+    "jest-environment-selenium": "2.1.2",
+    "js-beautify": "1.14.2",
+    "js-yaml": "^4.1.0",
+    "rimraf": "^3.0.2",
+    "semver": "^7.3.5",
+    "winston": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/glob": "7.2.0",
+    "@types/js-beautify": "1.13.3",
+    "@types/js-yaml": "4.0.5",
+    "@types/rimraf": "3.0.2",
+    "@types/semver": "7.3.9",
+    "@types/winston": "2.4.4"
+  }
+}

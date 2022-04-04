@@ -6,3 +6,4 @@
 **/gen
 **/trace
 **/.eslintrc.js
+**/code-export-*

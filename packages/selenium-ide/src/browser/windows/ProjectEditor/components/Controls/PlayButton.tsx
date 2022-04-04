@@ -11,7 +11,7 @@ export interface PlayButtonProps {
 const PlayButton: FC<PlayButtonProps> = ({ state }) => (
   <Tooltip title="Play" aria-label="play">
     <PlayArrowIcon
-      className="button m-2"
+      className="button m-2 not-draggable"
       onClick={() => {
         state.playback.currentIndex === badIndex
           ? window.sideAPI.playback.play(state.activeTestID)

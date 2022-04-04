@@ -1,0 +1,493 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command code emitter should emit 'assert selected label' command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"test\\"));
+  string value = element.GetAttribute(\\"value\\");
+  string locator = string.Format(\\"option[@value='%s']\\", value);
+  string selectedText = element.FindElement(By.XPath(locator)).Text;
+  Assert.That(selectedText, Is.EqualTo(\\"test\\"));
+}"
+`;
+
+exports[`command code emitter should emit 'verify selected label' command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"test\\"));
+  string value = element.GetAttribute(\\"value\\");
+  string locator = string.Format(\\"option[@value='%s']\\", value);
+  string selectedText = element.FindElement(By.XPath(locator)).Text;
+  Assert.That(selectedText, Is.EqualTo(\\"test\\"));
+}"
+`;
+
+exports[`command code emitter should emit \`add selection\` command 1`] = `
+"{
+  var dropdown = driver.FindElement(By.CssSelector(\\"select\\"));
+  dropdown.FindElement(By.XPath(\\"//option[. = 'A label']\\")).Click();
+}"
+`;
+
+exports[`command code emitter should emit \`answer on visible prompt\` command 1`] = `undefined`;
+
+exports[`command code emitter should emit \`assert alert\` command 1`] = `"Assert.That(driver.SwitchTo().Alert().Text, Is.EqualTo(\\"an alert\\"));"`;
+
+exports[`command code emitter should emit \`assert checked\` command 1`] = `"Assert.True(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
+
+exports[`command code emitter should emit \`assert confirmation\` command 1`] = `"Assert.That(driver.SwitchTo().Alert().Text, Is.EqualTo(\\"a confirmation\\"));"`;
+
+exports[`command code emitter should emit \`assert editable\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"text\\"));
+  Boolean isEditable = element.Enabled && element.GetAttribute(\\"readonly\\") == null;
+  Assert.True(isEditable);
+}"
+`;
+
+exports[`command code emitter should emit \`assert element not present\` command 1`] = `
+"{
+  var elements = driver.FindElements(By.Id(\\"element\\"));
+  Assert.True(elements.Count == 0);
+}"
+`;
+
+exports[`command code emitter should emit \`assert element present\` command 1`] = `
+"var elements = driver.FindElements(By.Id(\\"element\\"));
+Assert.True(elements.Count > 0);"
+`;
+
+exports[`command code emitter should emit \`assert not checked\` command 1`] = `"Assert.False(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
+
+exports[`command code emitter should emit \`assert not editable\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"text\\"));
+  Boolean isEditable = element.Enabled && element.GetAttribute(\\"readonly\\") == null;
+  Assert.False(isEditable);
+}"
+`;
+
+exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
+"{
+  string value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.That(value, Is.Not.EqualTo(\\"test\\"));
+}"
+`;
+
+exports[`command code emitter should emit \`assert not text\` command 1`] = `"Assert.That(driver.FindElement(By.Id(\\"test\\")).Text, Is.Not.EqualTo(\\"text\\"));"`;
+
+exports[`command code emitter should emit \`assert prompt\` command 1`] = `"Assert.That(driver.SwitchTo().Alert().Text, Is.EqualTo(\\"a prompt\\"));"`;
+
+exports[`command code emitter should emit \`assert selected value\` command 1`] = `
+"{
+  string value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.That(value, Is.EqualTo(\\"test\\"));
+}"
+`;
+
+exports[`command code emitter should emit \`assert text\` command 1`] = `"Assert.That(driver.FindElement(By.Id(\\"test\\")).Text, Is.EqualTo(\\"some text that should be here\\"));"`;
+
+exports[`command code emitter should emit \`assert title\` command 1`] = `"Assert.That(driver.Title, Is.EqualTo(\\"example title\\"));"`;
+
+exports[`command code emitter should emit \`assert value\` command 1`] = `
+"{
+  string value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.That(value, Is.EqualTo(\\"test\\"));
+}"
+`;
+
+exports[`command code emitter should emit \`assert\` command 1`] = `"Assert.That(vars[\\"varrrName\\"].ToString(), Is.EqualTo(\\"blah\\"));"`;
+
+exports[`command code emitter should emit \`check\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"f\\"));
+  if (!element.Selected) {
+    element.Click();
+  }
+}"
+`;
+
+exports[`command code emitter should emit \`choose cancel on visible prompt\` command 1`] = `undefined`;
+
+exports[`command code emitter should emit \`choose ok on visible confirmation\` command 1`] = `undefined`;
+
+exports[`command code emitter should emit \`click at\` command 1`] = `"driver.FindElement(By.LinkText(\\"button\\")).Click();"`;
+
+exports[`command code emitter should emit \`click\` command 1`] = `"driver.FindElement(By.LinkText(\\"button\\")).Click();"`;
+
+exports[`command code emitter should emit \`close\` command 1`] = `"driver.Close();"`;
+
+exports[`command code emitter should emit \`do\` command 1`] = `
+Object {
+  "body": "do {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`double click at\` command 1`] = `
+"{
+  var element = driver.FindElement(By.LinkText(\\"button\\"));
+  Actions builder = new Actions(driver);
+  builder.DoubleClick(element).Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`double click\` command 1`] = `
+"{
+  var element = driver.FindElement(By.LinkText(\\"button\\"));
+  Actions builder = new Actions(driver);
+  builder.DoubleClick(element).Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`drag and drop to object\` command 1`] = `
+"{
+  var dragged = driver.FindElement(By.LinkText(\\"dragged\\"));
+  var dropped = driver.FindElement(By.LinkText(\\"dropped\\"));
+  Actions builder = new Actions(driver);
+  builder.DragAndDrop(dragged, dropped).Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`echo\` command 1`] = `"Console.WriteLine(\\"blah\\");"`;
+
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"Console.WriteLine(vars[\\"blah\\"].ToString());"`;
+
+exports[`command code emitter should emit \`edit content\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"contentEditable\\"));
+  js.ExecuteScript(\\"if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}\\", element);
+}"
+`;
+
+exports[`command code emitter should emit \`else if\` command 1`] = `
+Object {
+  "body": "} else if ((Boolean) js.ExecuteScript(\\"return (true)\\")) {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`else\` command 1`] = `
+Object {
+  "body": "} else {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`end\` command 1`] = `
+Object {
+  "body": "}",
+  "endingLevel": 0,
+}
+`;
+
+exports[`command code emitter should emit \`execute async script\` command 1`] = `"vars[\\"myVar\\"] = js.executeAsyncScript(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\");"`;
+
+exports[`command code emitter should emit \`execute script\` command 1`] = `"vars[\\"myVar\\"] = js.ExecuteScript(\\"javascript\\");"`;
+
+exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"vars[\\"myVar\\"] = js.ExecuteScript(\\"return 'a'\\");"`;
+
+exports[`command code emitter should emit \`forEach\` command 1`] = `
+Object {
+  "body": "var collectionEnum = ((IReadOnlyCollection<object>)vars[\\"collection\\"]).ToList().GetEnumerator();
+while (collectionEnum.MoveNext())
+{
+  vars[\\"iteratorVar\\"] = collectionEnum.Current;",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`if\` command 1`] = `
+Object {
+  "body": "if ((Boolean) js.ExecuteScript(\\"return (true)\\")) {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`mouse down at\` event 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"button\\"));
+  Actions builder = new Actions(driver);
+  builder.MoveToElement(element).ClickAndHold().Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`mouse down\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"button\\"));
+  Actions builder = new Actions(driver);
+  builder.MoveToElement(element).ClickAndHold().Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`mouse move at\` event 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"button\\"));
+  Actions builder = new Actions(driver);
+  builder.MoveToElement(element).Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`mouse out\` event 1`] = `
+"{
+  var element = driver.FindElement(By.tagName(\\"body\\"));
+  Actions builder = new Actions(driver);
+  builder.MoveToElement(element, 0, 0).Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`mouse over\` event 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"button\\"));
+  Actions builder = new Actions(driver);
+  builder.MoveToElement(element).Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`mouse up at\` event 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"button\\"));
+  Actions builder = new Actions(driver);
+  builder.MoveToElement(element).Release().Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`mouse up\` event 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"button\\"));
+  Actions builder = new Actions(driver);
+  builder.MoveToElement(element).Release().Perform();
+}"
+`;
+
+exports[`command code emitter should emit \`open\` with absolute url 1`] = `"driver.Navigate().GoToUrl(\\"https://www.seleniumhq.org/\\");"`;
+
+exports[`command code emitter should emit \`pause\` command 1`] = `
+"try {
+  Thread.Sleep(300);
+} catch (Exception e) {
+  Console.WriteLine(\\"{0} Exception caught.\\", e);
+}"
+`;
+
+exports[`command code emitter should emit \`remove selection\` command 1`] = `
+"{
+  var dropdown = driver.FindElement(By.CssSelector(\\"select\\"));
+  dropdown.FindElement(By.XPath(\\"//option[. = 'A label']\\")).Click();
+}"
+`;
+
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `"} while ((Boolean) js.ExecuteScript(\\"return (true)\\"));"`;
+
+exports[`command code emitter should emit \`run script\` command 1`] = `"js.ExecuteScript(\\"alert('test');alert('Im annoying');\\");"`;
+
+exports[`command code emitter should emit \`run\` command 1`] = `"sometestcase();"`;
+
+exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"driver.SwitchTo().DefaultContent();"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"driver.SwitchTo().Window(vars[\\"window\\"].ToString());"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `
+"{
+  ArrayList<string> handles = new ArrayList<string>(driver.WindowHandles);
+  driver.SwitchTo().Window(handles[12]);
+}"
+`;
+
+exports[`command code emitter should emit \`select window\` to select a window by name 1`] = `"driver.SwitchTo().Window(\\"window\\");"`;
+
+exports[`command code emitter should emit \`select window\` to select a window by the local keyword 1`] = `
+"{
+  ArrayList<string> handles = new ArrayList<string>(driver.WindowHandles());
+  driver.SwitchTo().Window(handles[0]);
+}"
+`;
+
+exports[`command code emitter should emit \`select\` command 1`] = `
+"{
+  var dropdown = driver.FindElement(By.CssSelector(\\"select\\"));
+  dropdown.FindElement(By.XPath(\\"//option[. = 'A label']\\")).Click();
+}"
+`;
+
+exports[`command code emitter should emit \`send keys\` command 1`] = `"driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"example input\\");"`;
+
+exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"SuperSecretPassword!\\" + Keys.Enter);"`;
+
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"driver.FindElement(By.Id(\\"input\\")).SendKeys(vars[\\"blah\\"].ToString());"`;
+
+exports[`command code emitter should emit \`set speed\` 1`] = `"Console.WriteLine(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\");"`;
+
+exports[`command code emitter should emit \`setWindowSize\` 1`] = `"driver.Manage().Window.Size = new System.Drawing.Size(1440, 1177);"`;
+
+exports[`command code emitter should emit \`store attribute\` command 1`] = `
+"{
+  var element = driver.FindElement(By.XPath(\\"button[3]\\"));
+  string attribute = element.GetAttribute(\\"id\\");
+  vars[\\"myVar\\"] = attribute;
+}"
+`;
+
+exports[`command code emitter should emit \`store json\` command 1`] = `"throw new System.Exception(\\"The \`storeJson\` command is not yet implemented for this language.\\");"`;
+
+exports[`command code emitter should emit \`store text\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElement(By.Id(\\"someElement\\")).Text;"`;
+
+exports[`command code emitter should emit \`store title\` command 1`] = `"vars[\\"myVar\\"] = driver.Title;"`;
+
+exports[`command code emitter should emit \`store value\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElement(By.Id(\\"someElement\\")).GetAttribute(\\"value\\");"`;
+
+exports[`command code emitter should emit \`store window handle\` command 1`] = `"vars[\\"windowName\\"] = driver.CurrentWindowHandle;"`;
+
+exports[`command code emitter should emit \`store xpath count\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElements(By.XPath(\\"button\\")).Count;"`;
+
+exports[`command code emitter should emit \`store\` command 1`] = `"vars[\\"myVar\\"] = \\"some value\\";"`;
+
+exports[`command code emitter should emit \`submit\` command 1`] = `"throw new System.Exception(\\"\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\");"`;
+
+exports[`command code emitter should emit \`times\` command 1`] = `
+Object {
+  "body": "var times = 5;
+for(int i = 0; i < times; i++) {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`type\` command 1`] = `"driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"example input\\");"`;
+
+exports[`command code emitter should emit \`uncheck\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"f\\"));
+  if (element.Selected) {
+    element.Click();
+  }
+}"
+`;
+
+exports[`command code emitter should emit \`verify checked\` command 1`] = `"Assert.True(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
+
+exports[`command code emitter should emit \`verify editable\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"text\\"));
+  Boolean isEditable = element.Enabled && element.GetAttribute(\\"readonly\\") == null;
+  Assert.True(isEditable);
+}"
+`;
+
+exports[`command code emitter should emit \`verify element not present\` command 1`] = `
+"{
+  var elements = driver.FindElements(By.Id(\\"element\\"));
+  Assert.True(elements.Count == 0);
+}"
+`;
+
+exports[`command code emitter should emit \`verify element present\` command 1`] = `
+"var elements = driver.FindElements(By.Id(\\"element\\"));
+Assert.True(elements.Count > 0);"
+`;
+
+exports[`command code emitter should emit \`verify not checked\` command 1`] = `"Assert.False(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
+
+exports[`command code emitter should emit \`verify not editable\` command 1`] = `
+"{
+  var element = driver.FindElement(By.Id(\\"text\\"));
+  Boolean isEditable = element.Enabled && element.GetAttribute(\\"readonly\\") == null;
+  Assert.False(isEditable);
+}"
+`;
+
+exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
+"{
+  string value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.That(value, Is.Not.EqualTo(\\"test\\"));
+}"
+`;
+
+exports[`command code emitter should emit \`verify not text\` command 1`] = `"Assert.That(driver.FindElement(By.Id(\\"test\\")).Text, Is.Not.EqualTo(\\"text\\"));"`;
+
+exports[`command code emitter should emit \`verify selected value\` command 1`] = `
+"{
+  string value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.That(value, Is.EqualTo(\\"test\\"));
+}"
+`;
+
+exports[`command code emitter should emit \`verify text\` command 1`] = `"Assert.That(driver.FindElement(By.Id(\\"test\\")).Text, Is.EqualTo(\\"some text that should be here\\"));"`;
+
+exports[`command code emitter should emit \`verify title\` command 1`] = `"Assert.That(driver.Title, Is.EqualTo(\\"example title\\"));"`;
+
+exports[`command code emitter should emit \`verify value\` command 1`] = `
+"{
+  string value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.That(value, Is.EqualTo(\\"test\\"));
+}"
+`;
+
+exports[`command code emitter should emit \`verify\` command 1`] = `"Assert.That(vars[\\"varrrName\\"].ToString(), Is.EqualTo(\\"blah\\"));"`;
+
+exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `
+"{
+  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(5));
+  wait.Until(driver => driver.FindElement(By.CssSelector(\\"#blah\\")).Enabled);
+}"
+`;
+
+exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `
+"{
+  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(5));
+  wait.Until(driver => !driver.FindElement(By.CssSelector(\\"#blah\\")).Enabled);
+}"
+`;
+
+exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `
+"{
+  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(5));
+  wait.Until(driver => driver.FindElements(By.CssSelector(\\"#blah\\")).Count == 0);
+}"
+`;
+
+exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `
+"{
+  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(5));
+  wait.Until(driver => !driver.FindElement(By.CssSelector(\\"#blah\\")).Displayed);
+}"
+`;
+
+exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `
+"{
+  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(5));
+  wait.Until(driver => driver.FindElements(By.CssSelector(\\"#blah\\")).Count > 0);
+}"
+`;
+
+exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `
+"{
+  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(5));
+  wait.Until(driver => driver.FindElement(By.CssSelector(\\"#blah\\")).Displayed);
+}"
+`;
+
+exports[`command code emitter should emit \`waitForText\` command 1`] = `
+"{
+  WebDriverWait wait = new WebDriverWait(driver, System.TimeSpan.FromSeconds(30));
+  wait.Until(driver => driver.FindElement(By.CssSelector(\\"#blah\\")).Text == \\"text\\");
+}"
+`;
+
+exports[`command code emitter should emit \`while\` command 1`] = `
+Object {
+  "body": "while ((Boolean) js.ExecuteScript(\\"return (true)\\")) {",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
+"vars[\\"WindowHandles\\"] = driver.WindowHandles;
+driver.FindElement(By.CssSelector(\\"button\\")).Click();
+vars[\\"newWin\\"] = waitForWindow(2000);"
+`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 1`] = `""`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 2`] = `""`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 3`] = `""`;
+
+exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 4`] = `""`;

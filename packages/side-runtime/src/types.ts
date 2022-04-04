@@ -3,6 +3,8 @@ import { CommandType } from '@seleniumhq/side-model/src/Commands'
 import { Fn } from '@seleniumhq/side-commons/src/types'
 import WebDriverExecutor, { WebDriverExecutorHooks } from './webdriver'
 
+export { Capabilities } from 'selenium-webdriver'
+
 export interface CommandNodeOptions {
   emitControlFlowEvent?: Fn
   isValidationDisabled?: boolean

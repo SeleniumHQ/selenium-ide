@@ -16,6 +16,9 @@
       "path": "./packages/side-cli"
     },
     {
+      "path": "./packages/side-code-export"
+    },
+    {
       "path": "./packages/side-commons"
     },
     {
@@ -29,6 +32,9 @@
     },
     {
       "path": "./packages/side-recorder-postprocessor"
+    },
+    {
+      "path": "./packages/side-runner"
     },
     {
       "path": "./packages/side-runtime"
