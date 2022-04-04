@@ -24,7 +24,7 @@ import codeExport, {
   _findTestByName,
 } from '../../src'
 import Command from '../../src/command'
-import { project as projectProcessor } from '@seleniumhq/side-utils'
+import { project as projectProcessor } from '@seleniumhq/side-code-export'
 
 function readFile(filename) {
   return JSON.parse(
@@ -34,7 +34,7 @@ function readFile(filename) {
         '..',
         '..',
         '..',
-        'side-utils',
+        'side-code-export',
         '__test__',
         'test-files',
         filename

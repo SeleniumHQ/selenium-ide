@@ -37,12 +37,13 @@ export type EmitterExtra = () => {
   generateMethodDeclaration: (name: string) => string
 }
 
+export type PrebuildEmitter = (target: string, value: string) => Promise<string>
 export interface LanguageEmitterOpts {
   emitter: {
     canEmit: (command: CommandShape) => boolean
     emit: (command: CommandShape) => ExportCommandShape | ExportCommandsShape
     extras?: Record<string, EmitterExtra>
-    emitters: Record<string, CommandShape>
+    emitters: Record<string, PrebuildEmitter>
     register: (command: CommandShape, emitter: any) => void
   }
   hooks: LanguageHookEmitters

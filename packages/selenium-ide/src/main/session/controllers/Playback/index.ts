@@ -35,8 +35,13 @@ export default class PlaybackController {
   }
 
   async resume() {
-    this.isPlaying = true
-    this.playback.resume()
+    if (this.playback) {
+      this.isPlaying = true
+      this.playback.resume()
+    } else {
+      const sessionState = await this.session.state.get()
+      await this.play(sessionState.state.activeTestID)
+    }
   }
 
   async play(testID: string, playRange = PlaybackController.defaultPlayRange) {

@@ -15,11 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import semver from 'semver'
+import semver, { SemVer } from 'semver'
 
-export default function Satisfies(strGolden, strVersion) {
-  const golden = semver.coerce(strGolden)
-  const version = semver.coerce(strVersion)
+export default function Satisfies(strGolden: string, strVersion: string) {
+  const golden = semver.coerce(strGolden) as SemVer
+  const version = semver.coerce(strVersion) as SemVer
   if (strGolden === strVersion) {
     return
   } else if (semver.satisfies(version, `^${semver.major(golden)}`)) {

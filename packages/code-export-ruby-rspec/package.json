@@ -21,6 +21,6 @@
     "@babel/preset-env": "^7.4.5"
   },
   "dependencies": {
-    "@seleniumhq/side-utils": "^4.0.0"
+    "@seleniumhq/side-code-export": "^4.0.0"
   }
 }

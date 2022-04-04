@@ -15,9 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { JSON, ProxyType } from './types'
+
 export default function ParseProxy(
-  type: string,
-  options: Record<string, string>
+  type: ProxyType,
+  options: Record<string, JSON>
 ) {
   if (type === 'direct' || type === 'system') {
     return {
@@ -44,7 +46,7 @@ export default function ParseProxy(
         'Proxy options were not passed to manual proxy (e.g. --proxy-options="http=localhost:321 ftp=localhost:4324")'
       )
     } else {
-      let opts: Record<string, string> = {}
+      let opts: Record<string, JSON> = {}
       if (options.http) opts.http = options.http
       if (options.https) opts.https = options.https
       if (options.ftp) opts.ftp = options.ftp
@@ -61,7 +63,7 @@ export default function ParseProxy(
       )
     } else {
       if (options.socksVersion) {
-        const ver = parseInt(options.socksVersion)
+        const ver = parseInt(options.socksVersion as string)
         if (ver) {
           return {
             proxyType: type,

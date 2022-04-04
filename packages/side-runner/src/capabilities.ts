@@ -15,7 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export function parseString(input: string) {
+import { JSON } from './types'
+
+export function parseString(input: string): Record<string, JSON> {
   const capabilities = {}
 
   matchStringPairs(input).forEach(({ key, value }) => {

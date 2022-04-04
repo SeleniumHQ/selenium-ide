@@ -85,9 +85,9 @@ export interface EmitCommandContext {
 }
 
 export interface ProcessedCommandEmitter {
-  (target?: string, value?: string): string
-  targetPreprocessor: Preprocessor
-  valuePreprocessor: Preprocessor
+  (target?: any, value?: any): string
+  targetPreprocessor?: Preprocessor
+  valuePreprocessor?: Preprocessor
 }
 
 export async function emitCommand(

@@ -15,9 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { EmitterContext, ProcessedCommandEmitter } from './emit'
 import { keysPreprocessor, scriptPreprocessor } from './preprocessor'
+import { LanguageEmitterOpts, PrebuildEmitter } from '../types'
 
-export function registerCommandEmitter({ command, emitter, emitters }) {
+export interface RegisterCommandEmitterInput {
+  command: string
+  emitter: PrebuildEmitter
+  emitters: LanguageEmitterOpts['emitter']['emitters']
+}
+
+export function registerCommandEmitter({
+  command,
+  emitter,
+  emitters,
+}: RegisterCommandEmitterInput) {
   if (!emitters[command]) {
     emitters[command] = emitter
   } else {
@@ -25,7 +37,9 @@ export function registerCommandEmitter({ command, emitter, emitters }) {
   }
 }
 
-export function registerPreprocessors(emitters) {
+export function registerPreprocessors(
+  emitters: Record<string, ProcessedCommandEmitter>
+) {
   Object.keys(emitters).forEach((emitter) => {
     switch (emitter) {
       case 'sendKeys':
@@ -47,7 +61,10 @@ export function registerPreprocessors(emitters) {
 export async function registerMethod(
   name: string,
   result: string[],
-  { generateMethodDeclaration, hooks }
+  {
+    generateMethodDeclaration,
+    hooks,
+  }: Pick<EmitterContext, 'generateMethodDeclaration' | 'hooks'>
 ) {
   let methodDeclaration = generateMethodDeclaration(name)
   methodDeclaration =

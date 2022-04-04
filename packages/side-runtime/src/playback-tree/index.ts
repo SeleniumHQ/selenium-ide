@@ -27,8 +27,8 @@ export { createPlaybackTree } // public API
 export { createCommandNodesFromCommandStack } // for testing
 
 export interface PlaybackTree {
-  startingCommandNode: CommandNode,
-  nodes: CommandNode[],
+  startingCommandNode: CommandNode
+  nodes: CommandNode[]
   containsControlFlow: boolean
 }
 
@@ -49,7 +49,7 @@ function createPlaybackTree(
 }
 
 function containsControlFlow(nodes: CommandNode[]) {
-  return !!nodes.filter(node => node.isControlFlow()).length
+  return !!nodes.filter((node) => node.isControlFlow()).length
 }
 
 function createCommandNodesFromCommandStack(
@@ -63,9 +63,13 @@ function createCommandNodesFromCommandStack(
   return connectCommandNodes(nodes)
 }
 
-function createCommandNodes(commandStack: CommandShape[], levels: number[], emitControlFlowEvent?: Fn): CommandNode[] {
+function createCommandNodes(
+  commandStack: CommandShape[],
+  levels: number[],
+  emitControlFlowEvent?: Fn
+): CommandNode[] {
   let commandNodes: CommandNode[] = []
-  commandStack.forEach(function(command, index) {
+  commandStack.forEach(function (command, index) {
     let node = new CommandNode(command, { emitControlFlowEvent })
     node.index = index
     node.level = levels[index]
@@ -77,7 +81,7 @@ function createCommandNodes(commandStack: CommandShape[], levels: number[], emit
 function connectCommandNodes(_commandNodeStack: CommandNode[]): CommandNode[] {
   let commandNodeStack = [..._commandNodeStack]
   let state = new State()
-  commandNodeStack.forEach(function(commandNode) {
+  commandNodeStack.forEach(function (commandNode) {
     let nextCommandNode = commandNodeStack[commandNode.index + 1]
     connectCommandNode({
       commandNode,
@@ -89,9 +93,19 @@ function connectCommandNodes(_commandNodeStack: CommandNode[]): CommandNode[] {
   return commandNodeStack
 }
 
-export type ConnectFn = (commandNode: CommandNode, _nextCommandNode: CommandNode, stack: CommandNode[], state?: any) => void;
+export type ConnectFn = (
+  commandNode: CommandNode,
+  _nextCommandNode: CommandNode,
+  stack: CommandNode[],
+  state?: any
+) => void
 
-const connectDefault: ConnectFn = (commandNode, _nextCommandNode, stack, state) => {
+const connectDefault: ConnectFn = (
+  commandNode,
+  _nextCommandNode,
+  stack,
+  state
+) => {
   let nextCommandNode
   if (
     ControlFlowCommandChecks.isIf(state.top()) &&
@@ -114,7 +128,12 @@ const connectDefault: ConnectFn = (commandNode, _nextCommandNode, stack, state) 
   connectNext(commandNode, nextCommandNode as CommandNode)
 }
 
-const trackBranchOpen: ConnectFn = (commandNode, nextCommandNode, _stack, state) => {
+const trackBranchOpen: ConnectFn = (
+  commandNode,
+  nextCommandNode,
+  _stack,
+  state
+) => {
   state.push({
     command: commandNode.command.command,
     level: commandNode.level,
@@ -124,7 +143,12 @@ const trackBranchOpen: ConnectFn = (commandNode, nextCommandNode, _stack, state)
     connectNext(commandNode, nextCommandNode)
 }
 
-const trackBranchClose: ConnectFn = (commandNode, nextCommandNode, stack, state) => {
+const trackBranchClose: ConnectFn = (
+  commandNode,
+  nextCommandNode,
+  stack,
+  state
+) => {
   state.pop()
   const top = state.top()
   let nextCommandNodeOverride
@@ -137,7 +161,7 @@ const trackBranchClose: ConnectFn = (commandNode, nextCommandNode, stack, state)
     nextCommandNodeOverride = stack[top.index]
   connectNext(
     commandNode,
-    nextCommandNodeOverride ? nextCommandNodeOverride : nextCommandNode,
+    nextCommandNodeOverride ? nextCommandNodeOverride : nextCommandNode
   )
 }
 
@@ -170,7 +194,12 @@ const connectDo: ConnectFn = (commandNode, nextCommandNode, stack, state) => {
   state.pop()
 }
 
-function findNextNodeBy(stack: CommandNode[], index: number, level: number, commandName?: string) {
+function findNextNodeBy(
+  stack: CommandNode[],
+  index: number,
+  level: number,
+  commandName?: string
+) {
   for (let i = index + 1; i < stack.length + 1; i++) {
     if (commandName) {
       if (

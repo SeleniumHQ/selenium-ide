@@ -22,6 +22,6 @@
   },
   "dependencies": {
     "@seleniumhq/code-export-csharp-commons": "^3.17.4",
-    "@seleniumhq/side-utils": "^4.0.0"
+    "@seleniumhq/side-code-export": "^4.0.0"
   }
 }

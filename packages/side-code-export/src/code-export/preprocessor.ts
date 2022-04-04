@@ -19,17 +19,22 @@ import stringEscape from '../string-escape'
 
 export type VariableLookup = (str: string) => string
 
+export interface ScriptShape {
+  script: string
+  argv: string[]
+}
+
 export type Preprocessor = (
   param: string,
   variableLookup: VariableLookup
-) => string
+) => string | string[] | ScriptShape
 
 export type PreprocessorOptions = {
   ignoreEscaping: boolean
 }
 
 export interface EscapeStringOptions extends PreprocessorOptions {
-  preprocessor: Preprocessor
+  preprocessor?: Preprocessor
 }
 
 function escapeString(
@@ -44,7 +49,7 @@ function escapeString(
 
 export function preprocessParameter(
   param: string,
-  preprocessor: Preprocessor,
+  preprocessor: Preprocessor | undefined,
   variableLookup: VariableLookup,
   { ignoreEscaping }: PreprocessorOptions
 ) {
@@ -58,7 +63,7 @@ export function defaultPreprocessor(
   param: string,
   variableLookup: VariableLookup
 ) {
-  if (!param) return
+  if (!param) return ''
   const _var = param.match(/\$\{(\w+)\}/)
   if (_var) {
     return param.replace(_var[0], variableLookup(_var[1]))
@@ -67,7 +72,7 @@ export function defaultPreprocessor(
   }
 }
 
-export function scriptPreprocessor(script: string) {
+export function scriptPreprocessor(script: string): ScriptShape {
   let value = script.replace(/^\s+/, '').replace(/\s+$/, '')
   let r2
   let parts = []
@@ -105,7 +110,10 @@ export function scriptPreprocessor(script: string) {
   }
 }
 
-export function keysPreprocessor(str: string, variableLookup: VariableLookup) {
+export function keysPreprocessor(
+  str: string,
+  variableLookup: VariableLookup
+): string[] {
   let keys = []
   let match = str.match(/\$\{\w+\}/g)
   if (!match) {

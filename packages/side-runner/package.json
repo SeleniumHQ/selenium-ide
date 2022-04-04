@@ -6,6 +6,7 @@
   "scripts": {
     "build": "babel -d dist src --ignore=src/__test__",
     "prepublishOnly": "yarn build",
+    "start": "node dist/index.js",
     "watch": "yarn build -w"
   },
   "bin": {
@@ -22,9 +23,12 @@
   "license": "Apache-2.0",
   "private": false,
   "dependencies": {
+    "@seleniumhq/side-model": "^4.0.0",
+    "@seleniumhq/side-runtime": "^4.0.0",
     "commander": "^9.1.0",
     "glob": "^7.2.0",
     "global-npm": "^0.5.0",
+    "jest-environment-selenium": "2.1.2",
     "js-beautify": "1.14.2",
     "js-yaml": "^4.1.0",
     "rimraf": "^3.0.2",

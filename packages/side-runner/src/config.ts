@@ -19,7 +19,7 @@ import fs from 'fs'
 import yaml from 'js-yaml'
 
 export function load(config: string) {
-  return yaml.safeLoad(fs.readFileSync(config))
+  return yaml.load(fs.readFileSync(config, 'utf8'))
 }
 
 export default {

@@ -21,7 +21,7 @@ import {
   ControlFlowCommandNames,
 } from '../../../selenium-ide/src/neo/models/Command'
 import { opts } from '../../src/index'
-import { codeExport as exporter } from '@seleniumhq/side-utils'
+import { codeExport as exporter } from '@seleniumhq/side-code-export'
 
 const commandPrefixPadding = opts.commandPrefixPadding
 

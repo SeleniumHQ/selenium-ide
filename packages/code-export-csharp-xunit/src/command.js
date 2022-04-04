@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-utils'
+import { codeExport as exporter } from '@seleniumhq/side-code-export'
 import { Command, location } from '@seleniumhq/code-export-csharp-commons'
 const emitters = { ...Command.emitters }
 
