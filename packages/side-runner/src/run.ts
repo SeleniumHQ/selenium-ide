@@ -37,7 +37,7 @@ export interface HoistedThings {
 
 const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
   const runTest = async (project: Project, test: TestShape) => {
-    logger.info(`Running ${test.name}`)
+    logger.info(`Running test ${test.name}`)
     const plugins = await loadPlugins(require, project.path, project)
     const customCommands = await getCustomCommands(plugins)
     const driver = new WebDriverExecutor({
@@ -70,7 +70,7 @@ const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
     EE.addListener(
       PlaybackEvents.PLAYBACK_STATE_CHANGED,
       ({ state }: { state: PlaybackState }) => {
-        console.log('Playing state changed', state)
+        logger.info(`Playing state changed ${state}`)
         switch (state) {
           case 'aborted':
           case 'errored':
@@ -78,15 +78,16 @@ const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
           case 'finished':
           case 'paused':
           case 'stopped':
-            console.log(
-              'Test completed!',
-              state === 'finished' ? 'Success' : 'Failure'
+            logger.info(
+              `Finished test ${test.name} ${
+                state === 'finished' ? 'Success' : 'Failure'
+              }`
             )
         }
       }
     )
     EE.addListener(PlaybackEvents.COMMAND_STATE_CHANGED, ({ id, state }) => {
-      console.log('Playing command state changed', id, state)
+      logger.info(`Playing command state changed ${id} ${state}`)
     })
     playback.play(test, {
       startingCommandIndex: 0,
@@ -94,7 +95,7 @@ const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
   }
 
   const runSuite = async (project: Project, suite: SuiteShape) => {
-    logger.info(`Running suite ${project.path}:`, suite.name)
+    logger.info(`Running suite ${suite.name}`)
     if (!project.suites.length) {
       throw new Error(
         `The suite ${suite.name} has no tests, add tests to the suite using the IDE.`
@@ -106,10 +107,11 @@ const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
         project.tests.find((t) => t.id === suite.tests[i]) as TestShape
       )
     }
+    logger.info(`Finished suite ${suite.name}`)
   }
 
   const runProject = async (project: Project) => {
-    logger.info(`Running ${project.path}`)
+    logger.info(`Running project ${project.name}`)
     if (!program.force) {
       let warning = Satisfies(project.version, '2.0')
       if (warning) {
@@ -127,7 +129,7 @@ const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
     for (let i = 0, ii = project.suites.length; i != ii; i++) {
       await runSuite(project, project.suites[i])
     }
-    logger.info(`Finished running ${project.path}:`)
+    logger.info(`Finished project ${project.name}`)
   }
 
   const runAll = async (projects: Project[]) => {

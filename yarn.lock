@@ -3106,11 +3106,6 @@
   resolved "https://registry.npmjs.org/@react-dnd/shallowequal/-/shallowequal-3.0.0.tgz"
   integrity sha512-1ELWQdJB2UrCXTKK5cCD9uGLLIwECLIEdttKA255owdpchtXohIjZBTlFJszwYi2ZKe2Do+QvUzsGyGCMNwbdw==
 
-"@seleniumhq/side-model@^3.5.10":
-  version "3.17.2"
-  resolved "https://registry.yarnpkg.com/@seleniumhq/side-model/-/side-model-3.17.2.tgz#7e4f8b3bf69856efa3816c1ebed53aea6a0cb7f6"
-  integrity sha512-vpqzx9aDm/rAvX8D/6+gYW4kln5DzkquZ5quOrZGgUWv5XK6NrQDoeWwdymYqZ4TF3L40azdQaUX6CdanRlsxQ==
-
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
   resolved "https://registry.npmjs.org/@sindresorhus/is/-/is-0.14.0.tgz"
@@ -9064,6 +9059,11 @@ jest-environment-node@^27.5.1:
     "@types/node" "*"
     jest-mock "^27.5.1"
     jest-util "^27.5.1"
+
+jest-environment-selenium@2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/jest-environment-selenium/-/jest-environment-selenium-2.1.2.tgz#8d9c2c9849e81189146e4e54153b5be2a5582627"
+  integrity sha512-eznAfmOFGgdflVgkEBT7P49Belbb8ijskRYwtufXA9eJ7AwX9HiQuQzEkddUDg+uRuoY2ErJXoKjMbYYX68Y7g==
 
 jest-get-type@^27.5.1:
   version "27.5.1"

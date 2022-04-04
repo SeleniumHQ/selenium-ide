@@ -23,7 +23,7 @@ import crypto from 'crypto'
 import util from 'util'
 import { Command } from 'commander'
 import glob from 'glob'
-import winston from 'winston'
+import { createLogger, format, transports } from 'winston'
 import Capabilities from './capabilities'
 import Config from './config'
 import ParseProxy from './proxy'
@@ -98,10 +98,17 @@ if (!program.args.length) {
   process.exit(1)
 }
 
-winston.level = program.debug ? 'debug' : 'info'
+const logger = createLogger({
+  level: program.debug ? 'debug' : 'info',
+  transports: [
+    new transports.Console({
+      format: format.combine(format.colorize(), format.simple()),
+    }),
+  ],
+})
 
 if (program.extract || program.run) {
-  winston.warn(
+  logger.warn(
     "This feature is used by Selenium IDE maintainers for debugging purposes, we hope you know what you're doing!"
   )
 }
@@ -126,7 +133,7 @@ const configFilePath = path.isAbsolute(confPath)
 try {
   Object.assign(configuration, Config.load(configFilePath))
 } catch (e) {
-  winston.debug('Could not load ' + configFilePath)
+  logger.debug('Could not load ' + configFilePath)
 }
 
 program.filter = program.filter || '*'
@@ -147,7 +154,7 @@ if (program.capabilities) {
   try {
     configuration.capabilities = Capabilities.parseString(program.capabilities)
   } catch (e) {
-    winston.debug('Failed to parse inline capabilities')
+    logger.debug('Failed to parse inline capabilities')
   }
 }
 
@@ -155,7 +162,7 @@ if (program.params) {
   try {
     configuration.params = Capabilities.parseString(program.params)
   } catch (e) {
-    winston.debug('Failed to parse additional params')
+    logger.debug('Failed to parse additional params')
   }
 }
 
@@ -168,7 +175,7 @@ if (program.proxyType) {
     const proxy = ParseProxy(program.proxyType, opts as Record<string, JSON>)
     Object.assign(configuration, proxy)
   } catch (e) {
-    winston.error((e as Error).message)
+    logger.error((e as Error).message)
     // eslint-disable-next-line no-process-exit
     process.exit(1)
   }
@@ -180,7 +187,7 @@ if (program.proxyType) {
     )
     Object.assign(configuration, proxy)
   } catch (e) {
-    winston.error((e as Error).message)
+    logger.error((e as Error).message)
     // eslint-disable-next-line no-process-exit
     process.exit(1)
   }
@@ -190,7 +197,7 @@ configuration.baseUrl = program.baseUrl
   ? program.baseUrl
   : configuration.baseUrl
 
-winston.debug(util.inspect(configuration))
+logger.debug(util.inspect(configuration))
 
 function handleQuit(_signal: string, code: number) {
   // eslint-disable-next-line no-process-exit
@@ -214,7 +221,7 @@ const projects: Project[] = [
 
 const runners = buildRunners({
   configuration,
-  logger: winston as unknown as Console,
+  logger: logger as unknown as Console,
   program,
 })
 

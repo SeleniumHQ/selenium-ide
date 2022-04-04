@@ -4,10 +4,11 @@
   "description": "Run Selenium IDE projects in cli",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "scripts": {
-    "build": "babel -d dist src --ignore=src/__test__",
-    "prepublishOnly": "yarn build",
+    "build": "tsc",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
+    "prepublishOnly": "yarn clean && yarn build",
     "start": "node dist/index.js",
-    "watch": "yarn build -w"
+    "watch": "tsc --watch"
   },
   "bin": {
     "selenium-side-runner": "dist/index.js"
