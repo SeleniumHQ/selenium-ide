@@ -42,8 +42,6 @@ const startDriver: StartDriver =
               path.join(
                 __dirname,
                 '..',
-                '..',
-                '..',
                 'node_modules',
                 'electron-chromedriver',
                 'bin',

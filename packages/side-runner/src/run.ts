@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Satisfies from './versioner'
 import {
   getCustomCommands,
   loadPlugins,
@@ -27,6 +26,8 @@ import {
 } from '@seleniumhq/side-runtime'
 import { WebDriverExecutorConstructorArgs } from '@seleniumhq/side-runtime/dist/webdriver'
 import { SuiteShape, TestShape } from '@seleniumhq/side-model'
+import * as path from 'path'
+import Satisfies from './versioner'
 import { Configuration, Project, SideRunnerAPI } from './types'
 
 export interface HoistedThings {
@@ -38,7 +39,11 @@ export interface HoistedThings {
 const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
   const runTest = async (project: Project, test: TestShape) => {
     logger.info(`Running test ${test.name}`)
-    const plugins = await loadPlugins(require, project.path, project)
+    const shortenedProjectPath = project.path
+      .split(path.sep)
+      .slice(0, -1)
+      .join(path.sep)
+    const plugins = await loadPlugins(require, shortenedProjectPath, project)
     const customCommands = await getCustomCommands(plugins)
     const driver = new WebDriverExecutor({
       capabilities:

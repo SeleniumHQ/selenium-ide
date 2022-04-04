@@ -10,7 +10,7 @@ export const loadPlugins = (
   return project.plugins.map((pluginPath) => {
     const correctedPluginPath = pluginPath.startsWith('.')
       ? path.join(
-          projectPath.split(path.sep).slice(0, -1).join(path.sep),
+          projectPath,
           pluginPath
         )
       : pluginPath
