@@ -7800,13 +7800,6 @@ global-modules@^2.0.0:
   dependencies:
     global-prefix "^3.0.0"
 
-global-npm@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/global-npm/-/global-npm-0.5.0.tgz#33458ad1413a7d0db0940af0dcba0a4f9a46a9d0"
-  integrity sha512-K+ixd0qX3l1rleairpGnJbEM97tazdscQ0pSLiJ0jnrRpyUw6XrfGRdEhT7Ba2exOLrzXGyvOjnfMsHzQ3DanA==
-  dependencies:
-    which latest
-
 global-prefix@^1.0.1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/global-prefix/-/global-prefix-1.0.2.tgz"
@@ -14391,13 +14384,6 @@ which@^1.2.14, which@^1.2.9, which@^1.3.1:
 which@^2.0.1, which@^2.0.2:
   version "2.0.2"
   resolved "https://registry.npmjs.org/which/-/which-2.0.2.tgz"
-  integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
-  dependencies:
-    isexe "^2.0.0"
-
-which@latest:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/which/-/which-2.0.2.tgz#7c6a8dd0a636a0327e10b59c9286eee93f3f51b1"
   integrity sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==
   dependencies:
     isexe "^2.0.0"
