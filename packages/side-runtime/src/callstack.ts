@@ -15,19 +15,21 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { TestShape } from "@seleniumhq/side-model"
-import { PlaybackTree } from "./playback-tree"
-import { CommandNode } from "./playback-tree/command-node"
+import { CommandShape, TestShape } from '@seleniumhq/side-model'
+import { PlaybackTree } from './playback-tree'
+import { CommandNode } from './playback-tree/command-node'
 
 const stack = Symbol('stack')
 
+export interface Caller {
+  position: CommandNode['next']
+  tree: PlaybackTree
+  commands: CommandShape[]
+}
+
 export interface CallShape {
   callee: Partial<TestShape>
-  caller?: {
-    position: CommandNode,
-    tree: PlaybackTree,
-    commands: TestShape['commands'],
-  }
+  caller?: Caller
 }
 
 export default class Callstack {
@@ -43,9 +45,9 @@ export default class Callstack {
     this[stack].push(procedure)
   }
 
-  unwind() {
+  unwind(): CallShape {
     if (!this.length) throw new Error('Call stack is empty')
-    return this[stack].pop()
+    return this[stack].pop() as CallShape
   }
 
   top() {

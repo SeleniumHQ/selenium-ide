@@ -32,7 +32,6 @@ export default class PluginsController {
   async onProjectLoaded() {
     const projectPath = this.session.projects.filepath as string
     const pluginPaths = await this.list()
-    console.log(projectPath)
     const plugins = loadPlugins(
       __non_webpack_require__,
       projectPath,

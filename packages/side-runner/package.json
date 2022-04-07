@@ -7,14 +7,14 @@
     "build": "tsc",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
     "prepublishOnly": "yarn clean && yarn build",
-    "start": "node dist/index.js",
+    "start": "node dist/bin.js",
     "watch": "tsc --watch"
   },
   "bin": {
-    "selenium-side-runner": "dist/index.js"
+    "selenium-side-runner": "dist/bin.js"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=14"
   },
   "keywords": [
     "selenium",
@@ -23,13 +23,17 @@
   ],
   "license": "Apache-2.0",
   "private": false,
+  "jest": {
+    "testMatch": ["**/*.js"]
+  },
   "dependencies": {
     "@seleniumhq/side-model": "^4.0.0",
     "@seleniumhq/side-runtime": "^4.0.0",
     "commander": "^9.1.0",
     "glob": "^7.2.0",
-    "global-npm": "^0.5.0",
-    "jest-environment-selenium": "2.1.2",
+    "jest": "^27.5.1",
+    "jest-cli": "^27.5.1",
+    "jest-each": "^27.5.1",
     "js-beautify": "1.14.2",
     "js-yaml": "^4.1.0",
     "rimraf": "^3.0.2",
@@ -38,6 +42,7 @@
   },
   "devDependencies": {
     "@types/glob": "7.2.0",
+    "@types/jest": "^27.4.1",
     "@types/js-beautify": "1.13.3",
     "@types/js-yaml": "4.0.5",
     "@types/rimraf": "3.0.2",

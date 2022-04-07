@@ -1,30 +1,22 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "Debug Main Process",
-            "type": "node",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
-            "windows": {
-                "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron"
-            },
-            "args": [
-                "./dist/main-bundle.js"
-            ],
-            // "program": "${workspaceRoot}/src/main/index.ts",
-            // "outFiles": [
-            //     "${workspaceRoot}/app/main.js"
-            // ],
-            "outputCapture": "std",
-            "sourceMaps": true,
-            "trace": true,
-            // "sourceMapPathOverrides": {
-            //     "webpack:///./*": "${workspaceFolder}/src/*",
-            //     "webpack:///src/*": "${workspaceFolder}/src/*"
-            // },
-            // "webRoot": "${workspaceFolder}/dist"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Selenium IDE",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+      },
+      "environment": [
+        { "name": "ELECTRON_RUN_AS_NODE", "value": "" },
+        { "name": "NODE_DEBUG", "value": "api,webdriver" },
+        { "name": "NODE_OPTIONS", "value": "--no-warnings" }
+      ],
+      "args": ["${workspaceFolder}/dist/main-bundle.js"],
+      "outputCapture": "std"
+    }
+  ]
 }

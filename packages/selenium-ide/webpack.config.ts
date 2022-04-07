@@ -4,17 +4,25 @@ import CopyWebpackPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import kebabCase from 'lodash/fp/kebabCase'
 import path from 'path'
-import { Configuration, WebpackPluginInstance } from 'webpack'
+import {
+  Configuration,
+  SourceMapDevToolPlugin,
+  WebpackPluginInstance,
+} from 'webpack'
 
 const commonPlugins: WebpackPluginInstance[] = [
   new ForkTsCheckerWebpackPlugin(),
+  new SourceMapDevToolPlugin({
+    filename: '[file].map',
+  }),
 ]
 const commonConfig: Pick<
   Configuration,
-  'externals' | 'mode' | 'module' | 'resolve' | 'output'
+  'devtool' | 'externals' | 'mode' | 'module' | 'resolve' | 'output'
 > = {
+  devtool: 'source-map',
   externals: ['utf-8-validate', 'bufferutil'],
-  mode: 'development',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   module: {
     rules: [
       {

@@ -1,0 +1,33 @@
+{
+  "folders": [
+    { "path": "../", "name": "root" },
+    { "path": "../packages/code-export-csharp-commons" },
+    { "path": "../packages/code-export-csharp-nunit" },
+    { "path": "../packages/code-export-csharp-xunit" },
+    { "path": "../packages/code-export-java-junit" },
+    { "path": "../packages/code-export-javascript-mocha" },
+    { "path": "../packages/code-export-python-pytest" },
+    { "path": "../packages/code-export-ruby-rspec" },
+    { "path": "../packages/get-driver" },
+    { "path": "../packages/selenium-ide" },
+    { "path": "../packages/side-cli" },
+    { "path": "../packages/side-code-export" },
+    { "path": "../packages/side-commons" },
+    { "path": "../packages/side-migrate" },
+    { "path": "../packages/side-model" },
+    { "path": "../packages/side-plugin-example" },
+    { "path": "../packages/side-recorder-postprocessor" },
+    { "path": "../packages/side-runner" },
+    { "path": "../packages/side-runtime" },
+    { "path": "../packages/side-testkit" },
+    { "path": "../packages/webdriver-testkit" }
+  ],
+  "settings": {
+    "files.exclude": {
+      "dist/": true,
+      "node_modules/": true,
+      "packages/": true,
+      "tsconfig.tsbuildinfo": true
+    }
+  }
+}

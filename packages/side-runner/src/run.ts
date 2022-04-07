@@ -20,23 +20,22 @@ import {
   loadPlugins,
   Playback,
   PlaybackEvents,
-  PlaybackState,
+  PlaybackEventShapes,
   Variables,
   WebDriverExecutor,
 } from '@seleniumhq/side-runtime'
 import { WebDriverExecutorConstructorArgs } from '@seleniumhq/side-runtime/dist/webdriver'
-import { SuiteShape, TestShape } from '@seleniumhq/side-model'
+import { CommandShape, SuiteShape, TestShape } from '@seleniumhq/side-model'
 import * as path from 'path'
 import Satisfies from './versioner'
-import { Configuration, Project, SideRunnerAPI } from './types'
+import { Configuration, Project } from './types'
 
 export interface HoistedThings {
   configuration: Configuration
   logger: Console
-  program: SideRunnerAPI
 }
 
-const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
+const buildRunners = ({ configuration, logger }: HoistedThings) => {
   const runTest = async (project: Project, test: TestShape) => {
     logger.info(`Running test ${test.name}`)
     const shortenedProjectPath = project.path
@@ -63,40 +62,63 @@ const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
       },
       server: configuration.server,
     })
-    const playback = new Playback({
-      baseUrl: project.url,
-      executor: driver,
-      getTestByName: (name: string) =>
-        project.tests.find((t) => t.name === name) as TestShape,
-      logger: console,
-      variables: new Variables(),
-    })
-    const EE = playback['event-emitter']
-    EE.addListener(
-      PlaybackEvents.PLAYBACK_STATE_CHANGED,
-      ({ state }: { state: PlaybackState }) => {
-        logger.info(`Playing state changed ${state}`)
-        switch (state) {
-          case 'aborted':
-          case 'errored':
-          case 'failed':
-          case 'finished':
-          case 'paused':
-          case 'stopped':
-            logger.info(
-              `Finished test ${test.name} ${
-                state === 'finished' ? 'Success' : 'Failure'
-              }`
-            )
+    return await playbackUntilComplete()
+    function playbackUntilComplete() {
+      return new Promise((resolve, reject) => {
+        const playback = new Playback({
+          baseUrl: project.url,
+          executor: driver,
+          getTestByName: (name: string) =>
+            project.tests.find((t) => t.name === name) as TestShape,
+          logger,
+          variables: new Variables(),
+        })
+        const onComplete = (failure: any) => {
+          logger.info('Completing with failure', failure)
+          EE.removeAllListeners()
+          playback.cleanup()
+          if (failure) {
+            return reject(failure)
+          } else {
+            return resolve(null)
+          }
         }
-      }
-    )
-    EE.addListener(PlaybackEvents.COMMAND_STATE_CHANGED, ({ id, state }) => {
-      logger.info(`Playing command state changed ${id} ${state}`)
-    })
-    playback.play(test, {
-      startingCommandIndex: 0,
-    })
+        const EE = playback['event-emitter']
+        EE.addListener(
+          PlaybackEvents.PLAYBACK_STATE_CHANGED,
+          ({ state }: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
+            logger.info(`Playing state changed ${state}`)
+            switch (state) {
+              case 'aborted':
+              case 'errored':
+              case 'failed':
+              case 'finished':
+              case 'paused':
+              case 'stopped':
+                logger.info(
+                  `Finished test ${test.name} ${
+                    state === 'finished' ? 'Success' : 'Failure'
+                  }`
+                )
+                onComplete(state !== 'finished')
+            }
+          }
+        )
+        EE.addListener(
+          PlaybackEvents.COMMAND_STATE_CHANGED,
+          ({ id, state }: PlaybackEventShapes['COMMAND_STATE_CHANGED']) => {
+            const cmd = test.commands.find((c) => c.id === id) as CommandShape
+            const niceString = [cmd.command, cmd.target, cmd.value]
+              .filter((v) => !!v)
+              .join('|')
+            logger.debug(`${state} ${niceString}`)
+          }
+        )
+        playback.play(test, {
+          startingCommandIndex: 0,
+        })
+      })
+    }
   }
 
   const runSuite = async (project: Project, suite: SuiteShape) => {
@@ -117,7 +139,7 @@ const buildRunners = ({ configuration, logger, program }: HoistedThings) => {
 
   const runProject = async (project: Project) => {
     logger.info(`Running project ${project.name}`)
-    if (!program.force) {
+    if (!configuration.force) {
       let warning = Satisfies(project.version, '2.0')
       if (warning) {
         logger.warn(warning)
