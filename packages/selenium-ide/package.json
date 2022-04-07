@@ -8,13 +8,11 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf dist files tsconfig.tsbuildinfo node_modules",
-    "copy:tsconfig": "cp ./tsconfig.json ./dist/tsconfig.json",
     "start": "electron dist/main-bundle.js",
     "build": "run-s build:webpack build:electron",
-    "build:electron:import": "tsc --build ./electron-import",
     "build:electron": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
-    "build:webpack": "webpack --mode=development",
-    "watch": "webpack --mode=development --watch"
+    "build:webpack": "webpack",
+    "watch": "webpack --watch"
   },
   "sideEffects": false,
   "main": "dist/main-bundle.js",

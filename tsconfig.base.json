@@ -1,11 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
+    "composite": true,
     "lib": ["es5", "es6", "es2017", "es2019", "dom", "dom.iterable"],
     "declaration": true,
     "declarationMap": true,
-    "composite": true,
     "strict": true,
     /* Dont fail over type things in node_modules */
     "skipLibCheck": true,
@@ -17,9 +15,11 @@
     "noFallthroughCasesInSwitch": true,
 
     /* Module Resolution Options */
-    "moduleResolution": "node",
     "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "target": "ESNext",
     "types": ["node", "jest"]
   }
 }

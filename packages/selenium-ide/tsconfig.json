@@ -1,32 +1,17 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": [
-    "src/**/*",
-    "scripts",
-    "../side-recorder/src/renderer/target-selector.ts"
-  ],
+  "include": ["src/**/*"],
   "compilerOptions": {
-    // "sourceMap": true,
-    "inlineSourceMap": true,
-    "inlineSources": true,
     "jsx": "react",
     "paths": {
-      "api/*": [
-        "./src/api/*"
-      ],
-      "browser/*": [
-        "./src/browser/*"
-      ],
-      "main/*": [
-        "./src/main/*"
-      ]
+      "api/*": ["./src/api/*"],
+      "browser/*": ["./src/browser/*"],
+      "main/*": ["./src/main/*"]
     },
     "outDir": "dist",
     "rootDir": "src",
-    "types": [
-      "electron",
-      "webpack-env"
-    ]
+    "sourceMap": false,
+    "types": ["electron", "webpack-env"]
   },
   "references": [
     {

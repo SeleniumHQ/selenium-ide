@@ -19,14 +19,14 @@ import EventEmitter from 'events'
 import { events, Fn } from '@seleniumhq/side-commons'
 import { createPlaybackTree, PlaybackTree } from './playback-tree'
 import { AssertionError, VerificationError } from './errors'
-import Callstack from './callstack'
+import Callstack, { Caller } from './callstack'
 import Variables from './variables'
 import { WebDriverExecutor } from '.'
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import { CommandNode, CommandType } from './playback-tree/command-node'
 
 const EE = 'event-emitter'
-const state = Symbol('state')
+const state = 'state'
 const DELAY_INTERVAL = 10
 
 export interface PlaybackConstructorArgs {
@@ -48,10 +48,19 @@ export interface ExtendedEventEmitter extends EventEmitter {
   emitControlFlowChange: Fn
 }
 
+export type RunningPromise = Promise<any>
+export type VaguePromise = (v?: unknown) => void
+export type VaguePromiseWrapper = {
+  res: VaguePromise
+  rej: VaguePromise
+}
+
 export interface PlayOptions {
   pauseImmediately?: boolean
   startingCommandIndex?: number
 }
+
+export type PlayTo = VaguePromiseWrapper & { command: CommandShape }
 
 export default class Playback {
   constructor({
@@ -75,7 +84,13 @@ export default class Playback {
       options
     )
     this.variables = variables || new Variables()
-    this[state] = {}
+    this[state] = {
+      aborting: false,
+      initialized: false,
+      isPlaying: false,
+      pausing: false,
+      stopping: false,
+    }
     // @ts-expect-error
     this[EE] = new EventEmitter()
     this[EE].emitCommandStateChange = (payload) => {
@@ -95,10 +110,20 @@ export default class Playback {
   options: PlaybackConstructorOptions
   variables: Variables;
   [state]: {
-    initialized?: boolean
-    lastSentCommandState?: PlaybackEventShapes['COMMAND_STATE_CHANGED']
+    aborting: boolean
+    callstack?: Callstack
     exitCondition?: keyof typeof PlaybackStatesPriorities
-    [key: string]: any
+    initialized: boolean
+    isPlaying: boolean
+    lastSentCommandState?: PlaybackEventShapes['COMMAND_STATE_CHANGED']
+    pausing: boolean
+    pausingResolve?: (v?: unknown) => void
+    playPromise?: RunningPromise
+    playTo?: PlayTo
+    resumeResolve?: VaguePromise
+    steps?: number
+    stepPromise?: VaguePromiseWrapper
+    stopping: boolean
   };
   [EE]: ExtendedEventEmitter
   initialized?: boolean
@@ -248,7 +273,7 @@ export default class Playback {
     this[state].stopping = true
 
     if (this[state].resumeResolve) {
-      const r = this[state].resumeResolve
+      const r = this[state].resumeResolve as VaguePromise
       this[state].resumeResolve = undefined
       r()
     } else {
@@ -257,7 +282,7 @@ export default class Playback {
 
     // play will throw but the user will catch it with this.play()
     // this.stop() should resolve once play finishes
-    await this[state].playPromise.catch(() => {})
+    await (this[state].playPromise as RunningPromise).catch(() => {})
   }
 
   async abort() {
@@ -265,7 +290,7 @@ export default class Playback {
     this[state].aborting = true
 
     if (this[state].resumeResolve) {
-      const r = this[state].resumeResolve
+      const r = this[state].resumeResolve as VaguePromise
       this[state].resumeResolve = undefined
       r()
     }
@@ -277,7 +302,7 @@ export default class Playback {
 
     // play will throw but the user will catch it with this.play()
     // this.abort() should resolve once play finishes
-    await this[state].playPromise.catch(() => {})
+    await (this[state].playPromise as RunningPromise).catch(() => {})
   }
 
   async cleanup() {
@@ -334,7 +359,7 @@ export default class Playback {
 
   _resume() {
     if (this[state].resumeResolve) {
-      const r = this[state].resumeResolve
+      const r = this[state].resumeResolve as VaguePromise
       this[state].resumeResolve = undefined
       r()
       this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
@@ -348,12 +373,15 @@ export default class Playback {
       ignoreBreakpoint: false,
     }
   ): Promise<void> {
-    if (!this.currentExecutingNode && this[state].callstack.length > 1) {
+    if (
+      !this.currentExecutingNode &&
+      (this[state].callstack as Callstack).length > 1
+    ) {
       this._unwind()
     }
     if (this.currentExecutingNode) {
       const command = this.currentExecutingNode.command
-      const callstackIndex = this[state].callstack.length - 1
+      const callstackIndex = (this[state].callstack as Callstack).length - 1
       this[EE].emitCommandStateChange({
         id: command.id,
         callstackIndex,
@@ -369,21 +397,23 @@ export default class Playback {
       } else if (this[state].steps !== undefined) {
         if (this[state].steps === 0) {
           this[state].steps = undefined
-          if (this[state].stepPromise) {
-            this[state].stepPromise.res()
+          const stepPromise = this[state].stepPromise
+          if (stepPromise) {
+            stepPromise.res()
           }
           await this._pause()
           return await this._executionLoop({ ignoreBreakpoint: true })
         }
+        // @ts-expect-error
         this[state].steps--
       }
 
+      const playTo = this[state].playTo
       if (
         (this.currentExecutingNode.command.isBreakpoint &&
           !ignoreBreakpoint &&
           !this.options.ignoreBreakpoints) ||
-        (this[state].playTo &&
-          this[state].playTo.command === this.currentExecutingNode.command)
+        (playTo && playTo.command === this.currentExecutingNode.command)
       ) {
         await this._break()
         return await this._executionLoop({ ignoreBreakpoint: true })
@@ -404,7 +434,7 @@ export default class Playback {
       try {
         result = await this._executeCommand(this.currentExecutingNode)
       } catch (err) {
-        console.error('Execute error', err)
+        // console.error('Execute error', err)
         if (err instanceof AssertionError) {
           this[EE].emitCommandStateChange({
             id: command.id,
@@ -529,12 +559,14 @@ export default class Playback {
     const tree = createPlaybackTree(test.commands, {
       emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
     })
-    const caller = {
-      position: (this.currentExecutingNode as CommandNode).next,
-      tree: this.playbackTree,
-      commands: this.commands,
+    const nextPosition = this.currentExecutingNode?.next as CommandNode
+    const caller: Caller = {
+      position: nextPosition,
+      tree: this.playbackTree as PlaybackTree,
+      commands: this.commands as CommandShape[],
     }
-    this[state].callstack.call({
+    const callstack = this[state].callstack as Callstack
+    callstack.call({
       callee: test,
       caller,
     })
@@ -549,7 +581,7 @@ export default class Playback {
 
   async _finishPlaying() {
     this[state].playPromise = undefined
-    this[state].isPlaying = undefined
+    this[state].isPlaying = false
     if (this[state].lastSentCommandState?.state === CommandStates.EXECUTING) {
       const { id, callstackIndex } = this[state]
         .lastSentCommandState as PlaybackEventShapes['COMMAND_STATE_CHANGED']
@@ -561,17 +593,18 @@ export default class Playback {
       })
     }
     this[state].lastSentCommandState = undefined
-    if (this[state].stepPromise) {
-      if (this[state].steps === 0) {
+    const { playTo, steps, stepPromise } = this[state]
+    if (stepPromise) {
+      if (steps === 0) {
         // the last step is the end of the test
-        this[state].stepPromise.res()
+        stepPromise.res()
       } else {
-        this[state].stepPromise.rej(new Error('Playback stopped prematurely'))
+        stepPromise.rej(new Error('Playback stopped prematurely'))
       }
       this[state].steps = undefined
     }
-    if (this[state].playTo) {
-      this[state].playTo.rej(
+    if (playTo) {
+      playTo.rej(
         new Error(
           "Playback finished before reaching the requested command, check to make sure control flow isn't preventing this"
         )
@@ -600,17 +633,18 @@ export default class Playback {
   async __pause() {
     // internal method to handle either breaking or pausing
     this[state].pausing = false
-    if (this[state].pausingResolve) {
-      const r = this[state].pausingResolve
+    const { pausingResolve, playTo } = this[state]
+    if (pausingResolve) {
+      const r = pausingResolve
       this[state].pausingResolve = undefined
       r()
     }
     if (
       this.currentExecutingNode &&
-      this[state].playTo &&
-      this.currentExecutingNode.command === this[state].playTo.command
+      playTo &&
+      this.currentExecutingNode.command === playTo.command
     ) {
-      this[state].playTo.res()
+      playTo.res()
     }
 
     await new Promise((res) => {
@@ -650,12 +684,14 @@ export default class Playback {
   }
 
   _unwind() {
-    const { callee, caller } = this[state].callstack.unwind()
+    const callstack = this[state].callstack as Callstack
+    const { callee, caller: _caller } = callstack.unwind()
     this[EE].emit(PlaybackEvents.CALL_STACK_CHANGED, {
       change: CallstackChange.UNWINDED,
       callee,
-      caller: this[state].callstack.top().callee,
+      caller: callstack.top().callee,
     })
+    const caller = _caller as Caller
     this.commands = caller.commands
     this.playbackTree = caller.tree
     this.currentExecutingNode = caller.position
@@ -688,11 +724,7 @@ export interface PlaybackEventShapes {
   CALL_STACK_CHANGED: {
     change: typeof CallstackChange[keyof typeof CallstackChange]
     callee: Pick<TestShape, 'commands'>
-    caller: {
-      position: CommandNode['next']
-      tree: PlaybackTree
-      commands: CommandShape[]
-    }
+    caller: Caller
   }
   CONTROL_FLOW_CHANGED: {
     commandId: string

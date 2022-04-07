@@ -34,7 +34,6 @@
     "jest": "^27.5.1",
     "jest-cli": "^27.5.1",
     "jest-each": "^27.5.1",
-    "jest-environment-selenium": "2.1.2",
     "js-beautify": "1.14.2",
     "js-yaml": "^4.1.0",
     "rimraf": "^3.0.2",
@@ -43,6 +42,7 @@
   },
   "devDependencies": {
     "@types/glob": "7.2.0",
+    "@types/jest": "^27.4.1",
     "@types/js-beautify": "1.13.3",
     "@types/js-yaml": "4.0.5",
     "@types/rimraf": "3.0.2",

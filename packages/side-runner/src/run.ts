@@ -20,7 +20,7 @@ import {
   loadPlugins,
   Playback,
   PlaybackEvents,
-  PlaybackState,
+  PlaybackEventShapes,
   Variables,
   WebDriverExecutor,
 } from '@seleniumhq/side-runtime'
@@ -70,13 +70,23 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
           executor: driver,
           getTestByName: (name: string) =>
             project.tests.find((t) => t.name === name) as TestShape,
-          logger: console,
+          logger,
           variables: new Variables(),
         })
+        const onComplete = (failure: any) => {
+          logger.info('Completing with failure', failure)
+          EE.removeAllListeners()
+          playback.cleanup()
+          if (failure) {
+            return reject(failure)
+          } else {
+            return resolve(null)
+          }
+        }
         const EE = playback['event-emitter']
         EE.addListener(
           PlaybackEvents.PLAYBACK_STATE_CHANGED,
-          ({ state }: { state: PlaybackState }) => {
+          ({ state }: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
             logger.info(`Playing state changed ${state}`)
             switch (state) {
               case 'aborted':
@@ -90,19 +100,13 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
                     state === 'finished' ? 'Success' : 'Failure'
                   }`
                 )
-                EE.removeAllListeners()
-                playback.cleanup()
-                if (state === 'finished') {
-                  return resolve(null)
-                } else {
-                  return reject()
-                }
+                onComplete(state !== 'finished')
             }
           }
         )
         EE.addListener(
           PlaybackEvents.COMMAND_STATE_CHANGED,
-          ({ id, state }) => {
+          ({ id, state }: PlaybackEventShapes['COMMAND_STATE_CHANGED']) => {
             const cmd = test.commands.find((c) => c.id === id) as CommandShape
             const niceString = [cmd.command, cmd.target, cmd.value]
               .filter((v) => !!v)
