@@ -1,9 +1,30 @@
-import { app, BrowserWindow, MenuItemConstructorOptions } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  MenuItemConstructorOptions,
+} from 'electron'
 import contextMenu from 'electron-context-menu'
 import store from './store'
 import createSession from './session'
 import { Session } from './types'
 import { ChildProcess } from 'child_process'
+
+ipcMain.handle('electron-unhandled.ERROR', async (evt, title, error) => {
+  console.error(evt, title, error)
+})
+
+// Capture and show unhandled exceptions
+process.on('unhandledRejection', function handleWarning(reason) {
+  console.log('[PROCESS] Unhandled Promise Rejection')
+  console.log('- - - - - - - - - - - - - - - - - - -')
+  console.log(reason)
+  console.log('- -')
+})
+
+process.on('uncaughtException', (error) => {
+  console.error('Unhandled Error', error)
+})
 
 // Enable local debugging
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
@@ -39,9 +60,9 @@ let allWindowsClosed = false
 // after all windows have been closed
 app.on('window-all-closed', () => {
   allWindowsClosed = true
-  if (process.platform !== 'darwin') {
-    app.quit()
-  }
+  // if (process.platform !== 'darwin') {
+  //   app.quit()
+  // }
 })
 
 // Getting things in a row so that re-activating an app with no windows

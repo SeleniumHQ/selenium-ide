@@ -15,7 +15,7 @@
         { "name": "NODE_DEBUG", "value": "api,webdriver" },
         { "name": "NODE_OPTIONS", "value": "--no-warnings" }
       ],
-      "args": ["${workspaceFolder}/dist/main-bundle.js"],
+      "args": ["--trace-uncaught", "${workspaceFolder}/dist/main-bundle.js"],
       "outputCapture": "std",
       "webRoot": "${workspaceFolder}/dist",
       "sourceMaps": true,
