@@ -10,7 +10,7 @@
     },
     "outDir": "dist",
     "rootDir": "src",
-    "sourceMap": false,
+    "sourceMap": true,
     "types": ["electron", "webpack-env"]
   },
   "references": [

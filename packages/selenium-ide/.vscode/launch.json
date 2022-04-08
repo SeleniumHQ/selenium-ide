@@ -17,10 +17,11 @@
       ],
       "args": ["${workspaceFolder}/dist/main-bundle.js"],
       "outputCapture": "std",
+      "webRoot": "${workspaceFolder}/dist",
+      "sourceMaps": true,
       "sourceMapPathOverrides": {
-        "webpack:///./~/*": "${webRoot}/node_modules/*",
-        "webpack:///src/*": "${webRoot}/*",
-        "webpack:///./*": "${webRoot}/*",
+        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
+        "webpack://?:*/*": "${workspaceFolder}/*"
       }
     }
   ]
