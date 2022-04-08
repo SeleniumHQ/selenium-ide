@@ -16,7 +16,12 @@
         { "name": "NODE_OPTIONS", "value": "--no-warnings" }
       ],
       "args": ["${workspaceFolder}/dist/main-bundle.js"],
-      "outputCapture": "std"
+      "outputCapture": "std",
+      "sourceMapPathOverrides": {
+        "webpack:///./~/*": "${webRoot}/node_modules/*",
+        "webpack:///src/*": "${webRoot}/*",
+        "webpack:///./*": "${webRoot}/*",
+      }
     }
   ]
 }
