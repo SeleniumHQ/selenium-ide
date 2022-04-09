@@ -9,27 +9,17 @@
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
       "windows": {
         "preLaunchTask": "stop chromedriver",
-        // "postDebugTask ": "stop chromedriver",
+        "postDebugTask ": {
+          "task": "stop chromedriver"
+        },
         "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
       },
       "environment": [
-        {
-          "name": "ELECTRON_RUN_AS_NODE",
-          "value": ""
-        },
-        {
-          "name": "NODE_DEBUG",
-          "value": "api,webdriver"
-        },
-        {
-          "name": "NODE_OPTIONS",
-          "value": "--no-warnings"
-        }
+        { "name": "ELECTRON_RUN_AS_NODE", "value": "" },
+        { "name": "NODE_DEBUG", "value": "api,webdriver" },
+        { "name": "NODE_OPTIONS", "value": "--no-warnings" }
       ],
-      "args": [
-        "--trace-uncaught",
-        "${workspaceFolder}/dist/main-bundle.js"
-      ],
+      "args": ["--trace-uncaught", "${workspaceFolder}/dist/main-bundle.js"],
       "outputCapture": "std",
       "webRoot": "${workspaceFolder}/dist",
       "sourceMaps": true,
