@@ -1,18 +1,9 @@
-import {
-  app,
-  BrowserWindow,
-  ipcMain,
-  MenuItemConstructorOptions,
-} from 'electron'
+import { app, BrowserWindow, MenuItemConstructorOptions } from 'electron'
 import contextMenu from 'electron-context-menu'
 import store from './store'
 import createSession from './session'
 import { Session } from './types'
 import { ChildProcess } from 'child_process'
-
-ipcMain.handle('electron-unhandled.ERROR', async (evt, title, error) => {
-  console.error(evt, title, error)
-})
 
 // Capture and show unhandled exceptions
 process.on('unhandledRejection', function handleWarning(reason) {
