@@ -1,0 +1,84 @@
+{
+  "id": "3be0bc0c-e709-450e-82da-2662ab918da7",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "830394bb-7ddd-47ba-808b-430ff182237d",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "4b7fe050-f171-4d55-acc0-82979b3e5614",
+        "b393b699-19ca-419e-9fce-c3966711fdab"
+      ],
+      "timeout": 30000
+    },
+    {
+      "id": "44565e34-48e7-4945-ac71-4ec5d619a562",
+      "name": "New Suite",
+      "persistSession": false,
+      "parallel": false,
+      "tests": [],
+      "timeout": 30000
+    },
+    {
+      "id": "ff9f21c6-49fc-4c20-97e9-80c612876853",
+      "name": "New Suite",
+      "persistSession": false,
+      "parallel": false,
+      "tests": [],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "4b7fe050-f171-4d55-acc0-82979b3e5614",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "94bf7bac-d2cb-48a5-89c0-b4da7722b6cd",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "b393b699-19ca-419e-9fce-c3966711fdab",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "11a5f709-2c94-4d43-8c00-83a38ccc80ff",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "4a91b433-f36b-4ab7-89fa-d0482bafd568",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "06a71e51-db0a-4fb0-a96e-f418cfb3ec68",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}
