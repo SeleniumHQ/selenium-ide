@@ -30,7 +30,6 @@ interface SideModule {
     number,
     { rej: (e: Error) => void; res: (result: any) => void }
   >
-  setActiveContext: (sessionId: string) => void
   setWindowHandle: (handle: string, sessionId: string) => void
 }
 
@@ -121,7 +120,7 @@ sideModule.getFrameLocation = () => {
     currentParentWindow = currentWindow.parent
     for (let idx = 0; idx < currentParentWindow.frames.length; idx++)
       if (currentParentWindow.frames[idx] === currentWindow) {
-        frameLocation = ':' + idx + frameLocation
+        frameLocation = '/' + idx + frameLocation
         currentWindow = currentParentWindow as Window & typeof globalThis
         break
       }
@@ -139,22 +138,6 @@ sideModule.setWindowHandle = async (handle, sessionId) => {
       args: {
         handle,
         sessionId,
-      },
-    },
-    '*'
-  )
-}
-
-sideModule.setActiveContext = async (sessionId) => {
-  let frameLocation = sideModule.getFrameLocation()
-  await sideModule.postMessage(
-    window,
-    {
-      direction: 'from-page-script',
-      action: 'set-frame',
-      args: {
-        sessionId,
-        frameLocation,
       },
     },
     '*'

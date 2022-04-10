@@ -232,7 +232,6 @@ describe('recording syncronizer webdriver', () => {
     await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
     const {
       hooks: { onWindowAppeared, onWindowSwitched },
-      syncActiveContext,
     } = createRecorderSyncronizerForWebdriverExecutor({
       sessionId: 'default',
       executor,
@@ -252,7 +251,6 @@ describe('recording syncronizer webdriver', () => {
     }
     await (await playback.play(test))()
     await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
-    await syncActiveContext()
 
     const { contextCalls } = await getPageScriptCalls(executor.driver)
 

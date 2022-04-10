@@ -7,10 +7,10 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "clean": "rm -rf dist files tsconfig.tsbuildinfo node_modules",
+    "clean": "rm -rf dist files tsconfig.tsbuildinfo node_modules build",
     "start": "electron dist/main-bundle.js",
     "build": "run-s build:webpack build:electron",
-    "build:electron": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "build:electron": "DEBUG=electron-builder CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
     "build:webpack": "webpack",
     "watch": "webpack --watch"
   },
@@ -28,12 +28,32 @@
   },
   "build": {
     "appId": "org.seleniumhq.selenium-ide",
+    "files": ["release"],
     "productName": "Selenium IDE",
-    "asarUnpack": "files/*",
     "mac": {
-      "target": "dmg",
+      "target": {
+        "target": "default",
+        "arch": [
+          "arm64",
+          "x64"
+        ]
+      },
       "category": "public.app-category.developer-tools",
       "darkModeSupport": true
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     },
     "win": {
       "target": "nsis"
@@ -41,6 +61,7 @@
     "linux": {
       "target": "AppImage"
     },
+    "nodeVersion": "16.x",
     "fileAssociations": [
       {
         "ext": "side",
@@ -68,7 +89,7 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@seleniumhq/get-driver": "^4.0.0",
     "@seleniumhq/side-model": "^4.0.0",
-    "@seleniumhq/side-plugin-example": "*",
+    "@seleniumhq/side-plugin-example": "^4.0.0",
     "@seleniumhq/side-recorder-postprocessor": "^4.0.0",
     "@seleniumhq/side-runtime": "^4.0.0",
     "electron-context-menu": "^3.1.2",

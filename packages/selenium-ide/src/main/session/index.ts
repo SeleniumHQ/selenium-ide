@@ -16,10 +16,10 @@ import TestsController from './controllers/Tests'
 import VariablesController from './controllers/Variables'
 import WindowsController from './controllers/Windows'
 
-export default async function createSession(
+export default function createSession(
   app: App,
   store: Storage
-): Promise<Session> {
+): Session {
   // Building our session object
   const partialSession: Partial<Session> = {
     app,
@@ -39,11 +39,16 @@ export default async function createSession(
   partialSession.tests = new TestsController(partialSession as Session)
   partialSession.variables = new VariablesController(partialSession as Session)
   partialSession.windows = new WindowsController(partialSession as Session)
-  partialSession.api = await Api(partialSession as Session)
-  const session = partialSession as Session
+  partialSession.api = Api(partialSession as Session)
 
-  // Get the underlying driver going
-  session.windows.open('chromedriver')
+  const session = partialSession as Session
+  session.sleep = () => {
+    session.driver.stopProcess()
+    session.projects.onProjectUnloaded()
+  }
+  session.wake = () => {
+    session.windows.open('chromedriver')
+  }
 
   return session
 }

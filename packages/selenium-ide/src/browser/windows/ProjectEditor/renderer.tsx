@@ -47,7 +47,6 @@ const ProjectTestCommandList = () => {
   const [_openDrawer, setOpenDrawer] = React.useState(true)
   const openDrawer = _openDrawer && tab !== 2
 
-  console.log(session)
   if (id == loadingID) {
     return null
   }

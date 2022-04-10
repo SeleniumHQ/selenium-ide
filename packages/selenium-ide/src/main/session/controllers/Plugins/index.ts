@@ -37,7 +37,7 @@ export default class PluginsController {
       projectPath,
       await this.session.projects.getActive()
     )
-    return plugins.map((plugin, index) => {
+    plugins.forEach((plugin, index) => {
       const pluginPath = pluginPaths[index]
       return this.run(pluginPath, plugin)
     })

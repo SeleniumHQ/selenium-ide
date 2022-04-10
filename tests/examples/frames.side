@@ -1,0 +1,44 @@
+{
+  "id": "5a2faad4-1f0f-4d2e-8a3a-b3119267844c",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "https://w3.org/",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "ba2e8b01-1d00-47a1-ba22-610d1505e593",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "bd08dc2c-21c4-4d4a-9a5d-fb3496917035"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "bd08dc2c-21c4-4d4a-9a5d-fb3496917035",
+      "name": "Frames",
+      "commands": [
+        {
+          "id": "6618b3b2-62b4-499c-a593-14f805674a37",
+          "command": "open",
+          "target": "/WAI/UA/TS/html401/cp0101/0101-FRAME-TEST.html",
+          "value": "",
+          "comment": "Uh oh"
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}

@@ -1,6 +1,6 @@
 import { FormHelperText } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
-import TextField from '@mui/material/TextField'
+import TextField from 'browser/components/UncontrolledTextField'
 import capitalize from 'lodash/fp/capitalize'
 import React, { FC } from 'react'
 import { CommandFieldProps } from '../types'

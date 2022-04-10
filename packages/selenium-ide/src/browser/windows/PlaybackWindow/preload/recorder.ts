@@ -50,24 +50,17 @@ export default class Recorder {
     this.attached = false
     this.frameLocation = ''
     this.inputTypes = Recorder.inputTypes
-    this.setActiveContext = this.setActiveContext.bind(this)
-    this.window.addEventListener('message', this.setActiveContext)
 
     this.setWindowHandle = this.setWindowHandle.bind(this)
     // @ts-expect-error
     this.window.addEventListener('message', this.setWindowHandle)
-    window.sideAPI.recorder.onFrameRecalculate.addListener(() =>
-      this.getFrameLocation()
+    window.sideAPI.recorder.onFrameRecalculate.addListener(async () =>
+      await this.getFrameLocation()
     )
     // @ts-expect-error
     this.recordingState = {}
-    window.sideAPI.recorder.requestAttach().then((shouldAttach) => {
-      console.log('Checking initial attach?', shouldAttach)
-      if (shouldAttach) {
-        this.addRecorderTracingAttribute()
-        this.attach()
-      }
-    })
+    this.addRecorderTracingAttribute()
+    this.attach()
     initFindSelect()
     // e.g., once on load
     this.getFrameLocation()
@@ -96,10 +89,7 @@ export default class Recorder {
       target,
       value,
       insertBeforeLastCommand,
-      frameLocation:
-        actualFrameLocation != undefined
-          ? actualFrameLocation
-          : this.frameLocation,
+      frameLocation: actualFrameLocation || this.frameLocation,
     }
     const plugins = this.plugins
     for (let i = 0, ii = plugins.length; i !== ii; i++) {
@@ -125,30 +115,6 @@ export default class Recorder {
     ) {
       window.sideAPI.recorder
         .setWindowHandle(event.data.args.sessionId, event.data.args.handle)
-        .then(() => {
-          const source = event.source as Window
-          source.postMessage(
-            {
-              id: event.data.id,
-              direction: 'from-content-script',
-            },
-            '*'
-          )
-        })
-    }
-  }
-
-  setActiveContext(event: MessageEvent) {
-    if (
-      event.data &&
-      event.data.direction === 'from-page-script' &&
-      event.data.action === 'set-frame'
-    ) {
-      window.sideAPI.recorder
-        .setActiveContext(
-          event.data.args.sessionId,
-          event.data.args.frameLocation
-        )
         .then(() => {
           const source = event.source as Window
           source.postMessage(
@@ -238,28 +204,8 @@ export default class Recorder {
   }
 
   // set frame id
-  getFrameLocation() {
-    let currentWindow = this.window
-    let currentParentWindow
-
-    while (currentWindow !== this.window.top) {
-      currentParentWindow = currentWindow.parent
-      if (!currentParentWindow.frames.length) {
-        break
-      }
-
-      for (let idx = 0; idx < currentParentWindow.frames.length; idx++) {
-        const frame = currentParentWindow.frames[idx]
-
-        if (frame === currentWindow) {
-          this.frameLocation = ':' + this.frameLocation
-          currentWindow = currentParentWindow
-          break
-        }
-      }
-    }
-    this.frameLocation = 'root' + this.frameLocation
-    return window.sideAPI.recorder.setFrameLocation(this.frameLocation)
+  async getFrameLocation() {
+    this.frameLocation = await window.sideAPI.recorder.getFrameLocation()
   }
 
   static eventHandlers: Record<string, EventHandler[]> = {}
