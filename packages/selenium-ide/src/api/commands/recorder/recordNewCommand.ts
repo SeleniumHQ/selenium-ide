@@ -1,12 +1,28 @@
 import { getActiveCommandIndex } from 'api/helpers/getActiveData'
 import { Mutator } from 'api/types'
 import browserHandler from 'browser/api/classes/Handler'
-import set from 'lodash/fp/set'
+import update from 'lodash/fp/update'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
 import { mutator as addStepMutator } from '../tests/addStep'
 
 export type Shape = Session['recorder']['recordNewCommand']
+
+const traverseFrame = (target: string) =>
+  update(
+    'state.recorder.activeFrame',
+    (frame) => {
+      const traversalKey = target.split('=').pop()
+      switch (traversalKey) {
+        case 'top':
+          return 'root'
+        case 'parent':
+          return frame.split('/').slice(0, -1).join('/')
+        default:
+          return `${frame}/${traversalKey}`
+      }
+    },
+  )
 
 export const mutator: Mutator<Shape> = (
   session,
@@ -24,7 +40,7 @@ export const mutator: Mutator<Shape> = (
     })
     index += 1
     if (command.command === 'selectFrame') {
-      return set('state.recorder.activeFrame', command.target, newSession)
+      return traverseFrame(command.target)(newSession)
     }
     return newSession
   }, session)
