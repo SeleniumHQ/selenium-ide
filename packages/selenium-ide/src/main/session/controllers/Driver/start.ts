@@ -27,32 +27,7 @@ const WebdriverDebugLogErr = vdebuglog('webdriver-error', COLOR_YELLOW)
  *   4. When Electron is quitting, close the child driver process
  */
 
-const getUnpackagedDriver = ({ browser, version }: BrowserInfo) =>
-  browser === 'electron'
-    ? path.resolve(
-        path.join(
-          __dirname,
-          '..',
-          'node_modules',
-          'electron-chromedriver',
-          'bin',
-          'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
-        )
-      )
-    : path.resolve(
-        path.join(
-          __dirname,
-          '..',
-          'files',
-          resolveDriverName({
-            browser,
-            platform: os.platform(),
-            version,
-          })
-        )
-      )
-
-const getPackagedDriver = ({ browser, version }: BrowserInfo) =>
+const getDriver = ({ browser, version }: BrowserInfo) =>
   (browser === 'electron'
     ? path.resolve(
         path.join(
@@ -81,13 +56,11 @@ const getPackagedDriver = ({ browser, version }: BrowserInfo) =>
 export type StartDriver = (
   session: Session
 ) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
-const startDriver: StartDriver = (session) => (info) =>
+const startDriver: StartDriver = () => (info) =>
   new Promise((resolve, reject) => {
     let initialized = false
     const args = ['--verbose']
-    const driverPath = session.app.isPackaged
-      ? getPackagedDriver(info)
-      : getUnpackagedDriver(info)
+    const driverPath = getDriver(info)
     if (fs.existsSync(driverPath)) {
       const driver = spawn(driverPath.replace(/\s/g, '\\ '), args, {
         env: {},
