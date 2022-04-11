@@ -19,7 +19,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "ESNext",
+    "target": "ES2021",
     "types": ["node", "jest"]
   }
 }

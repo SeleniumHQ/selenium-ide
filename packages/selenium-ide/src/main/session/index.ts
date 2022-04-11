@@ -12,6 +12,7 @@ import ProjectsController from './controllers/Projects'
 import RecorderController from './controllers/Recorder'
 import StateController from './controllers/State'
 import SuitesController from './controllers/Suites'
+import SystemController from './controllers/System'
 import TestsController from './controllers/Tests'
 import VariablesController from './controllers/Variables'
 import WindowsController from './controllers/Windows'
@@ -36,6 +37,7 @@ export default function createSession(
   partialSession.recorder = new RecorderController(partialSession as Session)
   partialSession.state = new StateController(partialSession as Session)
   partialSession.suites = new SuitesController(partialSession as Session)
+  partialSession.system = new SystemController(partialSession as Session)
   partialSession.tests = new TestsController(partialSession as Session)
   partialSession.variables = new VariablesController(partialSession as Session)
   partialSession.windows = new WindowsController(partialSession as Session)

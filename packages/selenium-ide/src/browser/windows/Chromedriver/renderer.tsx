@@ -61,8 +61,12 @@ const DriverSelector = () => {
         })
         break
       case driverStateKeys.STARTING_DRIVER:
-        window.sideAPI.driver.startProcess(browserInfo.selected).then(() => {
-          setDriverStatus(driverStateKeys.COMPLETE)
+        window.sideAPI.driver.startProcess(browserInfo.selected).then((error) => {
+          if (error) {
+            window.sideAPI.system.crash(error)
+          } else {
+            setDriverStatus(driverStateKeys.COMPLETE)
+          }
         })
         break
       case driverStateKeys.COMPLETE:

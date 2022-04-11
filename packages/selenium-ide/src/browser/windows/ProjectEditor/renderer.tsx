@@ -54,7 +54,7 @@ const ProjectTestCommandList = () => {
   return (
     <AppWrapper>
       <DndProvider backend={HTML5Backend}>
-        <Box sx={{ display: 'flex' }}>
+        <Box className="flex">
           <AppBar className="draggable" position="fixed" open={openDrawer}>
             <Toolbar variant="dense">
               <TabPanelMulti indexes={[TESTS_TAB, SUITES_TAB]} value={tab}>

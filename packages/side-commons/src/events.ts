@@ -1,6 +1,9 @@
-import { EventEmitterKey, EventEmitterLike, Fn } from "./types"
+import { EventEmitterKey, EventEmitterLike, Fn } from './types'
 
-export function mergeEventEmitter(target: any, emitter: EventEmitterLike): void {
+export function mergeEventEmitter(
+  target: any,
+  emitter: EventEmitterLike
+): void {
   const whiteList: EventEmitterKey[] = [
     'addListener',
     'removeListener',
@@ -11,7 +14,7 @@ export function mergeEventEmitter(target: any, emitter: EventEmitterLike): void 
     'prependListener',
     'prependOnceListener',
   ]
-  whiteList.forEach(emitterProperty => {
+  whiteList.forEach((emitterProperty) => {
     target[emitterProperty] = emitter[emitterProperty]
       ? (emitter[emitterProperty] as Fn).bind(emitter)
       : undefined

@@ -8,7 +8,7 @@
       "browser/*": ["./src/browser/*"],
       "main/*": ["./src/main/*"]
     },
-    "outDir": "dist",
+    "outDir": "build",
     "rootDir": "src",
     "sourceMap": true,
     "types": ["electron", "webpack-env"]
