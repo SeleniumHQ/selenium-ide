@@ -137,7 +137,9 @@ function getBrowserPlugin(filename: string) {
           <script defer src="${filename}-bundle.js"></script>
         </head>
         <body>
-          <div id="root"></div>
+          <div id="root">
+            <div id="loading"></div>
+          </div>
         </body>
       </html>
     `,
