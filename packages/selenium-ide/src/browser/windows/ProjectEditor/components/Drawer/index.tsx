@@ -44,7 +44,7 @@ const Drawer: React.FC<CustomDrawerProps> = ({
         <IconButton onClick={() => setOpen(false)}>
           <ChevronLeft />
         </IconButton>
-        <span style={{ display: 'flex', flex: '1' }}>{header}</span>
+        <span className="flex flex-1">{header}</span>
       </DrawerHeader>
       <Divider sx={{ position: 'sticky', top: '46px' }} />
       {children}

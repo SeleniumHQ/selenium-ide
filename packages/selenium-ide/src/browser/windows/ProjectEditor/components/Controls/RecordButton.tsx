@@ -1,14 +1,17 @@
-import Tooltip from '@mui/material/Tooltip'
 import RecordIcon from '@mui/icons-material/FiberManualRecord'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 import React, { FC } from 'react'
 
 const RecordButton: FC = () => (
   <Tooltip title="Record" aria-label="record">
-    <RecordIcon
-      className="button m-2 not-draggable"
-      color="error"
+    <IconButton
+      className="m-2 not-draggable"
+      color="inherit"
       onClick={() => window.sideAPI.recorder.start()}
-    />
+    >
+      <RecordIcon color="error" />
+    </IconButton>
   </Tooltip>
 )
 

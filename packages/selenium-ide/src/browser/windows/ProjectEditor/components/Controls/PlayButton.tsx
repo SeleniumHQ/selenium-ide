@@ -1,5 +1,6 @@
-import Tooltip from '@mui/material/Tooltip'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
 import { StateShape } from 'api/types'
 import React, { FC } from 'react'
 import badIndex from 'api/constants/badIndex'
@@ -10,14 +11,17 @@ export interface PlayButtonProps {
 
 const PlayButton: FC<PlayButtonProps> = ({ state }) => (
   <Tooltip title="Play" aria-label="play">
-    <PlayArrowIcon
-      className="button m-2 not-draggable"
+    <IconButton
+      className="m-2 not-draggable"
+      color="inherit"
       onClick={() => {
         state.playback.currentIndex === badIndex
           ? window.sideAPI.playback.play(state.activeTestID)
           : window.sideAPI.playback.resume()
       }}
-    />
+    >
+      <PlayArrowIcon />
+    </IconButton>
   </Tooltip>
 )
 

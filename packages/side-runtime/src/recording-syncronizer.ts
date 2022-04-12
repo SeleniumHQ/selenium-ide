@@ -41,12 +41,18 @@ export default function createRecorderSyncronizer({
   const pendingWindows: Record<string, string> = {}
   const syncedWindows: Record<string, string> = {}
 
-  async function onStoreWindowHandle({ windowHandle, windowHandleName }: WindowFnInput) {
+  async function onStoreWindowHandle({
+    windowHandle,
+    windowHandleName,
+  }: WindowFnInput) {
     pendingWindows[windowHandle] = windowHandleName
     await syncWindowHandle(windowHandle)
   }
 
-  async function onWindowAppeared({ windowHandle, windowHandleName }: WindowFnInput) {
+  async function onWindowAppeared({
+    windowHandle,
+    windowHandleName,
+  }: WindowFnInput) {
     if (!syncedWindows[windowHandle]) {
       pendingWindows[windowHandle] = windowHandleName
     }
@@ -60,13 +66,6 @@ export default function createRecorderSyncronizer({
         `Tried to switch to window handle ${windowHandle} without it appearing first (onWindowAppeared was not called for it)`
       )
     }
-  }
-
-  async function syncActiveContext() {
-    await executeAsyncScript({
-      script: `return window.__side.setActiveContext("${sessionId}")`,
-      argv: [],
-    })
   }
 
   async function syncAllPendingWindows() {
@@ -87,7 +86,7 @@ export default function createRecorderSyncronizer({
   async function syncWindowHandle(windowHandle: string) {
     await executeAsyncScript({
       script: `return window.__side.setWindowHandle("${pendingWindows[windowHandle]}", "${sessionId}")`,
-      argv: []
+      argv: [],
     })
     syncedWindows[windowHandle] = pendingWindows[windowHandle]
     delete pendingWindows[windowHandle]
@@ -99,7 +98,6 @@ export default function createRecorderSyncronizer({
       onWindowAppeared,
       onWindowSwitched,
     },
-    syncActiveContext,
     syncAllPendingWindows,
   }
 }

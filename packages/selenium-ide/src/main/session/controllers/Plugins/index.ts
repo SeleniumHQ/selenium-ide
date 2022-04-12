@@ -2,6 +2,7 @@ import { loadPlugins, PluginShape } from '@seleniumhq/side-runtime'
 import { ipcMain } from 'electron'
 import storage from 'main/store'
 import { Session } from 'main/types'
+import { join } from 'path'
 
 export default class PluginsController {
   constructor(session: Session) {
@@ -26,7 +27,11 @@ export default class PluginsController {
   async list() {
     const systemPlugins = storage.get<'plugins'>('plugins')
     const project = await this.session.projects.getActive()
-    const projectPlugins = project.plugins
+    const projectPath = this.session.projects.filepath as string
+    const projectPlugins = project.plugins.map((p) =>
+      p.startsWith('.') ? join(projectPath, p) : p
+    )
+    // .plugins.map((pluginPath) => pluginPath.starts)
     return systemPlugins.concat(projectPlugins)
   }
   async onProjectLoaded() {
@@ -37,7 +42,7 @@ export default class PluginsController {
       projectPath,
       await this.session.projects.getActive()
     )
-    return plugins.map((plugin, index) => {
+    plugins.forEach((plugin, index) => {
       const pluginPath = pluginPaths[index]
       return this.run(pluginPath, plugin)
     })

@@ -1,8 +1,7 @@
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
-import { Session } from 'main/types'
 
-export type Shape = Session['recorder']['requestAttach']
+export type Shape = (error: unknown) => Promise<void> 
 
 export const browser = browserHandler<Shape>()
 

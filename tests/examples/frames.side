@@ -1,0 +1,238 @@
+{
+  "id": "5a2faad4-1f0f-4d2e-8a3a-b3119267844c",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "https://w3.org/",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "ba2e8b01-1d00-47a1-ba22-610d1505e593",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "bd08dc2c-21c4-4d4a-9a5d-fb3496917035"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "bd08dc2c-21c4-4d4a-9a5d-fb3496917035",
+      "name": "Frames",
+      "commands": [
+        {
+          "id": "6618b3b2-62b4-499c-a593-14f805674a37",
+          "command": "open",
+          "target": "/WAI/UA/TS/html401/cp0101/0101-FRAME-TEST.html",
+          "value": "",
+          "comment": "Uh oh"
+        },
+        {
+          "command": "selectFrame",
+          "id": "4f6cdc2b-5b8b-4755-ae0f-151220619870",
+          "target": "index=0",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "css=h2:nth-child(5)",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root/0",
+          "id": "6ce20c92-1335-4fb7-bc75-75a873f26a34",
+          "targets": [
+            [
+              "css=h2:nth-child(5)",
+              "css:finder"
+            ],
+            [
+              "xpath=//h2[contains(.,'UAAG 1.0 Requirement')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=h2:nth-child(5)",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root/0",
+          "id": "6078cfd9-9fb6-4205-bb05-66b54213c1b9",
+          "targets": [
+            [
+              "css=h2:nth-child(5)",
+              "css:finder"
+            ],
+            [
+              "xpath=//h2[contains(.,'UAAG 1.0 Requirement')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.checkpoint:nth-child(2)",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root/0",
+          "id": "83c206c7-5bfb-4d2b-8c54-204c9f09989d",
+          "targets": [
+            [
+              "css=.checkpoint:nth-child(2)",
+              "css:finder"
+            ]
+          ]
+        },
+        {
+          "command": "selectFrame",
+          "id": "e6f49a0d-81e4-4083-9fb4-76c837fb51e8",
+          "target": "relative=parent",
+          "value": ""
+        },
+        {
+          "command": "selectFrame",
+          "id": "8cd601f3-da01-4651-9c33-295ecf4ced7b",
+          "target": "index=1",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "css=html",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root/1",
+          "id": "36f6497f-5187-4b8b-b64a-31c283ec7e6b",
+          "targets": [
+            [
+              "css=html",
+              "css:finder"
+            ],
+            [
+              "xpath=//html[contains(.,'Test Link 1')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=html",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root/1",
+          "id": "96a96789-02d4-433e-addf-dd0c2fa5e249",
+          "targets": [
+            [
+              "css=html",
+              "css:finder"
+            ],
+            [
+              "xpath=//html[contains(.,'Test Link 1')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=Test Link 1",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root/1",
+          "id": "50bb47da-a84e-4fb6-b1a9-6eb8b9340960",
+          "targets": [
+            [
+              "linkText=Test Link 1",
+              "linkText"
+            ],
+            [
+              "css=a",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Test Link 1')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//a[contains(@href, '../action/return.html')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Test Link 1')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=input",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root/1",
+          "id": "076cc6e1-9c4e-4fd2-abcf-3eb692bfb9e1",
+          "targets": [
+            [
+              "css=input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@value='Go Back'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "selectFrame",
+          "id": "d369feb7-b854-49e2-b795-483f8e2b8b0b",
+          "target": "relative=parent",
+          "value": ""
+        },
+        {
+          "command": "selectFrame",
+          "id": "5ad2596d-5c2b-4697-bcb3-b72dd86bb1c2",
+          "target": "index=2",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "linkText=Test Link 2",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root/2",
+          "id": "92063795-0c37-459c-b415-63180c5f4192",
+          "targets": [
+            [
+              "linkText=Test Link 2",
+              "linkText"
+            ],
+            [
+              "css=a",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Test Link 2')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//a[contains(@href, '../action/return.html')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Test Link 2')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}

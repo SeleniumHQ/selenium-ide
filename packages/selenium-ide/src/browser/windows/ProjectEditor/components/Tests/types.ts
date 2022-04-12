@@ -7,6 +7,10 @@ export interface CommandEditorProps {
   testID: string
 }
 
+export type CommandSelectorProps = CommandEditorProps & {
+  isDisabled: boolean
+}
+
 export interface CommandArgFieldProps extends CommandEditorProps {
   fieldName: LocatorFields
 }
