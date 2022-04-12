@@ -1,21 +1,29 @@
 import { ipcMain } from 'electron'
-import { ApiHandler, EmptyApiHandler, Mutator } from 'api/types'
+import { Mutator } from 'api/types'
 import { Session, SessionControllerKeys } from '../../types'
 import getCore from '../helpers/getCore'
 import { COLOR_CYAN, vdebuglog } from 'main/util'
+import { AsyncHandler, HandlerFactory } from './Handler'
 
 const apiDebugLog = vdebuglog('api', COLOR_CYAN)
 
-export type AsyncHandler<HANDLER extends ApiHandler> = (
-  ...args: Parameters<HANDLER>
-) => Promise<ReturnType<HANDLER>>
+export type ParametersExceptFirst<F> = F extends (
+  arg0: any,
+  ...rest: infer R
+) => any
+  ? R
+  : never
 
-export type HandlerFactory<HANDLER extends ApiHandler> = (
-  path: string,
-  session: Session
-) => AsyncHandler<HANDLER>
+export type EventApiHandler = (
+  event: Electron.IpcMainEvent,
+  ...args: any[]
+) => any
 
-const defaultHandler = <HANDLER extends ApiHandler>(
+export type ModifiedHandler<HANDLER extends EventApiHandler> = (
+  ...args: ParametersExceptFirst<HANDLER>
+) => ReturnType<HANDLER>
+
+const defaultHandler = <HANDLER extends EventApiHandler>(
   path: string,
   session: Session
 ): AsyncHandler<HANDLER> => {
@@ -28,35 +36,40 @@ const defaultHandler = <HANDLER extends ApiHandler>(
   throw new Error(`Missing method for path ${path}`)
 }
 
-const passThroughHandler = <HANDLER extends EmptyApiHandler>(
-  _path: string,
-  _session: Session
-): AsyncHandler<HANDLER> => {
-  const handler = async (..._args: Parameters<HANDLER>) => {}
-  return handler as unknown as AsyncHandler<HANDLER>
-}
-export const passthrough = passThroughHandler
-
 const Handler =
-  <HANDLER extends ApiHandler>(
+  <HANDLER extends EventApiHandler>(
     factory: HandlerFactory<HANDLER> = defaultHandler
   ) =>
-  (path: string, session: Session, mutator?: Mutator<HANDLER>) => {
+  (
+    path: string,
+    session: Session,
+    mutator?: Mutator<ModifiedHandler<HANDLER>>
+  ) => {
     const handler = factory(path, session)
     const doAPI = async (...params: Parameters<HANDLER>) => {
       const result = await handler(...params)
       if (mutator) {
-        const newState = mutator(getCore(session), { params, result })
+        const serializableParams = params.slice(
+          1
+        ) as ParametersExceptFirst<HANDLER>
+        const newState = mutator(getCore(session), {
+          params: serializableParams,
+          result,
+        })
         session.projects.project = newState.project
         session.state.state = newState.state
-        session.api.state.onMutate.dispatchEvent(path, { params, result })
+        session.api.state.onMutate.dispatchEvent(path, {
+          params: serializableParams,
+          result,
+        })
       }
       return result
     }
-    ipcMain.on(path, async (event, ...args) => {
-      apiDebugLog('Received API Request', path, args)
+    ipcMain.on(path, async (...args) => {
+      apiDebugLog('Received API Request', path, args.slice(1))
       const result = await doAPI(...(args as Parameters<HANDLER>))
       apiDebugLog('Resolved API Request', path, result)
+      const event = args[0]
       event.senderFrame.send(`${path}.complete`, result)
     })
     return doAPI

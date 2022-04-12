@@ -6,7 +6,7 @@ const panelConfig: BrowserWindowConstructorOptions = {
   roundedCorners: false,
   minimizable: false,
   maximizable: false,
-  closable: false,
+  closable: true,
   focusable: false,
   resizable: false,
 }

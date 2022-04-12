@@ -19,6 +19,7 @@ import VariablesController from './session/controllers/Variables'
 import WindowsController from './session/controllers/Windows'
 import { MainApiMapper } from './api'
 import { StorageSchema } from './store'
+import SystemController from './session/controllers/System'
 
 export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
   browser: Browser
@@ -48,9 +49,12 @@ export interface Session {
   state: StateController
   store: Storage
   suites: SuitesController
+  system: SystemController
   tests: TestsController
   variables: VariablesController
   windows: WindowsController
+  sleep: () => void
+  wake: () => void
 }
 
 export type SessionControllerKeys = keyof Omit<Session, 'app' | 'api'>

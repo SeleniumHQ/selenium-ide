@@ -38,7 +38,7 @@ export const mutator: EventMutator<OnNewWindowRecorder> = (
     sessionWithPreviousStepUpdatedToOpenNewWindow,
     {
       params: [selectWindowStep],
-      result: selectWindowStep,
+      result: [selectWindowStep],
     }
   )
   return sessionWithselectWindowStep

@@ -37,6 +37,7 @@ export default class DriverController {
   driver: WebDriverExecutor
   driverProcess?: ChildProcess
   windowHandle?: string
+
   async build({
     browser = 'electron',
     capabilities = {
@@ -71,6 +72,11 @@ export default class DriverController {
         },
       },
     })
+  }
+  async onProjectUnloaded() {
+    if (this.driver) {
+      this.driver.cleanup()
+    }
   }
   async onPlaybackStart() {
     const playbackWindow = await this.session.windows.get('playback-window')

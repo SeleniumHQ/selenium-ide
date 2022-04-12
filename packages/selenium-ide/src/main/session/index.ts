@@ -12,14 +12,15 @@ import ProjectsController from './controllers/Projects'
 import RecorderController from './controllers/Recorder'
 import StateController from './controllers/State'
 import SuitesController from './controllers/Suites'
+import SystemController from './controllers/System'
 import TestsController from './controllers/Tests'
 import VariablesController from './controllers/Variables'
 import WindowsController from './controllers/Windows'
 
-export default async function createSession(
+export default function createSession(
   app: App,
   store: Storage
-): Promise<Session> {
+): Session {
   // Building our session object
   const partialSession: Partial<Session> = {
     app,
@@ -36,14 +37,20 @@ export default async function createSession(
   partialSession.recorder = new RecorderController(partialSession as Session)
   partialSession.state = new StateController(partialSession as Session)
   partialSession.suites = new SuitesController(partialSession as Session)
+  partialSession.system = new SystemController(partialSession as Session)
   partialSession.tests = new TestsController(partialSession as Session)
   partialSession.variables = new VariablesController(partialSession as Session)
   partialSession.windows = new WindowsController(partialSession as Session)
-  partialSession.api = await Api(partialSession as Session)
-  const session = partialSession as Session
 
-  // Get the underlying driver going
-  session.windows.open('chromedriver')
+  const session = partialSession as Session
+  session.sleep = () => {
+    session.driver.stopProcess()
+    session.projects.onProjectUnloaded()
+  }
+  session.wake = () => {
+    session.api = Api(session)
+    session.windows.open('chromedriver')
+  }
 
   return session
 }

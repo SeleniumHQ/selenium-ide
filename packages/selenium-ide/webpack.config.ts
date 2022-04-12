@@ -53,7 +53,7 @@ const commonConfig: Pick<
   },
   output: {
     filename: '[name]-bundle.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'build'),
   },
 }
 
@@ -137,7 +137,9 @@ function getBrowserPlugin(filename: string) {
           <script defer src="${filename}-bundle.js"></script>
         </head>
         <body>
-          <div id="root"></div>
+          <div id="root">
+            <div id="loading"></div>
+          </div>
         </body>
       </html>
     `,

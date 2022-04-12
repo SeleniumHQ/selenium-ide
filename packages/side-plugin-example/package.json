@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-plugin-example",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "description": "Selenium IDE example plugin",
   "author": "Todd <tarsitodd@gmail.com>",
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",

@@ -17,11 +17,12 @@
       "environment": [
         { "name": "ELECTRON_RUN_AS_NODE", "value": "" },
         { "name": "NODE_DEBUG", "value": "api,webdriver" },
-        { "name": "NODE_OPTIONS", "value": "--no-warnings" }
+        { "name": "NODE_OPTIONS", "value": "--no-warnings" },
+        { "name": "SIDE_DEBUG", "value": "true" }
       ],
-      "args": ["--trace-uncaught", "${workspaceFolder}/dist/main-bundle.js"],
+      "args": ["--trace-uncaught", "${workspaceFolder}/build/main-bundle.js"],
       "outputCapture": "std",
-      "webRoot": "${workspaceFolder}/dist",
+      "webRoot": "${workspaceFolder}/build",
       "sourceMaps": true,
       "sourceMapPathOverrides": {
         "webpack:///./~/*": "${workspaceFolder}/node_modules/*",

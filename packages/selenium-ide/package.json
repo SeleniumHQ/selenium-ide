@@ -1,21 +1,23 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "4.0.1",
+  "version": "4.0.0",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "clean": "rm -rf dist files tsconfig.tsbuildinfo node_modules",
-    "start": "electron dist/main-bundle.js",
+    "clean": "rm -rf build dist files node_modules tsconfig.tsbuildinfo",
+    "start": "electron build/main-bundle.js",
     "build": "run-s build:webpack build:electron",
-    "build:electron": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "build:electron": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "build:electron:dir": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
+    "build:electron:windows": "electron-builder -w -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
     "build:webpack": "webpack",
     "watch": "webpack --watch"
   },
   "sideEffects": false,
-  "main": "dist/main-bundle.js",
+  "main": "build/main-bundle.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
@@ -28,12 +30,44 @@
   },
   "build": {
     "appId": "org.seleniumhq.selenium-ide",
+    "asarUnpack": [
+      "node_modules/electron-chromedriver/bin/chromedriver",
+      "node_modules/electron-chromedriver/bin/chromedriver.exe"
+    ],
+    "files": [
+      "**/build/**/*",
+      "**/packages/*/dist/**/*.js",
+      "!**/*.d.ts",
+      "!**/selenium-ide/dist/**/*"
+    ],
+    "directories": {
+      "buildResources": "resources"
+    },
     "productName": "Selenium IDE",
-    "asarUnpack": "files/*",
     "mac": {
-      "target": "dmg",
+      "target": {
+        "target": "default",
+        "arch": [
+          "arm64",
+          "x64"
+        ]
+      },
       "category": "public.app-category.developer-tools",
       "darkModeSupport": true
+    },
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     },
     "win": {
       "target": "nsis"
@@ -41,6 +75,7 @@
     "linux": {
       "target": "AppImage"
     },
+    "nodeVersion": "16.x",
     "fileAssociations": [
       {
         "ext": "side",
@@ -56,6 +91,7 @@
   },
   "workspaces": {
     "nohoist": [
+      "electron",
       "**/electron-chromedriver"
     ]
   },
@@ -68,9 +104,10 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@seleniumhq/get-driver": "^4.0.0",
     "@seleniumhq/side-model": "^4.0.0",
-    "@seleniumhq/side-plugin-example": "*",
+    "@seleniumhq/side-plugin-example": "^4.0.0",
     "@seleniumhq/side-recorder-postprocessor": "^4.0.0",
     "@seleniumhq/side-runtime": "^4.0.0",
+    "electron-chromedriver": "16.0.0",
     "electron-context-menu": "^3.1.2",
     "electron-unhandled": "^4.0.1",
     "electron-store": "^8.0.0",
@@ -80,11 +117,10 @@
     "react-dnd": "^15.1.1",
     "react-dnd-html5-backend": "^15.1.2",
     "react-dom": "^17.0.2",
-    "spectron": "15.0.0",
-    "ua-parser-js": "^0.7.19"
+    "ua-parser-js": "^0.7.19",
+    "v8-compile-cache": "^2.3.0"
   },
   "devDependencies": {
-    "@electron-forge/cli": "6.0.0-beta.63",
     "@medv/finder": "^1.1.1",
     "@types/copy-webpack-plugin": "8.0.1",
     "@types/electron": "1.6.10",
@@ -98,7 +134,6 @@
     "css-loader": "^6.1.0",
     "electron": "^16.0.8",
     "electron-builder": "^22.14.13",
-    "electron-chromedriver": "16.0.0",
     "scroll-into-view-if-needed": "^2.2.20",
     "fork-ts-checker-webpack-plugin": "7.2.1",
     "html-webpack-plugin": "^5.3.2",

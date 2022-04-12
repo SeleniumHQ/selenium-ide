@@ -27,77 +27,76 @@ const WebdriverDebugLogErr = vdebuglog('webdriver-error', COLOR_YELLOW)
  *   4. When Electron is quitting, close the child driver process
  */
 
+const getDriver = ({ browser, version }: BrowserInfo) =>
+  (browser === 'electron'
+    ? path.resolve(
+        path.join(
+          __dirname,
+          '..',
+          'node_modules',
+          'electron-chromedriver',
+          'bin',
+          'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
+        )
+      )
+    : path.resolve(
+        path.join(
+          __dirname,
+          '..',
+          'files',
+          resolveDriverName({
+            browser,
+            platform: os.platform(),
+            version,
+          })
+        )
+      )
+  ).replace('app.asar', 'app.asar.unpacked')
+
 export type StartDriver = (
   session: Session
 ) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
-const startDriver: StartDriver =
-  () =>
-  ({ browser, version }) =>
-    new Promise((resolve, reject) => {
-      let initialized = false
-      const args = ['--verbose']
-      const driverPath =
-        browser === 'electron'
-          ? path.resolve(
-              path.join(
-                __dirname,
-                '..',
-                'node_modules',
-                'electron-chromedriver',
-                'bin',
-                'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
-              )
-            )
-          : path.resolve(
-              path
-                .join(
-                  __dirname,
-                  '..',
-                  'files',
-                  resolveDriverName({
-                    browser: browser,
-                    platform: os.platform(),
-                    version: version,
-                  })
-                )
-                .replace('app.asar', 'app.asar.unpacked')
-            )
-      if (fs.existsSync(driverPath)) {
-        const driver = spawn(driverPath, args, {
-          env: {},
-          shell: true,
-        })
-        driver.stdout.on('data', (out: string) => {
-          const outStr = `${out}`
-          WebdriverDebugLog(outStr)
-          const fullyStarted = outStr.includes(successMessage)
-          if (fullyStarted) {
-            initialized = true
-            console.log('Driver has initialized!')
-            resolve({ success: true, driver: driver })
-          }
-        })
-        driver.stderr.on('data', (err: string) => {
-          const errStr = `${err}`
-          WebdriverDebugLogErr(errStr)
+const startDriver: StartDriver = () => (info) =>
+  new Promise((resolve, reject) => {
+    let initialized = false
+    const args = ['--verbose']
+    const driverPath = getDriver(info)
+    if (fs.existsSync(driverPath)) {
+      const driver = spawn(driverPath.replace(/\s/g, '\\ '), args, {
+        env: {},
+        shell: true,
+      })
+      driver.stdout.on('data', (out: string) => {
+        const outStr = `${out}`
+        WebdriverDebugLog(outStr)
+        const fullyStarted = outStr.includes(successMessage)
+        if (fullyStarted) {
+          initialized = true
+          console.log('Driver has initialized!')
+          resolve({ success: true, driver: driver })
+        }
+      })
+      driver.stderr.on('data', (err: string) => {
+        const errStr = `${err}`
+        WebdriverDebugLogErr(errStr)
+        if (!initialized) {
+          resolve({ success: false, error: errStr })
+        }
+      })
+      driver.on('close', (code: number) => {
+        if (code) {
+          console.warn('driver has exited with code', code)
           if (!initialized) {
-            resolve({ success: false, error: errStr })
+            reject(code)
           }
-        })
-        driver.on('close', (code: number) => {
-          if (code) {
-            console.warn('driver has exited with code', code)
-            if (!initialized) {
-              reject(code)
-            }
-          }
-        })
-      } else {
-        resolve({
-          success: false,
-          error: `Missing executable at path ${driverPath}`,
-        })
-      }
-    })
+        }
+      })
+    } else {
+      resolve({
+        success: false,
+        error: `Missing executable at path ${driverPath}`,
+      })
+    }
+  })
 
 export default startDriver

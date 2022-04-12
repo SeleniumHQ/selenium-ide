@@ -5,6 +5,7 @@ import Api from 'main/api'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
+import { ipcMain } from 'electron'
 
 export default class ProjectsController {
   constructor(session: Session) {
@@ -25,6 +26,7 @@ export default class ProjectsController {
     project: ProjectShape,
     filepath?: string
   ): Promise<void> {
+    this.onProjectUnloaded()
     const {
       session: { commands, menu, plugins, windows },
     } = this
@@ -44,6 +46,14 @@ export default class ProjectsController {
     await menu.onProjectLoaded()
     // Display our playback and editor windows
     await windows.onProjectLoaded()
+  }
+
+  async onProjectUnloaded(): Promise<void> {
+    // Drop the reference to the old api
+    // so that the event listeners don't build up too much
+    ipcMain.removeAllListeners()
+    // Clear up our running webdriver process
+    this.session.driver.driver.cleanup()
   }
 
   async getActive(): Promise<ProjectShape> {

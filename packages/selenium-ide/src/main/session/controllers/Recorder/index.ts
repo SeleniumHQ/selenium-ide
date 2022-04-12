@@ -3,6 +3,35 @@ import { getActiveCommand } from 'api/helpers/getActiveData'
 import { LocatorFields } from 'api/types'
 import { randomInt, randomUUID } from 'crypto'
 import { Session } from 'main/types'
+import { relative } from 'path'
+
+const makeSelectFrameCMD = (target: string): CommandShape => ({
+  command: 'selectFrame',
+  id: randomUUID(),
+  target,
+  value: '',
+})
+
+const getFrameTraversalCommands = (
+  startingFrame: string,
+  endingFrame: string
+): CommandShape[] => {
+  if (!startingFrame || !endingFrame || startingFrame === endingFrame) {
+    return []
+  }
+
+  const relativePath = relative(startingFrame, endingFrame).replace(/^.*root/, 'root').split('/')
+  return relativePath.map((part: string) => {
+    switch (part) {
+      case '..':
+        return makeSelectFrameCMD('relative=parent')
+      case 'root':
+        return makeSelectFrameCMD('relative=top')
+      default:
+        return makeSelectFrameCMD(`index=${part}`)
+    }
+  })
+}
 
 export interface RecordNewCommandInput {
   command: string
@@ -18,18 +47,22 @@ export default class RecorderController {
   session: Session
   async recordNewCommand(
     cmd: RecordNewCommandInput
-  ): Promise<CommandShape | null> {
+  ): Promise<CommandShape[] | null> {
     const session = await this.session.state.get()
     if (session.state.status !== 'recording') {
       return null
     }
-    return {
+    const mainCommand: CommandShape = {
       ...cmd,
       id: randomUUID(),
       target: Array.isArray(cmd.target) ? cmd.target[0][0] : cmd.target,
       targets: Array.isArray(cmd.target) ? cmd.target : [[cmd.target, '']],
       value: Array.isArray(cmd.value) ? cmd.value[0][0] : cmd.value,
     }
+    return getFrameTraversalCommands(
+      session.state.recorder.activeFrame,
+      cmd.frameLocation as string
+    ).concat(mainCommand)
   }
 
   async handleNewWindow(_details: Electron.HandlerDetails) {
@@ -41,10 +74,6 @@ export default class RecorderController {
     )
   }
 
-  async requestAttach(): Promise<boolean> {
-    console.log('Request attach thingy?')
-    return true
-  }
   async requestSelectElement(activate: boolean, fieldName: LocatorFields) {
     this.session.windows.getLastPlaybackWindow().focus()
     this.session.api.recorder.onRequestSelectElement.dispatchEvent(
@@ -52,11 +81,16 @@ export default class RecorderController {
       fieldName
     )
   }
-  async setActiveContext(sessionID: string, frameLocation: string) {
-    console.log('Setting active context', sessionID, frameLocation)
-  }
-  async setFrameLocation(frameLocation: string) {
-    console.log('Setting frame location', frameLocation)
+
+  async getFrameLocation(event: Electron.IpcMainEvent): Promise<string> {
+    let frameLocation = 'root'
+    let activeFrame = event.senderFrame
+    while (activeFrame.parent) {
+      const frameIndex = activeFrame.parent.frames.indexOf(activeFrame)
+      frameLocation += `/${frameIndex}`
+      activeFrame = activeFrame.parent
+    }
+    return frameLocation
   }
   async setWindowHandle(sessionID: string, handle: string) {
     console.log('Setting window handle', sessionID, handle)

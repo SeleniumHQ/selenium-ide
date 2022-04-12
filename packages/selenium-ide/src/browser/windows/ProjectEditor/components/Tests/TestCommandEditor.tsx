@@ -18,8 +18,7 @@ export interface MiniCommandShape {
   name: string
 }
 
-const CommandEditor: FC<CommandEditorProps> = (props) => {
-  const { command } = props
+const CommandEditor: FC<CommandEditorProps> = ({ command, ...props }) => {
   if (command.id === '-1') {
     return (
       <Stack className="p-4" spacing={1}>
@@ -29,12 +28,25 @@ const CommandEditor: FC<CommandEditorProps> = (props) => {
       </Stack>
     )
   }
+  const isDisabled = command.command.startsWith('//')
+  const correctedCommand: CommandShape = {
+    ...command,
+    command: isDisabled ? command.command.slice(2) : command.command,
+  }
   return (
     <Stack className="p-4" spacing={1}>
-      <CommandSelector {...props} />
-      <ArgField {...props} fieldName="target" />
-      <ArgField {...props} fieldName="value" />
-      <CommandTextField {...props} fieldName="comment" />
+      <CommandSelector
+        command={correctedCommand}
+        isDisabled={isDisabled}
+        {...props}
+      />
+      <ArgField command={correctedCommand} {...props} fieldName="target" />
+      <ArgField command={correctedCommand} {...props} fieldName="value" />
+      <CommandTextField
+        command={correctedCommand}
+        {...props}
+        fieldName="comment"
+      />
     </Stack>
   )
 }

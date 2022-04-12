@@ -19,5 +19,8 @@ export const window: WindowConfig['window'] = () => {
       Math.floor(dimensions.height / 2) -
       50,
     title: 'Playback Window',
+    webPreferences: {
+      nodeIntegrationInSubFrames: true,
+    }
   }
 }

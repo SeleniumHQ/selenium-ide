@@ -8,6 +8,13 @@ import { CommandsStateShape } from './command'
  * Playback state, breakpoints, status, whatever is from within a session
  */
 
+export interface RecorderStateShape {
+  activeFrame: string
+}
+
+export const defaultRecorderState: RecorderStateShape = {
+  activeFrame: 'root',
+}
 export interface PlaybackStateShape {
   commands: CommandsStateShape
   currentIndex: number
@@ -33,6 +40,7 @@ export interface StateShape {
   logs: string[]
   status: 'idle' | 'paused' | 'playing' | 'recording'
   playback: PlaybackStateShape
+  recorder: RecorderStateShape
 }
 
 export type Shape = StateShape
@@ -46,6 +54,7 @@ const action: StateShape = {
   logs: [],
   status: 'idle',
   playback: defaultPlaybackState,
+  recorder: defaultRecorderState,
 }
 
 export default action

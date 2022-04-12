@@ -4,7 +4,7 @@ import React, { FC, useRef } from 'react'
 
 const UncontrolledTextField: FC<TextFieldProps> = ({
   onChange = noop,
-  value,
+  value = '',
   ...props
 }) => {
   const ref = useRef<HTMLInputElement>()
@@ -22,7 +22,7 @@ const UncontrolledTextField: FC<TextFieldProps> = ({
       inputRef={ref}
       margin="dense"
       onBlur={(event) => {
-        onChange(event) 
+        onChange(event)
         if (props.onBlur) {
           props.onBlur(event)
         }
