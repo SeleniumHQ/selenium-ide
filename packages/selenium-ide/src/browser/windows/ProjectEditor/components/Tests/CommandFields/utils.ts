@@ -1,3 +1,10 @@
+export const setField =
+  (name: string) => (testID: string, commandID: string) => (value: string) => {
+    window.sideAPI.tests.updateStep(testID, commandID, {
+      [name]: value,
+    })
+  }
+
 export const updateField =
   (name: string) => (testID: string, commandID: string) => (e: any) => {
     window.sideAPI.tests.updateStep(testID, commandID, {

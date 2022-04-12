@@ -116,7 +116,8 @@
     "react-dnd": "^15.1.1",
     "react-dnd-html5-backend": "^15.1.2",
     "react-dom": "^17.0.2",
-    "ua-parser-js": "^0.7.19"
+    "ua-parser-js": "^0.7.19",
+    "v8-compile-cache": "^2.3.0"
   },
   "devDependencies": {
     "@medv/finder": "^1.1.1",

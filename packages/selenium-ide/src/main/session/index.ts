@@ -41,7 +41,6 @@ export default function createSession(
   partialSession.tests = new TestsController(partialSession as Session)
   partialSession.variables = new VariablesController(partialSession as Session)
   partialSession.windows = new WindowsController(partialSession as Session)
-  partialSession.api = Api(partialSession as Session)
 
   const session = partialSession as Session
   session.sleep = () => {
@@ -49,6 +48,7 @@ export default function createSession(
     session.projects.onProjectUnloaded()
   }
   session.wake = () => {
+    session.api = Api(session)
     session.windows.open('chromedriver')
   }
 

@@ -76,9 +76,12 @@ const CommandRow: React.FC<CommandRowProps> = ({
   const toggleBreakpoint = () =>
     updateIsBreakpoint(activeTest, id, !isBreakpoint)
   const bgcolor = colorFromCommandState(commandState, prefersDarkMode)
+  const isDisabled = command.startsWith('//')
+  const commandText = isDisabled ? command.slice(2) : command
+  const mainClass = ['pos-rel'].concat(isDisabled ? ['o-50'] : []).join(' ')
   return (
     <ReorderableListItem
-      className="pos-rel"
+      className={mainClass}
       divider
       dragType="COMMAND"
       id={id}
@@ -100,7 +103,11 @@ const CommandRow: React.FC<CommandRowProps> = ({
     >
       <ListItemText
         disableTypography
-        primary={<Box sx={commandTextFormat}>{camelToTitleCase(command)}</Box>}
+        primary={
+          <Box sx={commandTextFormat}>
+            {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
+          </Box>
+        }
         secondary={
           <>
             <Box sx={argTextFormat}>{target}</Box>

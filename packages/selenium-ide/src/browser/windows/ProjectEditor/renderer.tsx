@@ -48,7 +48,7 @@ const ProjectTestCommandList = () => {
   const openDrawer = _openDrawer && tab !== 2
 
   if (id == loadingID) {
-    return null
+    return <div id="loading" />
   }
 
   return (

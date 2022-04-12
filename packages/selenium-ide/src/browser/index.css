@@ -36,6 +36,12 @@ body,
 .o-25 {
   opacity: 0.25;
 }
+.o-50 {
+  opacity: 0.5
+}
+.o-75 {
+  opacity: 0.75;
+}
 
 /**
  * Flexbox
@@ -308,6 +314,8 @@ body,
   animation: spin 1s ease-in-out infinite;
   -webkit-animation: spin 1s ease-in-out infinite;
   position: fixed;
+  margin-left: -25px;
+  margin-top: -25px;
   top: 50%;
   left: 50%;
 }

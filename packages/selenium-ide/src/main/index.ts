@@ -1,3 +1,4 @@
+import 'v8-compile-cache'
 import { app, BrowserWindow, MenuItemConstructorOptions } from 'electron'
 import contextMenu from 'electron-context-menu'
 import store from './store'
@@ -16,7 +17,9 @@ process.on('uncaughtException', (error) => {
 })
 
 // Enable local debugging
-app.commandLine.appendSwitch('remote-debugging-port', '8315')
+if (process.env.SIDE_DEBUG) {
+  app.commandLine.appendSwitch('remote-debugging-port', '8315')
+}
 
 const session = createSession(app, store)
 
