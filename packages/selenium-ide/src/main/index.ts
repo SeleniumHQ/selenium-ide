@@ -17,9 +17,7 @@ process.on('uncaughtException', (error) => {
 })
 
 // Enable local debugging
-if (process.env.SIDE_DEBUG) {
-  app.commandLine.appendSwitch('remote-debugging-port', '8315')
-}
+app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
 const session = createSession(app, store)
 

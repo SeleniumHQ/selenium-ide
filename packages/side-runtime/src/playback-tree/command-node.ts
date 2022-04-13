@@ -80,7 +80,7 @@ export class CommandNode {
   }
 
   shouldSkip(): boolean {
-    return !!this.command.skip
+    return Boolean(this.command.skip || this.command.command.startsWith('//'))
   }
 
   execute(commandExecutor: WebDriverExecutor, args?: CommandExecutorOptions) {
