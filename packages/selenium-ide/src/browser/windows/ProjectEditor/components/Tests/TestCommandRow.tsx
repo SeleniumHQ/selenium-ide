@@ -17,7 +17,7 @@ const {
 type ColorMode = 'light' | 'dark'
 
 const colorFromCommandState = (
-  state: PlaybackEventShapes['COMMAND_STATE_CHANGED']['state'],
+  state: PlaybackEventShapes['COMMAND_STATE_CHANGED']['state'] | undefined,
   mode: ColorMode
 ) => {
   switch (state) {
