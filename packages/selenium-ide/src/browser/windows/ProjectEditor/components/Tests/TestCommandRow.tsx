@@ -44,10 +44,15 @@ const argTextFormat = {
   typography: 'subtitle2',
   ml: 2,
 }
+const errorTextFormat = {
+  color: 'error.main',
+  typography: 'caption',
+  ml: 2,
+}
 
 interface CommandRowProps {
   activeTest: string
-  commandState: PlaybackEventShapes['COMMAND_STATE_CHANGED']['state']
+  commandState: PlaybackEventShapes['COMMAND_STATE_CHANGED']
   command: CommandShape
   index: number
   selected: boolean
@@ -65,7 +70,7 @@ const updateIsBreakpoint = (
 
 const CommandRow: React.FC<CommandRowProps> = ({
   activeTest,
-  commandState,
+  commandState = {},
   command: { command, id, isBreakpoint, target, value },
   index,
   selected,
@@ -75,7 +80,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
     : 'light'
   const toggleBreakpoint = () =>
     updateIsBreakpoint(activeTest, id, !isBreakpoint)
-  const bgcolor = colorFromCommandState(commandState, prefersDarkMode)
+  const bgcolor = colorFromCommandState(commandState.state, prefersDarkMode)
   const isDisabled = command.startsWith('//')
   const commandText = isDisabled ? command.slice(2) : command
   const mainClass = ['pos-rel'].concat(isDisabled ? ['o-50'] : []).join(' ')
@@ -112,6 +117,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
           <>
             <Box sx={argTextFormat}>{target}</Box>
             <Box sx={argTextFormat}>{value}</Box>
+            <Box sx={errorTextFormat}>{commandState.message}</Box>
           </>
         }
       />

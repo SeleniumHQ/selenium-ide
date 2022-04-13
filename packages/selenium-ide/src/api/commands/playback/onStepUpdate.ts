@@ -20,7 +20,7 @@ export const mutator: EventMutator<OnStepUpdatePlayback> = (
 ) => {
   const stateUpdates: StateUpdateShape = {
     playback: {
-      commands: { [data.id]: data.state },
+      commands: { [data.id]: data },
     },
   }
   if (data.state === 'executing') {
