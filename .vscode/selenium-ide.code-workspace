@@ -23,7 +23,8 @@
   ],
   "settings": {
     "files.exclude": {
-      "dist/": false,
+      "**/main-bundle*": true,
+      "dist/": true,
       "node_modules/": false,
       "packages/": true,
       "tsconfig.tsbuildinfo": true

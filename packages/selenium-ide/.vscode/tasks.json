@@ -10,7 +10,7 @@
                 "chromedriver.exe",
                 "/f",
                 "/FI",
-                "STATUS eq RUNNING"
+                "IMAGENAME eq chromedriver.exe"
             ],
             "presentation": {
                 "reveal": "always"
