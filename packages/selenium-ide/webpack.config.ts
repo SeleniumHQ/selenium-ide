@@ -26,6 +26,11 @@ const commonConfig: Pick<
   module: {
     rules: [
       {
+        exclude: [/selenium-ide\/dist/, /selenium-ide\/build/, /node_modules/],
+        test: /\.js$/,
+        loader: 'source-map-loader',
+      },
+      {
         test: /\.tsx?$/,
         loader: 'ts-loader',
         exclude: /node_modules/,

@@ -16,7 +16,6 @@
     { "path": "../packages/side-migrate" },
     { "path": "../packages/side-model" },
     { "path": "../packages/side-plugin-example" },
-    { "path": "../packages/side-recorder-postprocessor" },
     { "path": "../packages/side-runner" },
     { "path": "../packages/side-runtime" },
     { "path": "../packages/side-testkit" },

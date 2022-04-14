@@ -24,10 +24,6 @@
       "outputCapture": "std",
       "webRoot": "${workspaceFolder}/build",
       "sourceMaps": true,
-      "sourceMapPathOverrides": {
-        "webpack:///./~/*": "${workspaceFolder}/node_modules/*",
-        "webpack://?:*/*": "${workspaceFolder}/*"
-      }
     }
   ]
 }
