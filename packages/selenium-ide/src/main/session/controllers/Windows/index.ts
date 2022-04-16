@@ -162,21 +162,21 @@ export default class WindowsController {
     this.handlePlaybackWindow(playbackWindow)
 
     const projectWindow = await this.get(projectEditorWindowName)
-    playbackWindow.on('focus', () => {
-      projectWindow.showInactive()
+    projectWindow.on('focus', () => {
+      playbackWindow.showInactive()
     })
-    playbackWindow.on('blur', () => {
+    projectWindow.on('blur', () => {
       const windows = BrowserWindow.getAllWindows()
       const anyWindowFocused = windows.reduce((focused, window) => {
         if (focused) return true
         return window.isFocused()
       }, false)
       if (!anyWindowFocused) {
-        projectWindow.hide()
+        playbackWindow.hide()
       }
     })
-    playbackWindow.on('closed', () => {
-      projectWindow.close()
+    projectWindow.on('closed', () => {
+      playbackWindow.close()
     })
   }
 }
