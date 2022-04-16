@@ -2,15 +2,20 @@ import Paper from '@mui/material/Paper'
 import { getActiveSuite } from 'api/helpers/getActiveData'
 import React from 'react'
 import SuiteEditor from './SuiteEditor'
-import SuiteTestList from './SuiteTestList'
+import AvailableSuiteTestList from './AvailableSuiteTestList'
 import { CoreSessionData } from 'api/types'
 import MainHeader from '../Main/Header'
 import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
+import { TestShape } from '@seleniumhq/side-model'
+import CurrentSuiteTestList from './CurrentSuiteTestList'
 
 const SuitesTab: React.FC<{
   session: CoreSessionData
 }> = ({ session }) => {
   const activeSuite = getActiveSuite(session)
+  const activeTests = activeSuite.tests.map(
+    (id) => session.project.tests.find((t) => t.id === id) as TestShape
+  )
   const {
     project: { tests },
     state: { activeSuiteID },
@@ -20,7 +25,12 @@ const SuitesTab: React.FC<{
   return (
     <>
       <MainHeader />
-      <SuiteTestList
+      <CurrentSuiteTestList
+        activeSuite={activeSuiteID}
+        bottomOffset={bottomOffset}
+        tests={activeTests}
+      />
+      <AvailableSuiteTestList
         activeSuite={activeSuiteID}
         allTests={tests}
         bottomOffset={bottomOffset}

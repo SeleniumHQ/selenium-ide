@@ -2,18 +2,16 @@ import { TestShape } from '@seleniumhq/side-model'
 import List from '@mui/material/List'
 import ListSubheader from '@mui/material/ListSubheader'
 import React, { FC } from 'react'
-import SuiteTestRow from './SuiteTestRow'
+import CurrentSuiteTestRow from './CurrentSuiteTestRow'
 
-export interface SuiteTestListProps {
+export interface CurrentSuiteTestListProps {
   activeSuite: string
-  allTests: TestShape[]
   bottomOffset: number
-  tests: string[]
+  tests: TestShape[]
 }
 
-const SuiteTestList: FC<SuiteTestListProps> = ({
+const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
   activeSuite,
-  allTests,
   bottomOffset,
   tests,
 }) => (
@@ -21,26 +19,28 @@ const SuiteTestList: FC<SuiteTestListProps> = ({
     dense
     sx={{
       borderColor: 'primary.main',
+      display: 'inline-block',
       marginBottom: `${bottomOffset}px`,
+      width: '50%',
     }}
     subheader={
       <ListSubheader className="lh-36" sx={{ top: '96px', zIndex: 100 }}>
-        Tests
+        Tests in suite
       </ListSubheader>
     }
   >
-    {allTests.map((test) => {
+    {tests.map((test, index) => {
       const { id } = test
       return (
-        <SuiteTestRow
+        <CurrentSuiteTestRow
           activeSuite={activeSuite}
+          index={index}
           key={id}
           test={test}
-          selected={tests.includes(id)}
         />
       )
     })}
   </List>
 )
 
-export default SuiteTestList
+export default CurrentSuiteTestList
