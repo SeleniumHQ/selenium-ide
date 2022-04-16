@@ -10,6 +10,7 @@ import CommandTextField from './CommandFields/TextField'
 export interface CommandEditorProps {
   command: CommandShape
   commands: CoreSessionData['state']['commands']
+  selectedCommands: string[]
   testID: string
 }
 
@@ -18,12 +19,18 @@ export interface MiniCommandShape {
   name: string
 }
 
-const CommandEditor: FC<CommandEditorProps> = ({ command, ...props }) => {
-  if (command.id === '-1') {
+const CommandEditor: FC<CommandEditorProps> = ({
+  command,
+  selectedCommands,
+  ...props
+}) => {
+  if (selectedCommands.length !== 1) {
     return (
       <Stack className="p-4" spacing={1}>
-        <Typography className="centered pt-4" variant="body2">
-          No active command selected
+        <Typography className="centered py-4" variant="body2">
+          {selectedCommands.length === 0
+            ? 'No command selected'
+            : `${selectedCommands.length} commands selected`}
         </Typography>
       </Stack>
     )

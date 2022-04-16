@@ -1,5 +1,3 @@
-export * as attach from './attach'
-export * as detach from './detach'
 export * as list from './list'
 export * as projectCreate from './projectCreate'
 export * as projectDelete from './projectDelete'

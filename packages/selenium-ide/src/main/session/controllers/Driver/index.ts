@@ -73,11 +73,18 @@ export default class DriverController {
       },
     })
   }
+
+  async onProjectLoaded() {
+    // Build our webdriver with custom commands
+    this.build({})
+  }
+
   async onProjectUnloaded() {
     if (this.driver) {
       this.driver.cleanup()
     }
   }
+
   async onPlaybackStart() {
     const playbackWindow = await this.session.windows.get('playback-window')
     // Figure out playback window from document.title

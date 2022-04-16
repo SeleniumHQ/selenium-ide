@@ -1,10 +1,9 @@
 import update from 'lodash/fp/update'
 import browserHandler from 'browser/api/classes/Handler'
-import mainHandler from 'main/api/classes/Handler'
-import { Session } from 'main/types'
+import mainHandler, { passthrough } from 'main/api/classes/Handler'
 import { CoreSessionData, Mutator } from 'api/types'
 
-export type Shape = Session['state']['toggleBreakpoint']
+export type Shape = (stepID: string) => Promise<void>
 
 export const mutator: Mutator<Shape> = (session, { params: [commandID] }) =>
   update(
@@ -18,4 +17,4 @@ export const mutator: Mutator<Shape> = (session, { params: [commandID] }) =>
 
 export const browser = browserHandler<Shape>()
 
-export const main = mainHandler<Shape>()
+export const main = mainHandler<Shape>(passthrough)

@@ -32,9 +32,6 @@
       "path": "../side-plugin-example"
     },
     {
-      "path": "../side-recorder-postprocessor"
-    },
-    {
       "path": "../side-runtime"
     }
   ]

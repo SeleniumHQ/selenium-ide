@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { ApiPromiseHandler, ThenArg } from 'api/types'
+import { ApiPromiseHandler, DefaultRouteShape, ThenArg } from 'api/types'
 
 const doAPI = <HANDLER extends ApiPromiseHandler>(
   path: string,
@@ -15,7 +15,7 @@ const doAPI = <HANDLER extends ApiPromiseHandler>(
   })
 
 const Handler =
-  <HANDLER extends ApiPromiseHandler>() =>
+  <HANDLER extends ApiPromiseHandler = DefaultRouteShape>() =>
   (path: string) => {
     return async (
       ...args: Parameters<HANDLER>

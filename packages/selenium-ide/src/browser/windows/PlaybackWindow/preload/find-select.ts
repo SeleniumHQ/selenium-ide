@@ -25,6 +25,11 @@ const init = () => {
   window.sideAPI.recorder.onRequestSelectElement.addListener(
     processSelectionCommand
   )
+  window.addEventListener('beforeunload', () => {
+    window.sideAPI.recorder.onRequestSelectElement.removeListener(
+      processSelectionCommand
+    )
+  })
 }
 
 type RequestSelectElementHandlerParams = EventListenerParams<

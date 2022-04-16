@@ -14,7 +14,6 @@ import StateController from './controllers/State'
 import SuitesController from './controllers/Suites'
 import SystemController from './controllers/System'
 import TestsController from './controllers/Tests'
-import VariablesController from './controllers/Variables'
 import WindowsController from './controllers/Windows'
 
 export default function createSession(
@@ -30,7 +29,7 @@ export default function createSession(
   partialSession.argTypes = new ArgTypesController(partialSession as Session)
   partialSession.commands = new CommandsController(partialSession as Session)
   partialSession.driver = new DriverController(partialSession as Session)
-  partialSession.menu = new MenuController(partialSession as Session)
+  partialSession.menus = new MenuController(partialSession as Session)
   partialSession.playback = new PlaybackController(partialSession as Session)
   partialSession.plugins = new PluginsController(partialSession as Session)
   partialSession.projects = new ProjectsController(partialSession as Session)
@@ -39,8 +38,8 @@ export default function createSession(
   partialSession.suites = new SuitesController(partialSession as Session)
   partialSession.system = new SystemController(partialSession as Session)
   partialSession.tests = new TestsController(partialSession as Session)
-  partialSession.variables = new VariablesController(partialSession as Session)
   partialSession.windows = new WindowsController(partialSession as Session)
+  partialSession.api = Api(partialSession as Session)
 
   const session = partialSession as Session
   session.sleep = () => {
@@ -48,7 +47,6 @@ export default function createSession(
     session.projects.onProjectUnloaded()
   }
   session.wake = () => {
-    session.api = Api(session)
     session.windows.open('chromedriver')
   }
 

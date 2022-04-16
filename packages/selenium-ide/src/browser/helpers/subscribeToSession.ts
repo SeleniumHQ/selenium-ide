@@ -6,18 +6,26 @@ import { CoreSessionData } from 'api/types'
 const performSubscription = async (
   updateSession: Dispatch<SetStateAction<CoreSessionData>>
 ) => {
-  const session = await window.sideAPI.state.get()
-  updateSession(session)
-  window.sideAPI.state.onMutate.addListener((path, data) => {
-    const [namespace, method] = path.split('.')
-    // console.log('Queueing Mutator', path, data)
-    updateSession((session) => {
-      // @ts-expect-error
-      const newSession = sideAPI.mutators[namespace][method](session, data)
-      // console.log('Running Mutator', path, data, session, newSession)
-      return newSession
-    })
-  })
+  useEffect(() => {
+    window.sideAPI.state.get().then(updateSession)
+    const handler = (path: string, data: any) => {
+      const [namespace, method] = path.split('.')
+      console.debug('Queueing Mutator', path, data)
+      updateSession((session) => {
+        // @ts-expect-error
+        const newSession = window.sideAPI.mutators[namespace][method](
+          session,
+          data
+        )
+        console.debug('Running Mutator', path, data, session, newSession)
+        return newSession
+      })
+    }
+    window.sideAPI.state.onMutate.addListener(handler)
+    const removeHandler = () => window.sideAPI.state.onMutate.removeListener(handler)
+    window.addEventListener('beforeunload', removeHandler)
+    return removeHandler
+  }, [])
 }
 
 export default () => {
@@ -25,8 +33,6 @@ export default () => {
     project: defaultProject,
     state: defaultState,
   })
-  useEffect(() => {
-    performSubscription(updateSession)
-  }, [])
+  performSubscription(updateSession)
   return session
 }

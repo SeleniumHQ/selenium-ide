@@ -4,7 +4,7 @@ import browserHandler from 'browser/api/classes/Handler'
 import update from 'lodash/fp/update'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
-import { mutator as addStepMutator } from '../tests/addStep'
+import { mutator as addStepsMutator } from '../tests/addSteps'
 
 export type Shape = Session['recorder']['recordNewCommand']
 
@@ -31,12 +31,12 @@ export const mutator: Mutator<Shape> = (
   if (!result) return session
   let index = getActiveCommandIndex(session)
   return result.reduce((sesh, command) => {
-    const newSession = addStepMutator(sesh, {
+    const newSession = addStepsMutator(sesh, {
       params: [
         session.state.activeTestID,
         cmdInput.insertBeforeLastCommand ? index - 1 : index,
       ],
-      result: command,
+      result: [command],
     })
     index += 1
     if (command.command === 'selectFrame') {

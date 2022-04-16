@@ -10,7 +10,7 @@ import ReorderableListItem from 'browser/components/ReorderableListItem'
 import React from 'react'
 
 const {
-  state: { setActiveCommand },
+  state: { updateStepSelection },
   tests: { updateStep },
 } = window.sideAPI
 
@@ -56,6 +56,7 @@ interface CommandRowProps {
   command: CommandShape
   index: number
   selected: boolean
+  selectedBatch: boolean
 }
 
 const updateIsBreakpoint = (
@@ -74,6 +75,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
   command: { command, id, isBreakpoint, target, value },
   index,
   selected,
+  selectedBatch,
 }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
     ? 'dark'
@@ -91,9 +93,18 @@ const CommandRow: React.FC<CommandRowProps> = ({
       dragType="COMMAND"
       id={id}
       index={index}
-      onClick={() => setActiveCommand(id)}
-      reorder={(...args) =>
-        window.sideAPI.tests.reorderStep(activeTest, ...args)
+      onContextMenu={async () => {
+        await updateStepSelection(id, false, true, false)
+        await window.sideAPI.menus.open('testEditor', id)
+      }}
+      onClick={async (e) => {
+        const selectBatch = e.shiftKey
+        const addEntry = !e.altKey && (e.ctrlKey || e.metaKey || e.shiftKey)
+        const clearSelection = !e.altKey && !e.shiftKey && !e.ctrlKey
+        await updateStepSelection(id, selectBatch, addEntry, clearSelection)
+      }}
+      reorder={(_oldIndex, newIndex) =>
+        window.sideAPI.tests.reorderSteps(activeTest, newIndex)
       }
       secondaryAction={
         <IconButton
@@ -104,7 +115,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
           <PauseIcon />
         </IconButton>
       }
-      selected={selected}
+      selected={selected || selectedBatch}
     >
       <ListItemText
         disableTypography

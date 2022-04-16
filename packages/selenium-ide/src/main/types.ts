@@ -15,7 +15,6 @@ import RecorderController from './session/controllers/Recorder'
 import StateController from './session/controllers/State'
 import SuitesController from './session/controllers/Suites'
 import TestsController from './session/controllers/Tests'
-import VariablesController from './session/controllers/Variables'
 import WindowsController from './session/controllers/Windows'
 import { MainApiMapper } from './api'
 import { StorageSchema } from './store'
@@ -41,7 +40,7 @@ export interface Session {
   commands: CommandsController
   dialogs: DialogsController
   driver: DriverController
-  menu: MenuController
+  menus: MenuController
   playback: PlaybackController
   plugins: PluginsController
   projects: ProjectsController
@@ -51,7 +50,6 @@ export interface Session {
   suites: SuitesController
   system: SystemController
   tests: TestsController
-  variables: VariablesController
   windows: WindowsController
   sleep: () => void
   wake: () => void
@@ -63,3 +61,7 @@ export type SessionApiHandler = (
   path: string,
   session: Session
 ) => (...args: any[]) => any
+
+export type MenuComponent = (
+  session: Session
+) => () => Promise<Electron.MenuItemConstructorOptions[]>

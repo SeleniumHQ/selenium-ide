@@ -17,19 +17,15 @@ export default class StateController {
       state: this.state,
     }
   }
+
+  async onProjectLoaded() {
+    this.state = clone(defaultState)
+  }
+
   async setActiveCommand(commandID: string): Promise<boolean> {
     const session = await this.session.state.get()
-    const commandIndex = getCommandIndex(session, commandID)
+    const commandIndex = commandID ?  getCommandIndex(session, commandID) : 0
     this.session.playback.currentStepIndex = commandIndex
-    return true
-  }
-  async setActiveSuite(_suiteID: string): Promise<boolean> {
-    return true
-  }
-  async setActiveTest(_testID: string): Promise<boolean> {
-    return true
-  }
-  async toggleBreakpoint(_stepID: string): Promise<boolean> {
     return true
   }
 }
