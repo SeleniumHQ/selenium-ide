@@ -51,12 +51,16 @@ export default class Recorder {
     this.frameLocation = ''
     this.inputTypes = Recorder.inputTypes
 
+    this.getFrameLocation = this.getFrameLocation.bind(this)
     this.setWindowHandle = this.setWindowHandle.bind(this)
     // @ts-expect-error
     this.window.addEventListener('message', this.setWindowHandle)
-    window.sideAPI.recorder.onFrameRecalculate.addListener(async () =>
-      await this.getFrameLocation()
-    )
+    window.sideAPI.recorder.onFrameRecalculate.addListener(this.getFrameLocation)
+    window.addEventListener('beforeunload', () => {
+      window.sideAPI.recorder.onFrameRecalculate.removeListener(
+        this.getFrameLocation
+      )
+    })
     // @ts-expect-error
     this.recordingState = {}
     this.addRecorderTracingAttribute()

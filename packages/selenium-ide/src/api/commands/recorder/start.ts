@@ -3,7 +3,7 @@ import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
 import { Mutator } from 'api/types'
-import { mutator as addStepMutator } from '../tests/addStep'
+import { mutator as addStepMutator } from '../tests/addSteps'
 import { getActiveCommandIndex } from 'api/helpers/getActiveData'
 
 export type Shape = Session['recorder']['start']
@@ -21,12 +21,12 @@ export const mutator: Mutator<Shape> = (session, { result }) => {
         session,
       ),
     ],
-    result: {
+    result: [{
       id: result,
       command: 'open',
       target: '/',
       value: '',
-    },
+    }],
   })
 }
 

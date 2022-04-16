@@ -1,3 +1,4 @@
+import { CommandShape } from '@seleniumhq/side-model'
 import { CommandTypes } from '@seleniumhq/side-model/dist/Commands'
 import badIndex from 'api/constants/badIndex'
 import loadingID from 'api/constants/loadingID'
@@ -8,6 +9,16 @@ import { CommandsStateShape } from './command'
  * Playback state, breakpoints, status, whatever is from within a session
  */
 
+export interface EditorStateShape {
+  copiedCommands: Omit<CommandShape, 'id'>[],
+  selectedCommands: string[]
+}
+
+export const defaultEditorState: EditorStateShape = {
+  copiedCommands: [],
+  selectedCommands: [],
+}
+
 export interface RecorderStateShape {
   activeFrame: string
 }
@@ -15,6 +26,7 @@ export interface RecorderStateShape {
 export const defaultRecorderState: RecorderStateShape = {
   activeFrame: 'root',
 }
+
 export interface PlaybackStateShape {
   commands: CommandsStateShape
   currentIndex: number
@@ -37,10 +49,11 @@ export interface StateShape {
   activeTestID: string
   breakpoints: string[]
   commands: CommandTypes
+  editor: EditorStateShape
   logs: string[]
-  status: 'idle' | 'paused' | 'playing' | 'recording'
   playback: PlaybackStateShape
   recorder: RecorderStateShape
+  status: 'idle' | 'paused' | 'playing' | 'recording'
 }
 
 export type Shape = StateShape
@@ -51,10 +64,11 @@ const action: StateShape = {
   activeTestID: loadingID,
   breakpoints: [],
   commands: {},
+  editor: defaultEditorState,
   logs: [],
-  status: 'idle',
   playback: defaultPlaybackState,
   recorder: defaultRecorderState,
+  status: 'idle',
 }
 
 export default action

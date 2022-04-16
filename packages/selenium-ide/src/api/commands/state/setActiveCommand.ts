@@ -19,7 +19,7 @@ export const mutator: Mutator<Shape> = (
   const stateUpdates: StateUpdates = {
     activeCommandID,
     playback: {
-      currentIndex: getCommandIndex(session, activeCommandID),
+      currentIndex: Math.max(getCommandIndex(session, activeCommandID), 0),
     },
   }
   return merge(session, { state: stateUpdates })

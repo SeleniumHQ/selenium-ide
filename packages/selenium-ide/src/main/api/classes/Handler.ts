@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { ApiHandler, EmptyApiHandler, Mutator } from 'api/types'
+import { ApiHandler, DefaultRouteShape, EmptyApiHandler, Mutator } from 'api/types'
 import { Session, SessionControllerKeys } from '../../types'
 import getCore from '../helpers/getCore'
 import { COLOR_CYAN, vdebuglog } from 'main/util'
@@ -38,7 +38,7 @@ const passThroughHandler = <HANDLER extends EmptyApiHandler>(
 export const passthrough = passThroughHandler
 
 const Handler =
-  <HANDLER extends ApiHandler>(
+  <HANDLER extends ApiHandler = DefaultRouteShape>(
     factory: HandlerFactory<HANDLER> = defaultHandler
   ) =>
   (path: string, session: Session, mutator?: Mutator<HANDLER>) => {
@@ -46,9 +46,9 @@ const Handler =
     const doAPI = async (...params: Parameters<HANDLER>) => {
       const result = await handler(...params)
       if (mutator) {
-        const newState = mutator(getCore(session), { params, result })
-        session.projects.project = newState.project
-        session.state.state = newState.state
+        const { project, state } = mutator(getCore(session), { params, result })
+        session.projects.project = project
+        session.state.state = state
         session.api.state.onMutate.dispatchEvent(path, { params, result })
       }
       return result

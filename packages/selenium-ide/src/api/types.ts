@@ -48,7 +48,9 @@ export type EventMutator<Type extends any> = (
   req: Type
 ) => CoreSessionData
 
-export type Mutator<Type extends ApiHandler> = (
+export type DefaultRouteShape = () => Promise<void>
+
+export type Mutator<Type extends ApiHandler = DefaultRouteShape> = (
   session: CoreSessionData,
   req: RequestData<Type>
 ) => CoreSessionData

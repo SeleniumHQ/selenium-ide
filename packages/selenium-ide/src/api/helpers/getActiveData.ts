@@ -13,8 +13,12 @@ export const getActiveSuite = (session: CoreSessionData): SuiteShape => {
 
 export const getActiveTest = (session: CoreSessionData): TestShape => {
   const { project, state: { activeTestID } } = session
-
   return project.tests.find(hasID(activeTestID)) || defaultTest;
+}
+
+export const getActiveTestIndex = (session: CoreSessionData): number => {
+  const { project, state: { activeTestID } } = session
+  return project.tests.findIndex(hasID(activeTestID));
 }
 
 export const getActiveCommand = (session: CoreSessionData, activeTest?: TestShape): CommandShape => {

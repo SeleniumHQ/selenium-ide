@@ -1,11 +1,9 @@
 import { ProjectShape } from '@seleniumhq/side-model'
 import defaultProject from 'api/models/project'
 import { promises as fs } from 'fs'
-import Api from 'main/api'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
-import { ipcMain } from 'electron'
 
 export default class ProjectsController {
   constructor(session: Session) {
@@ -26,34 +24,32 @@ export default class ProjectsController {
     project: ProjectShape,
     filepath?: string
   ): Promise<void> {
-    this.onProjectUnloaded()
     const {
-      session: { commands, menu, plugins, windows },
+      session: { commands, driver, menus, plugins, windows },
     } = this
     this.filepath = filepath
-    // Drop the reference to the old api
-    // so that the event listeners don't build up too much
-    // NOTE: This needs to be run first
-    this.session.api = await Api(this.session)
     this.project = project
     // First we need to load any custom commands and hooks
     await plugins.onProjectLoaded()
     // Next we need to load our full command list into state
     await commands.onProjectLoaded()
     // Build our webdriver with custom commands
-    this.session.driver.build({})
+    await driver.onProjectLoaded()
     // Set up our application menu
-    await menu.onProjectLoaded()
+    await menus.onProjectLoaded()
     // Display our playback and editor windows
     await windows.onProjectLoaded()
   }
 
   async onProjectUnloaded(): Promise<void> {
-    // Drop the reference to the old api
-    // so that the event listeners don't build up too much
-    ipcMain.removeAllListeners()
-    // Clear up our running webdriver process
-    this.session.driver.driver.cleanup()
+    const {
+      session: { driver, plugins },
+    } = this
+
+    // Cleanup our driver
+    driver.onProjectUnloaded()
+    // Cleanup our plugins
+    plugins.onProjectUnloaded()
   }
 
   async getActive(): Promise<ProjectShape> {

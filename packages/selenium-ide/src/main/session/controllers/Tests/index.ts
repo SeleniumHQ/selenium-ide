@@ -9,6 +9,16 @@ export default class TestsController {
 
   session: Session
 
+  static commandFromData(step: Partial<CommandShape> = {}): CommandShape {
+    return {
+      ...step,
+      command: step.command || 'click',
+      target: step.target || '',
+      value: step.value || '',
+      id: randomUUID(),
+    }
+  }
+
   getByID(id: string): TestShape {
     return this.session.projects.project.tests.find(
       (t) => t.id === id
@@ -21,29 +31,29 @@ export default class TestsController {
     ) as TestShape
   }
 
-  async addStep(
+  async addSteps(
     _testID: string,
     _index: number,
-    stepFields: Partial<CommandShape> = {}
-  ): Promise<CommandShape> {
-    return {
-      id: randomUUID(),
-      command: stepFields.command || 'click',
-      target: stepFields.target || '',
-      value: stepFields.value || '',
+    stepFields: Partial<CommandShape>[] = []
+  ): Promise<CommandShape[]> {
+    if (stepFields.length < 1) {
+      return [TestsController.commandFromData()]
     }
+    return stepFields.map(TestsController.commandFromData)
   }
 
   async create(): Promise<TestShape> {
     return {
       id: randomUUID(),
       name: 'New Test',
-      commands: [{
-        id: randomUUID(),
-        command: 'open',
-        target: '/',
-        value: ''
-      }],
+      commands: [
+        {
+          id: randomUUID(),
+          command: 'open',
+          target: '/',
+          value: '',
+        },
+      ],
     }
   }
 }

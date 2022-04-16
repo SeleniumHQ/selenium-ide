@@ -4,26 +4,22 @@ import storage from 'main/store'
 import { Session } from 'main/types'
 import { join } from 'path'
 
+export type PluginMessageHandler = (
+  event: Electron.IpcMainEvent,
+  ...args: any[]
+) => void
+
+export type PluginHooksState = Record<string, PluginMessageHandler>
+
 export default class PluginsController {
   constructor(session: Session) {
     this.session = session
     this.plugins = []
+    this.pluginHooks = []
   }
   plugins: PluginShape[]
+  pluginHooks: PluginHooksState[]
   session: Session
-  async attach(filepath: string) {
-    const plugins = storage.get<'plugins'>('plugins', [])
-    if (plugins.indexOf(filepath) !== -1) return true
-    storage.set<'plugins'>('plugins', plugins.concat(filepath))
-    return true
-  }
-  async detach(filepath: string) {
-    const plugins = storage.get<'plugins'>('plugins', [])
-    const index = plugins.indexOf(filepath)
-    if (index === -1) return true
-    storage.set<'plugins'>('plugins', plugins.splice(index, 1))
-    return true
-  }
   async list() {
     const systemPlugins = storage.get<'plugins'>('plugins')
     const project = await this.session.projects.getActive()
@@ -44,16 +40,32 @@ export default class PluginsController {
     )
     plugins.forEach((plugin, index) => {
       const pluginPath = pluginPaths[index]
-      return this.run(pluginPath, plugin)
+      return this.load(pluginPath, plugin)
     })
   }
-  async run(pluginPath: string, plugin: PluginShape) {
+  async onProjectUnloaded() {
+    this.plugins.forEach((plugin) => {
+      return this.unload(plugin)
+    })
+  }
+  async load(pluginPath: string, plugin: PluginShape) {
     this.plugins.push(plugin)
-    const onMessage = plugin.hooks.onMessage
-    if (onMessage) {
-      ipcMain.on(`message-${pluginPath}`, (_event, ...args) =>
-        onMessage(...args)
-      )
-    }
+    const index = this.plugins.length - 1
+    this.pluginHooks[index] = {}
+    Object.entries(plugin.hooks).forEach(([event, hook]) => {
+      const key = event === 'onMessage' ? `message-${pluginPath}` : event
+      const handler: PluginMessageHandler = (_event, ...args) => hook(...args)
+      ipcMain.on(key, handler)
+      this.pluginHooks[index][key] = handler
+    })
+  }
+
+  async unload(plugin: PluginShape) {
+    const index = this.plugins.indexOf(plugin)
+    this.plugins.splice(index, 1)
+    const [hooks] = this.pluginHooks.splice(index, 1)
+    Object.entries(hooks).forEach(([key, handler]) => {
+      ipcMain.off(key, handler)
+    })
   }
 }

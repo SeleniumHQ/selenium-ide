@@ -7,14 +7,14 @@ import CommandRow from './TestCommandRow'
 import EditorToolbar from '../Drawer/EditorToolbar'
 
 export interface CommandListProps {
-  activeCommand: string
+  activeCommand: string | null
   activeTest: string
   bottomOffset: number
   commands: CommandShape[]
   commandStates: CommandsStateShape
+  selectedCommands: string[]
 }
 
-const deleteKeys: KeyboardEvent['key'][] = ['Backspace', 'Delete']
 const traverseKeys: KeyboardEvent['key'][] = ['ArrowUp', 'ArrowDown']
 
 const CommandList: FC<CommandListProps> = ({
@@ -23,25 +23,34 @@ const CommandList: FC<CommandListProps> = ({
   bottomOffset,
   commandStates,
   commands,
+  selectedCommands,
 }) => {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (deleteKeys.includes(e.key)) {
-        window.sideAPI.tests.removeStep(activeTest, activeCommand)
-      }
       if (traverseKeys.includes(e.key)) {
-        const activeCommandIndex = commands.findIndex(hasID(activeCommand))
+        let activeCommandIndex = 0
+        if (activeCommand) {
+          activeCommandIndex = commands.findIndex(hasID(activeCommand))
+        }
         const nextCommandIndex =
           e.key === 'ArrowUp' ? activeCommandIndex - 1 : activeCommandIndex + 1
         const nextCommand = commands[nextCommandIndex]
         if (nextCommand) {
-          window.sideAPI.state.setActiveCommand(nextCommand.id)
+          const removeKey = e.altKey
+          const anyAddKey = e.shiftKey || e.ctrlKey || e.metaKey
+          window.sideAPI.state.updateStepSelection(
+            nextCommand.id,
+            e.shiftKey,
+            !removeKey && anyAddKey,
+            !removeKey && !anyAddKey,
+          )
         }
       }
     }
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   })
+
   return (
     <List
       dense
@@ -50,7 +59,7 @@ const CommandList: FC<CommandListProps> = ({
           disableGutters={false}
           sx={{ top: '96px', zIndex: 100 }}
           onAdd={() =>
-            window.sideAPI.tests.addStep(
+            window.sideAPI.tests.addSteps(
               activeTest,
               Math.max(
                 commands.findIndex(({ id }) => id === activeCommand),
@@ -60,7 +69,8 @@ const CommandList: FC<CommandListProps> = ({
           }
           onRemove={
             commands.length > 1
-              ? () => window.sideAPI.tests.removeStep(activeTest, activeCommand)
+              ? () =>
+                  window.sideAPI.tests.removeSteps(activeTest, selectedCommands)
               : undefined
           }
           text="Commands"
@@ -81,6 +91,7 @@ const CommandList: FC<CommandListProps> = ({
             key={id}
             index={index}
             selected={id === activeCommand}
+            selectedBatch={selectedCommands.includes(id)}
           />
         )
       })}

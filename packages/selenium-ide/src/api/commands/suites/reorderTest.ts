@@ -1,12 +1,15 @@
 import { SuiteShape } from '@seleniumhq/side-model'
 import update from 'lodash/fp/update'
 import browserHandler from 'browser/api/classes/Handler'
-import mainHandler from 'main/api/classes/Handler'
-import { Session } from 'main/types'
+import mainHandler, { passthrough } from 'main/api/classes/Handler'
 import { Mutator } from 'api/types'
 import { hasID } from 'api/helpers/hasID'
 
-export type Shape = Session['suites']['reorderTest']
+export type Shape = (
+  _suiteID: string,
+  _testID: string,
+  _newIndex: number
+) => Promise<void>
 
 export const mutator: Mutator<Shape> = (
   session,
@@ -27,4 +30,4 @@ export const mutator: Mutator<Shape> = (
 
 export const browser = browserHandler<Shape>()
 
-export const main = mainHandler<Shape>()
+export const main = mainHandler<Shape>(passthrough)

@@ -7,6 +7,7 @@ export default class SuitesController {
     this.session = session
   }
   session: Session
+
   async addTest(_suiteID: string, _testID: string): Promise<TestShape> {
     return {
       id: randomUUID(),
@@ -14,12 +15,7 @@ export default class SuitesController {
       commands: [],
     }
   }
-  async removeTest(_suiteID: string, _testID: string): Promise<void> {}
-  async reorderTest(
-    _suiteID: string,
-    _testID: string,
-    _newIndex: number
-  ): Promise<void> {}
+
   async create(): Promise<SuiteShape> {
     return {
       id: randomUUID(),
@@ -29,8 +25,5 @@ export default class SuitesController {
       tests: [],
       timeout: 30000,
     }
-  }
-  async delete(_suiteID: string): Promise<boolean> {
-    return true
   }
 }
