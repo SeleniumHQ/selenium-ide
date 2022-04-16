@@ -1,13 +1,8 @@
 import Box from '@mui/material/Box'
-import Checkbox from '@mui/material/Checkbox'
-import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import { TestShape } from '@seleniumhq/side-model'
+import ReorderableListItem from 'browser/components/ReorderableListItem'
 import React, { FC } from 'react'
-
-const {
-  suites: { addTest, removeTest },
-} = window.sideAPI
 
 const camelToTitleCase = (text: string) => {
   const result = text.replace(/([A-Z])/g, ' $1')
@@ -18,37 +13,34 @@ const commandTextFormat = { color: 'primary.main', typography: 'body2' }
 
 interface SuiteTestRowProps {
   activeSuite: string
-  selected: boolean
+  index: number
   test: TestShape
 }
 
 const SuiteTestRow: FC<SuiteTestRowProps> = ({
   activeSuite,
-  selected,
+  index,
   test,
 }) => (
-  <ListItem
+  <ReorderableListItem
     className="pos-rel"
     divider
-    key={test.id}
-    secondaryAction={
-      <Checkbox
-        edge="end"
-        onChange={() => {
-          const handler = selected ? removeTest : addTest
-          return handler(activeSuite, test.id)
-        }}
-        checked={selected}
-        inputProps={{ 'aria-labelledby': test.name }}
-      />
-    }
-    selected={selected}
+    dragType='TEST'
+    id={test.id}
+    index={index}
+    key={`${test.id}-${index}`}
+    reorder={(oldIndex, newIndex, item) => {
+      // @ts-expect-error
+      if (!item.add) {
+        window.sideAPI.suites.reorderTest(activeSuite, oldIndex, newIndex)
+      }
+    }}
   >
     <ListItemText
       disableTypography
       primary={<Box sx={commandTextFormat}>{camelToTitleCase(test.name)}</Box>}
     />
-  </ListItem>
+  </ReorderableListItem>
 )
 
 export default SuiteTestRow

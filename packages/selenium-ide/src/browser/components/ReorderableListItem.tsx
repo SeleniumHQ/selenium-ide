@@ -7,7 +7,7 @@ import { useDrag, useDrop } from 'react-dnd'
 interface ReorderableListItemProps extends ListItemProps {
   index: number
   dragType: string
-  reorder: (oldIndex: number, newIndex: number) => void
+  reorder: (oldIndex: number, newIndex: number, item: DragItem) => void
 }
 
 interface DragItem {
@@ -77,7 +77,7 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
       }
 
       // Time to actually perform the action
-      reorder(dragIndex, hoverIndex)
+      reorder(dragIndex, hoverIndex, item)
 
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,

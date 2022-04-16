@@ -1,4 +1,4 @@
-import { CommandShape, TestShape } from '@seleniumhq/side-model'
+import { CommandShape } from '@seleniumhq/side-model'
 import browserHandler from 'browser/api/classes/Handler'
 import set from 'lodash/fp/set'
 import update from 'lodash/fp/update'
