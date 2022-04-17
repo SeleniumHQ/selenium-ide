@@ -9,11 +9,12 @@ import MainHeader from '../Main/Header'
 import loadingID from 'api/constants/loadingID'
 import { Typography } from '@mui/material'
 
+const sxCenter = { textAlign: 'center' }
 const NoTestFound = () => (
   <>
     <MainHeader />
     <Paper className="p-4" elevation={1} id="command-editor" square>
-      <Typography>No Test Selected</Typography>
+      <Typography sx={sxCenter}>No Test Selected</Typography>
     </Paper>
   </>
 )
