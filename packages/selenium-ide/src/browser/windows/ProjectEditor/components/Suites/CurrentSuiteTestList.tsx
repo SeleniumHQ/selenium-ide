@@ -21,6 +21,7 @@ const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
       borderColor: 'primary.main',
       display: 'inline-block',
       marginBottom: `${bottomOffset}px`,
+      verticalAlign: 'top',
       width: '50%',
     }}
     subheader={

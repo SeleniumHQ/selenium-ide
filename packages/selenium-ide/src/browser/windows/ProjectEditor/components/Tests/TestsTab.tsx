@@ -6,12 +6,21 @@ import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import { CoreSessionData } from 'api/types'
 import MainHeader from '../Main/Header'
+import loadingID from 'api/constants/loadingID'
+import { Typography } from '@mui/material'
+
+const NoTestFound = () => (
+  <>
+    <MainHeader />
+    <Paper className="p-4" elevation={1} id="command-editor" square>
+      <Typography>No Test Selected</Typography>
+    </Paper>
+  </>
+)
 
 const TestsTab: React.FC<{
   session: CoreSessionData
 }> = ({ session }) => {
-  const activeTest = getActiveTest(session)
-  const activeCommand = getActiveCommand(session)
   const {
     state: {
       activeCommandID,
@@ -29,6 +38,14 @@ const TestsTab: React.FC<{
       window.sideAPI.state.closeTestEditor()
     }
   }, [])
+
+  if (activeTestID === loadingID) {
+    return <NoTestFound />
+  }
+
+  const activeTest = getActiveTest(session)
+  const activeCommand = getActiveCommand(session)
+
   return (
     <>
       <MainHeader />

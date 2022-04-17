@@ -8,7 +8,7 @@ export default class SuitesController {
   }
   session: Session
 
-  async addTest(_suiteID: string, _testID: string): Promise<TestShape> {
+  async addTest(): Promise<TestShape> {
     return {
       id: randomUUID(),
       name: 'New Test',

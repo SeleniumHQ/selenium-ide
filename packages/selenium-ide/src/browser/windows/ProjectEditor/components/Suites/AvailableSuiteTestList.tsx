@@ -23,6 +23,7 @@ const AvailableSuiteTestList: FC<AvailableSuiteTestListProps> = ({
       borderColor: 'primary.main',
       display: 'inline-block',
       marginBottom: `${bottomOffset}px`,
+      verticalAlign: 'top',
       width: '50%',
     }}
     subheader={
