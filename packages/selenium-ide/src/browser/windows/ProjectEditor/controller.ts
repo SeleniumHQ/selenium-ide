@@ -7,6 +7,7 @@ export const window: WindowConfig['window'] = () => {
   const display = Electron.screen.getPrimaryDisplay()
   return {
     ...panelConfig,
+    frame: true,
     focusable: true,
     resizable: true,
     x: display.bounds.width - width,
