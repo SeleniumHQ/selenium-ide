@@ -19,6 +19,7 @@ interface AvailableSuiteTestRowProps {
 }
 
 const AvailableSuiteTestRow: FC<AvailableSuiteTestRowProps> = ({
+  activeSuite,
   index,
   selected,
   test,
@@ -26,9 +27,10 @@ const AvailableSuiteTestRow: FC<AvailableSuiteTestRowProps> = ({
   <DraggableListItem
     className="pos-rel"
     divider
-    dragType='TEST'
+    dragType="TEST"
     end={(result) => {
-      console.log(result)
+      // @ts-expect-error
+      window.sideAPI.suites.addTest(activeSuite, test.id, result.newIndex)
     }}
     id={test.id}
     index={index}

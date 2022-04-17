@@ -5,6 +5,7 @@ import { useDrag, useDrop } from 'react-dnd'
 
 
 interface ReorderableListItemProps extends ListItemProps {
+  id: string
   index: number
   dragType: string
   reorder: (oldIndex: number, newIndex: number, item: DragItem) => void
@@ -35,6 +36,13 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
     collect(monitor) {
       return {
         handlerId: monitor.getHandlerId(),
+      }
+    },
+    // @ts-expect-error
+    drop(item) {
+      return {
+        oldIndex: item.index,
+        newIndex: index,
       }
     },
     hover(item: DragItem, monitor) {
@@ -89,6 +97,11 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
 
   const [{ isDragging }, drag] = useDrag({
     type: dragType,
+    end: (item, monitor) => {
+      if (!monitor.didDrop()) {
+        reorder(index, item.index, item as DragItem)
+      }
+    },
     item: () => {
       return { id, index }
     },

@@ -1,0 +1,53 @@
+{
+  "id": "5ae78ac5-a1c2-441b-9c01-5aa9f15f7b21",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "f533a4f8-4b20-4a79-bea4-ddc5882a57ba",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "b722bec1-cd73-4df1-af19-0d4f977fca47",
+      "name": "open page",
+      "commands": [
+        {
+          "id": "ab250350-7dd3-4428-b19a-6358f5b6891d",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "8b8e2497-1a65-46e4-baa5-a4dd2a0670c0",
+      "name": "outer",
+      "commands": [
+        {
+          "id": "ac59c71a-4b22-4788-a928-3b89776697f7",
+          "command": "run",
+          "target": "open page",
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}

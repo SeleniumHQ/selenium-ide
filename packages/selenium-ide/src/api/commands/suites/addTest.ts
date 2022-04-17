@@ -1,15 +1,15 @@
 import update from 'lodash/fp/update'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
-import { Session } from 'main/types'
 import { CoreSessionData, Mutator } from 'api/types'
 import { hasID } from 'api/helpers/hasID'
+import { TestShape } from '@seleniumhq/side-model'
 
-export type Shape = Session['suites']['addTest']
+export type Shape = (suiteID: string, testID: string, index: number) => Promise<TestShape>
 
 export const mutator: Mutator<Shape> = (
   session,
-  { params: [suiteID, testID] }
+  { params: [suiteID, testID, index] }
 ) =>
   update(
     'project.suites',
@@ -17,7 +17,10 @@ export const mutator: Mutator<Shape> = (
       const suiteIndex = suites.findIndex(hasID(suiteID))
       return update(
         `${suiteIndex}.tests`,
-        (tests) => tests.concat(testID),
+        (tests) => {
+          tests.splice(index, 0, testID)
+          return tests
+        },
         suites
       )
     },
