@@ -64,7 +64,7 @@ const startDriver: StartDriver = () => (info) =>
     if (fs.existsSync(driverPath)) {
       const driver = spawn(driverPath.replace(/\s/g, '\\ '), args, {
         env: {},
-        shell: true,
+        shell: false,
       })
       driver.stdout.on('data', (out: string) => {
         const outStr = `${out}`
