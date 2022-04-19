@@ -1,6 +1,7 @@
 import { ipcRenderer } from 'electron'
 import { BaseListener, VariadicArgs } from 'api/types'
 
+
 const baseListener = <ARGS extends VariadicArgs>(
   path: string
 ): BaseListener<ARGS> => {

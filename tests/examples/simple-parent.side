@@ -39,6 +39,12 @@
           "command": "run",
           "target": "open page",
           "value": ""
+        },
+        {
+          "command": "assertElementPresent",
+          "target": "css=.lnXdpd",
+          "value": "",
+          "id": "d341e173-b4f8-4645-b25d-1b58f55ef371"
         }
       ]
     }

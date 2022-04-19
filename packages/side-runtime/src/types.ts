@@ -70,7 +70,7 @@ export interface PluginPreloadOutputShape {
   hooks: {
     onCommandRecorded?: (
       command: NewCommandShape,
-      event: Event | KeyboardEvent | MouseEvent | undefined
+      event: Event | KeyboardEvent | MouseEvent | MutationRecord[] | undefined
     ) => OnCommandRecordedResult
   }
 }

@@ -40,6 +40,7 @@ function processSelectionCommand(
   selecting: RequestSelectElementHandlerParams[0],
   field: RequestSelectElementHandlerParams[1]
 ): void {
+  console.log('Did we get here somehow?', selecting, field)
   if (selecting) {
     startSelection(field)
   } else {
@@ -50,7 +51,9 @@ function processSelectionCommand(
 let targetSelector: TargetSelector | null = null
 const locatorBuilders = new LocatorBuilders(window)
 function startSelection(field: LocatorFields) {
+  console.log('Doing this thing?')
   targetSelector = new TargetSelector(function (element, win) {
+    console.log('WTFFFFF')
     if (element && win) {
       const target = locatorBuilders.buildAll(element)
       if (target != null && Array.isArray(target)) {
@@ -62,8 +65,10 @@ function startSelection(field: LocatorFields) {
 }
 
 function cleanSelection() {
-  ;(targetSelector as TargetSelector).cleanup()
-  targetSelector = null
+  if (targetSelector) {
+    targetSelector.cleanup()
+    targetSelector = null
+  }
 }
 
 function processMessage(event: MessageEvent<any>) {

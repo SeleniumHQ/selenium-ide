@@ -21,8 +21,8 @@ import Recorder from './recorder'
 import { isTest } from './utils'
 
 const locatorBuilders = new LocatorBuilders(window)
-export const handlers: Parameters<typeof Recorder.addEventHandler>[] = []
-export const observers: Parameters<typeof Recorder.addMutationObserver>[] = []
+export const handlers: Parameters<Recorder['addEventHandler']>[] = []
+export const observers: Parameters<Recorder['addMutationObserver']>[] = []
 
 function eventIsTrusted(event: Event) {
   return isTest ? true : event.isTrusted
@@ -648,7 +648,7 @@ observers.push([
       if (scrollDetector) {
         //TODO: fix target
         this.record(
-          event,
+          mutations,
           'runScript',
           'window.scrollTo(0,' + window.scrollY + ')',
           ''

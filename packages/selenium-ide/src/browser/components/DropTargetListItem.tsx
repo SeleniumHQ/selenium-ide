@@ -1,14 +1,13 @@
 import ListItem, { ListItemProps } from '@mui/material/ListItem'
+import { ReorderPreview } from 'browser/hooks/useReorderPreview'
 import type { XYCoord, Identifier } from 'dnd-core'
 import React, { MutableRefObject } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
+import { useDrop } from 'react-dnd'
 
-
-interface ReorderableListItemProps extends ListItemProps {
-  id: string
-  index: number
+interface DropTargetListItemProps extends ListItemProps {
   dragType: string
-  reorder: (oldIndex: number, newIndex: number, item: DragItem) => void
+  index: number
+  reorder: ReorderPreview
   reorderConfirm: (oldIndex: number, newIndex: number, item: DragItem) => void
   reorderReset: () => void
 }
@@ -19,18 +18,16 @@ interface DragItem {
   type: string
 }
 
-const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
+const DropTargetListItem: React.FC<DropTargetListItemProps> = ({
   children,
   dragType,
-  id,
   index,
   reorder,
   reorderConfirm,
   reorderReset,
-  sx = {},
   ...props
 }) => {
-  const ref = React.useRef<HTMLLIElement>();
+  const ref = React.useRef<HTMLLIElement>()
   const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
@@ -42,14 +39,9 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
         handlerId: monitor.getHandlerId(),
       }
     },
-    // @ts-expect-error
     drop(item, monitor) {
       if (monitor.didDrop()) {
         reorderConfirm(item.index, index, item)
-        return {
-          oldIndex: item.index,
-          newIndex: index,
-        };
       } else {
         reorderReset()
       }
@@ -94,7 +86,7 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
       }
 
       // Time to actually perform the action
-      reorder(dragIndex, hoverIndex, item)
+      reorder({ newIndex: hoverIndex - 1 })
 
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
@@ -104,29 +96,12 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
     },
   })
 
-  const [{ isDragging }, drag] = useDrag({
-    type: dragType,
-    item: () => {
-      return { id, index }
-    },
-    collect: (monitor: any) => ({
-      isDragging: monitor.isDragging(),
-    }),
-  })
+  drop(ref)
 
-  drag(drop(ref))
-
-  const wrappedSX = !isDragging
-    ? sx
-    : {
-        ...sx,
-        opacity: 0.5,
-      }
   return (
     <ListItem
       data-handler-id={handlerId}
       ref={ref as MutableRefObject<HTMLLIElement>}
-      sx={wrappedSX}
       {...props}
     >
       {children}
@@ -134,4 +109,4 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
   )
 }
 
-export default ReorderableListItem
+export default DropTargetListItem

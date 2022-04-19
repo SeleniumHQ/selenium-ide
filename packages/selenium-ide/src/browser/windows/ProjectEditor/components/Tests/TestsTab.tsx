@@ -27,7 +27,7 @@ const TestsTab: React.FC<{
       activeCommandID,
       activeTestID,
       commands,
-      editor: { selectedCommands },
+      editor: { selectedCommandIndexes },
       playback,
     },
   } = session
@@ -46,7 +46,6 @@ const TestsTab: React.FC<{
 
   const activeTest = getActiveTest(session)
   const activeCommand = getActiveCommand(session)
-
   return (
     <>
       <MainHeader />
@@ -56,7 +55,7 @@ const TestsTab: React.FC<{
         bottomOffset={bottomOffset}
         commands={activeTest.commands}
         commandStates={playback.commands}
-        selectedCommands={selectedCommands}
+        selectedCommandIndexes={selectedCommandIndexes}
       />
       <Paper
         elevation={1}
@@ -73,7 +72,7 @@ const TestsTab: React.FC<{
         <CommandEditor
           commands={commands}
           command={activeCommand}
-          selectedCommands={selectedCommands}
+          selectedCommandIndexes={selectedCommandIndexes}
           testID={activeTestID}
         />
       </Paper>

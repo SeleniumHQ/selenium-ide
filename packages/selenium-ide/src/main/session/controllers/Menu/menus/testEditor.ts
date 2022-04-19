@@ -1,4 +1,3 @@
-import { CommandShape } from '@seleniumhq/side-model'
 import { getActiveCommandIndex, getActiveTest } from 'api/helpers/getActiveData'
 import { Menu } from 'electron'
 import { MenuComponent, Session } from 'main/types'
@@ -10,7 +9,7 @@ export const commandList: MenuComponent = (session) => async () => {
   const sessionData = await session.state.get()
   const editorState = sessionData.state.editor
   const copiedCommandCount = editorState.copiedCommands.length
-  const selectedCommandCount = editorState.selectedCommands.length
+  const selectedCommandCount = editorState.selectedCommandIndexes.length
   return [
     {
       accelerator: 'CommandOrControl+X',
@@ -18,7 +17,7 @@ export const commandList: MenuComponent = (session) => async () => {
         await session.api.state.setCopiedCommands()
         await session.api.tests.removeSteps(
           sessionData.state.activeTestID,
-          sessionData.state.editor.selectedCommands
+          sessionData.state.editor.selectedCommandIndexes
         )
       },
       enabled: Boolean(selectedCommandCount),
@@ -49,8 +48,8 @@ export const commandList: MenuComponent = (session) => async () => {
       click: async () => {
         const cmds = getActiveTest(sessionData).commands
         const allCommandsDisabled =
-          sessionData.state.editor.selectedCommands
-            .map((id) => cmds.find((cmd) => cmd.id === id) as CommandShape)
+          sessionData.state.editor.selectedCommandIndexes
+            .map((index) => cmds[index])
             .findIndex((cmd) => !cmd.command.startsWith('//')) === -1
 
         session.api.tests.toggleStepDisability(!allCommandsDisabled)
@@ -63,7 +62,7 @@ export const commandList: MenuComponent = (session) => async () => {
       click: async () => {
         await session.api.tests.removeSteps(
           sessionData.state.activeTestID,
-          sessionData.state.editor.selectedCommands
+          sessionData.state.editor.selectedCommandIndexes
         )
       },
       enabled: Boolean(selectedCommandCount),
@@ -75,12 +74,12 @@ export const commandList: MenuComponent = (session) => async () => {
       click: async () => {
         await session.api.tests.removeSteps(
           sessionData.state.activeTestID,
-          sessionData.state.editor.selectedCommands
+          sessionData.state.editor.selectedCommandIndexes
         )
       },
       enabled: Boolean(selectedCommandCount),
       label: pluralize('Delete Command', selectedCommandCount),
-      visible: false
+      visible: false,
     },
   ]
 }
@@ -88,7 +87,7 @@ export const commandList: MenuComponent = (session) => async () => {
 export const recorderList = (session: Session) => async () => {
   const sessionData = await session.state.get()
   const editorState = sessionData.state.editor
-  const selectedCommandCount = editorState.selectedCommands.length
+  const selectedCommandCount = editorState.selectedCommandIndexes.length
   return [
     {
       accelerator: 'CommandOrControl+R',
@@ -104,7 +103,7 @@ export const recorderList = (session: Session) => async () => {
 export const playbackList: MenuComponent = (session) => async () => {
   const sessionData = await session.state.get()
   const editorState = sessionData.state.editor
-  const selectedCommandCount = editorState.selectedCommands.length
+  const selectedCommandCount = editorState.selectedCommandIndexes.length
   return [
     {
       click: async () => {

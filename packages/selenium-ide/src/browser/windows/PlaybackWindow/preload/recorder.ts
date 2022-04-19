@@ -55,7 +55,9 @@ export default class Recorder {
     this.setWindowHandle = this.setWindowHandle.bind(this)
     // @ts-expect-error
     this.window.addEventListener('message', this.setWindowHandle)
-    window.sideAPI.recorder.onFrameRecalculate.addListener(this.getFrameLocation)
+    window.sideAPI.recorder.onFrameRecalculate.addListener(
+      this.getFrameLocation
+    )
     window.addEventListener('beforeunload', () => {
       window.sideAPI.recorder.onFrameRecalculate.removeListener(
         this.getFrameLocation
@@ -64,11 +66,19 @@ export default class Recorder {
     // @ts-expect-error
     this.recordingState = {}
     this.addRecorderTracingAttribute()
-    this.attach()
     initFindSelect()
     // e.g., once on load
     this.getFrameLocation()
+
+    handlers.forEach((handler) => {
+      this.addEventHandler(...handler)
+    })
+    observers.forEach((observer) => {
+      this.addMutationObserver(...observer)
+    })
+    this.attach()
   }
+
   plugins: PluginPreloadOutputShape[]
   window: Window
   eventListeners: Record<string, EventListener[]>
@@ -76,12 +86,13 @@ export default class Recorder {
   recordingState: RecordingState
   frameLocation: string
   inputTypes: any[]
+
   addRecorderTracingAttribute() {
     this.window.document.body.setAttribute('data-side-attach-once-loaded', '')
   }
 
   record(
-    event: Event | KeyboardEvent | MouseEvent | undefined,
+    event: Event | KeyboardEvent | MouseEvent | MutationRecord[] | undefined,
     command: string,
     target: string | [string, string][],
     value: string | [string, string][],
@@ -145,13 +156,13 @@ export default class Recorder {
 
   attach() {
     if (!this.attached) {
-      for (let eventKey in Recorder.eventHandlers) {
+      for (let eventKey in this.eventHandlers) {
         const eventInfo = this.parseEventKey(eventKey)
         const eventName = eventInfo.eventName
         const capture = eventInfo.capture
 
         this.eventListeners[eventKey] = []
-        const handlers = Recorder.eventHandlers[eventKey]
+        const handlers = this.eventHandlers[eventKey]
         for (let i = 0; i < handlers.length; i++) {
           this.window.document.addEventListener(
             eventName,
@@ -161,9 +172,9 @@ export default class Recorder {
           this.eventListeners[eventKey].push(handlers[i])
         }
       }
-      for (let observerName in Recorder.mutationObservers) {
-        const observer = Recorder.mutationObservers[observerName]
-        observer.observe(this.window.document.body, observer.config)
+      for (let observerName in this.mutationObservers) {
+        const observer = this.mutationObservers[observerName]
+        observer.observe(window.document.body, observer.config)
       }
       this.attached = true
       this.recordingState = {
@@ -197,8 +208,8 @@ export default class Recorder {
         )
       }
     }
-    for (let observerName in Recorder.mutationObservers) {
-      const observer = Recorder.mutationObservers[observerName]
+    for (let observerName in this.mutationObservers) {
+      const observer = this.mutationObservers[observerName]
       observer.disconnect()
     }
     this.eventListeners = {}
@@ -212,9 +223,9 @@ export default class Recorder {
     this.frameLocation = await window.sideAPI.recorder.getFrameLocation()
   }
 
-  static eventHandlers: Record<string, EventHandler[]> = {}
-  static mutationObservers: Record<string, ExpandedMutationObserver> = {}
-  public static addEventHandler = function (
+  eventHandlers: Record<string, EventHandler[]> = {}
+  mutationObservers: Record<string, ExpandedMutationObserver> = {}
+  addEventHandler(
     handlerName: string,
     eventName: string,
     handler: EventHandler,
@@ -222,21 +233,21 @@ export default class Recorder {
   ) {
     handler.handlerName = handlerName
     let key = capture ? 'C_' + eventName : eventName
-    if (!Recorder.eventHandlers[key]) {
-      Recorder.eventHandlers[key] = []
+    if (!this.eventHandlers[key]) {
+      this.eventHandlers[key] = []
     }
-    Recorder.eventHandlers[key].push(handler)
+    this.eventHandlers[key].push(handler)
   }
 
-  public static addMutationObserver = function (
+  addMutationObserver(
     observerName: string,
     callback: MutationCallback,
     config: any
   ) {
-    const observer = new MutationObserver(callback) as ExpandedMutationObserver
+    const observer = new MutationObserver(callback.bind(this)) as ExpandedMutationObserver
     observer.observerName = observerName
     observer.config = config
-    Recorder.mutationObservers[observerName] = observer
+    this.mutationObservers[observerName] = observer
   }
 
   static inputTypes: string[] = [
@@ -258,13 +269,6 @@ export default class Recorder {
     'color',
   ]
 }
-handlers.forEach((handler) => {
-  Recorder.addEventHandler(...handler)
-})
-
-observers.forEach((observer) => {
-  Recorder.addMutationObserver(...observer)
-})
 
 function updateInputElementsOfRelevantType(
   action: (el: HTMLInputElement) => void,

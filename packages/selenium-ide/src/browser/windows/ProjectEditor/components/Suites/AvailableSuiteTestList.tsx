@@ -8,14 +8,12 @@ export interface AvailableSuiteTestListProps {
   activeSuite: string
   allTests: TestShape[]
   bottomOffset: number
-  tests: string[]
 }
 
 const AvailableSuiteTestList: FC<AvailableSuiteTestListProps> = ({
   activeSuite,
   allTests,
   bottomOffset,
-  tests,
 }) => (
   <List
     dense
@@ -40,7 +38,6 @@ const AvailableSuiteTestList: FC<AvailableSuiteTestListProps> = ({
           index={index}
           key={id}
           test={test}
-          selected={tests.includes(id)}
         />
       )
     })}

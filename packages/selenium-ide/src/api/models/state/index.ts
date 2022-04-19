@@ -11,12 +11,14 @@ import { CommandsStateShape } from './command'
 
 export interface EditorStateShape {
   copiedCommands: Omit<CommandShape, 'id'>[],
-  selectedCommands: string[]
+  selectedCommandIndexes: number[]
+  selectedTestIndexes: number[]
 }
 
 export const defaultEditorState: EditorStateShape = {
   copiedCommands: [],
-  selectedCommands: [],
+  selectedCommandIndexes: [],
+  selectedTestIndexes: [],
 }
 
 export interface RecorderStateShape {

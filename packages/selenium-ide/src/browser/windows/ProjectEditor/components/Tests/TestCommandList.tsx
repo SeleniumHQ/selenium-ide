@@ -1,7 +1,8 @@
-import { CommandShape } from '@seleniumhq/side-model'
 import List from '@mui/material/List'
+import { CommandShape } from '@seleniumhq/side-model'
 import { hasID } from 'api/helpers/hasID'
 import { CommandsStateShape } from 'api/models/state/command'
+import useReorderPreview from 'browser/hooks/useReorderPreview'
 import React, { FC, useEffect } from 'react'
 import CommandRow from './TestCommandRow'
 import EditorToolbar from '../Drawer/EditorToolbar'
@@ -12,7 +13,7 @@ export interface CommandListProps {
   bottomOffset: number
   commands: CommandShape[]
   commandStates: CommandsStateShape
-  selectedCommands: string[]
+  selectedCommandIndexes: number[]
 }
 
 const traverseKeys: KeyboardEvent['key'][] = ['ArrowUp', 'ArrowDown']
@@ -23,7 +24,7 @@ const CommandList: FC<CommandListProps> = ({
   bottomOffset,
   commandStates,
   commands,
-  selectedCommands,
+  selectedCommandIndexes,
 }) => {
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -39,10 +40,10 @@ const CommandList: FC<CommandListProps> = ({
           const removeKey = e.altKey
           const anyAddKey = e.shiftKey || e.ctrlKey || e.metaKey
           window.sideAPI.state.updateStepSelection(
-            nextCommand.id,
+            nextCommandIndex,
             e.shiftKey,
             !removeKey && anyAddKey,
-            !removeKey && !anyAddKey,
+            !removeKey && !anyAddKey
           )
         }
       }
@@ -50,7 +51,13 @@ const CommandList: FC<CommandListProps> = ({
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
   })
-
+  const [preview, reorderPreview, resetPreview] = useReorderPreview(
+    commands,
+    selectedCommandIndexes,
+  )
+  useEffect(() => {
+    resetPreview()
+  }, [commands.map((c) => c.id).join('-')])
   return (
     <List
       dense
@@ -70,7 +77,7 @@ const CommandList: FC<CommandListProps> = ({
           onRemove={
             commands.length > 1
               ? () =>
-                  window.sideAPI.tests.removeSteps(activeTest, selectedCommands)
+                  window.sideAPI.tests.removeSteps(activeTest, selectedCommandIndexes)
               : undefined
           }
           text="Commands"
@@ -81,7 +88,10 @@ const CommandList: FC<CommandListProps> = ({
         marginBottom: `${bottomOffset}px`,
       }}
     >
-      {commands.map((command, index) => {
+      {preview.map(([command, origIndex], index) => {
+        if (!command) {
+          return null
+        }
         const { id } = command
         return (
           <CommandRow
@@ -90,8 +100,9 @@ const CommandList: FC<CommandListProps> = ({
             commandState={commandStates[id]}
             key={id}
             index={index}
-            selected={id === activeCommand}
-            selectedBatch={selectedCommands.includes(id)}
+            reorderPreview={reorderPreview}
+            resetPreview={resetPreview}
+            selected={selectedCommandIndexes.includes(origIndex)}
           />
         )
       })}

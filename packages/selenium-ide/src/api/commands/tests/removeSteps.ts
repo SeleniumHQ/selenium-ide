@@ -7,11 +7,11 @@ import { Mutator } from 'api/types'
 import { getActiveCommandIndex } from 'api/helpers/getActiveData'
 import { hasID } from 'api/helpers/hasID'
 
-export type Shape = (testID: string, stepID: string[]) => Promise<void>
+export type Shape = (testID: string, stepIndexes: number[]) => Promise<void>
 
 export const mutator: Mutator<Shape> = (
   session,
-  { params: [testID, stepIDs] }
+  { params: [testID, stepIndexes] }
 ) => {
   const {
     project: { tests },
@@ -22,13 +22,13 @@ export const mutator: Mutator<Shape> = (
   const sessionWithRemovedCommands = update(
     `project.tests.${testIndex}.commands`,
     (commands: CommandShape[]) =>
-      commands.filter((cmd) => !stepIDs.includes(cmd.id)),
+      commands.filter((_cmd, index) => !stepIndexes.includes(index)),
     session
   )
   const sessionWithUpdatedSelection = update(
-    `state.editor.selectedCommands`,
-    (selectedCommands: string[]) =>
-      selectedCommands.filter((id) => !stepIDs.includes(id)),
+    `state.editor.selectedCommandIndexes`,
+    (selectedCommandIndexes: string[]) =>
+      selectedCommandIndexes.filter((_id, index) => !stepIndexes.includes(index)),
     sessionWithRemovedCommands
   )
   const newActiveTest = sessionWithUpdatedSelection.project.tests[testIndex]

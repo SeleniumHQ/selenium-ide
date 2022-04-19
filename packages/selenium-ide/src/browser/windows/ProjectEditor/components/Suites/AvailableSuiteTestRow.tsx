@@ -14,14 +14,12 @@ const commandTextFormat = { color: 'primary.main', typography: 'body2' }
 interface AvailableSuiteTestRowProps {
   activeSuite: string
   index: number
-  selected: boolean
   test: TestShape
 }
 
 const AvailableSuiteTestRow: FC<AvailableSuiteTestRowProps> = ({
   activeSuite,
   index,
-  selected,
   test,
 }) => (
   <DraggableListItem
@@ -36,7 +34,6 @@ const AvailableSuiteTestRow: FC<AvailableSuiteTestRowProps> = ({
     index={index}
     key={test.id}
     metadata={{ add: true }}
-    selected={selected}
   >
     <ListItemText
       disableTypography

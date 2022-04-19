@@ -30,7 +30,7 @@ export const mutator: Mutator<Shape> = (
 ) => {
   if (!result) return session
   let index = getActiveCommandIndex(session)
-  return result.reduce((sesh, command) => {
+  const rv = result.reduce((sesh, command) => {
     const newSession = addStepsMutator(sesh, {
       params: [
         session.state.activeTestID,
@@ -44,6 +44,8 @@ export const mutator: Mutator<Shape> = (
     }
     return newSession
   }, session)
+  console.log('Recorded?', session, rv)
+  return rv
 }
 
 export const browser = browserHandler<Shape>()

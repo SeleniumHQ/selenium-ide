@@ -138,7 +138,14 @@ export default class WindowsController {
     window.webContents.on('did-create-window', (win) =>
       this.handlePlaybackWindow(win)
     )
-
+    window.webContents.on('frame-created', async (_event, details) => {
+      await details.frame.once('dom-ready', async () => {
+        const hasAPI = await details.frame.executeJavaScript('window.sideAPI')
+        if (!hasAPI) {
+          details.frame.reload()
+        }
+      })
+    })
     window.on('focus', () => {
       const windowIndex = this.playbackWindows.indexOf(window)
       if (windowIndex !== this.playbackWindows.length - 1) {
@@ -176,7 +183,10 @@ export default class WindowsController {
       }
     })
     projectWindow.on('closed', () => {
-      playbackWindow.close()
+      BrowserWindow.getAllWindows().forEach((win) => {
+        if (!win.closable) win.closable = true
+        win.close()
+      })
     })
   }
 }

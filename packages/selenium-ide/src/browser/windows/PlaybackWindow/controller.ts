@@ -9,6 +9,7 @@ export const window: WindowConfig['window'] = () => {
   const display = Electron.screen.getPrimaryDisplay()
   return {
     ...dimensions,
+    closable: false,
     focusable: true,
     x:
       Math.floor(display.bounds.width / 2) -

@@ -9,12 +9,12 @@ import { CommandShape } from '@seleniumhq/side-model'
 export type Shape = () => Promise<void>
 
 export const mutator: Mutator<Shape> = (session) => {
-  const selection = session.state.editor.selectedCommands
+  const selection = session.state.editor.selectedCommandIndexes
   const activeTest = getActiveTest(session)
-  const selectedCommands: CommandShape[] = activeTest.commands.filter((cmd) =>
-    selection.includes(cmd.id)
+  const selectedCommandIndexes: CommandShape[] = activeTest.commands.filter((_cmd, index) =>
+    selection.includes(index)
   )
-  const copyFriendlyCommands = selectedCommands.map(omit(['id']))
+  const copyFriendlyCommands = selectedCommandIndexes.map(omit(['id']))
   return set('state.editor.copiedCommands', copyFriendlyCommands, session)
 }
 

@@ -43,13 +43,15 @@ export default class ProjectsController {
 
   async onProjectUnloaded(): Promise<void> {
     const {
-      session: { driver, plugins },
+      session: { driver, plugins, state },
     } = this
 
     // Cleanup our driver
     driver.onProjectUnloaded()
     // Cleanup our plugins
     plugins.onProjectUnloaded()
+    // Cleanup our state
+    state.onProjectUnloaded()
   }
 
   async getActive(): Promise<ProjectShape> {

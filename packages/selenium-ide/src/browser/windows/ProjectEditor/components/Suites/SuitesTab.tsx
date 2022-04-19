@@ -18,7 +18,7 @@ const SuitesTab: React.FC<{
   )
   const {
     project: { tests },
-    state: { activeSuiteID },
+    state: { activeSuiteID, editor },
   } = session
 
   const bottomOffset = useHeightFromElement('suite-editor')
@@ -28,13 +28,13 @@ const SuitesTab: React.FC<{
       <CurrentSuiteTestList
         activeSuite={activeSuiteID}
         bottomOffset={bottomOffset}
+        selectedIndexes={editor.selectedTestIndexes}
         tests={activeTests}
       />
       <AvailableSuiteTestList
         activeSuite={activeSuiteID}
         allTests={tests}
         bottomOffset={bottomOffset}
-        tests={activeSuite.tests}
       />
       <Paper
         elevation={1}

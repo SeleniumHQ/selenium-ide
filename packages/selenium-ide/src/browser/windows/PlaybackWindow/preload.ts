@@ -16,7 +16,7 @@
 // under the License.
 import api from 'browser/api'
 import apiMutators from 'browser/api/mutator'
-import { ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { identity } from 'lodash/fp'
 import path from 'path'
 import Recorder from './preload/recorder'
@@ -40,23 +40,19 @@ const pluginFromPath = (pluginPath: string) => {
 }
 
 /**
- * Binds our API on initialization
+ * Expose it in the main context
  */
-process.once('loaded', async () => {
-  /**
-   * Expose it in the main context
-   */
-  window.addEventListener('DOMContentLoaded', async () => {
-    window.sideAPI = {
-      recorder: api.recorder,
-      // @ts-expect-error
-      mutators: { recorder: apiMutators.recorder },
-    }
-    const pluginPaths = await api.plugins.list()
-    const plugins = pluginPaths.map(pluginFromPath).filter(identity)
-    setTimeout(async () => {
-      console.log('Initializing the recorder')
-      new Recorder(window, plugins)
-    }, 500)
-  })
+window.addEventListener('DOMContentLoaded', async () => {
+  contextBridge.exposeInMainWorld('sideAPI', true)
+  window.sideAPI = {
+    recorder: api.recorder,
+    // @ts-expect-error
+    mutators: { recorder: apiMutators.recorder },
+  }
+  const pluginPaths = await api.plugins.list()
+  const plugins = pluginPaths.map(pluginFromPath).filter(identity)
+  setTimeout(async () => {
+    console.debug('Initializing the recorder')
+    new Recorder(window, plugins)
+  }, 500)
 })

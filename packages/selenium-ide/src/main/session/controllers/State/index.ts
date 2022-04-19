@@ -1,8 +1,8 @@
-import clone from 'lodash/fp/clone'
+import { getCommandIndex } from 'api/helpers/getActiveData'
 import defaultState from 'api/models/state'
 import { CoreSessionData, StateShape } from 'api/types'
+import clone from 'lodash/fp/clone'
 import { Session } from 'main/types'
-import { getCommandIndex } from 'api/helpers/getActiveData'
 
 export default class StateController {
   constructor(session: Session) {
@@ -18,7 +18,7 @@ export default class StateController {
     }
   }
 
-  async onProjectLoaded() {
+  async onProjectUnloaded() {
     this.state = clone(defaultState)
   }
 

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { CommandShape } from "@seleniumhq/side-model"
+import { CommandShape } from '@seleniumhq/side-model'
 
 export const ControlFlowCommandNames = {
   do: 'do',
