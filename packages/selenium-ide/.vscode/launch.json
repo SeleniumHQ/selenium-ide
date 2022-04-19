@@ -8,10 +8,6 @@
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
       "windows": {
-        "preLaunchTask": "stop chromedriver",
-        "postDebugTask ": {
-          "task": "stop chromedriver"
-        },
         "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
       },
       "environment": [

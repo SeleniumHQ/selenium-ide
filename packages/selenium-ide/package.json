@@ -8,9 +8,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "clean": "rm -rf build dist files node_modules tsconfig.tsbuildinfo",
-    "start": "run-script-os",
-    "start:default": "electron build/main-bundle.js",
-    "start:win32": "taskkill.exe /im chromedriver.exe /F /FI \"IMAGENAME eq chromedriver.exe\" && electron build/main-bundle.js",
+    "start": "electron build/main-bundle.js",
     "build": "run-s build:webpack build:electron",
     "build:electron": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
     "build:electron:dir": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
