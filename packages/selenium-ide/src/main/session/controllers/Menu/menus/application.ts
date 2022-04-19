@@ -2,6 +2,7 @@ import { Menu } from 'electron'
 import { Session } from 'main/types'
 import { projectEditorCommands } from './projectEditor'
 import { testEditorCommands } from './testEditor'
+import { projectViewCommands } from './projectView'
 
 const applicationMenu = (session: Session) => async () =>
   Menu.buildFromTemplate([
@@ -27,6 +28,10 @@ const applicationMenu = (session: Session) => async () =>
       label: 'Edit',
       submenu: await testEditorCommands(session)(),
     },
+    {
+      label: 'View',
+      submenu: await projectViewCommands(session)(),
+    }
   ])
 
 export default applicationMenu
