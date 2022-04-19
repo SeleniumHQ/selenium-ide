@@ -147,7 +147,8 @@ export default class DriverController {
   }
   async stopProcess(): Promise<null | string> {
     if (this.driverProcess) {
-      this.driverProcess.kill()
+      let procKilled = this.driverProcess.kill()
+      console.log(procKilled)
     }
     return null
   }
