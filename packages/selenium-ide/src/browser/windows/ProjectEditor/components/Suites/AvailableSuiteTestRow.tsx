@@ -28,7 +28,7 @@ const AvailableSuiteTestRow: FC<AvailableSuiteTestRowProps> = ({
     dragType="TEST"
     end={(result) => {
       // @ts-expect-error
-      window.sideAPI.suites.addTest(activeSuite, test.id, result.newIndex)
+      window.sideAPI.suites.addTests(activeSuite, [test.id], result.newIndex)
     }}
     id={test.id}
     index={index}

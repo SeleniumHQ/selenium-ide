@@ -1,6 +1,3 @@
-import difference from 'lodash/difference'
-import uniq from 'lodash/uniq'
-
 export type UpdateSelection = (
   indexes: number[],
   selectionIndexes: number[],
@@ -12,7 +9,7 @@ export const updateSelection: UpdateSelection = (
   indexes,
   selectionIndexes,
   prevIndex,
-  [index, add, batch, clear]
+  [index, batch, add, clear]
 ) => {
   let newIndexes = [index]
   if (clear) {
@@ -22,9 +19,15 @@ export const updateSelection: UpdateSelection = (
     const min = Math.min(prevIndex, index)
     const max = Math.max(prevIndex, index) + 1
     newIndexes = indexes.slice(min, max)
+    if (prevIndex > index) {
+      newIndexes.reverse()
+    }
   }
+  const filteredIndexes = selectionIndexes.filter((index) =>
+    !newIndexes.includes(index)
+  )
   if (add) {
-    return uniq(selectionIndexes.concat(newIndexes))
+    return filteredIndexes.concat(newIndexes)
   }
-  return difference(selectionIndexes, newIndexes)
+  return filteredIndexes
 }

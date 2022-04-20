@@ -1,5 +1,6 @@
-import React from 'react'
 import { reorderList } from 'api/helpers/reorderList'
+import identity from 'lodash/fp/identity'
+import React from 'react'
 
 export type ReorderPreviewInput = { newIndex: number }
 export type ReorderPreview = (input: ReorderPreviewInput) => void
@@ -10,7 +11,8 @@ const deriveIDIndexes: DeriveIDIndexes = (entries) =>
 
 const useReorderPreview = <T = any>(
   entries: T[],
-  selectedIndexes: number[]
+  selectedIndexes: number[],
+  id: (entry: T) => string = identity
 ): [[T, number][], ReorderPreview, () => void] => {
   const [preview, setPreview] = React.useState(deriveIDIndexes(entries))
   const resetPreview = () => setPreview(deriveIDIndexes(entries))
@@ -22,6 +24,9 @@ const useReorderPreview = <T = any>(
     })
     setPreview(newPreview)
   }
+  React.useEffect(() => {
+    resetPreview()
+  }, [entries.map(id).join('-')])
   return [preview, reorderPreview, resetPreview]
 }
 

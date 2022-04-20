@@ -21,6 +21,13 @@ body,
 }
 
 /**
+ * Interaction utils
+ */
+.pointer-auto {
+  pointer-events: all;
+}
+
+/**
  * Position utils
  */
 .pos-rel {

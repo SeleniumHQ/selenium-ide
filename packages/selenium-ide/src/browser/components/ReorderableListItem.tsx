@@ -2,7 +2,7 @@ import ListItem, { ListItemProps } from '@mui/material/ListItem'
 import type { XYCoord, Identifier } from 'dnd-core'
 import React, { MutableRefObject } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-
+import { Shape as SelectShape } from 'api/commands/state/updateStepSelection'
 
 interface ReorderableListItemProps extends ListItemProps {
   id: string
@@ -11,6 +11,7 @@ interface ReorderableListItemProps extends ListItemProps {
   reorder: (oldIndex: number, newIndex: number, item: DragItem) => void
   reorderConfirm: (oldIndex: number, newIndex: number, item: DragItem) => void
   reorderReset: () => void
+  select: SelectShape
 }
 
 interface DragItem {
@@ -27,10 +28,12 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
   reorder,
   reorderConfirm,
   reorderReset,
+  select,
   sx = {},
   ...props
 }) => {
-  const ref = React.useRef<HTMLLIElement>();
+  const ref = React.useRef<HTMLLIElement>()
+  const { selected } = props
   const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
@@ -42,17 +45,8 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
         handlerId: monitor.getHandlerId(),
       }
     },
-    // @ts-expect-error
-    drop(item, monitor) {
-      if (monitor.didDrop()) {
-        reorderConfirm(item.index, index, item)
-        return {
-          oldIndex: item.index,
-          newIndex: index,
-        };
-      } else {
-        reorderReset()
-      }
+    drop(item) {
+      reorderConfirm(item.index, index, item)
     },
     hover(item: DragItem, monitor) {
       if (!ref.current) {
@@ -104,9 +98,11 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
     },
   })
 
+  // 
   const [{ isDragging }, drag] = useDrag({
     type: dragType,
     item: () => {
+      if (!selected) select(index, false, false, true)
       return { id, index }
     },
     collect: (monitor: any) => ({

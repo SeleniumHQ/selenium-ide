@@ -1,4 +1,4 @@
-import { SuiteShape, TestShape } from '@seleniumhq/side-model'
+import { SuiteShape } from '@seleniumhq/side-model'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 
@@ -7,14 +7,6 @@ export default class SuitesController {
     this.session = session
   }
   session: Session
-
-  async addTest(): Promise<TestShape> {
-    return {
-      id: randomUUID(),
-      name: 'New Test',
-      commands: [],
-    }
-  }
 
   async create(): Promise<SuiteShape> {
     return {
