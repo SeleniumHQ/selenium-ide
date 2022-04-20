@@ -1,11 +1,11 @@
 import { TestShape } from '@seleniumhq/side-model'
-import List from '@mui/material/List'
-import ListSubheader from '@mui/material/ListSubheader'
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import CurrentSuiteTestRow from './CurrentSuiteTestRow'
 import useReorderPreview from 'browser/hooks/useReorderPreview'
 import DropTargetListItem from 'browser/components/DropTargetListItem'
 import { ListItemText } from '@mui/material'
+import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
+import ReorderableList from 'browser/components/ReorderableList'
 
 export interface CurrentSuiteTestListProps {
   activeSuite: string
@@ -14,7 +14,7 @@ export interface CurrentSuiteTestListProps {
   tests: TestShape[]
 }
 
-const traverseKeys: KeyboardEvent['key'][] = ['ArrowUp', 'ArrowDown']
+const useKeyboundNav = makeKeyboundNav(window.sideAPI.state.updateStepSelection)
 
 const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
   activeSuite,
@@ -24,58 +24,30 @@ const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
 }) => {
   const [preview, reorderPreview, resetPreview] = useReorderPreview(
     tests,
-    selectedIndexes
+    selectedIndexes,
+    (t) => t.id
   )
-  useEffect(() => {
-    resetPreview()
-  }, [tests.map((t) => t.id).join('-')])
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (traverseKeys.includes(e.key)) {
-        let activeTestIndex = 0
-        if (selectedIndexes.length) {
-          activeTestIndex = selectedIndexes.slice(-1)[0]
-        }
-        const nextTestIndex =
-          e.key === 'ArrowUp' ? activeTestIndex - 1 : activeTestIndex + 1
-        const nextTest = tests[nextTestIndex]
-        if (nextTest) {
-          const removeKey = e.altKey
-          const anyAddKey = e.shiftKey || e.ctrlKey || e.metaKey
-          window.sideAPI.state.updateTestSelection(
-            nextTestIndex,
-            e.shiftKey,
-            !removeKey && anyAddKey,
-            !removeKey && !anyAddKey
-          )
-        }
-      }
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  })
+  useKeyboundNav(tests, selectedIndexes)
   return (
-    <List
+    <ReorderableList
+      bottomOffset={bottomOffset}
       dense
+      subheader="Tests in suite"
       sx={{
-        borderColor: 'primary.main',
         display: 'inline-block',
-        marginBottom: `${bottomOffset}px`,
-        verticalAlign: 'top',
         width: '50%',
       }}
-      subheader={
-        <ListSubheader className="lh-36" sx={{ top: '96px', zIndex: 100 }}>
-          Tests in suite
-        </ListSubheader>
-      }
     >
-      {preview.map(([test, origIndex], index) => {
+      {preview.map(([id, origIndex], index) => {
+        const test = tests[origIndex]
+        if (!test) {
+          return null
+        }
         return (
           <CurrentSuiteTestRow
             activeSuite={activeSuite}
             index={index}
-            key={`${test.id}-${index}`}
+            key={`${id}-${origIndex}`}
             reorder={reorderPreview}
             reorderReset={resetPreview}
             selected={selectedIndexes.includes(origIndex)}
@@ -86,18 +58,13 @@ const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
       <DropTargetListItem
         dragType="TEST"
         index={tests.length}
-        reorderConfirm={(_oldIndex, newIndex, item) => {
-          // @ts-expect-error
-          if (item.add) {
-            window.sideAPI.suites.addTest(activeSuite, item.id, newIndex)
-          }
-        }}
+        reorderConfirm={() => {}}
         reorder={reorderPreview}
         reorderReset={resetPreview}
       >
         <ListItemText>Drop Tests Here</ListItemText>
       </DropTargetListItem>
-    </List>
+    </ReorderableList>
   )
 }
 

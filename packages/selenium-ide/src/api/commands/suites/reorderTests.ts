@@ -1,9 +1,13 @@
+import set from 'lodash/fp/set'
 import update from 'lodash/fp/update'
 import { Mutator } from 'api/types'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler, { passthrough } from 'main/api/classes/Handler'
 import { hasID } from 'api/helpers/hasID'
-import { reorderListRaw } from 'api/helpers/reorderList'
+import {
+  recalculateSelectedIndexes,
+  reorderListRaw,
+} from 'api/helpers/reorderList'
 
 export type Shape = (testID: string, newIndex: number) => Promise<void>
 
@@ -12,16 +16,24 @@ export const mutator: Mutator<Shape> = (
   { params: [suiteID, newIndex] }
 ) => {
   const suiteIndex = session.project.suites.findIndex(hasID(suiteID))
-  return update(
+  const newSession = update(
     `project.suites.${suiteIndex}.tests`,
     (tests: string[]) => {
       return reorderListRaw({
-        entries: tests.map((t, index) => [t, index]),
+        entries: tests,
         newIndex,
         selectedIndexes: session.state.editor.selectedTestIndexes,
-      }).map((t) => t[0])
+      })
     },
     session
+  )
+  return set(
+    'state.editor.selectedTestIndexes',
+    recalculateSelectedIndexes({
+      newIndex,
+      selectedIndexes: session.state.editor.selectedTestIndexes,
+    }),
+    newSession
   )
 }
 

@@ -24,7 +24,7 @@ export const mutator: Mutator<Shape> = (session, { params }) => {
       updateSelection(
         activeTest.commands.map((_cmd, index) => index),
         indexes,
-        activeTest.commands.findIndex((cmd) => cmd.id === session.state.activeCommandID),
+        indexes.slice(-1)[0],
         params
       ),
     session

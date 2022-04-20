@@ -1,3 +1,5 @@
+import { Close } from '@mui/icons-material'
+import { IconButton } from '@mui/material'
 import Box from '@mui/material/Box'
 import ListItemText from '@mui/material/ListItemText'
 import { TestShape } from '@seleniumhq/side-model'
@@ -12,7 +14,7 @@ const camelToTitleCase = (text: string) => {
 
 const commandTextFormat = { color: 'primary.main', typography: 'body2' }
 
-interface SuiteTestRowProps {
+interface CurrentSuiteTestRowProps {
   activeSuite: string
   index: number
   reorder: ReorderPreview
@@ -21,7 +23,7 @@ interface SuiteTestRowProps {
   test: TestShape
 }
 
-const SuiteTestRow: FC<SuiteTestRowProps> = ({
+const CurrentSuiteTestRow: FC<CurrentSuiteTestRowProps> = ({
   activeSuite,
   index,
   reorder,
@@ -58,14 +60,22 @@ const SuiteTestRow: FC<SuiteTestRowProps> = ({
     reorder={(_oldIndex, newIndex) => reorder({ newIndex })}
     reorderConfirm={(_oldIndex, newIndex, item) => {
       // @ts-expect-error
-      if (item.add) {
-        window.sideAPI.suites.addTest(activeSuite, item.id, newIndex)
-      } else {
-        window.sideAPI.suites.reorderTest(activeSuite, newIndex)
+      if (!item.add) {
+        window.sideAPI.suites.reorderTests(activeSuite, newIndex)
       }
     }}
     reorderReset={reorderReset}
+    secondaryAction={
+        <IconButton
+          edge="end"
+          onClick={() => window.sideAPI.suites.removeTests(activeSuite, [test.id])}
+          size="small"
+        >
+          <Close />
+        </IconButton>
+    }
     selected={selected}
+    select={window.sideAPI.state.updateTestSelection}
   >
     <ListItemText
       disableTypography
@@ -74,4 +84,4 @@ const SuiteTestRow: FC<SuiteTestRowProps> = ({
   </ReorderableListItem>
 )
 
-export default SuiteTestRow
+export default CurrentSuiteTestRow

@@ -121,6 +121,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
         </IconButton>
       }
       selected={selected}
+      select={updateStepSelection}
     >
       <ListItemText
         disableTypography

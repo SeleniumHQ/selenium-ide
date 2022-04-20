@@ -1,14 +1,13 @@
-import List from '@mui/material/List'
 import { CommandShape } from '@seleniumhq/side-model'
-import { hasID } from 'api/helpers/hasID'
 import { CommandsStateShape } from 'api/models/state/command'
 import useReorderPreview from 'browser/hooks/useReorderPreview'
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import CommandRow from './TestCommandRow'
 import EditorToolbar from '../Drawer/EditorToolbar'
+import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
+import ReorderableList from 'browser/components/ReorderableList'
 
 export interface CommandListProps {
-  activeCommand: string | null
   activeTest: string
   bottomOffset: number
   commands: CommandShape[]
@@ -16,50 +15,24 @@ export interface CommandListProps {
   selectedCommandIndexes: number[]
 }
 
-const traverseKeys: KeyboardEvent['key'][] = ['ArrowUp', 'ArrowDown']
+const useKeyboundNav = makeKeyboundNav(window.sideAPI.state.updateTestSelection)
 
 const CommandList: FC<CommandListProps> = ({
-  activeCommand,
   activeTest,
   bottomOffset,
   commandStates,
   commands,
   selectedCommandIndexes,
 }) => {
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (traverseKeys.includes(e.key)) {
-        let activeCommandIndex = 0
-        if (activeCommand) {
-          activeCommandIndex = commands.findIndex(hasID(activeCommand))
-        }
-        const nextCommandIndex =
-          e.key === 'ArrowUp' ? activeCommandIndex - 1 : activeCommandIndex + 1
-        const nextCommand = commands[nextCommandIndex]
-        if (nextCommand) {
-          const removeKey = e.altKey
-          const anyAddKey = e.shiftKey || e.ctrlKey || e.metaKey
-          window.sideAPI.state.updateStepSelection(
-            nextCommandIndex,
-            e.shiftKey,
-            !removeKey && anyAddKey,
-            !removeKey && !anyAddKey
-          )
-        }
-      }
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  })
   const [preview, reorderPreview, resetPreview] = useReorderPreview(
     commands,
     selectedCommandIndexes,
+    (c) => c.id
   )
-  useEffect(() => {
-    resetPreview()
-  }, [commands.map((c) => c.id).join('-')])
+  useKeyboundNav(commands, selectedCommandIndexes)
   return (
-    <List
+    <ReorderableList
+      bottomOffset={bottomOffset}
       dense
       subheader={
         <EditorToolbar
@@ -69,7 +42,7 @@ const CommandList: FC<CommandListProps> = ({
             window.sideAPI.tests.addSteps(
               activeTest,
               Math.max(
-                commands.findIndex(({ id }) => id === activeCommand),
+                selectedCommandIndexes.slice(-1)[0],
                 0
               )
             )
@@ -77,16 +50,15 @@ const CommandList: FC<CommandListProps> = ({
           onRemove={
             commands.length > 1
               ? () =>
-                  window.sideAPI.tests.removeSteps(activeTest, selectedCommandIndexes)
+                  window.sideAPI.tests.removeSteps(
+                    activeTest,
+                    selectedCommandIndexes
+                  )
               : undefined
           }
           text="Commands"
         />
       }
-      sx={{
-        borderColor: 'primary.main',
-        marginBottom: `${bottomOffset}px`,
-      }}
     >
       {preview.map(([command, origIndex], index) => {
         if (!command) {
@@ -106,7 +78,7 @@ const CommandList: FC<CommandListProps> = ({
           />
         )
       })}
-    </List>
+    </ReorderableList>
   )
 }
 

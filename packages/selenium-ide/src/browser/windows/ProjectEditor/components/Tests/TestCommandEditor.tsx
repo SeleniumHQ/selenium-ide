@@ -24,7 +24,16 @@ const CommandEditor: FC<CommandEditorProps> = ({
   selectedCommandIndexes,
   ...props
 }) => {
-  if (selectedCommandIndexes.length !== 1) {
+  const { commands } = props
+  const isDisabled = command.command.startsWith('//')
+  const correctedCommand: CommandShape = {
+    ...command,
+    command: isDisabled ? command.command.slice(2) : command.command,
+  }
+  if (
+    selectedCommandIndexes.length !== 1 ||
+    !commands[correctedCommand.command]
+  ) {
     return (
       <Stack className="p-4" spacing={1}>
         <Typography className="centered py-4" variant="body2">
@@ -34,11 +43,6 @@ const CommandEditor: FC<CommandEditorProps> = ({
         </Typography>
       </Stack>
     )
-  }
-  const isDisabled = command.command.startsWith('//')
-  const correctedCommand: CommandShape = {
-    ...command,
-    command: isDisabled ? command.command.slice(2) : command.command,
   }
   return (
     <Stack className="p-4" spacing={1}>

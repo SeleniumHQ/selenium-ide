@@ -24,7 +24,6 @@ const TestsTab: React.FC<{
 }> = ({ session }) => {
   const {
     state: {
-      activeCommandID,
       activeTestID,
       commands,
       editor: { selectedCommandIndexes },
@@ -50,7 +49,6 @@ const TestsTab: React.FC<{
     <>
       <MainHeader />
       <CommandList
-        activeCommand={activeCommandID}
         activeTest={activeTestID}
         bottomOffset={bottomOffset}
         commands={activeTest.commands}
