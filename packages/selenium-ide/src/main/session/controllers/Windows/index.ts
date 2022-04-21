@@ -123,7 +123,8 @@ export default class WindowsController {
     }
     this.windows[name] = window
     window.on('closed', () => {
-      if (name != 'project-editor') delete this.windows[name]
+      if (!name.startsWith(projectEditorWindowName))
+        delete this.windows[name]
     })
     return true
   }
