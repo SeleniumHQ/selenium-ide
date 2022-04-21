@@ -169,7 +169,7 @@ export default class WindowsController {
       console.debug(win.accessibleTitle)
 
       // TODO implement an enum on the window shape to include "type" so that we aren't looking at strings.  Also, this name in the title is subject to change, for live URL or localization, etc.
-      if (win.title == 'Playback Window') {
+      if (win.title === 'Playback Window') {
         win.closable = true
         win.close()
       }
