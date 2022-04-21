@@ -158,12 +158,6 @@ export default class WindowsController {
     )
   }
 
-  async onPlaybackShow() {
-//    await this.open(playbackWindowName)
-    const window = await this.get(playbackWindowName)
-    this.handlePlaybackWindow(window)
-  }
-
   async onProjectLoaded() {
     // await this.close(projectEditorWindowName)
     await this.open(projectEditorWindowName)

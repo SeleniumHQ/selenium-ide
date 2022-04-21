@@ -5,13 +5,6 @@ import { MenuComponent, Session } from 'main/types'
 export const projectViewCommands: MenuComponent = (session) => async () =>
   [
     {
-      accelerator: 'CommandOrControl+P',
-      label: 'Show Playback Window',
-      click: async () => {
-        await session.windows.onPlaybackShow()
-      },
-    },
-    {
       accelerator: 'CommandOrControl+F12',
       label: 'Show DevTools',
       click: async () => {
