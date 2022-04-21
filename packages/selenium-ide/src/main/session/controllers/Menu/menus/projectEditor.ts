@@ -17,7 +17,7 @@ export const projectEditorCommands: MenuComponent = (session) => async () =>
       click: async () => {
         const response = await session.dialogs.open()
         if (response.canceled) return
-        await session.projects.close()
+//        await session.projects.close()
         await session.api.projects.load(response.filePaths[0])
       },
     },

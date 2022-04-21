@@ -41,7 +41,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
           const win = new BrowserWindow({
             ...windowConfig,
             webPreferences: {
-              ...windowConfig?.webPreferences ?? {}, 
+              ...(windowConfig?.webPreferences ?? {}),
               preload: hasPreload ? preloadPath : undefined,
             },
             ...options,
@@ -123,7 +123,7 @@ export default class WindowsController {
     }
     this.windows[name] = window
     window.on('closed', () => {
-      delete this.windows[name]
+      if (name != 'project-editor') delete this.windows[name]
     })
     return true
   }
@@ -158,10 +158,26 @@ export default class WindowsController {
     )
   }
 
+  async onPlaybackShow() {
+    await this.open(playbackWindowName)
+  }
+
   async onProjectLoaded() {
-    await this.close(projectEditorWindowName)
+    // await this.close(projectEditorWindowName)
     await this.open(projectEditorWindowName)
     await this.close('splash')
+
+    BrowserWindow.getAllWindows().forEach((win) => {
+      console.debug('found win, closable ' + win.closable)
+      console.debug(win.id)
+      console.debug(win.accessibleTitle)
+
+      // TODO implement an enum on the window shape to include "type" so that we aren't looking at strings.  Also, this name in the title is subject to change, for live URL or localization, etc.
+      if (win.title == 'Playback Window') {
+        win.closable = true
+        win.close()
+      }
+    })
 
     await this.close(playbackWindowName)
     await this.open(playbackWindowName)
@@ -169,23 +185,16 @@ export default class WindowsController {
     this.handlePlaybackWindow(playbackWindow)
 
     const projectWindow = await this.get(projectEditorWindowName)
-    projectWindow.on('focus', () => {
-      playbackWindow.showInactive()
-    })
-    projectWindow.on('blur', () => {
-      const windows = BrowserWindow.getAllWindows()
-      const anyWindowFocused = windows.reduce((focused, window) => {
-        if (focused) return true
-        return window.isFocused()
-      }, false)
-      if (!anyWindowFocused) {
-        playbackWindow.hide()
-      }
-    })
+    projectWindow.on('focus', () => {})
+    projectWindow.on('blur', () => {})
     projectWindow.on('closed', () => {
+      console.debug('projectWindow on closed')
       BrowserWindow.getAllWindows().forEach((win) => {
-        if (!win.closable) win.closable = true
-        win.close()
+        console.debug('found win, closable ' + win.closable)
+        if (!win.closable) {
+          win.closable = true
+          win.close()
+        }
       })
     })
   }
