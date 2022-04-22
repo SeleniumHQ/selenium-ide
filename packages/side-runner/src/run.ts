@@ -75,7 +75,6 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
         })
         const onComplete = (failure: any) => {
           logger.info('Completing with failure', failure)
-          EE.removeAllListeners()
           playback.cleanup()
           if (failure) {
             return reject(failure)

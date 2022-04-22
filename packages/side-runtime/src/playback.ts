@@ -306,6 +306,7 @@ export default class Playback {
   }
 
   async cleanup() {
+    this[EE].removeAllListeners()
     await this.executor.cleanup()
   }
 

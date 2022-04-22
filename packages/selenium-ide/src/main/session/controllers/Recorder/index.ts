@@ -40,6 +40,7 @@ export interface RecordNewCommandInput {
   insertBeforeLastCommand?: boolean
   frameLocation?: string
 }
+
 export default class RecorderController {
   constructor(session: Session) {
     this.session = session

@@ -25,7 +25,7 @@ export default class ProjectsController {
     filepath?: string
   ): Promise<void> {
     const {
-      session: { commands, driver, menus, plugins, windows },
+      session: { commands, menus, plugins, windows },
     } = this
     this.filepath = filepath
     this.project = project
@@ -33,8 +33,6 @@ export default class ProjectsController {
     await plugins.onProjectLoaded()
     // Next we need to load our full command list into state
     await commands.onProjectLoaded()
-    // Build our webdriver with custom commands
-    await driver.onProjectLoaded()
     // Set up our application menu
     await menus.onProjectLoaded()
     // Display our playback and editor windows
@@ -43,11 +41,9 @@ export default class ProjectsController {
 
   async onProjectUnloaded(): Promise<void> {
     const {
-      session: { driver, plugins, state },
+      session: { plugins, state },
     } = this
 
-    // Cleanup our driver
-    driver.onProjectUnloaded()
     // Cleanup our plugins
     plugins.onProjectUnloaded()
     // Cleanup our state

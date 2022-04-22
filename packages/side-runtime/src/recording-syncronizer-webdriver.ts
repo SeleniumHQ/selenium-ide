@@ -32,8 +32,10 @@ export default function createRecorderSyncronizerForWebdriverExecutor({
 }: RecorderSynchronizerInput) {
   return createRecorderSyncronizer({
     sessionId,
-    executeAsyncScript: (script: ScriptShape) => executor.doExecuteAsyncScript(script),
-    switchToWindow: (handle: string) => executor.driver.switchTo().window(handle),
+    executeAsyncScript: (script: ScriptShape) =>
+      executor.doExecuteAsyncScript(script),
+    switchToWindow: (handle: string) =>
+      executor.driver.switchTo().window(handle),
     getWindowHandle: () => executor.driver.getWindowHandle(),
     logger,
   })
