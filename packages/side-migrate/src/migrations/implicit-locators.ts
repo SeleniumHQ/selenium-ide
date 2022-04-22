@@ -19,20 +19,20 @@ import { Commands, ArgTypes, ProjectShape } from '@seleniumhq/side-model'
 
 export default function migrate(project: ProjectShape) {
   let r = Object.assign({}, project)
-  r.tests = r.tests.map(test => {
+  r.tests = r.tests.map((test) => {
     return Object.assign({}, test, {
-      commands: test.commands.map(c => {
+      commands: test.commands.map((c) => {
         if (Commands[c.command]) {
           let newCmd = Object.assign({}, c)
           const type = Commands[c.command]
           if (type.target?.name === ArgTypes.locator.name) {
-            newCmd.target = migrateLocator(newCmd.target)
+            newCmd.target = migrateLocator(newCmd.target as string)
           }
           if (type.value?.name === ArgTypes.locator.name) {
-            newCmd.value = migrateLocator(newCmd.value)
+            newCmd.value = migrateLocator(newCmd.value as string)
           }
           if (newCmd.targets) {
-            newCmd.targets = newCmd.targets.map(targetTuple => [
+            newCmd.targets = newCmd.targets.map((targetTuple) => [
               migrateLocator(targetTuple[0]),
               targetTuple[1],
             ])

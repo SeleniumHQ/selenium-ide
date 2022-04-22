@@ -113,7 +113,11 @@ export function migrateProject(files: FileObj[]) {
   return project
 }
 
-function migrateSuite(suite: string, fileMap: Record<string, string>, project: ProjectShape) {
+function migrateSuite(
+  suite: string,
+  fileMap: Record<string, string>,
+  project: ProjectShape
+) {
   const result = JSON.parse(convert.xml2json(fileMap[suite], { compact: true }))
   const parsedSuite: SuiteShape = {
     id: suite,
@@ -152,7 +156,9 @@ export function migrateTestCase(data: string): {
   const test = {
     name: result.html.body.table.thead.tr.td._text,
     commands: tr
-      .filter((row: any) => row.td[0]._text && isImplementedWait(row.td[0]._text))
+      .filter(
+        (row: any) => row.td[0]._text && isImplementedWait(row.td[0]._text)
+      )
       .map((row: any) => ({
         command: row.td[0]._text && row.td[0]._text.replace('AndWait', ''),
         target: xmlunescape(parseTarget(row.td[1])),
@@ -169,7 +175,7 @@ export function migrateUrls(test: TestShape, url: string): TestShape {
     commands: test.commands.map((command) => {
       if (command.command === 'open') {
         return Object.assign({}, command, {
-          target: new URL(command.target, url).href,
+          target: new URL(command.target as string, url).href,
         })
       }
       return command

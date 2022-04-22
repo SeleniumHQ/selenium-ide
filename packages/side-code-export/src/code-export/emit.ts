@@ -100,13 +100,13 @@ export async function emitCommand(
     const ignoreEscaping = command.command === 'storeJson'
     let result = emitter(
       preprocessParameter(
-        command.target,
+        command.target as string,
         emitter.targetPreprocessor,
         variableLookup,
         { ignoreEscaping }
       ),
       preprocessParameter(
-        command.value,
+        command.value as string,
         emitter.valuePreprocessor,
         variableLookup,
         { ignoreEscaping }
