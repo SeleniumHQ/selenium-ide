@@ -15,11 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { CommandShape, ProjectShape } from "@seleniumhq/side-model"
+import { CommandShape, ProjectShape } from '@seleniumhq/side-model'
 
 export default function migrate(project: ProjectShape) {
   let r = Object.assign({}, project)
-  r.tests = r.tests.map(test => {
+  r.tests = r.tests.map((test) => {
     return Object.assign({}, test, {
       commands: migrateCommands([...test.commands]),
     })
@@ -40,21 +40,21 @@ function migrateCommands(commands: CommandShape[]) {
         commands[i] = Object.assign({}, command, {
           target: 'handle=${root}',
         })
-      } else if (/^win_ser_/.test(command.target)) {
-        if (!windowNamesCache[command.target]) {
-          windowNamesCache[command.target] = `win${Math.floor(
+      } else if (/^win_ser_/.test(command.target as string)) {
+        if (!windowNamesCache[command.target as string]) {
+          windowNamesCache[command.target as string] = `win${Math.floor(
             Math.random() * 10000
           )}`
           if (i > 0) {
             commands[i - 1] = Object.assign({}, commands[i - 1], {
               opensWindow: true,
-              windowHandleName: windowNamesCache[command.target],
+              windowHandleName: windowNamesCache[command.target as string],
               windowTimeout: 2000,
             })
           }
         }
         commands[i] = Object.assign({}, command, {
-          target: `handle=\${${windowNamesCache[command.target]}}`,
+          target: `handle=\${${windowNamesCache[command.target as string]}}`,
         })
       }
     } else if (command.command === 'close') {

@@ -139,11 +139,11 @@ export class CommandNode {
 
   evaluateForEach(variables: Variables): boolean | string {
     let collection = variables.get(
-      interpolateScript(this.command.target, variables).script
+      interpolateScript(this.command.target as string, variables).script
     )
     if (!collection) return 'Invalid variable provided.'
     variables.set(
-      interpolateScript(this.command.value, variables).script,
+      interpolateScript(this.command.value as string, variables).script,
       collection[this.timesVisited]
     )
     const result = this.timesVisited < collection.length
@@ -164,7 +164,7 @@ export class CommandNode {
 
   _evaluate(commandExecutor: WebDriverExecutor) {
     let expression = interpolateScript(
-      this.command.target,
+      this.command.target as string,
       commandExecutor.variables
     )
     if (ControlFlowCommandChecks.isTimes(this.command)) {
@@ -210,7 +210,7 @@ export class CommandNode {
   _isRetryLimit() {
     if (ControlFlowCommandChecks.isLoop(this.command)) {
       let limit = 1000
-      let value = Math.floor(+this.command.value)
+      let value = Math.floor(+(this.command.value as string))
       if (this.command.value && !isNaN(value)) {
         limit = value
       }
