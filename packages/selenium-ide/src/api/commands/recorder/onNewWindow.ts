@@ -4,6 +4,7 @@ import browserEventListener from 'browser/api/classes/EventListener'
 import mainEventListener from 'main/api/classes/EventListener'
 import { mutator as recordNewCommandMutator } from './recordNewCommand'
 import { mutator as updateStepTestsMutator } from '../tests/updateStep'
+import { RecordNewCommandInput } from 'main/session/controllers/Recorder'
 
 type windowID = string
 type selectWindowStepID = string
@@ -37,7 +38,7 @@ export const mutator: EventMutator<OnNewWindowRecorder> = (
   const sessionWithselectWindowStep = recordNewCommandMutator(
     sessionWithPreviousStepUpdatedToOpenNewWindow,
     {
-      params: [selectWindowStep],
+      params: [selectWindowStep as RecordNewCommandInput],
       result: [selectWindowStep],
     }
   )

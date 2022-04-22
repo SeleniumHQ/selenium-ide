@@ -6,10 +6,10 @@ export interface CommandShape {
   id: string
   comment?: string
   command: string
-  target: string
+  target?: string
   targets?: [string, string][]
   targetFallback?: [string, string][]
-  value: string
+  value?: string
   values?: [string, string][]
   valueFallback?: [string, string][]
   isBreakpoint?: boolean

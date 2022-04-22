@@ -48,15 +48,15 @@ export default class DriverController {
     },
     // The "9515" is the port opened by chrome driver.
     server = 'http://localhost:9515',
-  }: DriverOptions) {
-    this.driver = new WebDriverExecutor({
+  }: DriverOptions): Promise<WebDriverExecutor> {
+    const driver: WebDriverExecutor = new WebDriverExecutor({
       capabilities: {
         browserName: browser === 'electron' ? 'chrome' : browser,
         ...capabilities,
       },
       customCommands: this.session.commands.customCommands,
       hooks: {
-        onBeforePlay: async () => this.onPlaybackStart(),
+        onBeforePlay: async () => this.onPlaybackStart(driver),
       },
       server,
       windowAPI: {
@@ -72,39 +72,23 @@ export default class DriverController {
         },
       },
     })
+    return driver
   }
 
-  async onProjectLoaded() {
-    // Build our webdriver with custom commands
-    this.build({})
-  }
-
-  async onProjectUnloaded() {
-    if (this.driver) {
-      this.driver.cleanup()
-    }
-  }
-
-  async onPlaybackStart() {
-    const playbackWindow = await this.session.windows.get('playback-window')
+  async onPlaybackStart({ driver }: WebDriverExecutor) {
+    const playbackWindow = await this.session.windows.playbackWindows.slice(-1)[0]
     // Figure out playback window from document.title
-    if (!this.windowHandle) {
-      const webdriver = this.driver.driver
-      const handles = await webdriver.getAllWindowHandles()
-      for (let i = 0, ii = handles.length; i !== ii; i++) {
-        await webdriver.switchTo().window(handles[i])
-        const title = await webdriver.getTitle()
-        const url = await webdriver.getCurrentUrl()
-        if (
-          title === playbackWindow.getTitle() &&
-          url === playbackWindow.webContents.getURL()
-        ) {
-          this.windowHandle = handles[i]
-          break
-        }
+    const handles = await driver.getAllWindowHandles()
+    for (let i = 0, ii = handles.length; i !== ii; i++) {
+      await driver.switchTo().window(handles[i])
+      const title = await driver.getTitle()
+      const url = await driver.getCurrentUrl()
+      if (
+        title === playbackWindow.getTitle() &&
+        url === playbackWindow.webContents.getURL()
+      ) {
+        break
       }
-    } else {
-      this.driver.driver.switchTo().window(this.windowHandle)
     }
   }
   async download(info: BrowserInfo) {

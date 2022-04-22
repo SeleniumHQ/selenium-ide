@@ -10,19 +10,21 @@ export default class PlaybackController {
   constructor(session: Session) {
     this.session = session
     this.handleCommandStateChanged = this.handleCommandStateChanged.bind(this)
+    this.playback = null
   }
   static defaultPlayRange = [0, -1]
   currentStepIndex: null | number = null
   isPlaying = false
   playRange = [0, -1]
   playingTest = ''
-  // @ts-expect-error
-  playback: Playback
+  playback: Playback | null
   session: Session
 
   async pause() {
     this.isPlaying = false
-    await this.playback.pause()
+    if (this.playback) {
+      await this.playback.pause()
+    }
   }
 
   async stop() {
@@ -51,7 +53,7 @@ export default class PlaybackController {
     if (!this.playback) {
       const playback = new Playback({
         baseUrl: this.session.projects.project.url,
-        executor: this.session.driver.driver,
+        executor: await this.session.driver.build({}),
         getTestByName: (name: string) => this.session.tests.getByName(name),
         logger: console,
         variables: new Variables(),
@@ -80,5 +82,15 @@ export default class PlaybackController {
     e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']
   ) => {
     this.session.api.playback.onPlayUpdate.dispatchEvent(e)
+    switch (e.state) {
+      case 'aborted':
+      case 'errored':
+      case 'failed':
+      case 'finished':
+      case 'stopped':
+        const playback = this.playback as Playback
+        playback.cleanup()
+        this.playback = null
+    }
   }
 }
