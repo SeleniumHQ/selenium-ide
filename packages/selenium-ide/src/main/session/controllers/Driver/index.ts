@@ -33,8 +33,6 @@ export default class DriverController {
     this.build({})
   }
   session: Session
-  // @ts-expect-error
-  driver: WebDriverExecutor
   driverProcess?: ChildProcess
   windowHandle?: string
 
