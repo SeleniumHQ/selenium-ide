@@ -38,6 +38,9 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
             },
           }}
           onChange={updateTarget(testID, command.id)}
+          onContextMenu={() => {
+            window.sideAPI.menus.open('textField')
+          }}
           onInputChange={updateTargetAutoComplete(testID, command.id)}
           options={(command[fieldNames] ?? []).map((entry) => entry.join('='))}
           renderInput={(params) => (

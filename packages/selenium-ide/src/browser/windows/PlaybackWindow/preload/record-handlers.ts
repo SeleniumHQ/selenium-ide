@@ -837,28 +837,17 @@ handlers.push([
   },
 ])
 
+const nbsp = String.fromCharCode(160)
 function getOptionLocator(option: HTMLOptionElement) {
   let label = option.text.replace(/^ *(.*?) *$/, '$1')
-  if (label.match(/\xA0/)) {
+  if (label.match(new RegExp(nbsp))) {
     // if the text contains &nbsp;
     return (
-      'label=regexp:' +
+      'label=mostly-equals:' +
       label
-        .replace(/[(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, function (str) {
-          // eslint-disable-line no-useless-escape
-          return '\\' + str
-        })
-        .replace(/\s+/g, function (str) {
-          if (str.match(/\xA0/)) {
-            if (str.length > 1) {
-              return '\\s+'
-            } else {
-              return '\\s'
-            }
-          } else {
-            return str
-          }
-        })
+        .replace(/[(\)\[\]\\\^\$\*\+\?\.\|\{\}]/g, (str) => `\\${str}`)
+        .replace(/\s/g, ' ')
+        .trim()
     )
   } else {
     return 'label=' + label

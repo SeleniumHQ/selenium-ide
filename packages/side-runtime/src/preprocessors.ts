@@ -15,8 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { Fn } from "@seleniumhq/side-commons"
-import Variables from "./variables"
+import { Fn } from '@seleniumhq/side-commons'
+import Variables from './variables'
 
 const nbsp = String.fromCharCode(160)
 
@@ -78,7 +78,11 @@ function runPreprocessor(preprocessor: Fn, value: any, ...args: any[]) {
   return value
 }
 
-function preprocessObject(preprocessors: Record<string, Fn>, obj: Record<string, unknown>, ...args: any[]) {
+function preprocessObject(
+  preprocessors: Record<string, Fn>,
+  obj: Record<string, unknown>,
+  ...args: any[]
+) {
   const result = { ...obj }
 
   Object.keys(preprocessors).forEach((prop) => {
