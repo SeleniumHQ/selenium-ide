@@ -20,6 +20,9 @@ const CommandTextField: FC<CommandFieldProps> = ({
         label={FieldName}
         name={fieldName}
         onChange={updateText(testID, command.id)}
+        onContextMenu={() => {
+          window.sideAPI.menus.open('textField')
+        }}
         size="small"
         value={command[fieldName]}
       />
