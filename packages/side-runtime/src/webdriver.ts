@@ -1765,10 +1765,24 @@ const LOCATORS = {
   xpath: By.xpath,
 }
 
+const nbsp = String.fromCharCode(160)
 const OPTIONS_LOCATORS = {
   id: (id: string) => By.css(`*[id="${id}"]`),
   value: (value: string) => By.css(`*[value="${value}"]`),
-  label: (label: string) => By.xpath(`//option[. = '${label}']`),
+  label: (label: string) => {
+    const labels = label.match(/^[\w|-]+(?=:)/)
+    if (labels?.length) {
+      const [type, ...labelParts] = label.split(':')
+      const labelBody = labelParts.join(':')
+      switch (type) {
+        case 'mostly-equals':
+          return By.xpath(
+            `//option[normalize-space(translate(., '${nbsp}', ' ')) = '${labelBody}']`
+          )
+      }
+    }
+    return By.xpath(`//option[. = '${label}']`)
+  },
   index: (index: string) => By.css(`*:nth-child(${index})`),
 }
 
