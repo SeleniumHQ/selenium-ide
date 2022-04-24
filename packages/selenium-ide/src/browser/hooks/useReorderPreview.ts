@@ -5,8 +5,7 @@ import React from 'react'
 export type ReorderPreviewInput = { newIndex: number }
 export type ReorderPreview = (input: ReorderPreviewInput) => void
 
-type DeriveIDIndexes<T = any> = (entries: T[]) => [T, number][]
-const deriveIDIndexes: DeriveIDIndexes = (entries) =>
+const addIndexes = <T>(entries: T[]): [T, number][] =>
   entries.map((entry, index) => [entry, index])
 
 const useReorderPreview = <T = any>(
@@ -14,10 +13,10 @@ const useReorderPreview = <T = any>(
   selectedIndexes: number[],
   id: (entry: T) => string = identity
 ): [[T, number][], ReorderPreview, () => void] => {
-  const [preview, setPreview] = React.useState(deriveIDIndexes(entries))
-  const resetPreview = () => setPreview(deriveIDIndexes(entries))
+  const [preview, setPreview] = React.useState(addIndexes(entries.map(id)))
+  const resetPreview = () => setPreview(addIndexes(entries.map(id)))
   const reorderPreview: ReorderPreview = ({ newIndex }) => {
-    const newPreview = reorderList<[T, number]>({
+    const newPreview = reorderList({
       entries: preview,
       newIndex,
       selectedIndexes,
@@ -27,7 +26,11 @@ const useReorderPreview = <T = any>(
   React.useEffect(() => {
     resetPreview()
   }, [entries.map(id).join('-')])
-  return [preview, reorderPreview, resetPreview]
+  return [
+    preview.map(([_id, index]) => [entries[index], index]),
+    reorderPreview,
+    resetPreview,
+  ]
 }
 
 export default useReorderPreview
