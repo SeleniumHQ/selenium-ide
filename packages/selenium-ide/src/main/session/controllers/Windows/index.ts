@@ -123,8 +123,7 @@ export default class WindowsController {
     }
     this.windows[name] = window
     window.on('closed', () => {
-      if (!name.startsWith(projectEditorWindowName))
-        delete this.windows[name]
+      if (!name.startsWith(projectEditorWindowName)) delete this.windows[name]
     })
     return true
   }
@@ -178,16 +177,16 @@ export default class WindowsController {
       implement an enum on the window shape to include "type" so that we aren't looking at strings.  Also, this name in the title is subject to change, for live URL or localization, etc.
        */
 
-      if (!win.title.startsWith('Project Editor') && (!win.title.startsWith('Command List'))) {
+      if (
+        !win.title.startsWith('Project Editor') &&
+        !win.title.startsWith('Command List')
+      ) {
         win.closable = true
         win.close()
       }
       this.playbackWindows.forEach((bw) => {
-        bw.close();
-      }
-      )
-
-
+        bw.close()
+      })
     })
 
     await this.close(playbackWindowName)
@@ -202,8 +201,8 @@ export default class WindowsController {
         console.debug('found win, closable ' + win.closable)
         if (!win.closable) {
           win.closable = true
-          win.close()
         }
+        win.close()
       })
     })
   }
