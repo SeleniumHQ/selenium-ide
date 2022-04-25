@@ -163,6 +163,13 @@ export default class WindowsController {
     await this.open(projectEditorWindowName)
     await this.close('splash')
 
+    this.playbackWindows.forEach((bw) => {
+      if (!bw.closable) {
+        bw.closable = true
+      }
+      bw.close()
+    })
+
     BrowserWindow.getAllWindows().forEach((win) => {
       console.debug('found win, closable ' + win.closable)
       console.debug(win.id)
@@ -184,9 +191,6 @@ export default class WindowsController {
         win.closable = true
         win.close()
       }
-      this.playbackWindows.forEach((bw) => {
-        bw.close()
-      })
     })
 
     await this.close(playbackWindowName)
