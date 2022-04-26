@@ -159,7 +159,6 @@ export default class WindowsController {
   }
 
   async onProjectLoaded() {
-    // await this.close(projectEditorWindowName)
     await this.open(projectEditorWindowName)
     await this.close('splash')
 
