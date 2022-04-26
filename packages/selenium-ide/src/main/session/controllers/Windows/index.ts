@@ -169,6 +169,7 @@ export default class WindowsController {
       bw.close()
     })
 
+<<<<<<< HEAD
     BrowserWindow.getAllWindows().forEach((win) => {
       console.debug('found win, closable ' + win.closable)
       console.debug(win.id)
@@ -192,6 +193,8 @@ export default class WindowsController {
       }
     })
 
+=======
+>>>>>>> 99164eae4e9a2a89d6ec835e15330fb0556acf60
     await this.close(playbackWindowName)
     await this.open(playbackWindowName)
     const playbackWindow = await this.get(playbackWindowName)

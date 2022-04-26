@@ -97,7 +97,7 @@ export default class RecorderController {
     console.log('Setting window handle', sessionID, handle)
   }
   async start(): Promise<string | null> {
-    const playbackWindow = await this.session.windows.get('playback-window')
+    const playbackWindow = await this.session.windows.getLastPlaybackWindow()
     const playbackURL = playbackWindow.webContents.getURL()
     if (
       playbackURL.startsWith('file://') &&

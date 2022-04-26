@@ -14,7 +14,9 @@ const useReorderPreview = <T = any>(
   id: (entry: T) => string = identity
 ): [[T, number][], ReorderPreview, () => void] => {
   const [preview, setPreview] = React.useState(addIndexes(entries.map(id)))
-  const resetPreview = () => setPreview(addIndexes(entries.map(id)))
+  const resetPreview = () => {
+    setPreview(addIndexes(entries.map(id)))
+  } 
   const reorderPreview: ReorderPreview = ({ newIndex }) => {
     const newPreview = reorderList({
       entries: preview,
@@ -23,9 +25,7 @@ const useReorderPreview = <T = any>(
     })
     setPreview(newPreview)
   }
-  React.useEffect(() => {
-    resetPreview()
-  }, [entries.map(id).join('-')])
+  React.useEffect(resetPreview, [entries.map(id).join('-')])
   return [
     preview.map(([_id, index]) => [entries[index], index]),
     reorderPreview,
