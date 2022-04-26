@@ -13,6 +13,13 @@ export const projectViewCommands: MenuComponent = (session) => async () =>
         window?.webContents.openDevTools()
       },
     },
+    {
+      accelerator: 'CommandOrControl+P',
+      label: 'Reset Playback Windows',
+      click: async () => {
+        await session.windows.initializePlaybackWindow()
+      }
+    }
   ]
 
 const projectViewMenu = (session: Session) => async () => {

@@ -49,6 +49,5 @@ export default function createSession(
   session.wake = () => {
     session.windows.open('chromedriver')
   }
-
   return session
 }

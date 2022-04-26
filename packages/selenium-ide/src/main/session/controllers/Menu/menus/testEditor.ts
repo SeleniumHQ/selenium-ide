@@ -58,7 +58,7 @@ export const commandList: MenuComponent = (session) => async () => {
       label: pluralize('Disable Command', selectedCommandCount),
     },
     {
-      accelerator: 'CommandOrControl+Delete',
+      accelerator: 'Delete',
       click: async () => {
         await session.api.tests.removeSteps(
           sessionData.state.activeTestID,
