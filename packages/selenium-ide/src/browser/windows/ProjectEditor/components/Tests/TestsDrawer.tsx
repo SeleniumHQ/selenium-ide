@@ -44,15 +44,7 @@ const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => (
     >
       {tests
         .slice()
-        .sort((a, b) => {
-          if (b.name < a.name) {
-            return 1
-          }
-          if (a.name < b.name) {
-            return -1
-          }
-          return 0
-        })
+        .sort((a, b) => a.name.localeCompare(b.name))
         .map(({ id, name }) => (
           <RenamableListItem
             id={id}
