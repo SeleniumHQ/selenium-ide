@@ -41,7 +41,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
           const win = new BrowserWindow({
             ...windowConfig,
             webPreferences: {
-              ...windowConfig?.webPreferences ?? {}, 
+              ...(windowConfig?.webPreferences ?? {}),
               preload: hasPreload ? preloadPath : undefined,
             },
             ...options,
@@ -123,7 +123,7 @@ export default class WindowsController {
     }
     this.windows[name] = window
     window.on('closed', () => {
-      delete this.windows[name]
+      if (!name.startsWith(projectEditorWindowName)) delete this.windows[name]
     })
     return true
   }
@@ -159,9 +159,38 @@ export default class WindowsController {
   }
 
   async onProjectLoaded() {
-    await this.close(projectEditorWindowName)
     await this.open(projectEditorWindowName)
     await this.close('splash')
+
+    this.playbackWindows.forEach((bw) => {
+      if (!bw.closable) {
+        bw.closable = true
+      }
+      bw.close()
+    })
+
+    BrowserWindow.getAllWindows().forEach((win) => {
+      console.debug('found win, closable ' + win.closable)
+      console.debug(win.id)
+      console.debug(win.accessibleTitle)
+
+      /* TODO enum seems hard to implement. Instead, 
+       use the title name 'starts with' as a type check
+       also, look at this idea:
+       We should delete all the windows we can when we call the projects.close endpoint, which is part of projects.load, but should probably also be on projects.new. This function here does the cleanup and is rather redundant and somewhat confused, much like myself lol:
+        https://github.com/SeleniumHQ/selenium-ide/blob/trunk/packages/selenium-ide/src/main/session/controllers/Windows/index.ts#L93
+      
+      implement an enum on the window shape to include "type" so that we aren't looking at strings.  Also, this name in the title is subject to change, for live URL or localization, etc.
+       */
+
+      if (
+        !win.title.startsWith('Project Editor') &&
+        !win.title.startsWith('Command List')
+      ) {
+        win.closable = true
+        win.close()
+      }
+    })
 
     await this.close(playbackWindowName)
     await this.open(playbackWindowName)
@@ -169,22 +198,13 @@ export default class WindowsController {
     this.handlePlaybackWindow(playbackWindow)
 
     const projectWindow = await this.get(projectEditorWindowName)
-    projectWindow.on('focus', () => {
-      playbackWindow.showInactive()
-    })
-    projectWindow.on('blur', () => {
-      const windows = BrowserWindow.getAllWindows()
-      const anyWindowFocused = windows.reduce((focused, window) => {
-        if (focused) return true
-        return window.isFocused()
-      }, false)
-      if (!anyWindowFocused) {
-        playbackWindow.hide()
-      }
-    })
     projectWindow.on('closed', () => {
+      console.debug('projectWindow on closed')
       BrowserWindow.getAllWindows().forEach((win) => {
-        if (!win.closable) win.closable = true
+        console.debug('found win, closable ' + win.closable)
+        if (!win.closable) {
+          win.closable = true
+        }
         win.close()
       })
     })

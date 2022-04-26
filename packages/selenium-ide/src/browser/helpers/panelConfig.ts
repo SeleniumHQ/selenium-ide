@@ -2,13 +2,13 @@ import { BrowserWindowConstructorOptions } from 'electron'
 
 const panelConfig: BrowserWindowConstructorOptions = {
   center: false,
-  frame: false,
-  roundedCorners: false,
-  minimizable: false,
-  maximizable: false,
+  frame: true,
+  roundedCorners: true,
+  minimizable: true,
+  maximizable: true,
   closable: true,
   focusable: false,
-  resizable: false,
+  resizable: true,
 }
 
 export default panelConfig;

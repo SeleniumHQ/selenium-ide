@@ -1,4 +1,4 @@
-import { BrowserWindow} from 'electron'
+import { BrowserWindow } from 'electron'
 import { Menu } from 'electron'
 import { MenuComponent, Session } from 'main/types'
 
@@ -10,7 +10,7 @@ export const projectViewCommands: MenuComponent = (session) => async () =>
       click: async () => {
         await session.state.get()
         const window = BrowserWindow.getFocusedWindow()
-        window?.webContents.openDevTools();
+        window?.webContents.openDevTools()
       },
     },
   ]

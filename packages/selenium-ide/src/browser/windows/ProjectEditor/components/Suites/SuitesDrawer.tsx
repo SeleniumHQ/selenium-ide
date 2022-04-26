@@ -49,16 +49,19 @@ const SuiteList: FC<SuiteListProps> = ({
         />
       }
     >
-      {suites.map(({ id, name }) => (
-        <RenamableListItem
-          id={id}
-          key={id}
-          name={name}
-          rename={rename}
-          selected={id === activeSuite}
-          setSelected={setSelected}
-        />
-      ))}
+      {suites
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(({ id, name }) => (
+          <RenamableListItem
+            id={id}
+            key={id}
+            name={name}
+            rename={rename}
+            selected={id === activeSuite}
+            setSelected={setSelected}
+          />
+        ))}
     </List>
   </Drawer>
 )

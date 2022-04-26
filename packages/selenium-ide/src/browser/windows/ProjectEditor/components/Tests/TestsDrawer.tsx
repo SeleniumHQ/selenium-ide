@@ -42,16 +42,19 @@ const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => (
         />
       }
     >
-      {tests.map(({ id, name }) => (
-        <RenamableListItem
-          id={id}
-          key={id}
-          name={name}
-          rename={rename}
-          selected={id === activeTest}
-          setSelected={setSelected}
-        />
-      ))}
+      {tests
+        .slice()
+        .sort((a, b) => a.name.localeCompare(b.name))
+        .map(({ id, name }) => (
+          <RenamableListItem
+            id={id}
+            key={id}
+            name={name}
+            rename={rename}
+            selected={id === activeTest}
+            setSelected={setSelected}
+          />
+        ))}
     </List>
   </Drawer>
 )
