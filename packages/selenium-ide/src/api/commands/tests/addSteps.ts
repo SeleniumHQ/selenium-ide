@@ -1,11 +1,11 @@
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
-import set from 'lodash/fp/set'
 import update from 'lodash/fp/update'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
 import { Mutator } from 'api/types'
 import { hasID } from 'api/helpers/hasID'
+import { mutator as updateStepSelection } from '../state/updateStepSelection'
 
 export type Shape = Session['tests']['addSteps']
 
@@ -31,8 +31,10 @@ export const mutator: Mutator<Shape> = (
     },
     session
   )
-  const activeCommand = result.slice(-1)[0] as CommandShape
-  return set('state.activeCommandID', activeCommand.id, sessionWithNewCommands)
+  return updateStepSelection(sessionWithNewCommands, {
+    params: [index + result.length, false, false, true],
+    result: undefined
+  })
 }
 
 export const main = mainHandler<Shape>()

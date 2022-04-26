@@ -2,9 +2,11 @@ import 'v8-compile-cache'
 import { app } from 'electron'
 import store from './store'
 import createSession from './session'
+import installReactDevtools from './install-react-devtools'
 
 // Enable debugging - required for electron-chromedriver
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
+
 
 // Capture and show unhandled exceptions
 process.on('unhandledRejection', function handleWarning(reason) {
@@ -21,7 +23,10 @@ process.on('uncaughtException', (error) => {
 const session = createSession(app, store)
 
 // Start and stop hooks
-app.on('ready', session.wake)
+app.on('ready', () => {
+  !app.isPackaged && installReactDevtools()
+  session.wake()
+})
 app.on('before-quit', session.sleep)
 
 // Respect the OSX convention of having the application in memory even

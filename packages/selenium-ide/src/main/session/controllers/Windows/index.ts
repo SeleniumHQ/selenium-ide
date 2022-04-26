@@ -169,29 +169,6 @@ export default class WindowsController {
       bw.close()
     })
 
-    BrowserWindow.getAllWindows().forEach((win) => {
-      console.debug('found win, closable ' + win.closable)
-      console.debug(win.id)
-      console.debug(win.accessibleTitle)
-
-      /* TODO enum seems hard to implement. Instead, 
-       use the title name 'starts with' as a type check
-       also, look at this idea:
-       We should delete all the windows we can when we call the projects.close endpoint, which is part of projects.load, but should probably also be on projects.new. This function here does the cleanup and is rather redundant and somewhat confused, much like myself lol:
-        https://github.com/SeleniumHQ/selenium-ide/blob/trunk/packages/selenium-ide/src/main/session/controllers/Windows/index.ts#L93
-      
-      implement an enum on the window shape to include "type" so that we aren't looking at strings.  Also, this name in the title is subject to change, for live URL or localization, etc.
-       */
-
-      if (
-        !win.title.startsWith('Project Editor') &&
-        !win.title.startsWith('Command List')
-      ) {
-        win.closable = true
-        win.close()
-      }
-    })
-
     await this.close(playbackWindowName)
     await this.open(playbackWindowName)
     const playbackWindow = await this.get(playbackWindowName)
