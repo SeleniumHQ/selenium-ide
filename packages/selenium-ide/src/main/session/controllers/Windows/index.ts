@@ -187,18 +187,29 @@ export default class WindowsController {
     })
   }
 
-  async initializePlaybackWindow()
-  {
-        this.playbackWindows.forEach((bw) => {
-          if (!bw.closable) {
-            bw.closable = true
-          }
-          bw.close()
-        })
+  async initializePlaybackWindow() {
+    this.playbackWindows.forEach((bw) => {
+      if (!bw.closable) {
+        bw.closable = true
+      }
+      bw.close()
+    })
 
-        await this.close(playbackWindowName)
-        await this.open(playbackWindowName)
-        const playbackWindow = await this.get(playbackWindowName)
-        this.handlePlaybackWindow(playbackWindow)
+    await this.close(playbackWindowName)
+    await this.open(playbackWindowName)
+    const playbackWindow = await this.get(playbackWindowName)
+    this.handlePlaybackWindow(playbackWindow)
   }
+
+  async getPlaybackWindow() {
+    const playbackWindow = await this.session.windows.playbackWindows.slice(
+      -1
+    )[0]
+    if (playbackWindow) return playbackWindow
+    else {
+      await this.session.windows.open('playback-window')
+      return this.session.windows.get('playback-window')
+    }
+  }
+  
 }

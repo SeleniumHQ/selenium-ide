@@ -73,19 +73,8 @@ export default class DriverController {
     return driver
   }
 
-  async getPlaybackWindow() {
-    const playbackWindow = await this.session.windows.playbackWindows.slice(
-      -1
-    )[0]
-    if (playbackWindow) return playbackWindow
-    else {
-      await this.session.windows.open('playback-window')
-      return this.session.windows.get('playback-window')
-    }
-  }
-
   async onPlaybackStart({ driver }: WebDriverExecutor) {
-    const playbackWindow = await this.getPlaybackWindow()
+    const playbackWindow = await this.session.windows.getPlaybackWindow()
     // Figure out playback window from document.title
     const handles = await driver.getAllWindowHandles()
     for (let i = 0, ii = handles.length; i !== ii; i++) {
