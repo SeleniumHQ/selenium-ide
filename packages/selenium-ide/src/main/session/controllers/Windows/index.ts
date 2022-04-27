@@ -197,8 +197,6 @@ export default class WindowsController {
 
     await this.close(playbackWindowName)
     await this.open(playbackWindowName)
-    const playbackWindow = await this.get(playbackWindowName)
-    this.handlePlaybackWindow(playbackWindow)
   }
 
   async getPlaybackWindow() {
