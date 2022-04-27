@@ -186,4 +186,28 @@ export default class WindowsController {
       })
     })
   }
+
+  async initializePlaybackWindow() {
+    this.playbackWindows.forEach((bw) => {
+      if (!bw.closable) {
+        bw.closable = true
+      }
+      bw.close()
+    })
+
+    await this.close(playbackWindowName)
+    await this.open(playbackWindowName)
+  }
+
+  async getPlaybackWindow() {
+    const playbackWindow = await this.session.windows.playbackWindows.slice(
+      -1
+    )[0]
+    if (playbackWindow) return playbackWindow
+    else {
+      await this.session.windows.open('playback-window')
+      return this.session.windows.get('playback-window')
+    }
+  }
+  
 }

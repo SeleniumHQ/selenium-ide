@@ -74,7 +74,7 @@ export default class DriverController {
   }
 
   async onPlaybackStart({ driver }: WebDriverExecutor) {
-    const playbackWindow = await this.session.windows.playbackWindows.slice(-1)[0]
+    const playbackWindow = await this.session.windows.getPlaybackWindow()
     // Figure out playback window from document.title
     const handles = await driver.getAllWindowHandles()
     for (let i = 0, ii = handles.length; i !== ii; i++) {
