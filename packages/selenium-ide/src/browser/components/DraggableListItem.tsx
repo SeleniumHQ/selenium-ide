@@ -2,7 +2,6 @@ import ListItem, { ListItemProps } from '@mui/material/ListItem'
 import React, { MutableRefObject } from 'react'
 import { useDrag } from 'react-dnd'
 
-
 interface DraggableListItemProps extends ListItemProps {
   index: number
   dragType: string
@@ -20,7 +19,7 @@ const DraggableListItem: React.FC<DraggableListItemProps> = ({
   sx = {},
   ...props
 }) => {
-  const ref = React.useRef<HTMLLIElement>();
+  const ref = React.useRef<HTMLLIElement>()
   const [{ isDragging }, drag] = useDrag({
     type: dragType,
     item: () => {

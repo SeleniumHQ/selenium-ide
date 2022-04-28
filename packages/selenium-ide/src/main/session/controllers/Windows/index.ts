@@ -200,13 +200,13 @@ export default class WindowsController {
   }
 
   async getPlaybackWindow() {
-    const playbackWindow = await this.session.windows.playbackWindows.slice(
+    const playbackWindow = await this.playbackWindows.slice(
       -1
     )[0]
     if (playbackWindow) return playbackWindow
     else {
-      await this.session.windows.open('playback-window')
-      return this.session.windows.get('playback-window')
+      await this.open('playback-window')
+      return this.get('playback-window')
     }
   }
   
