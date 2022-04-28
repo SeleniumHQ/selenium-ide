@@ -63,8 +63,9 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
             disableGutters={false}
             sx={{ top: '96px', zIndex: 100 }}
             onAdd={() => projectCreate()}
-            text="Project Plugins"
-          />
+          >
+            Project Plugins
+          </EditorToolbar>
         }
         sx={{
           borderColor: 'primary.main',

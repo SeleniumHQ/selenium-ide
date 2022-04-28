@@ -2,10 +2,11 @@ import { CommandShape } from '@seleniumhq/side-model'
 import { CommandsStateShape } from 'api/models/state/command'
 import useReorderPreview from 'browser/hooks/useReorderPreview'
 import React, { FC } from 'react'
-import CommandListItem from './TestCommandListItem'
+import CommandRow from './TestCommandRow'
 import EditorToolbar from '../Drawer/EditorToolbar'
 import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
 import ReorderableList from 'browser/components/ReorderableList'
+import { Box } from '@mui/material'
 
 export interface CommandListProps {
   activeTest: string
@@ -53,7 +54,12 @@ const CommandList: FC<CommandListProps> = ({
               : undefined
           }
         >
-          Commands
+          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+            <Box sx={{ flex: 0, flexBasis: 50 }}>&nbsp;</Box>
+            <Box sx={{ flex: 1 }}>Cmd</Box>
+            <Box sx={{ flex: 2, paddingLeft: 2 }}>Target</Box>
+            <Box sx={{ flex: 2, paddingLeft: 2 }}>Value</Box>
+          </Box>
         </EditorToolbar>
       }
     >
@@ -63,7 +69,7 @@ const CommandList: FC<CommandListProps> = ({
         }
         const { id } = command
         return (
-          <CommandListItem
+          <CommandRow
             activeTest={activeTest}
             command={command}
             commandState={commandStates[id]}

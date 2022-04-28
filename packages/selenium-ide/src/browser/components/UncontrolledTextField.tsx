@@ -1,32 +1,26 @@
 import TextField, { TextFieldProps } from '@mui/material/TextField'
 import { noop } from 'lodash/fp'
-import React, { FC, useRef } from 'react'
+import React, { FC } from 'react'
 
+/**
+ * This is actually a hyper controlled text field
+ */
 const UncontrolledTextField: FC<TextFieldProps> = ({
-  onChange = noop,
   value = '',
+  onChange: _onChange = noop,
   ...props
 }) => {
-  const ref = useRef<HTMLInputElement>()
-  const input = ref.current as HTMLInputElement
-  React.useEffect(() => {
-    if (input) {
-      if (value !== input.value) {
-        input.value = value as string
-      }
-    }
-  }, [Boolean(input), value])
+  const [localValue, setLocalValue] = React.useState(value)
+  const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const el = e.target as HTMLInputElement
+    setLocalValue(el.value)
+    onChange(e)
+  }
   return (
     <TextField
-      defaultValue={value}
-      inputRef={ref}
       margin="dense"
-      onBlur={(event) => {
-        onChange(event)
-        if (props.onBlur) {
-          props.onBlur(event)
-        }
-      }}
+      onChange={onChange}
+      value={localValue}
       {...props}
     />
   )

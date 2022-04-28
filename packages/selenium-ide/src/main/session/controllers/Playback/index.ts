@@ -4,6 +4,7 @@ import {
   PlaybackEventShapes,
   Variables,
 } from '@seleniumhq/side-runtime'
+import { hasID } from 'api/helpers/hasID'
 import { Session } from 'main/types'
 
 export default class PlaybackController {
@@ -16,6 +17,7 @@ export default class PlaybackController {
   currentStepIndex: null | number = null
   isPlaying = false
   playRange = [0, -1]
+  playingSuite = ''
   playingTest = ''
   playback: Playback | null
   session: Session
@@ -33,6 +35,7 @@ export default class PlaybackController {
     }
     this.currentStepIndex = 0
     this.playRange = PlaybackController.defaultPlayRange
+    this.playingSuite = ''
     this.playingTest = ''
   }
 
@@ -73,11 +76,44 @@ export default class PlaybackController {
       startingCommandIndex: playRange[0],
     })
   }
+
+  async playSuite() {
+    const {
+      project: { suites },
+      state: { activeSuiteID },
+    } = await this.session.state.get()
+    this.playingSuite = activeSuiteID
+    const tests = suites.find(hasID(activeSuiteID))?.tests ?? []
+    this.play(tests[0])
+  }
+
+  async playNextTest() {
+    const {
+      project: { suites },
+      state: { activeSuiteID, activeTestID },
+    } = await this.session.state.get()
+    const tests = suites.find(hasID(activeSuiteID))?.tests ?? []
+    const nextTestIndex = tests.indexOf(activeTestID) + 1
+    const nextTest = tests[nextTestIndex]
+    if (nextTest) {
+      this.session.api.state.onMutate.dispatchEvent('state.setActiveTest', {
+        params: [nextTest],
+      })
+      this.play(nextTest)
+    } else {
+      this.playingSuite = ''
+      this.session.api.state.onMutate.dispatchEvent('playback.stop', {
+        params: [],
+      })
+    }
+  }
+
   handleCommandStateChanged = (
     e: PlaybackEventShapes['COMMAND_STATE_CHANGED']
   ) => {
     this.session.api.playback.onStepUpdate.dispatchEvent(e)
   }
+
   handlePlaybackStateChanged = (
     e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']
   ) => {
@@ -91,6 +127,9 @@ export default class PlaybackController {
         const playback = this.playback as Playback
         playback.cleanup()
         this.playback = null
+        if (this.playingSuite) {
+          this.playNextTest()
+        }
     }
   }
 }

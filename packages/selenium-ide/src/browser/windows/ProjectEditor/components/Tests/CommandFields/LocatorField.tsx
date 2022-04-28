@@ -22,6 +22,16 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
   const commandData = commands[command.command]
   const updateTarget = updateField(fieldName)
   const updateTargetAutoComplete = updateFieldAutoComplete(fieldName)
+  const [localValue, setLocalValue] = React.useState(command[fieldName])
+  const onChange = (e: any) => {
+    const el = e.target as HTMLInputElement
+    setLocalValue(el.value)
+    updateTarget(testID, command.id)(e)
+  }
+  const onChangeAutoComplete = (e: any, value: string) => {
+    setLocalValue(value)
+    updateTargetAutoComplete(testID, command.id)(e, value)
+  }
 
   return (
     <FormControl>
@@ -29,7 +39,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         <Autocomplete
           className="flex-1"
           freeSolo
-          inputValue={command[fieldName]}
+          inputValue={localValue}
           componentsProps={{
             paper: {
               sx: {
@@ -37,17 +47,17 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
               },
             },
           }}
-          onChange={updateTarget(testID, command.id)}
+          onChange={onChange}
           onContextMenu={() => {
             window.sideAPI.menus.open('textField')
           }}
-          onInputChange={updateTargetAutoComplete(testID, command.id)}
+          onInputChange={onChangeAutoComplete}
           options={(command[fieldNames] ?? []).map((entry) => entry.join('='))}
           renderInput={(params) => (
             <TextField {...params} label={FieldName} name={fieldName} />
           )}
           size="small"
-          value={command[fieldName]}
+          value={localValue}
         />
         <IconButton
           className="flex-fixed ml-4"

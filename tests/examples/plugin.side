@@ -136,6 +136,6 @@
     "https://www.google.com/"
   ],
   "plugins": [
-    "../../../packages/side-plugin-example/dist/index.js"
+    "@seleniumhq/side-plugin-example"
   ]
 }

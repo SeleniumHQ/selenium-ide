@@ -42,12 +42,5 @@ export default function createSession(
   partialSession.api = Api(partialSession as Session)
 
   const session = partialSession as Session
-  session.sleep = () => {
-    session.driver.stopProcess()
-    session.projects.onProjectUnloaded()
-  }
-  session.wake = () => {
-    session.windows.open('chromedriver')
-  }
   return session
 }

@@ -4,10 +4,11 @@ import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
 import React, { useEffect } from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
+import CommandTable from './TestCommandTable'
 import { CoreSessionData } from 'api/types'
 import MainHeader from '../Main/Header'
 import loadingID from 'api/constants/loadingID'
-import { Typography } from '@mui/material'
+import { Typography, useMediaQuery } from '@mui/material'
 
 const sxCenter = { textAlign: 'center' }
 const NoTestFound = () => (
@@ -31,6 +32,8 @@ const TestsTab: React.FC<{
     },
   } = session
 
+  const isTableWidth = useMediaQuery('only screen and (min-width: 600px)')
+  const CommandsComponent = isTableWidth ? CommandTable : CommandList
   const bottomOffset = useHeightFromElement('command-editor')
   useEffect(() => {
     window.sideAPI.state.openTestEditor()
@@ -48,7 +51,7 @@ const TestsTab: React.FC<{
   return (
     <>
       <MainHeader />
-      <CommandList
+      <CommandsComponent
         activeTest={activeTestID}
         bottomOffset={bottomOffset}
         commands={activeTest.commands}

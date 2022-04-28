@@ -1,5 +1,6 @@
 import { Menu } from 'electron'
 import { Session } from 'main/types'
+import { editBasicsCommands } from './editBasics'
 import { projectEditorCommands } from './projectEditor'
 import { testEditorCommands } from './testEditor'
 import { projectViewCommands } from './projectView'
@@ -25,13 +26,16 @@ const applicationMenu = (session: Session) => async () =>
       submenu: await projectEditorCommands(session)(),
     },
     {
-      label: 'Edit',
-      submenu: await testEditorCommands(session)(),
+      label: '&Edit',
+      submenu: [
+        ...(await editBasicsCommands(session)()),
+        ...(await testEditorCommands(session)()),
+      ],
     },
     {
-      label: 'View',
+      label: '&View',
       submenu: await projectViewCommands(session)(),
-    }
+    },
   ])
 
 export default applicationMenu

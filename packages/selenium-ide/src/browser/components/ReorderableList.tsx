@@ -1,19 +1,20 @@
+import { TableBodyProps } from '@mui/material/TableBody'
 import List, { ListProps } from '@mui/material/List'
-import ListSubheader from '@mui/material/ListSubheader'
 import React, { FC } from 'react'
 
-export interface ReorderableListProps extends ListProps {
+export type ReorderableListProps = ListProps & TableBodyProps & {
   bottomOffset: number
+  Component?: React.FC | React.ComponentClass
 }
 
 const ReorderableList: FC<ReorderableListProps> = ({
   bottomOffset,
   children,
-  subheader,
+  Component = List,
   sx = {},
   ...props
 }) => (
-    <List
+    <Component
       dense
       sx={{
         borderColor: 'primary.main',
@@ -21,15 +22,10 @@ const ReorderableList: FC<ReorderableListProps> = ({
         verticalAlign: 'top',
         ...sx,
       }}
-      subheader={(
-        <ListSubheader className="lh-36" sx={{ top: '96px', zIndex: 100 }}>
-          {subheader}
-        </ListSubheader>
-      )}
       {...props}
     >
       {children}
-    </List>
+    </Component>
   )
 
 export default ReorderableList

@@ -51,8 +51,6 @@ export interface Session {
   system: SystemController
   tests: TestsController
   windows: WindowsController
-  sleep: () => void
-  wake: () => void
 }
 
 export type SessionControllerKeys = keyof Omit<Session, 'app' | 'api'>

@@ -5,6 +5,7 @@ import { useDrag, useDrop } from 'react-dnd'
 import { Shape as SelectShape } from 'api/commands/state/updateStepSelection'
 
 interface ReorderableListItemProps extends ListItemProps {
+  Component?: React.FC | React.ComponentClass
   id: string
   index: number
   dragType: string
@@ -22,6 +23,7 @@ interface DragItem {
 
 const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
   children,
+  Component = ListItem,
   dragType,
   id,
   index,
@@ -119,14 +121,14 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
         opacity: 0.5,
       }
   return (
-    <ListItem
+    <Component
       data-handler-id={handlerId}
       ref={ref as MutableRefObject<HTMLLIElement>}
       sx={wrappedSX}
       {...props}
     >
       {children}
-    </ListItem>
+    </Component>
   )
 }
 

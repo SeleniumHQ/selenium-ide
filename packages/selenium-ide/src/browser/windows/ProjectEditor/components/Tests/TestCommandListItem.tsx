@@ -1,4 +1,7 @@
-import { Box, IconButton, Typography, useMediaQuery } from '@mui/material'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import ListItemText from '@mui/material/ListItemText'
+import useMediaQuery from '@mui/material/useMediaQuery'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
@@ -37,10 +40,6 @@ const colorFromCommandState = (
 }
 
 const commandTextFormat = { color: 'primary.main', typography: 'body2' }
-const commentTextFormat = {
-  color: 'info.main',
-  typography: 'subtitle2',
-}
 const argTextFormat = {
   color: 'secondary.main',
   typography: 'subtitle2',
@@ -75,7 +74,7 @@ const updateIsBreakpoint = (
 const CommandRow: React.FC<CommandRowProps> = ({
   activeTest,
   commandState = {},
-  command: { command, comment, id, isBreakpoint, target, value },
+  command: { command, id, isBreakpoint, target, value },
   index,
   reorderPreview,
   resetPreview,
@@ -93,14 +92,6 @@ const CommandRow: React.FC<CommandRowProps> = ({
   return (
     <ReorderableListItem
       className={mainClass}
-      componentsProps={{
-        root: {
-          style: {
-            display: 'flex',
-            flexDirection: 'column',
-          },
-        },
-      }}
       divider
       dragType="COMMAND"
       id={id}
@@ -115,84 +106,42 @@ const CommandRow: React.FC<CommandRowProps> = ({
         const clearSelection = !e.altKey && !e.shiftKey && !e.ctrlKey
         await updateStepSelection(index, selectBatch, addEntry, clearSelection)
       }}
-      disablePadding
       reorder={(_, newIndex) => reorderPreview({ newIndex })}
       reorderConfirm={(_, newIndex) =>
         window.sideAPI.tests.reorderSteps(activeTest, newIndex)
       }
       reorderReset={resetPreview}
-      selected={selected}
-      select={updateStepSelection}
       secondaryAction={
         <IconButton
           color={isBreakpoint ? 'success' : 'default'}
+          edge="end"
           onClick={toggleBreakpoint}
         >
           <PauseIcon />
         </IconButton>
       }
-      sx={{
-        paddingTop: comment ? 0 : 2,
-        paddingBottom: commandState.message ? 0 : 2,
-        width: '100%',
-      }}
+      selected={selected}
+      select={updateStepSelection}
     >
-      {comment && (
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            textAlign: 'flex-start',
-            width: 'inherit',
-          }}
-        >
-          <Box sx={{ flex: 0, flexBasis: 50, textAlign: 'center' }}>&nbsp;</Box>
-          <Box
-            sx={{
-              flex: 1,
-              opacity: 0.75,
-              width: 'inherit',
-              ...commentTextFormat,
-            }}
-          >
-            <Typography>// {comment}</Typography>
-          </Box>
-        </Box>
-      )}
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          textAlign: 'flex-start',
-          width: 'inherit',
-        }}
-      >
-        <Box sx={{ flex: 0, flexBasis: 50, textAlign: 'center' }}>
-          <Typography>{index + 1}</Typography>
-        </Box>
-        <Box sx={{ flex: 1, ...commandTextFormat }}>
-          <Typography>
+      <ListItemText
+        disableTypography
+        primary={
+          <Box sx={commandTextFormat}>
             {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
-          </Typography>
-        </Box>
-        <Box sx={{ flex: 2, ...argTextFormat }}>
-          <Typography>{target}</Typography>
-        </Box>
-        <Box sx={{ flex: 2, ...argTextFormat }}>
-          <Typography>{value}</Typography>
-        </Box>
-        <Box sx={{ flex: 0, flexBasis: 50 }}></Box>
-      </Box>
-      {commandState.message && (
-        <Box sx={errorTextFormat}>
-          <Typography>{commandState.message}</Typography>
-        </Box>
-      )}
+          </Box>
+        }
+        secondary={
+          <>
+            <Box sx={argTextFormat}>{target}</Box>
+            <Box sx={argTextFormat}>{value}</Box>
+            <Box sx={errorTextFormat}>{commandState.message}</Box>
+          </>
+        }
+      />
       <Box
         className="fill pos-abs o-25"
         sx={{ bgcolor, marginLeft: -2, pointerEvents: 'none', zIndex: 75 }}
       />
-      <Box />
     </ReorderableListItem>
   )
 }

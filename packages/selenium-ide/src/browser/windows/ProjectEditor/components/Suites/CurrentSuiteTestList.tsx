@@ -3,7 +3,7 @@ import React, { FC } from 'react'
 import CurrentSuiteTestRow from './CurrentSuiteTestRow'
 import useReorderPreview from 'browser/hooks/useReorderPreview'
 import DropTargetListItem from 'browser/components/DropTargetListItem'
-import { ListItemText } from '@mui/material'
+import { ListItemText, ListSubheader } from '@mui/material'
 import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
 import ReorderableList from 'browser/components/ReorderableList'
 
@@ -32,12 +32,15 @@ const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
     <ReorderableList
       bottomOffset={bottomOffset}
       dense
-      subheader="Tests in suite"
       sx={{
         display: 'inline-block',
         width: '50%',
       }}
     >
+
+      <ListSubheader className="lh-36" sx={{ top: '96px', zIndex: 100 }}>
+        Tests in suite
+      </ListSubheader>
       {preview.map(([id, origIndex], index) => {
         const test = tests[origIndex]
         if (!test) {
