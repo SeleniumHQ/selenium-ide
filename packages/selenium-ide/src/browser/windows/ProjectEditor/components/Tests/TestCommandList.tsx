@@ -6,6 +6,12 @@ import CommandRow from './TestCommandRow'
 import EditorToolbar from '../Drawer/EditorToolbar'
 import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
 import ReorderableList from 'browser/components/ReorderableList'
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableContainer,
+} from '@mui/material'
 
 export interface CommandListProps {
   activeTest: string
@@ -41,10 +47,7 @@ const CommandList: FC<CommandListProps> = ({
           onAdd={() =>
             window.sideAPI.tests.addSteps(
               activeTest,
-              Math.max(
-                selectedCommandIndexes.slice(-1)[0],
-                0
-              )
+              Math.max(selectedCommandIndexes.slice(-1)[0], 0)
             )
           }
           onRemove={
@@ -60,24 +63,32 @@ const CommandList: FC<CommandListProps> = ({
         />
       }
     >
-      {preview.map(([command, origIndex], index) => {
-        if (!command) {
-          return null
-        }
-        const { id } = command
-        return (
-          <CommandRow
-            activeTest={activeTest}
-            command={command}
-            commandState={commandStates[id]}
-            key={id}
-            index={index}
-            reorderPreview={reorderPreview}
-            resetPreview={resetPreview}
-            selected={selectedCommandIndexes.includes(origIndex)}
-          />
-        )
-      })}
+      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <TableContainer>
+          <Table padding="none" stickyHeader aria-label="sticky table">
+            <TableBody>
+              {preview.map(([command, origIndex], index) => {
+                if (!command) {
+                  return null
+                }
+                const { id } = command
+                return (
+                  <CommandRow
+                    activeTest={activeTest}
+                    command={command}
+                    commandState={commandStates[id]}
+                    key={id}
+                    index={index}
+                    reorderPreview={reorderPreview}
+                    resetPreview={resetPreview}
+                    selected={selectedCommandIndexes.includes(origIndex)}
+                  />
+                )
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
     </ReorderableList>
   )
 }

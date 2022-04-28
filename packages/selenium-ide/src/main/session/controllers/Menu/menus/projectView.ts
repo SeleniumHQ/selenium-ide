@@ -5,7 +5,7 @@ import { MenuComponent, Session } from 'main/types'
 export const projectViewCommands: MenuComponent = (session) => async () =>
   [
     {
-      accelerator: 'CommandOrControl+F12',
+      accelerator: 'F12',
       label: 'Show DevTools',
       click: async () => {
         await session.state.get()

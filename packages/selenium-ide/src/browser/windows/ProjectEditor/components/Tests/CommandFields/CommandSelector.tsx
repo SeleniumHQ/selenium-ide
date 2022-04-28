@@ -1,11 +1,12 @@
-import CodeOffIcon from '@mui/icons-material/CodeOff'
-import HelpCenterIcon from '@mui/icons-material/HelpCenter'
-import FormControl from '@mui/material/FormControl'
-import IconButton from '@mui/material/IconButton'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-import Tooltip from '@mui/material/Tooltip'
+import { CodeOff, HelpCenter } from '@mui/icons-material'
+import {
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
+  Tooltip,
+} from '@mui/material'
 import React, { FC, useMemo } from 'react'
 import { setField, updateField } from './utils'
 import { CommandSelectorProps } from '../types'
@@ -54,17 +55,15 @@ const CommandSelector: FC<CommandSelectorProps> = ({
       </Select>
       <Tooltip
         className="flex-fixed ml-5 my-auto"
-        title={`${isDisabled ? 'En' :'Dis'}able this command`}
+        title={`${isDisabled ? 'En' : 'Dis'}able this command`}
         placement="top-end"
       >
         <IconButton
           onClick={() =>
-            setCommand(
-              isDisabled ? command.command : `//${command.command}`
-            )
+            setCommand(isDisabled ? command.command : `//${command.command}`)
           }
         >
-          <CodeOffIcon color={isDisabled ? 'info' : 'inherit'} />
+          <CodeOff color={isDisabled ? 'info' : 'inherit'} />
         </IconButton>
       </Tooltip>
       <Tooltip
@@ -72,7 +71,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
         title={commandData.description}
         placement="top-end"
       >
-        <HelpCenterIcon />
+        <HelpCenter />
       </Tooltip>
     </FormControl>
   )

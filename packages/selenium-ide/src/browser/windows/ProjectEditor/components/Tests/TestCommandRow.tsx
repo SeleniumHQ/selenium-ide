@@ -1,7 +1,4 @@
-import Box from '@mui/material/Box'
-import IconButton from '@mui/material/IconButton'
-import ListItemText from '@mui/material/ListItemText'
-import useMediaQuery from '@mui/material/useMediaQuery'
+import { Box, Chip, IconButton, ListItemText, TableCell, TableRow, useMediaQuery } from '@mui/material'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
@@ -123,21 +120,63 @@ const CommandRow: React.FC<CommandRowProps> = ({
       selected={selected}
       select={updateStepSelection}
     >
-      <ListItemText
-        disableTypography
-        primary={
-          <Box sx={commandTextFormat}>
-            {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
-          </Box>
-        }
-        secondary={
-          <>
-            <Box sx={argTextFormat}>{target}</Box>
-            <Box sx={argTextFormat}>{value}</Box>
-            <Box sx={errorTextFormat}>{commandState.message}</Box>
-          </>
-        }
-      />
+      <TableRow style={{ borderBottomStyle: 'none' }}>
+        <TableCell style={{ borderBottomStyle: 'none', bottom: 'none' }}>
+          <Chip label={index + 1}></Chip>
+        </TableCell>
+        <TableCell style={{ borderBottomStyle: 'none', bottom: 'none' }}>
+          <ListItemText
+            disableTypography
+            primary={
+              <TableCell
+                style={{
+                  borderBottomStyle: 'none',
+                  paddingLeft: 10,
+                  bottom: 'none',
+                  borderBottom: 'none',
+                }}
+                sx={commandTextFormat}
+              >
+                {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
+              </TableCell>
+            }
+            secondary={
+              <>
+                <TableCell
+                  style={{
+                    borderBottomStyle: 'none',
+                    paddingLeft: 10,
+                    bottom: 'none',
+                    borderBottom: 'none',
+                  }}
+                  sx={argTextFormat}
+                >
+                  {target}
+                </TableCell>
+                <TableCell
+                  style={{
+                    borderBottom: 'none',
+                    borderBottomStyle: 'none',
+                    paddingLeft: 10,
+                  }}
+                  sx={argTextFormat}
+                >
+                  {value}
+                </TableCell>
+                <TableCell
+                  sx={errorTextFormat}
+                  style={{
+                    borderBottom: 'none',
+                    borderBottomStyle: 'none',
+                  }}
+                >
+                  {commandState.message}
+                </TableCell>
+              </>
+            }
+          />
+        </TableCell>
+      </TableRow>
       <Box
         className="fill pos-abs o-25"
         sx={{ bgcolor, marginLeft: -2, pointerEvents: 'none', zIndex: 75 }}
