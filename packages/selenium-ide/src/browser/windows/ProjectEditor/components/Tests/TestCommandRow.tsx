@@ -161,8 +161,8 @@ const CommandRow: React.FC<CommandRowProps> = ({
         sx={{
           display: 'flex',
           flexDirection: 'row',
-          paddingTop: comment ? 0 : 1,
-          paddingBottom: commandState.message ? 0 : 1,
+          paddingTop: comment ? 0 : 0.5,
+          paddingBottom: commandState.message ? 0 : 0.5,
           textAlign: 'flex-start',
           width: 'inherit',
         }}
