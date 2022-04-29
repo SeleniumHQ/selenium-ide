@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography, useMediaQuery } from '@mui/material'
+import { Box, Chip, IconButton, Typography, useMediaQuery } from '@mui/material'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
@@ -132,8 +132,6 @@ const CommandRow: React.FC<CommandRowProps> = ({
         </IconButton>
       }
       sx={{
-        paddingTop: comment ? 0 : 2,
-        paddingBottom: commandState.message ? 0 : 2,
         width: '100%',
       }}
     >
@@ -155,7 +153,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
               ...commentTextFormat,
             }}
           >
-            <Typography>// {comment}</Typography>
+            // {comment}
           </Box>
         </Box>
       )}
@@ -163,24 +161,20 @@ const CommandRow: React.FC<CommandRowProps> = ({
         sx={{
           display: 'flex',
           flexDirection: 'row',
+          paddingTop: comment ? 0 : 0.5,
+          paddingBottom: commandState.message ? 0 : 0.5,
           textAlign: 'flex-start',
           width: 'inherit',
         }}
       >
         <Box sx={{ flex: 0, flexBasis: 50, textAlign: 'center' }}>
-          <Typography>{index + 1}</Typography>
+          <Chip label={index + 1}></Chip>
         </Box>
         <Box sx={{ flex: 1, ...commandTextFormat }}>
-          <Typography>
-            {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
-          </Typography>
+          {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
         </Box>
-        <Box sx={{ flex: 2, ...argTextFormat }}>
-          <Typography>{target}</Typography>
-        </Box>
-        <Box sx={{ flex: 2, ...argTextFormat }}>
-          <Typography>{value}</Typography>
-        </Box>
+        <Box sx={{ flex: 2, ...argTextFormat }}>{target}</Box>
+        <Box sx={{ flex: 2, ...argTextFormat }}>{value}</Box>
         <Box sx={{ flex: 0, flexBasis: 50 }}></Box>
       </Box>
       {commandState.message && (
@@ -190,7 +184,12 @@ const CommandRow: React.FC<CommandRowProps> = ({
       )}
       <Box
         className="fill pos-abs o-25"
-        sx={{ bgcolor, marginTop: -2, pointerEvents: 'none', zIndex: 75 }}
+        sx={{
+          bgcolor,
+          marginBottom:1,
+          pointerEvents: 'none',
+          zIndex: 75,
+        }}
       />
       <Box />
     </ReorderableListItem>
