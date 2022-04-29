@@ -191,6 +191,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
         className="fill pos-abs o-25"
         sx={{
           bgcolor,
+          marginBottom:1,
           pointerEvents: 'none',
           zIndex: 75,
         }}
