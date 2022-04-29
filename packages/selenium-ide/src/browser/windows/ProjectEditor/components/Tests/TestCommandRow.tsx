@@ -132,8 +132,6 @@ const CommandRow: React.FC<CommandRowProps> = ({
         </IconButton>
       }
       sx={{
-        paddingTop: comment ? 0 : 1,
-        paddingBottom: commandState.message ? 0 : 1,
         width: '100%',
       }}
     >
@@ -163,6 +161,8 @@ const CommandRow: React.FC<CommandRowProps> = ({
         sx={{
           display: 'flex',
           flexDirection: 'row',
+          paddingTop: comment ? 0 : 1,
+          paddingBottom: commandState.message ? 0 : 1,
           textAlign: 'flex-start',
           width: 'inherit',
         }}
@@ -173,12 +173,8 @@ const CommandRow: React.FC<CommandRowProps> = ({
         <Box sx={{ flex: 1, ...commandTextFormat }}>
           {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
         </Box>
-         <Box sx={{ flex: 2, ...argTextFormat }}>
-          {target}
-        </Box>
-        <Box sx={{ flex: 2, ...argTextFormat }}>
-         {value}
-        </Box>
+        <Box sx={{ flex: 2, ...argTextFormat }}>{target}</Box>
+        <Box sx={{ flex: 2, ...argTextFormat }}>{value}</Box>
         <Box sx={{ flex: 0, flexBasis: 50 }}></Box>
       </Box>
       {commandState.message && (
@@ -188,7 +184,11 @@ const CommandRow: React.FC<CommandRowProps> = ({
       )}
       <Box
         className="fill pos-abs o-25"
-        sx={{ bottom:'none', borderBottom:'none', borderBottomStyle:'none', bgcolor, pointerEvents: 'none', zIndex: 75 }}
+        sx={{
+          bgcolor,
+          pointerEvents: 'none',
+          zIndex: 75,
+        }}
       />
       <Box />
     </ReorderableListItem>
