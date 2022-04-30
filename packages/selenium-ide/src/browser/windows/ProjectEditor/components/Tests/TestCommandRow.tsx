@@ -1,4 +1,4 @@
-import { Box, Chip, IconButton, Typography, useMediaQuery } from '@mui/material'
+import { Box, IconButton, Typography, useMediaQuery } from '@mui/material'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
@@ -35,6 +35,8 @@ const colorFromCommandState = (
       return 'transparent'
   }
 }
+
+const commandIndexTextFormat = { color: 'primary.main'}
 
 const commandTextFormat = { color: 'primary.main', typography: 'body2' }
 const commentTextFormat = {
@@ -87,7 +89,10 @@ const CommandRow: React.FC<CommandRowProps> = ({
   const toggleBreakpoint = () =>
     updateIsBreakpoint(activeTest, id, !isBreakpoint)
   const bgcolor = colorFromCommandState(commandState.state, prefersDarkMode)
-  const isDisabled = command.startsWith('//')
+  if (commandState.state === 'executing') {
+    window.scrollTo(0, 20 * index)
+  }
+    const isDisabled = command.startsWith('//')
   const commandText = isDisabled ? command.slice(2) : command
   const mainClass = ['pos-rel'].concat(isDisabled ? ['o-50'] : []).join(' ')
   return (
@@ -167,10 +172,10 @@ const CommandRow: React.FC<CommandRowProps> = ({
           width: 'inherit',
         }}
       >
-        <Box sx={{ flex: 0, flexBasis: 50, textAlign: 'center' }}>
-          <Chip label={index + 1}></Chip>
+        <Box sx={{  flex: 0, flexBasis: 50, textAlign: 'center', ...commandIndexTextFormat }}>
+          {index + 1}
         </Box>
-        <Box sx={{ flex: 1, ...commandTextFormat }}>
+        <Box sx={{ paddingLeft:1, flex: 1, ...commandTextFormat }}>
           {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
         </Box>
         <Box sx={{ flex: 2, ...argTextFormat }}>{target}</Box>

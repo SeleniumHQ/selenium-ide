@@ -38,7 +38,7 @@ const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
       }}
     >
 
-      <ListSubheader className="lh-36" sx={{ top: '96px', zIndex: 100 }}>
+      <ListSubheader className="lh-36" sx={{ top: '48px', zIndex: 100 }}>
         Tests in suite
       </ListSubheader>
       {preview.map(([id, origIndex], index) => {

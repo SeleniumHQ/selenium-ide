@@ -37,7 +37,7 @@ const CommandList: FC<CommandListProps> = ({
       dense
       subheader={
         <EditorToolbar
-          sx={{ top: '96px', zIndex: 100 }}
+          sx={{ top: '48px', zIndex: 100 }}
           onAdd={() =>
             window.sideAPI.tests.addSteps(
               activeTest,

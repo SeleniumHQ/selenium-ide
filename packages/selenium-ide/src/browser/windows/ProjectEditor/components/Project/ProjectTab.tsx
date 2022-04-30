@@ -61,7 +61,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
         subheader={
           <EditorToolbar
             disableGutters={false}
-            sx={{ top: '96px', zIndex: 100 }}
+            sx={{ top: '48px', zIndex: 100 }}
             onAdd={() => projectCreate()}
           >
             Project Plugins

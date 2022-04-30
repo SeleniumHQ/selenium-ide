@@ -25,7 +25,7 @@ const AvailableSuiteTestList: FC<AvailableSuiteTestListProps> = ({
       width: '50%',
     }}
     subheader={
-      <ListSubheader className="lh-36" sx={{ top: '96px', zIndex: 100 }}>
+      <ListSubheader className="lh-36" sx={{ top: '48px', zIndex: 100 }}>
         Available Tests
       </ListSubheader>
     }
