@@ -3,6 +3,7 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { StateShape } from 'api/types'
 import React, { FC } from 'react'
+import baseControlProps from './BaseProps'
 
 export interface PlayListButtonProps {
   state: StateShape
@@ -11,8 +12,7 @@ export interface PlayListButtonProps {
 const PlayListButton: FC<PlayListButtonProps> = () => (
   <Tooltip title="Play Suite" aria-label="play-suite">
     <IconButton
-      className="m-2 not-draggable"
-      color="inherit"
+      {...baseControlProps}
       onClick={() => window.sideAPI.playback.playSuite()}
     >
       <PlaylistPlayIcon />

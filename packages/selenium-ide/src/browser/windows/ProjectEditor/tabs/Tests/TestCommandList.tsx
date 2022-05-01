@@ -1,11 +1,11 @@
 import { CommandShape } from '@seleniumhq/side-model'
 import { CommandsStateShape } from 'api/models/state/command'
+import ReorderableList from 'browser/components/ReorderableList'
+import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
 import useReorderPreview from 'browser/hooks/useReorderPreview'
 import React, { FC } from 'react'
 import CommandListItem from './TestCommandListItem'
-import EditorToolbar from '../Drawer/EditorToolbar'
-import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
-import ReorderableList from 'browser/components/ReorderableList'
+import EditorToolbar from '../../components/Drawer/EditorToolbar'
 
 export interface CommandListProps {
   activeTest: string
@@ -53,7 +53,7 @@ const CommandList: FC<CommandListProps> = ({
               : undefined
           }
         >
-          Commands
+          <span className="ml-4">Commands</span>
         </EditorToolbar>
       }
     >

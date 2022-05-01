@@ -1,55 +1,31 @@
-import Divider from '@mui/material/Divider'
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
-import IconButton from '@mui/material/IconButton'
-import ChevronLeft from '@mui/icons-material/ChevronLeft'
+import { CoreSessionData } from 'api/types'
 import React from 'react'
-import DrawerHeader from './Header'
-import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
+import { DrawerWrapperProps } from './Wrapper'
+import TabPanel from '../Tab/Panel'
+import { SUITES_TAB, TAB, TESTS_TAB } from '../../enums/tab'
+import SuitesDrawer from '../../tabs/Suites/SuitesDrawer'
+import TestsDrawer from '../../tabs/Tests/TestsDrawer'
 
-export const drawerWidth = 160
-
-export const drawerStyle = (footerHeight: number) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  '& .MuiDrawer-paper': {
-    boxSizing: 'border-box',
-    height: `calc(100% - ${footerHeight}px)`,
-    width: drawerWidth,
-  },
-})
-
-interface CustomDrawerProps extends DrawerProps {
-  footerID: string
-  header: React.ReactNode
-  open: boolean
-  setOpen: (b: boolean) => void
+interface SIDEDrawerProps extends Omit<DrawerWrapperProps, 'footerID' | 'header'> {
+  session: CoreSessionData
+  tab: TAB
 }
 
-const Drawer: React.FC<CustomDrawerProps> = ({
-  children,
-  footerID,
-  header = null,
-  open,
-  setOpen,
-}) => {
-  const footerHeight = useHeightFromElement(footerID)
+const SIDEDrawer: React.FC<SIDEDrawerProps> = ({ session, tab, ...props }) => {
+  const {
+    project: { suites, tests },
+    state: { activeSuiteID, activeTestID },
+  } = session
   return (
-    <MuiDrawer
-      variant="persistent"
-      anchor="left"
-      open={open}
-      sx={drawerStyle(footerHeight)}
-    >
-      <DrawerHeader>
-        <IconButton onClick={() => setOpen(false)}>
-          <ChevronLeft />
-        </IconButton>
-        <span className="flex flex-1">{header}</span>
-      </DrawerHeader>
-      <Divider sx={{ position: 'sticky', top: '46px' }} />
-      {children}
-    </MuiDrawer>
+    <>
+      <TabPanel index={TESTS_TAB} value={tab}>
+        <TestsDrawer activeTest={activeTestID} tests={tests} {...props} />
+      </TabPanel>
+      <TabPanel index={SUITES_TAB} value={tab}>
+        <SuitesDrawer activeSuite={activeSuiteID} suites={suites} {...props} />
+      </TabPanel>
+    </>
   )
 }
 
-export default Drawer
+export default SIDEDrawer

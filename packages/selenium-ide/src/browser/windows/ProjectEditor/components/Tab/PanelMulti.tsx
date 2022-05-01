@@ -1,22 +1,12 @@
 import React from 'react'
 
 interface TabPanelMultiProps {
-  children?: React.ReactNode
-  dir?: string
+  children?: React.ReactElement
   indexes: number[]
   value: number
 }
 
-const TabPanelMulti: React.FC<TabPanelMultiProps> = ({ children, value, indexes, ...other }) => (
-  <div
-    role="tabpanel"
-    hidden={!indexes.includes(value)}
-    id={`full-width-tabpanel-${indexes.join('-')}`}
-    aria-labelledby={`full-width-tab-${indexes.join('-')}`}
-    {...other}
-  >
-    {indexes.includes(value) && children}
-  </div>
-)
+const TabPanelMulti = ({ children, indexes, value }: TabPanelMultiProps): React.ReactElement | null =>
+  indexes.includes(value) ? (children as React.ReactElement) : null
 
-export default TabPanelMulti;
+export default TabPanelMulti

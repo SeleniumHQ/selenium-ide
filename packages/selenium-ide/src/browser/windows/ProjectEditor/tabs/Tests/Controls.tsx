@@ -1,9 +1,9 @@
 import { StateShape } from 'api/types'
 import React, { FC } from 'react'
-import PlayButton from '../Controls/PlayButton'
-import RecordButton from '../Controls/RecordButton'
-import StopButton from '../Controls/StopButton'
-import PauseButton from '../Controls/PauseButton'
+import PlayButton from '../../components/Controls/PlayButton'
+import RecordButton from '../../components/Controls/RecordButton'
+import StopButton from '../../components/Controls/StopButton'
+import PauseButton from '../../components/Controls/PauseButton'
 
 export interface TestControlsProps {
   state: StateShape

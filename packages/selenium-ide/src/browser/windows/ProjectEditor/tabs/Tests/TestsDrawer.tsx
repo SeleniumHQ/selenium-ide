@@ -1,9 +1,9 @@
 import List from '@mui/material/List'
 import { TestShape } from '@seleniumhq/side-model'
 import React, { FC } from 'react'
-import Drawer from '../Drawer'
-import EditorToolbar from '../Drawer/EditorToolbar'
-import RenamableListItem from '../Drawer/RenamableListItem'
+import Drawer from '../../components/Drawer/Wrapper'
+import EditorToolbar from '../../components/Drawer/EditorToolbar'
+import RenamableListItem from '../../components/Drawer/RenamableListItem'
 
 export interface TestListProps {
   activeTest: string
