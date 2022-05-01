@@ -5,7 +5,7 @@ import FormHelperText from '@mui/material/FormHelperText'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import capitalize from 'lodash/fp/capitalize'
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
 import { updateField, updateFieldAutoComplete } from './utils'
 import { CommandArgFieldProps } from '../types'
 
@@ -32,6 +32,9 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
     setLocalValue(value)
     updateTargetAutoComplete(testID, command.id)(e, value)
   }
+  useEffect(() => {
+    setLocalValue(command[fieldName])
+  }, [command.id])
 
   return (
     <FormControl>

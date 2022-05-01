@@ -17,7 +17,7 @@ const UncontrolledTextField: FC<TextFieldProps> = ({
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const el = e.target as HTMLInputElement
     setLocalValue(el.value)
-    onChange(e)
+    _onChange(e)
   }
   return (
     <TextField

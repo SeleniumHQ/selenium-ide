@@ -406,7 +406,9 @@ export default class WebDriverExecutor {
       } catch (e) {
         console.warn('Click encountered a webdriver failure:')
         console.error(e)
-        console.info('Retrying...')
+        if (finalTime > Date.now()) {
+          console.info('Retrying...')
+        }
       }
     }
     if (!success) {

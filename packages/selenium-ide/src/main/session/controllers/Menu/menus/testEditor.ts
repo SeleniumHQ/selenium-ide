@@ -12,7 +12,7 @@ export const commandList: MenuComponent = (session) => async () => {
   const selectedCommandCount = editorState.selectedCommandIndexes.length
   return [
     {
-      accelerator: 'X',
+      accelerator: 'CommandOrControl+Shift+X',
       click: async () => {
         await session.api.state.setCopiedCommands()
         await session.api.tests.removeSteps(
@@ -24,7 +24,7 @@ export const commandList: MenuComponent = (session) => async () => {
       label: pluralize('Cut Command', selectedCommandCount),
     },
     {
-      accelerator: 'C',
+      accelerator: 'CommandOrControl+Shift+C',
       click: async () => {
         await session.api.state.setCopiedCommands()
       },
@@ -32,7 +32,7 @@ export const commandList: MenuComponent = (session) => async () => {
       label: pluralize('Copy Command', selectedCommandCount),
     },
     {
-      accelerator: 'V',
+      accelerator: 'CommandOrControl+Shift+V',
       click: async () => {
         await session.api.tests.addSteps(
           sessionData.state.activeTestID,
@@ -44,7 +44,7 @@ export const commandList: MenuComponent = (session) => async () => {
       label: pluralize('Paste Command', copiedCommandCount),
     },
     {
-      accelerator: 'D',
+      accelerator: 'CommandOrControl+Shift+D',
       click: async () => {
         const cmds = getActiveTest(sessionData).commands
         const allCommandsDisabled =

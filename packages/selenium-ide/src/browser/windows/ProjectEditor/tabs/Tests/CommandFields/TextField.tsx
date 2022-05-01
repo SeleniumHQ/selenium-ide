@@ -17,7 +17,7 @@ const CommandTextField: FC<CommandFieldProps> = ({
   return (
     <FormControl>
       <TextField
-        id={`${command.id}-${command[fieldName]}`}
+        id={`${fieldName}-${command.id}`}
         label={FieldName}
         name={fieldName}
         onChange={updateText(testID, command.id)}
