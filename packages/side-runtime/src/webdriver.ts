@@ -395,16 +395,25 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doClick(
-    locator: string,
-    _: string,
-    commandObject: Partial<CommandShape> = {}
-  ) {
-    const element = await this.waitForElement(
-      locator,
-      commandObject.targetFallback
-    )
-    await element.click()
+  async doClick(locator: string) {
+    const element = await this.waitForElementVisible(locator, this.implicitWait)
+    let finalTime = Date.now() + this.implicitWait
+    let success = null
+    while (!success && finalTime > Date.now()) {
+      try {
+        await element.click()
+        success = true
+      } catch (e) {
+        console.warn('Click encountered a webdriver failure:')
+        console.error(e)
+        console.info('Retrying...')
+      }
+    }
+    if (!success) {
+      throw new Error(
+        `Failed to click element at ${locator} within ${this.implicitWait}ms`
+      )
+    }
   }
 
   async doClickAt(
@@ -714,16 +723,7 @@ export default class WebDriverExecutor {
   }
 
   async doWaitForElementVisible(locator: string, timeout: string) {
-    const startTime = Date.now()
-    const element = (await this.wait<WebElementShape>(
-      until.elementLocated(parseLocator(locator)),
-      parseInt(timeout)
-    )) as WebElementShape
-    const elapsed = Date.now() - startTime
-    await this.wait(
-      until.elementIsVisible(element),
-      parseInt(timeout) - elapsed
-    )
+    await this.waitForElementVisible(locator, parseInt(timeout))
   }
 
   async doWaitForElementNotVisible(locator: string, timeout: string) {
@@ -1203,6 +1203,28 @@ export default class WebDriverExecutor {
       element
     )
     return enabled && !readonly
+  }
+
+  async retryToAllowForIntermittency(locator: string, timeout: number) {
+    const startTime = Date.now()
+    const element = (await this.wait<WebElementShape>(
+      until.elementLocated(parseLocator(locator)),
+      timeout
+    )) as WebElementShape
+    const elapsed = Date.now() - startTime
+    await this.wait(until.elementIsVisible(element), timeout - elapsed)
+    return element
+  }
+
+  async waitForElementVisible(locator: string, timeout: number) {
+    const startTime = Date.now()
+    const element = (await this.wait<WebElementShape>(
+      until.elementLocated(parseLocator(locator)),
+      timeout
+    )) as WebElementShape
+    const elapsed = Date.now() - startTime
+    await this.wait(until.elementIsVisible(element), timeout - elapsed)
+    return element
   }
 
   async wait<T extends any>(
@@ -1704,7 +1726,6 @@ function parseOptionLocator(locator: string) {
 
 function parseCoordString(coord: string) {
   const [x, y] = coord.split(',').map((n) => parseInt(n))
-
   return {
     x,
     y,

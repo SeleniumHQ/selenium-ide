@@ -11,6 +11,9 @@ const UncontrolledTextField: FC<TextFieldProps> = ({
   ...props
 }) => {
   const [localValue, setLocalValue] = React.useState(value)
+  React.useEffect(() => {
+    setLocalValue(value)
+  }, [props.id])
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const el = e.target as HTMLInputElement
     setLocalValue(el.value)

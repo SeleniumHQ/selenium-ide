@@ -1,8 +1,8 @@
 import { StateShape } from 'api/types'
 import React, { FC } from 'react'
-import PauseButton from '../Controls/PauseButton'
-import PlayListButton from '../Controls/PlayListButton'
-import StopButton from '../Controls/StopButton'
+import PauseButton from '../../components/Controls/PauseButton'
+import PlayListButton from '../../components/Controls/PlayListButton'
+import StopButton from '../../components/Controls/StopButton'
 
 export interface SuiteControlsProps {
   state: StateShape

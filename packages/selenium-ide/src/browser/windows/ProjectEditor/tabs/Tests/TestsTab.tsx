@@ -6,7 +6,7 @@ import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import CommandTable from './TestCommandTable'
 import { CoreSessionData } from 'api/types'
-import MainHeader from '../Main/Header'
+import MainHeader from '../../components/Main/Header'
 import loadingID from 'api/constants/loadingID'
 import { Typography, useMediaQuery } from '@mui/material'
 

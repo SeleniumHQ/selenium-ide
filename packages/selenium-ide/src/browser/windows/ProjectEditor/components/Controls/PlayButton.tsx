@@ -4,6 +4,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { StateShape } from 'api/types'
 import React, { FC } from 'react'
 import badIndex from 'api/constants/badIndex'
+import baseControlProps from './BaseProps'
 
 export interface PlayButtonProps {
   state: StateShape
@@ -12,8 +13,7 @@ export interface PlayButtonProps {
 const PlayButton: FC<PlayButtonProps> = ({ state }) => (
   <Tooltip title="Play" aria-label="play">
     <IconButton
-      className="m-2 not-draggable"
-      color="inherit"
+      {...baseControlProps}
       onClick={() => {
         state.playback.currentIndex === badIndex
           ? window.sideAPI.playback.play(state.activeTestID)

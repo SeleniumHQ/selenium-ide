@@ -8,8 +8,8 @@ import Stack from '@mui/material/Stack'
 import { CoreSessionData } from 'api/types'
 import TextField from 'browser/components/UncontrolledTextField'
 import React, { FC } from 'react'
-import EditorToolbar from '../Drawer/EditorToolbar'
-import MainHeader from '../Main/Header'
+import EditorToolbar from '../../components/Drawer/EditorToolbar'
+import MainHeader from '../../components/Main/Header'
 
 export interface ProjectTabProps {
   session: CoreSessionData
@@ -31,6 +31,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
       <Stack className="p-4" spacing={1}>
         <FormControl>
           <TextField
+            id="name"
             label="Name"
             name="name"
             onChange={(e: any) => {
@@ -44,6 +45,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
         </FormControl>
         <FormControl>
           <TextField
+            id="url"
             label="URL"
             name="url"
             onChange={(e: any) => {
@@ -75,6 +77,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
           <ListItem className="py-3" key={index}>
             <TextField
               defaultValue={typeof plugin === 'string' ? plugin : ''}
+              id={`plugin-${index}`}
               fullWidth
               onBlur={(e) => projectEdit(index, e.target.value)}
               size="small"
