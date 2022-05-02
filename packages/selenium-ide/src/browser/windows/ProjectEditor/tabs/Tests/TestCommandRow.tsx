@@ -189,7 +189,11 @@ const CommandRow: React.FC<CommandRowProps> = ({
       )}
       <Box
         className="fill pos-abs o-25"
-        sx={{ bottom:'none', borderBottom:'none', borderBottomStyle:'none', bgcolor, pointerEvents: 'none', zIndex: 75 }}
+        sx={{
+          bgcolor,
+          pointerEvents: 'none',
+          zIndex: 75,
+        }}
       />
       <Box />
     </ReorderableListItem>
