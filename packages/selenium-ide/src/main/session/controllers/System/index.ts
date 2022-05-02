@@ -1,4 +1,4 @@
-import { app, dialog } from 'electron'
+import { dialog } from 'electron'
 import { Session } from 'main/types'
 
 
@@ -18,7 +18,13 @@ export default class SystemController {
       message: error,
       type: "error"
     })
-    app.quit()
+    this.quit()
+  }
+  async quit() {
+    const confirm = await this.session.projects.checkIfCurrentProjectChanged()
+    if (confirm) {
+      this.session.app.quit()
+    }
   }
   session: Session
 }
