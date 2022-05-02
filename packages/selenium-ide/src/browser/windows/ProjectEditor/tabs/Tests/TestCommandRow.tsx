@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography, useMediaQuery } from '@mui/material'
+import { Box, Chip, IconButton, Typography, useMediaQuery } from '@mui/material'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
@@ -189,12 +189,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
       )}
       <Box
         className="fill pos-abs o-25"
-        sx={{
-          bgcolor,
-          marginBottom:1,
-          pointerEvents: 'none',
-          zIndex: 75,
-        }}
+        sx={{ bottom:'none', borderBottom:'none', borderBottomStyle:'none', bgcolor, pointerEvents: 'none', zIndex: 75 }}
       />
       <Box />
     </ReorderableListItem>
