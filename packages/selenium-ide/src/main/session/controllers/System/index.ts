@@ -23,7 +23,7 @@ export default class SystemController {
   async quit() {
     const confirm = await this.session.projects.checkIfCurrentProjectChanged()
     if (confirm) {
-      this.session.app.quit()
+      this.session.app.exit()
     }
   }
   session: Session
