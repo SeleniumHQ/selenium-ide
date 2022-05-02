@@ -185,6 +185,10 @@ export default class WindowsController {
         win.close()
       })
     })
+    projectWindow.on('close', (e) => {
+      e.preventDefault()
+      this.session.system.quit()
+    })
   }
 
   async initializePlaybackWindow() {
@@ -200,14 +204,11 @@ export default class WindowsController {
   }
 
   async getPlaybackWindow() {
-    const playbackWindow = await this.playbackWindows.slice(
-      -1
-    )[0]
+    const playbackWindow = await this.playbackWindows.slice(-1)[0]
     if (playbackWindow) return playbackWindow
     else {
       await this.open('playback-window')
       return this.get('playback-window')
     }
   }
-  
 }

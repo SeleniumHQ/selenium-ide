@@ -24,6 +24,7 @@ export default class SystemController {
     const confirm = await this.session.projects.checkIfCurrentProjectChanged()
     if (confirm) {
       this.session.app.quit()
+      
     }
   }
   session: Session
