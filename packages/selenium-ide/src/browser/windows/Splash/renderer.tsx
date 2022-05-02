@@ -15,6 +15,7 @@ const ProjectEditor = () => {
     window.sideAPI.projects.getRecent().then(setRecentProjects)
   }, [])
   const loadProject = async () => {
+    
     const response = await window.sideAPI.dialogs.open()
     if (response.canceled) return
     await window.sideAPI.projects.load(response.filePaths[0])

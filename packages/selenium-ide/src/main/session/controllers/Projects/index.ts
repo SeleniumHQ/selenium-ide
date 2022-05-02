@@ -43,6 +43,7 @@ export default class ProjectsController {
     const {
       session: { plugins, state },
     } = this
+    this.checkIfCurrentProjectChanged()
 
     // Cleanup our plugins
     plugins.onProjectUnloaded()
@@ -120,6 +121,8 @@ export default class ProjectsController {
   }
 
   async load_v3(filepath: string): Promise<ProjectShape> {
+    await this.checkIfCurrentProjectChanged()
+
     const fileContents = await fs.readFile(filepath, 'utf-8')
     this.recentProjects.add(filepath)
     const project: ProjectShape = JSON.parse(fileContents)
@@ -132,5 +135,29 @@ export default class ProjectsController {
     await fs.writeFile(filepath, JSON.stringify(this.project, undefined, 2))
     this.recentProjects.add(filepath)
     return true
+  }
+
+  async checkIfCurrentProjectChanged() {
+    if (await this.projectHasChanged()) {
+      const confirmationStatus = await this.session.dialogs.showMessageBox(
+        'Save changes before leaving?',
+        ['Cancel', 'Save and Continue', 'Continue without Saving']
+      )
+      switch (confirmationStatus) {
+        case 1:
+          await this.session.projects.save(
+            this.session.projects.filepath as string
+          )
+      }
+    }
+  }
+
+  async projectHasChanged(): Promise<boolean> {
+    if (this.filepath) {
+      const fileContents = await fs.readFile(this.filepath, 'utf-8')
+      const currentProject = JSON.stringify(this.project, undefined, 2)
+      if (fileContents != currentProject) return true
+    }
+    return false
   }
 }
