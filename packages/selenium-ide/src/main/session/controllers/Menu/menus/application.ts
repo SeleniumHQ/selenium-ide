@@ -18,7 +18,13 @@ const applicationMenu = (session: Session) => async () =>
         { role: 'hideOthers' },
         { role: 'unhide' },
         { type: 'separator' },
-        { role: 'quit' },
+        {
+          accelerator: 'CommandOrControl+Q',
+          label: 'Quit',
+          click: async () => {
+            await session.system.quit()
+          },
+        },
       ],
     },
     {

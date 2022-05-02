@@ -14,6 +14,9 @@ const defaultSuite: Partial<SuiteShape> = {
   tests: [loadingID],
 }
 export const mutator: Mutator<Shape> = (session, { result }) => {
+  if (!result) {
+    return session
+  }
   const firstSuite = result.suites?.[0] ?? defaultSuite
   const activeSuiteID = firstSuite.id
   const activeTestID = firstSuite.tests[0] ?? loadingID
