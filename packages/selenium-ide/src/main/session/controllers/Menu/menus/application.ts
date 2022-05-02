@@ -4,6 +4,7 @@ import { editBasicsCommands } from './editBasics'
 import { projectEditorCommands } from './projectEditor'
 import { testEditorCommands } from './testEditor'
 import { projectViewCommands } from './projectView'
+import { platform } from 'os'
 
 const applicationMenu = (session: Session) => async () =>
   Menu.buildFromTemplate([
@@ -19,7 +20,7 @@ const applicationMenu = (session: Session) => async () =>
         { role: 'unhide' },
         { type: 'separator' },
         {
-          accelerator: 'CommandOrControl+Q',
+          accelerator: platform() === 'win32' ? 'Alt+F4' : 'CommandOrControl+Q',
           label: 'Quit',
           click: async () => {
             await session.system.quit()
