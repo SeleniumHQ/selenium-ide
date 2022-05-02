@@ -51,7 +51,9 @@ export default class PlaybackController {
 
   async play(testID: string, playRange = PlaybackController.defaultPlayRange) {
 
-    await this.session.windows.initializePlaybackWindow()
+    // Hack to detect if this is a fresh play event or resume/step
+    if(playRange[0]===0 && playRange[1]===-1)
+      await this.session.windows.initializePlaybackWindow()
 
     this.playingTest = testID
     this.playRange = playRange
