@@ -1,4 +1,4 @@
-import { Box, Chip, IconButton, Typography, useMediaQuery } from '@mui/material'
+import { Box, IconButton, Typography, useMediaQuery } from '@mui/material'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
