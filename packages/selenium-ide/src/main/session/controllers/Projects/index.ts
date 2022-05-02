@@ -43,7 +43,6 @@ export default class ProjectsController {
     const {
       session: { plugins, state },
     } = this
-    this.checkIfCurrentProjectChanged()
 
     // Cleanup our plugins
     plugins.onProjectUnloaded()
@@ -104,9 +103,11 @@ export default class ProjectsController {
     return starterProject
   }
 
-  async load(filepath: string): Promise<ProjectShape> {
+  async load(filepath: string): Promise<ProjectShape | null> {
     const project = await this.load_v3(filepath)
-    this.onProjectLoaded(project, filepath)
+    if (project) {
+      this.onProjectLoaded(project, filepath)
+    }
     return project
   }
 
@@ -120,9 +121,11 @@ export default class ProjectsController {
     return true
   }
 
-  async load_v3(filepath: string): Promise<ProjectShape> {
-    await this.checkIfCurrentProjectChanged()
-
+  async load_v3(filepath: string): Promise<ProjectShape | null> {
+    const confirm = await this.checkIfCurrentProjectChanged()
+    if (!confirm) {
+      return null
+    }
     const fileContents = await fs.readFile(filepath, 'utf-8')
     this.recentProjects.add(filepath)
     const project: ProjectShape = JSON.parse(fileContents)
@@ -144,12 +147,15 @@ export default class ProjectsController {
         ['Cancel', 'Save and Continue', 'Continue without Saving']
       )
       switch (confirmationStatus) {
+        case 0:
+          return false
         case 1:
           await this.session.projects.save(
             this.session.projects.filepath as string
           )
       }
     }
+    return true
   }
 
   async projectHasChanged(): Promise<boolean> {
