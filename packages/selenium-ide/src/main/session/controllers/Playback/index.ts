@@ -50,6 +50,9 @@ export default class PlaybackController {
   }
 
   async play(testID: string, playRange = PlaybackController.defaultPlayRange) {
+
+    await this.session.windows.initializePlaybackWindow()
+
     this.playingTest = testID
     this.playRange = playRange
     this.isPlaying = true
