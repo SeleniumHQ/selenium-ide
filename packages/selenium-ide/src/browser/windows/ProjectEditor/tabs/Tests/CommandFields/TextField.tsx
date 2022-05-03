@@ -15,20 +15,21 @@ const CommandTextField: FC<CommandFieldProps> = ({
 }) => {
   const FieldName = capitalize(fieldName)
   const updateText = updateField(fieldName)
-
-  const note =
-    fieldName === 'comment'
-      ? ''
-      : ' - ' + commands[command.command]['description']
+  const isComment = fieldName === 'comment'
+  const fullnote = isComment ? '' : commands[command.command][fieldName]?.description ?? ''
+  const label = fullnote ? FieldName + ' - ' + fullnote : FieldName
 
   return (
-    <FormControl className="d-flex flex-row">
+    <FormControl className="flex flex-row">
       <TextField
-        text-overflow="ellipsis"
-        className="flex-grow-1"
-        sx={{ typography: 'subtitle2', color: 'red' }}
+        className="flex-1"
         id={`${fieldName}-${command.id}`}
-        label={FieldName + note}
+        label={label}
+        InputLabelProps={{
+          sx: {
+            textOverflow: 'ellipsis',
+          },
+        }}
         name={fieldName}
         onChange={updateText(testID, command.id)}
         onContextMenu={() => {
@@ -37,20 +38,11 @@ const CommandTextField: FC<CommandFieldProps> = ({
         size="small"
         value={command[fieldName]}
       />
-      <Tooltip
-        text-overflow="ellipsis"
-        className="mx-2 my-auto"
-        title={note}
-        placement="top-end"
-      >
-        <HelpCenter />
-      </Tooltip>
-
-      {/* {fieldName === 'comment' ? null : (
-        <FormHelperText>
-          {commands[command.command][fieldName]?.description ?? ''}
-        </FormHelperText>
-      )} */}
+      {!isComment && (
+        <Tooltip className="mx-2 my-auto" title={fullnote} placement="top-end">
+          <HelpCenter />
+        </Tooltip>
+      )}
     </FormControl>
   )
 }

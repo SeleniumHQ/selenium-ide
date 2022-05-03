@@ -21,7 +21,8 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
   const fieldNames = (fieldName + 's') as PluralField
   const FieldName = capitalize(fieldName)
 
-  const note = commands[command.command][fieldName]?.description ?? ''
+  const fullnote = commands[command.command][fieldName]?.description ?? ''
+  const label = fullnote ? FieldName + ' - ' + fullnote : FieldName
 
   const updateTarget = updateField(fieldName)
   const updateTargetAutoComplete = updateFieldAutoComplete(fieldName)
@@ -41,35 +42,34 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
 
   return (
     <FormControl className="flex flex-row">
-      <div className="flex-grow-1">
-        <Autocomplete
-          text-overflow="ellipsis"
-          freeSolo
-          inputValue={localValue}
-          componentsProps={{
-            paper: {
-              sx: {
-                zIndex: 3000,
-              },
+      <Autocomplete
+        className="flex-1"
+        freeSolo
+        inputValue={localValue}
+        componentsProps={{
+          paper: {
+            sx: {
+              zIndex: 3000,
             },
-          }}
-          onChange={onChange}
-          onContextMenu={() => {
-            window.sideAPI.menus.open('textField')
-          }}
-          onInputChange={onChangeAutoComplete}
-          options={(command[fieldNames] ?? []).map((entry) => entry.join('='))}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={FieldName + ' - ' + note}
-              name={fieldName}
-            />
-          )}
-          size="small"
-          value={localValue}
-        />
-      </div>
+          },
+        }}
+        onChange={onChange}
+        onContextMenu={() => {
+          window.sideAPI.menus.open('textField')
+        }}
+        onInputChange={onChangeAutoComplete}
+        options={(command[fieldNames] ?? []).map((entry) => entry.join('='))}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={label}
+            name={fieldName}
+          />
+        )}
+        size="small"
+        text-overflow="ellipsis"
+        value={localValue}
+      />
       <IconButton
         className="ml-4"
         onClick={() =>
@@ -79,16 +79,12 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         <AddToHomeScreenIcon />
       </IconButton>
       <Tooltip
-        text-overflow="ellipsis"
         className="mx-2 my-auto"
-        title={note}
+        title={fullnote}
         placement="top-end"
       >
         <HelpCenter />
       </Tooltip>
-      {/* <FormHelperText>
-        {commandData[fieldName]?.description ?? ''}
-      </FormHelperText> */}
     </FormControl>
   )
 }
