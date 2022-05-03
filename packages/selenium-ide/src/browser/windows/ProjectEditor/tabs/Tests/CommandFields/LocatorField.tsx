@@ -1,12 +1,10 @@
 import { HelpCenter } from '@mui/icons-material'
 import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen'
-import {
-  Autocomplete,
-  FormControl,
-  IconButton,
-  TextField,
-  Tooltip,
-} from '@mui/material'
+import { Autocomplete } from '@mui/material'
+import { FormControl } from '@mui/material'
+import { IconButton } from '@mui/material'
+import { TextField } from '@mui/material'
+import { Tooltip } from '@mui/material'
 import capitalize from 'lodash/fp/capitalize'
 import React, { FC, useEffect } from 'react'
 import { updateField, updateFieldAutoComplete } from './utils'
@@ -23,18 +21,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
   const fieldNames = (fieldName + 's') as PluralField
   const FieldName = capitalize(fieldName)
 
-  const fullnote = commands[command.command][fieldName]?.description ?? ''
-  let note = new String()
-  let longNote = ''
-  let isLongNote = false
-
-  const truncateLength = 60
-
-  if (fullnote.length > truncateLength) {
-    isLongNote = true
-    note = fullnote.substring(0, truncateLength) + '...'
-    longNote = fullnote
-  } else note = fullnote
+  const note = commands[command.command][fieldName]?.description ?? ''
 
   const updateTarget = updateField(fieldName)
   const updateTargetAutoComplete = updateFieldAutoComplete(fieldName)
@@ -56,6 +43,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
     <FormControl className="flex flex-row">
       <div className="flex-grow-1">
         <Autocomplete
+          text-overflow="ellipsis"
           freeSolo
           inputValue={localValue}
           componentsProps={{
@@ -90,11 +78,14 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
       >
         <AddToHomeScreenIcon />
       </IconButton>
-      {isLongNote && (
-        <Tooltip className="mx-2 my-auto" title={longNote} placement="top-end">
-          <HelpCenter />
-        </Tooltip>
-      )}
+      <Tooltip
+        text-overflow="ellipsis"
+        className="mx-2 my-auto"
+        title={note}
+        placement="top-end"
+      >
+        <HelpCenter />
+      </Tooltip>
       {/* <FormHelperText>
         {commandData[fieldName]?.description ?? ''}
       </FormHelperText> */}
