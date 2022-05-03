@@ -2,21 +2,13 @@ import config from './config'
 import Store from 'electron-store'
 import { BrowserInfo } from 'main/types'
 
-interface WindowPositionBound {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
 export interface StorageSchema {
   config: typeof config
   browserInfo: BrowserInfo
   plugins: string[]
   recentProjects: string[]
-  windowPositionBounds: {
-    [key: string]: WindowPositionBound
-  }
+  windowSize: number[]
+  windowPosition:number[]
 }
 
 const store = new Store<StorageSchema>({
@@ -28,7 +20,8 @@ const store = new Store<StorageSchema>({
     config,
     plugins: [],
     recentProjects: [],
-    windowPositionBounds: {},
+    windowSize: [],
+    windowPosition: []
   },
 })
 
