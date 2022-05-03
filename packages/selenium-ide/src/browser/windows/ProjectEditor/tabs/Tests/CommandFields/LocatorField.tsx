@@ -1,9 +1,12 @@
+import { HelpCenter } from '@mui/icons-material'
 import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen'
-import Autocomplete from '@mui/material/Autocomplete'
-import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
-import IconButton from '@mui/material/IconButton'
-import TextField from '@mui/material/TextField'
+import {
+  Autocomplete,
+  FormControl,
+  IconButton,
+  TextField,
+  Tooltip,
+} from '@mui/material'
 import capitalize from 'lodash/fp/capitalize'
 import React, { FC, useEffect } from 'react'
 import { updateField, updateFieldAutoComplete } from './utils'
@@ -19,7 +22,20 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
 }) => {
   const fieldNames = (fieldName + 's') as PluralField
   const FieldName = capitalize(fieldName)
-  const commandData = commands[command.command]
+
+  const fullnote = commands[command.command][fieldName]?.description ?? ''
+  let note = new String()
+  let longNote = ''
+  let isLongNote = false
+
+  const truncateLength = 60
+
+  if (fullnote.length > truncateLength) {
+    isLongNote = true
+    note = fullnote.substring(0, truncateLength) + '...'
+    longNote = fullnote
+  } else note = fullnote
+
   const updateTarget = updateField(fieldName)
   const updateTargetAutoComplete = updateFieldAutoComplete(fieldName)
   const [localValue, setLocalValue] = React.useState(command[fieldName])
@@ -37,10 +53,9 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
   }, [command.id])
 
   return (
-    <FormControl>
-      <div className="flex flex-row">
+    <FormControl className="flex flex-row">
+      <div className="flex-grow-1">
         <Autocomplete
-          className="flex-1"
           freeSolo
           inputValue={localValue}
           componentsProps={{
@@ -57,23 +72,32 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
           onInputChange={onChangeAutoComplete}
           options={(command[fieldNames] ?? []).map((entry) => entry.join('='))}
           renderInput={(params) => (
-            <TextField {...params} label={FieldName} name={fieldName} />
+            <TextField
+              {...params}
+              label={FieldName + ' - ' + note}
+              name={fieldName}
+            />
           )}
           size="small"
           value={localValue}
         />
-        <IconButton
-          className="flex-fixed ml-4"
-          onClick={() =>
-            window.sideAPI.recorder.requestSelectElement(true, fieldName)
-          }
-        >
-          <AddToHomeScreenIcon />
-        </IconButton>
       </div>
-      <FormHelperText>
+      <IconButton
+        className="ml-4"
+        onClick={() =>
+          window.sideAPI.recorder.requestSelectElement(true, fieldName)
+        }
+      >
+        <AddToHomeScreenIcon />
+      </IconButton>
+      {isLongNote && (
+        <Tooltip className="mx-2 my-auto" title={longNote} placement="top-end">
+          <HelpCenter />
+        </Tooltip>
+      )}
+      {/* <FormHelperText>
         {commandData[fieldName]?.description ?? ''}
-      </FormHelperText>
+      </FormHelperText> */}
     </FormControl>
   )
 }
