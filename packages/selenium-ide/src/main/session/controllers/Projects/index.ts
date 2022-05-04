@@ -153,6 +153,7 @@ export default class ProjectsController {
   async save_v3(filepath: string): Promise<boolean> {
     await fs.writeFile(filepath, JSON.stringify(this.project, undefined, 2))
     this.recentProjects.add(filepath)
+    this.session.projects.filepath = filepath;
     return true
   }
 
