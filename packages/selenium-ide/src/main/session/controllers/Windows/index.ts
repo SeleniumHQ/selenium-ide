@@ -6,6 +6,7 @@ import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
 import storage from 'main/store'
 import { join } from 'path'
+
 // import { StopOutlined } from '@mui/icons-material'
 
 const playbackWindowName = 'playback-window'
@@ -200,6 +201,7 @@ export default class WindowsController {
     })
     projectWindow.on('close', (e) => {
       e.preventDefault()
+      this.session.state.onProjectUnloaded()
       this.session.system.quit()
     })
     projectWindow.on('moved', function () {

@@ -4,6 +4,10 @@ import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
+import { CoreSessionData, StateShape } from 'api/types'
+import storage from 'main/store'
+import { State } from '@seleniumhq/side-runtime/src/playback-tree/state'
+
 
 export default class ProjectsController {
   constructor(session: Session) {
@@ -103,12 +107,26 @@ export default class ProjectsController {
     return starterProject
   }
 
-  async load(filepath: string): Promise<ProjectShape | null> {
-    const project = await this.load_v3(filepath)
-    if (project) {
-      this.onProjectLoaded(project, filepath)
+  async load(filepath: string): Promise<CoreSessionData | null> {
+    const projectStates = storage.get<'projectStates'>('projectStates')
+    let loadedState: StateShape = {} as StateShape
+    if (projectStates[filepath])
+    {
+      loadedState = projectStates[filepath]
     }
-    return project
+
+    const loadedProject = await this.load_v3(filepath)
+    if (loadedProject) {
+      this.onProjectLoaded(loadedProject, filepath)
+    }
+    if (loadedProject) {
+      const loadedSessionData: CoreSessionData = {
+        project: loadedProject,
+        state: loadedState,
+      }
+      return loadedSessionData
+    }
+    return null
   }
 
   async save(filepath: string): Promise<boolean> {
