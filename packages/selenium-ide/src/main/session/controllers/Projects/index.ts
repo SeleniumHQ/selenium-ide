@@ -6,8 +6,6 @@ import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
 import { CoreSessionData, StateShape } from 'api/types'
 import storage from 'main/store'
-import { State } from '@seleniumhq/side-runtime/src/playback-tree/state'
-
 
 export default class ProjectsController {
   constructor(session: Session) {
