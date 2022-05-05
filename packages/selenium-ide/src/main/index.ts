@@ -8,7 +8,6 @@ import installReactDevtools from './install-react-devtools'
 // Enable debugging - required for electron-chromedriver
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
-
 // Capture and show unhandled exceptions
 process.on('unhandledRejection', function handleWarning(reason) {
   console.log('[PROCESS] Unhandled Promise Rejection')

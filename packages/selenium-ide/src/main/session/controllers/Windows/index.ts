@@ -187,7 +187,7 @@ export default class WindowsController {
 
     projectWindow.setSize(size[0], size[1], true)
     projectWindow.setPosition(position[0], position[1])
-    projectWindow.show();
+    projectWindow.show()
 
     projectWindow.on('closed', () => {
       console.debug('projectWindow on closed')
@@ -226,7 +226,6 @@ export default class WindowsController {
 
     await this.close(playbackWindowName)
     await this.open(playbackWindowName)
-    
   }
 
   async getPlaybackWindow() {

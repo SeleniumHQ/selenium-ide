@@ -1,6 +1,8 @@
 import { ProjectShape } from '@seleniumhq/side-model'
 import defaultProject from 'api/models/project'
+import defaultState from 'api/models/state'
 import { promises as fs } from 'fs'
+import clone from 'lodash/fp/clone'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
@@ -108,9 +110,11 @@ export default class ProjectsController {
   async load(filepath: string): Promise<CoreSessionData | null> {
     const projectStates = storage.get<'projectStates'>('projectStates')
     let loadedState: StateShape = {} as StateShape
-    if (projectStates[filepath])
-    {
+
+    if (projectStates[filepath]) {
       loadedState = projectStates[filepath]
+      if (!loadedState.activeCommandID)
+        loadedState = clone(defaultState)
     }
 
     const loadedProject = await this.load_v3(filepath)
@@ -153,7 +157,7 @@ export default class ProjectsController {
   async save_v3(filepath: string): Promise<boolean> {
     await fs.writeFile(filepath, JSON.stringify(this.project, undefined, 2))
     this.recentProjects.add(filepath)
-    this.session.projects.filepath = filepath;
+    this.session.projects.filepath = filepath
     return true
   }
 
