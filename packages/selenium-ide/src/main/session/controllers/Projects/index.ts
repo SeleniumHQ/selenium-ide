@@ -1,9 +1,12 @@
 import { ProjectShape } from '@seleniumhq/side-model'
 import defaultProject from 'api/models/project'
+import defaultState from 'api/models/state'
 import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
+import { CoreSessionData, StateShape } from 'api/types'
+import storage from 'main/store'
 
 export default class ProjectsController {
   constructor(session: Session) {
@@ -103,12 +106,27 @@ export default class ProjectsController {
     return starterProject
   }
 
-  async load(filepath: string): Promise<ProjectShape | null> {
-    const project = await this.load_v3(filepath)
-    if (project) {
-      this.onProjectLoaded(project, filepath)
+  async load(filepath: string): Promise<CoreSessionData | null> {
+    const projectStates = storage.get<'projectStates'>('projectStates')
+    let loadedState: StateShape = {} as StateShape
+
+    const loadedProject = await this.load_v3(filepath)
+    if (loadedProject) {
+      if (projectStates[loadedProject.id]) {
+        loadedState = projectStates[loadedProject.id]
+      }
+      if (!loadedState.activeCommandID) loadedState = defaultState // hack check to set default state if none was found from projectStates
+
+      this.onProjectLoaded(loadedProject, filepath)
     }
-    return project
+    if (loadedProject) {
+      const loadedSessionData: CoreSessionData = {
+        project: loadedProject,
+        state: loadedState,
+      }
+      return loadedSessionData
+    }
+    return null
   }
 
   async save(filepath: string): Promise<boolean> {
@@ -137,6 +155,7 @@ export default class ProjectsController {
   async save_v3(filepath: string): Promise<boolean> {
     await fs.writeFile(filepath, JSON.stringify(this.project, undefined, 2))
     this.recentProjects.add(filepath)
+    this.session.projects.filepath = filepath
     return true
   }
 

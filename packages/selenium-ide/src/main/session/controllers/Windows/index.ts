@@ -4,7 +4,10 @@ import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
 import { existsSync, readFileSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
+import storage from 'main/store'
 import { join } from 'path'
+
+// import { StopOutlined } from '@mui/icons-material'
 
 const playbackWindowName = 'playback-window'
 const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
@@ -175,6 +178,15 @@ export default class WindowsController {
     this.handlePlaybackWindow(playbackWindow)
 
     const projectWindow = await this.get(projectEditorWindowName)
+    let position, size: number[]
+
+    size = storage.get<'windowSize'>('windowSize', [552, 664])
+    position = storage.get<'windowPosition'>('windowPosition', [982, 20])
+    
+    projectWindow.setSize(size[0], size[1], true)
+    projectWindow.setPosition(position[0], position[1])
+    projectWindow.show()
+
     projectWindow.on('closed', () => {
       console.debug('projectWindow on closed')
       BrowserWindow.getAllWindows().forEach((win) => {
@@ -187,7 +199,18 @@ export default class WindowsController {
     })
     projectWindow.on('close', (e) => {
       e.preventDefault()
+      this.session.state.onProjectUnloaded()
       this.session.system.quit()
+    })
+    projectWindow.on('moved', function () {
+      var position = projectWindow.getPosition()
+      storage.set<'windowPosition'>('windowPosition', position)
+      console.log(' x: ' + position[0] + ' y: ' + position[1])
+    })
+    projectWindow.on('resize', function () {
+      var size = projectWindow.getSize()
+      storage.set<'windowSize'>('windowSize', size)
+      console.log('w:' + size[0] + ' h: ' + size[1] + ' x: ')
     })
   }
 

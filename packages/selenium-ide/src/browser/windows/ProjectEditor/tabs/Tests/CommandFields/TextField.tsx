@@ -1,10 +1,11 @@
-import { FormHelperText } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
+import HelpCenter from '@mui/icons-material/HelpCenter'
 import TextField from 'browser/components/UncontrolledTextField'
 import capitalize from 'lodash/fp/capitalize'
 import React, { FC } from 'react'
 import { CommandFieldProps } from '../types'
 import { updateField } from './utils'
+import Tooltip from '@mui/material/Tooltip'
 
 const CommandTextField: FC<CommandFieldProps> = ({
   commands,
@@ -14,11 +15,21 @@ const CommandTextField: FC<CommandFieldProps> = ({
 }) => {
   const FieldName = capitalize(fieldName)
   const updateText = updateField(fieldName)
+  const isComment = fieldName === 'comment'
+  const fullnote = isComment ? '' : commands[command.command][fieldName]?.description ?? ''
+  const label = fullnote ? FieldName + ' - ' + fullnote : FieldName
+
   return (
-    <FormControl>
+    <FormControl className="flex flex-row">
       <TextField
+        className="flex-1"
         id={`${fieldName}-${command.id}`}
-        label={FieldName}
+        label={label}
+        InputLabelProps={{
+          sx: {
+            textOverflow: 'ellipsis',
+          },
+        }}
         name={fieldName}
         onChange={updateText(testID, command.id)}
         onContextMenu={() => {
@@ -27,10 +38,10 @@ const CommandTextField: FC<CommandFieldProps> = ({
         size="small"
         value={command[fieldName]}
       />
-      {fieldName === 'comment' ? null : (
-        <FormHelperText>
-          {commands[command.command][fieldName]?.description ?? ''}
-        </FormHelperText>
+      {!isComment && (
+        <Tooltip className="mx-2 my-auto" title={fullnote} placement="top-end">
+          <HelpCenter />
+        </Tooltip>
       )}
     </FormControl>
   )
