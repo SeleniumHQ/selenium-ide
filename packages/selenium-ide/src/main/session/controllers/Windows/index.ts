@@ -182,9 +182,7 @@ export default class WindowsController {
 
     size = storage.get<'windowSize'>('windowSize', [552, 664])
     position = storage.get<'windowPosition'>('windowPosition', [982, 20])
-    if (!size[0]) size = [552, 664]
-    if (!position[0]) position = [982, 20]
-
+    
     projectWindow.setSize(size[0], size[1], true)
     projectWindow.setPosition(position[0], position[1])
     projectWindow.show()

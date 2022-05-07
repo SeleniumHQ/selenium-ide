@@ -5,7 +5,6 @@ import clone from 'lodash/fp/clone'
 import storage from 'main/store'
 import { Session } from 'main/types'
 
-
 export default class StateController {
   constructor(session: Session) {
     this.session = session
@@ -23,8 +22,9 @@ export default class StateController {
   async onProjectUnloaded() {
     let projectStates = storage.get<'projectStates'>('projectStates')
     if (this.session.projects.filepath) {
-      projectStates[this.session.projects.filepath] = this.state
-        storage.set<'projectStates'>('projectStates', projectStates)
+      // If this file has been loaded or saved, save state
+      projectStates[this.session.projects.project.id] = this.state
+      storage.set<'projectStates'>('projectStates', projectStates)
     }
     this.state = clone(defaultState)
     this.session.system.quit
@@ -32,7 +32,7 @@ export default class StateController {
 
   async setActiveCommand(commandID: string): Promise<boolean> {
     const session = await this.session.state.get()
-    const commandIndex = commandID ?  getCommandIndex(session, commandID) : 0
+    const commandIndex = commandID ? getCommandIndex(session, commandID) : 0
     this.session.playback.currentStepIndex = commandIndex
     return true
   }

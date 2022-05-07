@@ -1,11 +1,11 @@
 import FormControl from '@mui/material/FormControl'
-import { HelpCenter } from '@mui/icons-material'
+import HelpCenter from '@mui/icons-material/HelpCenter'
 import TextField from 'browser/components/UncontrolledTextField'
 import capitalize from 'lodash/fp/capitalize'
 import React, { FC } from 'react'
 import { CommandFieldProps } from '../types'
 import { updateField } from './utils'
-import { Tooltip } from '@mui/material'
+import Tooltip from '@mui/material/Tooltip'
 
 const CommandTextField: FC<CommandFieldProps> = ({
   commands,

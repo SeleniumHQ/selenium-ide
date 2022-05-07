@@ -1,10 +1,10 @@
-import { HelpCenter } from '@mui/icons-material'
+import HelpCenter from '@mui/icons-material/HelpCenter'
 import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen'
-import { Autocomplete } from '@mui/material'
-import { FormControl } from '@mui/material'
-import { IconButton } from '@mui/material'
-import { TextField } from '@mui/material'
-import { Tooltip } from '@mui/material'
+import Autocomplete from '@mui/material/Autocomplete'
+import FormControl from '@mui/material/FormControl'
+import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
+import Tooltip from '@mui/material/Tooltip'
 import capitalize from 'lodash/fp/capitalize'
 import React, { FC, useEffect } from 'react'
 import { updateField, updateFieldAutoComplete } from './utils'
@@ -60,11 +60,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         onInputChange={onChangeAutoComplete}
         options={(command[fieldNames] ?? []).map((entry) => entry.join('='))}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            label={label}
-            name={fieldName}
-          />
+          <TextField {...params} label={label} name={fieldName} />
         )}
         size="small"
         text-overflow="ellipsis"
@@ -78,11 +74,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
       >
         <AddToHomeScreenIcon />
       </IconButton>
-      <Tooltip
-        className="mx-2 my-auto"
-        title={fullnote}
-        placement="top-end"
-      >
+      <Tooltip className="mx-2 my-auto" title={fullnote} placement="top-end">
         <HelpCenter />
       </Tooltip>
     </FormControl>

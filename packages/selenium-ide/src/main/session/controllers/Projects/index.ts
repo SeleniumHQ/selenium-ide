@@ -2,7 +2,6 @@ import { ProjectShape } from '@seleniumhq/side-model'
 import defaultProject from 'api/models/project'
 import defaultState from 'api/models/state'
 import { promises as fs } from 'fs'
-import clone from 'lodash/fp/clone'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
@@ -111,14 +110,13 @@ export default class ProjectsController {
     const projectStates = storage.get<'projectStates'>('projectStates')
     let loadedState: StateShape = {} as StateShape
 
-    if (projectStates[filepath]) {
-      loadedState = projectStates[filepath]
-      if (!loadedState.activeCommandID)
-        loadedState = clone(defaultState)
-    }
-
     const loadedProject = await this.load_v3(filepath)
     if (loadedProject) {
+      if (projectStates[loadedProject.id]) {
+        loadedState = projectStates[loadedProject.id]
+      }
+      if (!loadedState.activeCommandID) loadedState = defaultState // hack check to set default state if none was found from projectStates
+
       this.onProjectLoaded(loadedProject, filepath)
     }
     if (loadedProject) {
