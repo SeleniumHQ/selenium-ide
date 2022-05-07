@@ -395,8 +395,12 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doClick(locator: string) {
-    const element = await this.waitForElementVisible(locator, this.implicitWait)
+  async doClick(
+    locator: string,
+    _: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
+    const element = await this.waitForElement(locator, commandObject.targets)
     let finalTime = Date.now() + this.implicitWait
     let success = null
     while (!success && finalTime > Date.now()) {
@@ -1427,7 +1431,7 @@ WebDriverExecutor.prototype.doUncheck = composePreprocessors(
 
 WebDriverExecutor.prototype.doClick = composePreprocessors(
   interpolateString,
-  null,
+  interpolateString,
   { targetFallback: preprocessArray(interpolateString) },
   WebDriverExecutor.prototype.doClick
 )
