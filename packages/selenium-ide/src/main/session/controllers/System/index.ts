@@ -1,29 +1,41 @@
 import { dialog } from 'electron'
 import { Session } from 'main/types'
 
+let firstTime = true
 export default class SystemController {
   constructor(session: Session) {
     this.session = session
   }
+  isDown: boolean = true
   async startup() {
-    this.session.windows.open('chromedriver')
+    if (this.isDown) {
+      // await this.session.windows.open('chromedriver')
+      await this.session.driver.startProcess()
+      await this.session.projects.select(firstTime)
+      this.isDown = false
+      firstTime = false
+    }
   }
   async shutdown() {
-    this.session.driver.stopProcess()
-    this.session.projects.onProjectUnloaded()
+    if (!this.isDown) {
+      const confirm = await this.session.projects.onProjectUnloaded()
+      if (confirm) {
+        await this.session.driver.stopProcess()
+        this.isDown = true
+      }
+    }
   }
   async crash(error: string) {
     await dialog.showMessageBox({
       message: error,
-      type: "error"
+      type: 'error',
     })
-    this.quit()
+    await this.shutdown()
+    await this.quit()
   }
   async quit() {
-    const confirm = await this.session.projects.checkIfCurrentProjectChanged()
-    if (confirm) {
-      this.session.app.exit()
-    }
+    await this.shutdown()
+    this.session.app.quit()
   }
   session: Session
 }

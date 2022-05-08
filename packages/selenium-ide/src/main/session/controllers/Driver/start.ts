@@ -62,7 +62,7 @@ const startDriver: StartDriver = () => (info) =>
     const args = ['--verbose']
     const driverPath = getDriver(info)
     if (fs.existsSync(driverPath)) {
-      const driver = spawn(driverPath.replace(/\s/g, '\\ '), args, {
+      const driver = spawn(driverPath.replace(/\s/g, '\ '), args, {
         env: {},
         shell: false,
       })

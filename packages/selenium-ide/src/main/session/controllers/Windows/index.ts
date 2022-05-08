@@ -96,10 +96,10 @@ export default class WindowsController {
   async closeAll(): Promise<void> {
     const playbackWindows = this.playbackWindows
     playbackWindows.forEach((window) => window.close())
-    this.windows = {}
     this.playbackWindows = []
     const windows = BrowserWindow.getAllWindows()
     windows.forEach((window) => window.close())
+    this.windows = {}
   }
 
   async get(name: string): Promise<BrowserWindow> {
@@ -141,6 +141,11 @@ export default class WindowsController {
     window.webContents.on('did-create-window', (win) =>
       this.handlePlaybackWindow(win)
     )
+    // This block listens for frames to be created
+    // Upon being so, we check if our API is available
+    // If not, we reload and check again until it is.
+    // This is to overcome a quirk in Electron where
+    // the preload scripts will sometimes just fail to register or something 
     window.webContents.on('frame-created', async (_event, details) => {
       await details.frame.once('dom-ready', async () => {
         const hasAPI = await details.frame.executeJavaScript('window.sideAPI')
@@ -178,13 +183,10 @@ export default class WindowsController {
     this.handlePlaybackWindow(playbackWindow)
 
     const projectWindow = await this.get(projectEditorWindowName)
-    let position, size: number[]
-
-    size = storage.get<'windowSize'>('windowSize', [552, 664])
-    position = storage.get<'windowPosition'>('windowPosition', [982, 20])
-    
-    projectWindow.setSize(size[0], size[1], true)
-    projectWindow.setPosition(position[0], position[1])
+    const size = storage.get<'windowSize'>('windowSize')
+    const position = storage.get<'windowPosition'>('windowPosition')
+    if (size.length) projectWindow.setSize(size[0], size[1], true)
+    if (position.length) projectWindow.setPosition(position[0], position[1])
     projectWindow.show()
 
     projectWindow.on('closed', () => {
@@ -199,16 +201,15 @@ export default class WindowsController {
     })
     projectWindow.on('close', (e) => {
       e.preventDefault()
-      this.session.state.onProjectUnloaded()
-      this.session.system.quit()
+      this.session.system.shutdown()
     })
-    projectWindow.on('moved', function () {
-      var position = projectWindow.getPosition()
+    projectWindow.on('moved', () => {
+      const position = projectWindow.getPosition() as [number, number]
       storage.set<'windowPosition'>('windowPosition', position)
       console.log(' x: ' + position[0] + ' y: ' + position[1])
     })
-    projectWindow.on('resize', function () {
-      var size = projectWindow.getSize()
+    projectWindow.on('resize', () => {
+      const size = projectWindow.getSize() as [number, number]
       storage.set<'windowSize'>('windowSize', size)
       console.log('w:' + size[0] + ' h: ' + size[1] + ' x: ')
     })
@@ -227,11 +228,6 @@ export default class WindowsController {
   }
 
   async getPlaybackWindow() {
-    const playbackWindow = await this.playbackWindows.slice(-1)[0]
-    if (playbackWindow) return playbackWindow
-    else {
-      await this.open('playback-window')
-      return this.get('playback-window')
-    }
+    return this.playbackWindows.slice(-1)[0]
   }
 }

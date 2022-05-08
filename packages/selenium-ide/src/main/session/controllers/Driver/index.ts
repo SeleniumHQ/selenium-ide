@@ -8,6 +8,10 @@ import startDriver from './start'
 // Escape hatch to avoid dealing with rootDir complexities in TS
 // https://stackoverflow.com/questions/50822310/how-to-import-package-json-in-typescript
 const ElectronVersion = require('electron/package.json').version
+const ourElectronBrowserInfo: BrowserInfo = {
+  browser: 'electron',
+  version: ElectronVersion,
+}
 
 type WindowType = 'webview'
 interface DriverOptions {
@@ -32,6 +36,7 @@ export default class DriverController {
     this.session = session
     this.build({})
   }
+
   session: Session
   driverProcess?: ChildProcess
   windowHandle?: string
@@ -89,9 +94,11 @@ export default class DriverController {
       }
     }
   }
+
   async download(info: BrowserInfo) {
     return downloadDriver(info)
   }
+
   async listBrowsers(): Promise<BrowsersInfo> {
     /*
      * Note: This is shelved for optimization but could be unearthed
@@ -107,19 +114,17 @@ export default class DriverController {
      *   })
      * )
      */
-    const ourElectronBrowserInfo: BrowserInfo = {
-      browser: 'electron',
-      version: ElectronVersion,
-    }
     return {
       browsers: [ourElectronBrowserInfo],
       selected: ourElectronBrowserInfo,
     }
   }
-  async selectBrowser(selected: BrowserInfo): Promise<void> {
+
+  async selectBrowser(selected: BrowserInfo = ourElectronBrowserInfo): Promise<void> {
     this.session.store.set('browserInfo', selected)
   }
-  async startProcess(info: BrowserInfo): Promise<null | string> {
+
+  async startProcess(info: BrowserInfo = ourElectronBrowserInfo): Promise<null | string> {
     const results = await startDriver(this.session)(info)
     if (results.success) {
       this.driverProcess = results.driver
@@ -127,6 +132,7 @@ export default class DriverController {
     }
     return results.error
   }
+
   async stopProcess(): Promise<null | string> {
     if (this.driverProcess) {
       let procKilled = this.driverProcess.kill()

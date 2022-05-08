@@ -22,27 +22,31 @@ process.on('uncaughtException', (error) => {
 
 // Instantiate the session
 const session = createSession(app, store)
+app.on('open-file', async (_e, path) => {
+  await session.projects.load(path)
+})
 
 // Start and stop hooks
-app.on('ready', () => {
+app.on('ready', async () => {
   !app.isPackaged && installReactDevtools()
-  session.system.startup()
+  await session.system.startup()
 })
-app.on('before-quit', () => session.system.shutdown())
 
 // Respect the OSX convention of having the application in memory even
 // after all windows have been closed
 let allWindowsClosed = false
+
 app.on('activate', async () => {
   if (allWindowsClosed) {
     allWindowsClosed = false
-    session.system.startup()
+    await session.system.startup()
   }
 })
-app.on('window-all-closed', () => {
+
+app.on('window-all-closed', async () => {
   allWindowsClosed = true
-  session.system.shutdown()
+  await session.system.shutdown()
   if (process.platform !== 'darwin') {
-    app.quit()
+    await session.system.quit()
   }
 })
