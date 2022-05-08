@@ -3,7 +3,7 @@ import { WebDriverExecutor } from '@seleniumhq/side-runtime'
 import { ChildProcess } from 'child_process'
 import { BrowserInfo, Session } from 'main/types'
 import downloadDriver from './download'
-import startDriver from './start'
+import startDriver, { WebdriverDebugLog } from './start'
 
 // Escape hatch to avoid dealing with rootDir complexities in TS
 // https://stackoverflow.com/questions/50822310/how-to-import-package-json-in-typescript
@@ -136,7 +136,7 @@ export default class DriverController {
   async stopProcess(): Promise<null | string> {
     if (this.driverProcess) {
       let procKilled = this.driverProcess.kill()
-      console.log(procKilled)
+      WebdriverDebugLog('Killed driver?', procKilled)
     }
     return null
   }

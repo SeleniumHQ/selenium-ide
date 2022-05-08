@@ -24,6 +24,7 @@ export default class ProjectsController {
     project: ProjectShape,
     filepath?: string
   ): Promise<void> {
+    if (this.loaded) return
     const {
       session: { commands, menus, plugins, windows },
     } = this
@@ -44,7 +45,8 @@ export default class ProjectsController {
     const {
       session: { plugins, state },
     } = this
-
+    if (!this.loaded) return true
+ 
     const confirm = await this.doSaveChangesConfirm()
     if (confirm) {
       // Cleanup our plugins
@@ -173,7 +175,7 @@ export default class ProjectsController {
     return true
   }
 
-  async doSaveChangesConfirm() {
+  async doSaveChangesConfirm(): Promise<boolean> {
     if (await this.projectHasChanged()) {
       const confirmationStatus = await this.session.dialogs.showMessageBox(
         'Save changes before leaving?',
@@ -192,11 +194,10 @@ export default class ProjectsController {
   }
 
   async projectHasChanged(): Promise<boolean> {
-    if (this.filepath) {
-      const fileContents = await fs.readFile(this.filepath, 'utf-8')
-      const currentProject = JSON.stringify(this.project, undefined, 2)
-      if (fileContents != currentProject) return true
-    }
-    return false
+    if (!this.filepath) return true
+
+    const fileContents = await fs.readFile(this.filepath, 'utf-8')
+    const currentProject = JSON.stringify(this.project, undefined, 2)
+    return fileContents != currentProject
   }
 }

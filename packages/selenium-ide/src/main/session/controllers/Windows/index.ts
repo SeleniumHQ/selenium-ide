@@ -97,9 +97,6 @@ export default class WindowsController {
     const playbackWindows = this.playbackWindows
     playbackWindows.forEach((window) => window.close())
     this.playbackWindows = []
-    const windows = BrowserWindow.getAllWindows()
-    windows.forEach((window) => window.close())
-    this.windows = {}
   }
 
   async get(name: string): Promise<BrowserWindow> {
@@ -145,7 +142,7 @@ export default class WindowsController {
     // Upon being so, we check if our API is available
     // If not, we reload and check again until it is.
     // This is to overcome a quirk in Electron where
-    // the preload scripts will sometimes just fail to register or something 
+    // the preload scripts will sometimes just fail to register or something
     window.webContents.on('frame-created', async (_event, details) => {
       await details.frame.once('dom-ready', async () => {
         const hasAPI = await details.frame.executeJavaScript('window.sideAPI')
@@ -154,6 +151,7 @@ export default class WindowsController {
         }
       })
     })
+    // Keeps playback window list ordered according to interactions
     window.on('focus', () => {
       const windowIndex = this.playbackWindows.indexOf(window)
       if (windowIndex !== this.playbackWindows.length - 1) {
@@ -167,21 +165,10 @@ export default class WindowsController {
   }
 
   async onProjectLoaded() {
-    await this.open(projectEditorWindowName)
+    await this.initializePlaybackWindow()
     await this.close('splash')
 
-    this.playbackWindows.forEach((bw) => {
-      if (!bw.closable) {
-        bw.closable = true
-      }
-      bw.close()
-    })
-
-    await this.close(playbackWindowName)
-    await this.open(playbackWindowName)
-    const playbackWindow = await this.get(playbackWindowName)
-    this.handlePlaybackWindow(playbackWindow)
-
+    await this.open(projectEditorWindowName)
     const projectWindow = await this.get(projectEditorWindowName)
     const size = storage.get<'windowSize'>('windowSize')
     const position = storage.get<'windowPosition'>('windowPosition')
@@ -189,19 +176,16 @@ export default class WindowsController {
     if (position.length) projectWindow.setPosition(position[0], position[1])
     projectWindow.show()
 
-    projectWindow.on('closed', () => {
-      console.debug('projectWindow on closed')
-      BrowserWindow.getAllWindows().forEach((win) => {
-        console.debug('found win, closable ' + win.closable)
-        if (!win.closable) {
-          win.closable = true
+    projectWindow.on('closed', () => this.closeAll())
+
+    projectWindow.on('close', async (e) => {
+      if (!this.session.system.isDown) {
+        e.preventDefault()
+        await this.session.system.shutdown()
+        if (this.session.system.isDown) {
+          await this.close(projectEditorWindowName)
         }
-        win.close()
-      })
-    })
-    projectWindow.on('close', (e) => {
-      e.preventDefault()
-      this.session.system.shutdown()
+      }
     })
     projectWindow.on('moved', () => {
       const position = projectWindow.getPosition() as [number, number]

@@ -16,8 +16,8 @@ export interface DriverStartFailure {
   success: false
 }
 
-const WebdriverDebugLog = vdebuglog('webdriver', COLOR_MAGENTA)
-const WebdriverDebugLogErr = vdebuglog('webdriver-error', COLOR_YELLOW)
+export const WebdriverDebugLog = vdebuglog('webdriver', COLOR_MAGENTA)
+export const WebdriverDebugLogErr = vdebuglog('webdriver-error', COLOR_YELLOW)
 
 /**
  * This module is just an async function that does the following:
@@ -72,7 +72,7 @@ const startDriver: StartDriver = () => (info) =>
         const fullyStarted = outStr.includes(successMessage)
         if (fullyStarted) {
           initialized = true
-          console.log('Driver has initialized!')
+          WebdriverDebugLog('Driver has initialized!')
           resolve({ success: true, driver: driver })
         }
       })
@@ -85,7 +85,7 @@ const startDriver: StartDriver = () => (info) =>
       })
       driver.on('close', (code: number) => {
         if (code) {
-          console.warn('driver has exited with code', code)
+          WebdriverDebugLogErr(`driver has exited with code${code}`)
           if (!initialized) {
             reject(code)
           }
