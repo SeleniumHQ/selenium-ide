@@ -303,13 +303,35 @@ export default class WebDriverExecutor {
   }
 
   async doSelectFrame(locator: string) {
+    // It's possible that for the browser and webdriver to index frames differently.
+    // We can ask the browser for the URL of the underlying original index and use that in
+    // webdriver to ensure we get the proper match.
+
     const targetLocator = this.driver.switchTo()
     if (locator === 'relative=top') {
       await targetLocator.defaultContent()
     } else if (locator === 'relative=parent') {
       await targetLocator.parentFrame()
     } else if (locator.startsWith('index=')) {
-      await targetLocator.frame(+locator.substr('index='.length))
+      const frameIndex = locator.substr('index='.length)
+      // Delay for a second. Check too fast, and browser will think this iframe location is 'about:blank'
+      await new Promise((f) => setTimeout(f, 1000))
+      const frameUrl = await this.driver.executeScript(
+        "return window.frames['" + frameIndex + "'].location.href"
+      )
+      const windowFrames = await this.driver.findElements(By.css('iframe'))
+      let matchIndex = 0
+      for (let frame of windowFrames) {
+        let localFrameUrl = await frame.getAttribute('src')
+        if (localFrameUrl === frameUrl) {
+          break
+        }
+        matchIndex++
+      }
+
+      this.driver.switchTo().defaultContent
+      this.driver.switchTo().frame(matchIndex)
+      // await targetLocator.frame(+locator.substr('index='.length))
     } else {
       const element = await this.waitForElement(locator)
       await targetLocator.frame(element)
