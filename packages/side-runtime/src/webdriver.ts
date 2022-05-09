@@ -328,8 +328,6 @@ export default class WebDriverExecutor {
         }
         matchIndex++
       }
-
-      this.driver.switchTo().defaultContent
       this.driver.switchTo().frame(matchIndex)
       // await targetLocator.frame(+locator.substr('index='.length))
     } else {
