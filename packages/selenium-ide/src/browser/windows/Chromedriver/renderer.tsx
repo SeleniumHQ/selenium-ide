@@ -70,7 +70,7 @@ const DriverSelector = () => {
         })
         break
       case driverStateKeys.COMPLETE:
-        window.sideAPI.windows.open('splash').then(() => {
+        window.sideAPI.projects.select().then(() => {
           window.sideAPI.windows.close('chromedriver')
         })
         break

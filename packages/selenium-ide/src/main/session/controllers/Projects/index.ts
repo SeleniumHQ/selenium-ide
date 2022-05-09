@@ -15,18 +15,16 @@ export default class ProjectsController {
     this.project = defaultProject
   }
   filepath?: string
+  loaded = false
   recentProjects: RecentProjects
   project: ProjectShape
   session: Session
-
-  async close(): Promise<void> {
-    await this.session.windows.closeAll()
-  }
 
   async onProjectLoaded(
     project: ProjectShape,
     filepath?: string
   ): Promise<void> {
+    if (this.loaded) return
     const {
       session: { commands, menus, plugins, windows },
     } = this
@@ -40,17 +38,26 @@ export default class ProjectsController {
     await menus.onProjectLoaded()
     // Display our playback and editor windows
     await windows.onProjectLoaded()
+    this.loaded = true
   }
 
-  async onProjectUnloaded(): Promise<void> {
+  async onProjectUnloaded(): Promise<boolean> {
     const {
       session: { plugins, state },
     } = this
+    if (!this.loaded) return true
+ 
+    const confirm = await this.doSaveChangesConfirm()
+    if (confirm) {
+      // Cleanup our plugins
+      plugins.onProjectUnloaded()
+      // Cleanup our state
+      state.onProjectUnloaded()
 
-    // Cleanup our plugins
-    plugins.onProjectUnloaded()
-    // Cleanup our state
-    state.onProjectUnloaded()
+      delete this.filepath
+      this.loaded = false
+    }
+    return confirm
   }
 
   async getActive(): Promise<ProjectShape> {
@@ -107,19 +114,20 @@ export default class ProjectsController {
   }
 
   async load(filepath: string): Promise<CoreSessionData | null> {
-    const projectStates = storage.get<'projectStates'>('projectStates')
-    let loadedState: StateShape = {} as StateShape
-
     const loadedProject = await this.load_v3(filepath)
     if (loadedProject) {
-      if (projectStates[loadedProject.id]) {
-        loadedState = projectStates[loadedProject.id]
+      if (this.loaded) {
+        const confirm = await this.onProjectUnloaded()
+        if (!confirm) {
+          return null
+        }
       }
-      if (!loadedState.activeCommandID) loadedState = defaultState // hack check to set default state if none was found from projectStates
+      const loadedState = storage.get(
+        `projectStates.${loadedProject.id}`,
+        defaultState
+      ) as StateShape
 
       this.onProjectLoaded(loadedProject, filepath)
-    }
-    if (loadedProject) {
       const loadedSessionData: CoreSessionData = {
         project: loadedProject,
         state: loadedState,
@@ -133,6 +141,18 @@ export default class ProjectsController {
     return this.save_v3(filepath)
   }
 
+  async select(useArgs = false): Promise<void> {
+    // When we're opened with a side file in the path
+    const argsFilepath = process.argv[this.session.app.isPackaged ? 1 : 2]
+    if (this.filepath) {
+      await this.load(this.filepath)
+    } else if (useArgs && argsFilepath) {
+      await this.load(argsFilepath)
+    } else {
+      await this.session.windows.open('splash')
+    }
+  }
+
   async update(
     _updates: Partial<Pick<ProjectShape, 'name' | 'url'>>
   ): Promise<boolean> {
@@ -140,10 +160,6 @@ export default class ProjectsController {
   }
 
   async load_v3(filepath: string): Promise<ProjectShape | null> {
-    const confirm = await this.checkIfCurrentProjectChanged()
-    if (!confirm) {
-      return null
-    }
     const fileContents = await fs.readFile(filepath, 'utf-8')
     this.recentProjects.add(filepath)
     const project: ProjectShape = JSON.parse(fileContents)
@@ -159,7 +175,7 @@ export default class ProjectsController {
     return true
   }
 
-  async checkIfCurrentProjectChanged() {
+  async doSaveChangesConfirm(): Promise<boolean> {
     if (await this.projectHasChanged()) {
       const confirmationStatus = await this.session.dialogs.showMessageBox(
         'Save changes before leaving?',
@@ -178,11 +194,10 @@ export default class ProjectsController {
   }
 
   async projectHasChanged(): Promise<boolean> {
-    if (this.filepath) {
-      const fileContents = await fs.readFile(this.filepath, 'utf-8')
-      const currentProject = JSON.stringify(this.project, undefined, 2)
-      if (fileContents != currentProject) return true
-    }
-    return false
+    if (!this.filepath) return true
+
+    const fileContents = await fs.readFile(this.filepath, 'utf-8')
+    const currentProject = JSON.stringify(this.project, undefined, 2)
+    return fileContents != currentProject
   }
 }
