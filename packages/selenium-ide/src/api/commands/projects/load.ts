@@ -1,3 +1,4 @@
+// import defaultState from 'api/models/state'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
@@ -17,14 +18,18 @@ export const mutator: Mutator<Shape> = (session, { result }) => {
   if (!result) {
     return session
   }
-  const firstSuite = result.suites?.[0] ?? defaultSuite
+  // result.state = defaultState
+  const { project, state } = result
+  if (state) {
+    return result
+  }
+  const firstSuite = project.suites?.[0] ?? defaultSuite
   const activeSuiteID = firstSuite.id
   const activeTestID = firstSuite.tests[0] ?? loadingID
   const activeCommandID =
-    result.tests.find(hasID(activeTestID))?.commands?.[0]?.id ??
-    loadingID
+    project.tests.find(hasID(activeTestID))?.commands?.[0]?.id ?? loadingID
   return {
-    project: result,
+    project,
     state: {
       ...session.state,
       activeSuiteID,

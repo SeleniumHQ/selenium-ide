@@ -1,13 +1,18 @@
 // import { Chrome } from '@seleniumhq/browser-info'
 import { WebDriverExecutor } from '@seleniumhq/side-runtime'
+import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/src/webdriver'
 import { ChildProcess } from 'child_process'
 import { BrowserInfo, Session } from 'main/types'
 import downloadDriver from './download'
-import startDriver from './start'
+import startDriver, { WebdriverDebugLog } from './start'
 
 // Escape hatch to avoid dealing with rootDir complexities in TS
 // https://stackoverflow.com/questions/50822310/how-to-import-package-json-in-typescript
 const ElectronVersion = require('electron/package.json').version
+const ourElectronBrowserInfo: BrowserInfo = {
+  browser: 'electron',
+  version: ElectronVersion,
+}
 
 type WindowType = 'webview'
 interface DriverOptions {
@@ -32,6 +37,7 @@ export default class DriverController {
     this.session = session
     this.build({})
   }
+
   session: Session
   driverProcess?: ChildProcess
   windowHandle?: string
@@ -54,7 +60,7 @@ export default class DriverController {
       },
       customCommands: this.session.commands.customCommands,
       hooks: {
-        onBeforePlay: async () => this.onPlaybackStart(driver),
+        onBeforePlay: this.onBeforePlay.bind(this),
       },
       server,
       windowAPI: {
@@ -73,8 +79,17 @@ export default class DriverController {
     return driver
   }
 
-  async onPlaybackStart({ driver }: WebDriverExecutor) {
-    const playbackWindow = await this.session.windows.getPlaybackWindow()
+  onBeforePlay: NonNullable<WebDriverExecutorHooks['onBeforePlay']> = async ({
+    driver: executor,
+  }) => {
+    const { state, windows } = this.session
+    const sessionData = await state.get()
+    if (sessionData.state.playback.currentIndex === -1) {
+      await windows.initializePlaybackWindow()
+    }
+    const playbackWindow = await windows.getPlaybackWindow()
+
+    const { driver } = executor
     // Figure out playback window from document.title
     const handles = await driver.getAllWindowHandles()
     for (let i = 0, ii = handles.length; i !== ii; i++) {
@@ -89,9 +104,11 @@ export default class DriverController {
       }
     }
   }
+
   async download(info: BrowserInfo) {
     return downloadDriver(info)
   }
+
   async listBrowsers(): Promise<BrowsersInfo> {
     /*
      * Note: This is shelved for optimization but could be unearthed
@@ -107,19 +124,21 @@ export default class DriverController {
      *   })
      * )
      */
-    const ourElectronBrowserInfo: BrowserInfo = {
-      browser: 'electron',
-      version: ElectronVersion,
-    }
     return {
       browsers: [ourElectronBrowserInfo],
       selected: ourElectronBrowserInfo,
     }
   }
-  async selectBrowser(selected: BrowserInfo): Promise<void> {
+
+  async selectBrowser(
+    selected: BrowserInfo = ourElectronBrowserInfo
+  ): Promise<void> {
     this.session.store.set('browserInfo', selected)
   }
-  async startProcess(info: BrowserInfo): Promise<null | string> {
+
+  async startProcess(
+    info: BrowserInfo = ourElectronBrowserInfo
+  ): Promise<null | string> {
     const results = await startDriver(this.session)(info)
     if (results.success) {
       this.driverProcess = results.driver
@@ -127,10 +146,11 @@ export default class DriverController {
     }
     return results.error
   }
+
   async stopProcess(): Promise<null | string> {
     if (this.driverProcess) {
       let procKilled = this.driverProcess.kill()
-      console.log(procKilled)
+      WebdriverDebugLog('Killed driver?', procKilled)
     }
     return null
   }

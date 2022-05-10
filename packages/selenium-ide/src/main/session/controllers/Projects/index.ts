@@ -1,9 +1,12 @@
 import { ProjectShape } from '@seleniumhq/side-model'
 import defaultProject from 'api/models/project'
+import defaultState from 'api/models/state'
 import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
+import { CoreSessionData, StateShape } from 'api/types'
+import storage from 'main/store'
 
 export default class ProjectsController {
   constructor(session: Session) {
@@ -12,18 +15,16 @@ export default class ProjectsController {
     this.project = defaultProject
   }
   filepath?: string
+  loaded = false
   recentProjects: RecentProjects
   project: ProjectShape
   session: Session
-
-  async close(): Promise<void> {
-    await this.session.windows.closeAll()
-  }
 
   async onProjectLoaded(
     project: ProjectShape,
     filepath?: string
   ): Promise<void> {
+    if (this.loaded) return
     const {
       session: { commands, menus, plugins, windows },
     } = this
@@ -37,17 +38,26 @@ export default class ProjectsController {
     await menus.onProjectLoaded()
     // Display our playback and editor windows
     await windows.onProjectLoaded()
+    this.loaded = true
   }
 
-  async onProjectUnloaded(): Promise<void> {
+  async onProjectUnloaded(): Promise<boolean> {
     const {
       session: { plugins, state },
     } = this
+    if (!this.loaded) return true
+ 
+    const confirm = await this.doSaveChangesConfirm()
+    if (confirm) {
+      // Cleanup our plugins
+      plugins.onProjectUnloaded()
+      // Cleanup our state
+      state.onProjectUnloaded()
 
-    // Cleanup our plugins
-    plugins.onProjectUnloaded()
-    // Cleanup our state
-    state.onProjectUnloaded()
+      delete this.filepath
+      this.loaded = false
+    }
+    return confirm
   }
 
   async getActive(): Promise<ProjectShape> {
@@ -103,16 +113,44 @@ export default class ProjectsController {
     return starterProject
   }
 
-  async load(filepath: string): Promise<ProjectShape | null> {
-    const project = await this.load_v3(filepath)
-    if (project) {
-      this.onProjectLoaded(project, filepath)
+  async load(filepath: string): Promise<CoreSessionData | null> {
+    const loadedProject = await this.load_v3(filepath)
+    if (loadedProject) {
+      if (this.loaded) {
+        const confirm = await this.onProjectUnloaded()
+        if (!confirm) {
+          return null
+        }
+      }
+      const loadedState = storage.get(
+        `projectStates.${loadedProject.id}`,
+        defaultState
+      ) as StateShape
+
+      this.onProjectLoaded(loadedProject, filepath)
+      const loadedSessionData: CoreSessionData = {
+        project: loadedProject,
+        state: loadedState,
+      }
+      return loadedSessionData
     }
-    return project
+    return null
   }
 
   async save(filepath: string): Promise<boolean> {
     return this.save_v3(filepath)
+  }
+
+  async select(useArgs = false): Promise<void> {
+    // When we're opened with a side file in the path
+    const argsFilepath = process.argv[this.session.app.isPackaged ? 1 : 2]
+    if (this.filepath) {
+      await this.load(this.filepath)
+    } else if (useArgs && argsFilepath) {
+      await this.load(argsFilepath)
+    } else {
+      await this.session.windows.open('splash')
+    }
   }
 
   async update(
@@ -122,10 +160,6 @@ export default class ProjectsController {
   }
 
   async load_v3(filepath: string): Promise<ProjectShape | null> {
-    const confirm = await this.checkIfCurrentProjectChanged()
-    if (!confirm) {
-      return null
-    }
     const fileContents = await fs.readFile(filepath, 'utf-8')
     this.recentProjects.add(filepath)
     const project: ProjectShape = JSON.parse(fileContents)
@@ -137,10 +171,11 @@ export default class ProjectsController {
   async save_v3(filepath: string): Promise<boolean> {
     await fs.writeFile(filepath, JSON.stringify(this.project, undefined, 2))
     this.recentProjects.add(filepath)
+    this.session.projects.filepath = filepath
     return true
   }
 
-  async checkIfCurrentProjectChanged() {
+  async doSaveChangesConfirm(): Promise<boolean> {
     if (await this.projectHasChanged()) {
       const confirmationStatus = await this.session.dialogs.showMessageBox(
         'Save changes before leaving?',
@@ -159,11 +194,10 @@ export default class ProjectsController {
   }
 
   async projectHasChanged(): Promise<boolean> {
-    if (this.filepath) {
-      const fileContents = await fs.readFile(this.filepath, 'utf-8')
-      const currentProject = JSON.stringify(this.project, undefined, 2)
-      if (fileContents != currentProject) return true
-    }
-    return false
+    if (!this.filepath) return true
+
+    const fileContents = await fs.readFile(this.filepath, 'utf-8')
+    const currentProject = JSON.stringify(this.project, undefined, 2)
+    return fileContents != currentProject
   }
 }

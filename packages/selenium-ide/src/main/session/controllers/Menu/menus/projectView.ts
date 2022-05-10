@@ -2,29 +2,29 @@ import { BrowserWindow } from 'electron'
 import { Menu } from 'electron'
 import { MenuComponent, Session } from 'main/types'
 import { platform } from 'os'
+import { multipleCommand } from '../utils'
 
-const devToolsAccelerators =
-  platform() === 'win32'
-    ? ['CommandOrControl+Shift+I', 'CommandOrControl+F12', 'F12']
-    : ['CommandOrControl+Option+I', 'CommandOrControl+F12']
 export const projectViewCommands: MenuComponent = (session) => async () =>
   [
-    ...devToolsAccelerators.map((accelerator, index) => ({
-      accelerator,
-      label: 'Show DevTools',
-      click: async () => {
-        await session.state.get()
-        const window = BrowserWindow.getFocusedWindow()
-        window?.webContents.openDevTools()
-      },
-      visible: index === 0,
-    })),
+    ...multipleCommand(
+      platform() === 'win32'
+        ? ['CommandOrControl+Shift+I', 'CommandOrControl+F12', 'F12']
+        : ['CommandOrControl+Option+I', 'CommandOrControl+F12'],
+      {
+        click: async () => {
+          await session.state.get()
+          const window = BrowserWindow.getFocusedWindow()
+          window?.webContents.openDevTools()
+        },
+        label: 'Show DevTools',
+      }
+    ),
     {
       accelerator: 'CommandOrControl+P',
-      label: 'Reset Playback Windows',
       click: async () => {
         await session.windows.initializePlaybackWindow()
       },
+      label: 'Reset Playback Windows',
     },
   ]
 

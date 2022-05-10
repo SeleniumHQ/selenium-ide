@@ -5,7 +5,7 @@
   "author": "Todd <tarsitodd@gmail.com>",
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
-  "main": "dist/main/index.js",
+  "main": "dist/index.js",
   "files": [
     "dist"
   ],

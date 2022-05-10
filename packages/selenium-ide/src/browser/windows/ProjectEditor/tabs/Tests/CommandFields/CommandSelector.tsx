@@ -1,12 +1,10 @@
 import { CodeOff, HelpCenter } from '@mui/icons-material'
-import {
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Tooltip,
-} from '@mui/material'
+import { FormControl } from '@mui/material'
+import { IconButton } from '@mui/material'
+import { InputLabel } from '@mui/material'
+import { MenuItem } from '@mui/material'
+import { Select } from '@mui/material'
+import { Tooltip } from '@mui/material'
 import React, { FC, useMemo } from 'react'
 import { setField, updateField } from './utils'
 import { CommandSelectorProps } from '../types'
