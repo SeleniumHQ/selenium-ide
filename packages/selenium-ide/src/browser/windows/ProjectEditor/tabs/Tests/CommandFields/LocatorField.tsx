@@ -45,7 +45,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
       <Autocomplete
         className="flex-1"
         freeSolo
-        inputValue={localValue}
+        inputValue={localValue || ''}
         componentsProps={{
           paper: {
             sx: {
@@ -64,7 +64,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         )}
         size="small"
         text-overflow="ellipsis"
-        value={localValue}
+        value={localValue || ''}
       />
       <IconButton
         className="ml-4"

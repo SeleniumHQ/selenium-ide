@@ -149,6 +149,7 @@ export default class WindowsController {
         if (!hasAPI) {
           details.frame.reload()
         }
+        await this.session.api.recorder.onFrameRecalculate.dispatchEvent()
       })
     })
     // Keeps playback window list ordered according to interactions
