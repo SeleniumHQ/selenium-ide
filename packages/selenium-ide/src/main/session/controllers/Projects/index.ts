@@ -46,7 +46,7 @@ export default class ProjectsController {
       session: { plugins, state },
     } = this
     if (!this.loaded) return true
- 
+
     const confirm = await this.doSaveChangesConfirm()
     if (confirm) {
       // Cleanup our plugins
@@ -143,7 +143,15 @@ export default class ProjectsController {
 
   async select(useArgs = false): Promise<void> {
     // When we're opened with a side file in the path
-    const argsFilepath = process.argv[this.session.app.isPackaged ? 1 : 2]
+    let argsFilepath = process.argv[1]
+    if (!this.session.app.isPackaged) {
+      const mainArgIndex = process.argv.findIndex((arg) =>
+        arg.endsWith('main-bundle.js')
+      )
+      if (mainArgIndex === -1) {
+        argsFilepath = ''
+      } else argsFilepath = process.argv[mainArgIndex + 1]
+    }
     if (this.filepath) {
       await this.load(this.filepath)
     } else if (useArgs && argsFilepath) {
