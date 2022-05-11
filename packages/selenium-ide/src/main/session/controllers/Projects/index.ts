@@ -170,11 +170,18 @@ export default class ProjectsController {
   async load_v3(filepath: string): Promise<ProjectShape | null> {
     const fileContents = await fs.readFile(filepath, 'utf-8')
     this.recentProjects.add(filepath)
-    const project: ProjectShape = JSON.parse(fileContents)
-    project.plugins = project.plugins.filter(
-      (plugin) => typeof plugin === 'string'
-    )
-    return project
+    let project: ProjectShape
+    try {
+      project = JSON.parse(fileContents)
+
+      project.plugins = project.plugins.filter(
+        (plugin) => typeof plugin === 'string'
+      )
+      return project
+    } catch (e) {
+      console.log((e as Error).message)
+      return null
+    }
   }
   async save_v3(filepath: string): Promise<boolean> {
     await fs.writeFile(filepath, JSON.stringify(this.project, undefined, 2))
