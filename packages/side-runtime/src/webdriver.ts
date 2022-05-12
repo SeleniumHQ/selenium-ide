@@ -420,26 +420,12 @@ export default class WebDriverExecutor {
     _: string,
     commandObject: Partial<CommandShape> = {}
   ) {
+    // This technically uses double the implicitWait but o well darn
     const element = await this.waitForElement(locator, commandObject.targets)
-    let finalTime = Date.now() + this.implicitWait
-    let success = null
-    while (!success && finalTime > Date.now()) {
-      try {
-        await element.click()
-        success = true
-      } catch (e) {
-        console.warn('Click encountered a webdriver failure:')
-        console.error(e)
-        if (finalTime > Date.now()) {
-          console.info('Retrying...')
-        }
-      }
-    }
-    if (!success) {
-      throw new Error(
-        `Failed to click element at ${locator} within ${this.implicitWait}ms`
-      )
-    }
+
+    const timeout = Date.now() + this.implicitWait
+    await this.wait(until.elementIsVisible(element), timeout - Date.now())
+    await element.click()
   }
 
   async doClickAt(

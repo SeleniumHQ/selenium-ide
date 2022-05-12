@@ -1,6 +1,5 @@
 // import { Chrome } from '@seleniumhq/browser-info'
 import { WebDriverExecutor } from '@seleniumhq/side-runtime'
-import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/src/webdriver'
 import { ChildProcess } from 'child_process'
 import { BrowserInfo, Session } from 'main/types'
 import downloadDriver from './download'
@@ -60,7 +59,7 @@ export default class DriverController {
       },
       customCommands: this.session.commands.customCommands,
       hooks: {
-        onBeforePlay: this.onBeforePlay.bind(this),
+        onBeforePlay: (v) => this.session.playback.onBeforePlay(v),
       },
       server,
       windowAPI: {
@@ -77,32 +76,6 @@ export default class DriverController {
       },
     })
     return driver
-  }
-
-  onBeforePlay: NonNullable<WebDriverExecutorHooks['onBeforePlay']> = async ({
-    driver: executor,
-  }) => {
-    const { state, windows } = this.session
-    const sessionData = await state.get()
-    if (sessionData.state.playback.currentIndex === -1) {
-      await windows.initializePlaybackWindow()
-    }
-    const playbackWindow = await windows.getPlaybackWindow()
-
-    const { driver } = executor
-    // Figure out playback window from document.title
-    const handles = await driver.getAllWindowHandles()
-    for (let i = 0, ii = handles.length; i !== ii; i++) {
-      await driver.switchTo().window(handles[i])
-      const title = await driver.getTitle()
-      const url = await driver.getCurrentUrl()
-      if (
-        title === playbackWindow.getTitle() &&
-        url === playbackWindow.webContents.getURL()
-      ) {
-        break
-      }
-    }
   }
 
   async download(info: BrowserInfo) {

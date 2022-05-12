@@ -481,7 +481,7 @@ export default class Playback {
         state: result.skipped ? CommandStates.SKIPPED : CommandStates.PASSED,
         message: undefined,
       })
-      this.currentExecutingNode = result.next
+      this.currentExecutingNode = result.next as CommandNode
 
       return await this._executionLoop()
     }
@@ -540,6 +540,7 @@ export default class Playback {
         ? result
         : {
             next: (this.playbackTree as PlaybackTree).startingCommandNode,
+            skipped: false,
           }
     } else {
       const result = await commandNode.execute(this.executor)
