@@ -100,8 +100,9 @@ export const recorderList = (session: Session) => async () => {
   ]
 }
 
-export const playbackList: MenuComponent = (session) => async () => {
+export const playbackList: MenuComponent = (session) => async (_commandID?: string) => {
   const sessionData = await session.state.get()
+  const commandID = _commandID || sessionData.state.activeCommandID
   const editorState = sessionData.state.editor
   const selectedCommandCount = editorState.selectedCommandIndexes.length
   return [
@@ -111,7 +112,7 @@ export const playbackList: MenuComponent = (session) => async () => {
         await session.api.playback.play(sessionData.state.activeTestID, [
           0,
           activeTest.commands.findIndex(
-            (cmd) => cmd.id === sessionData.state.activeCommandID
+            (cmd) => cmd.id === commandID
           ),
         ])
       },
@@ -124,7 +125,7 @@ export const playbackList: MenuComponent = (session) => async () => {
         const activeTest = getActiveTest(sessionData)
         await session.api.playback.play(sessionData.state.activeTestID, [
           activeTest.commands.findIndex(
-            (cmd) => cmd.id === sessionData.state.activeCommandID
+            (cmd) => cmd.id === commandID
           ),
           activeTest.commands.length - 1,
         ])
@@ -137,7 +138,7 @@ export const playbackList: MenuComponent = (session) => async () => {
         const activeTest = getActiveTest(sessionData)
         await session.api.playback.play(sessionData.state.activeTestID, [
           activeTest.commands.findIndex(
-            (cmd) => cmd.id === sessionData.state.activeCommandID
+            (cmd) => cmd.id === commandID
           ),
           activeTest.commands.length - 1,
         ])

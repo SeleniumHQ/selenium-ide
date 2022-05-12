@@ -103,7 +103,7 @@ export class CommandNode {
     })
   }
 
-  _executeCommand(
+  async _executeCommand(
     commandExecutor: WebDriverExecutor,
     { executorOverride }: CommandExecutorOptions = {}
   ) {
@@ -120,12 +120,32 @@ export class CommandNode {
           commandExecutor
         )
       }
+      return this._executeCoreCommand(
+        commandExecutor,
+        Date.now() + commandExecutor.implicitWait
+      )
+    }
+  }
+
+  async _executeCoreCommand(
+    commandExecutor: WebDriverExecutor,
+    timeout: number
+  ): Promise<unknown> {
+    try {
       // @ts-expect-error
-      return commandExecutor[commandExecutor.name(this.command.command)](
+      return await commandExecutor[commandExecutor.name(this.command.command)](
         this.command.target,
         this.command.value,
         this.command
       )
+    } catch (e) {
+      console.warn(
+        'Unexpected error occured during command:',
+        this.command.command
+      )
+      if (Date.now() > timeout) throw e
+      console.error(e)
+      return this._executeCoreCommand(commandExecutor, timeout)
     }
   }
 
