@@ -191,22 +191,18 @@ export default class WindowsController {
     projectWindow.on('moved', () => {
       const position = projectWindow.getPosition() as [number, number]
       storage.set<'windowPosition'>('windowPosition', position)
-      console.log(' x: ' + position[0] + ' y: ' + position[1])
     })
     projectWindow.on('resize', () => {
       const size = projectWindow.getSize() as [number, number]
       storage.set<'windowSize'>('windowSize', size)
-      console.log('w:' + size[0] + ' h: ' + size[1] + ' x: ')
     })
     projectWindow.on('moved', function () {
       var position = projectWindow.getPosition()
       storage.set<'windowPosition'>('windowPosition', position)
-      console.log(' x: ' + position[0] + ' y: ' + position[1])
     })
     projectWindow.on('resize', function () {
       var size = projectWindow.getSize()
       storage.set<'windowSize'>('windowSize', size)
-      console.log('w:' + size[0] + ' h: ' + size[1] + ' x: ')
     })
   }
 
