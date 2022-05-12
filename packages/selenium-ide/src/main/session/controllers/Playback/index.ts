@@ -4,6 +4,7 @@ import {
   PlaybackEventShapes,
   Variables,
 } from '@seleniumhq/side-runtime'
+import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/src/webdriver'
 import { hasID } from 'api/helpers/hasID'
 import { Session } from 'main/types'
 
@@ -21,6 +22,35 @@ export default class PlaybackController {
   playingTest = ''
   playback: Playback | null
   session: Session
+
+  onBeforePlay: NonNullable<WebDriverExecutorHooks['onBeforePlay']> = async ({
+    driver: executor,
+  }) => {
+    const { driver } = executor
+    const { windows } = this.session
+    if (this.playRange[0] === 0) {
+      await windows.initializePlaybackWindow()
+    }
+    const playbackWindow = await windows.getPlaybackWindow()
+
+    // Figure out playback window from document.title
+    const handles = await driver.getAllWindowHandles()
+    for (let i = 0, ii = handles.length; i !== ii; i++) {
+      try {
+        await driver.switchTo().window(handles[i])
+        const title = await driver.getTitle()
+        const url = await driver.getCurrentUrl()
+        if (
+          title === playbackWindow.getTitle() &&
+          url === playbackWindow.webContents.getURL()
+        ) {
+          break
+        }
+      } catch (e) {
+        console.warn('Failed to switch to window', e)
+      }
+    }
+  }
 
   async pause() {
     this.isPlaying = false
