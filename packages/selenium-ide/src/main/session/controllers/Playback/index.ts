@@ -102,9 +102,18 @@ export default class PlaybackController {
       )
       this.playback = playback
     }
-    this.playback.play(this.session.tests.getByID(testID), {
-      startingCommandIndex: playRange[0],
-    })
+    if (playRange[1] !== -1) {
+      const test = this.session.tests.getByID(testID)
+      this.playback.playTo(
+        test,
+        test.commands[playRange[1]],
+        test.commands[playRange[0]]
+      )
+    } else {
+      this.playback.play(this.session.tests.getByID(testID), {
+        startingCommandIndex: playRange[0],
+      })
+    }
   }
 
   async playSuite() {
