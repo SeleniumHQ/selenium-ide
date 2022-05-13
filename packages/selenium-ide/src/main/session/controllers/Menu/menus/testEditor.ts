@@ -116,7 +116,6 @@ export const playbackList: MenuComponent = (session) => async (_commandID?: stri
           ),
         ])
       },
-      enabled: selectedCommandCount === 1,
       label: 'Play To Here',
     },
     {
