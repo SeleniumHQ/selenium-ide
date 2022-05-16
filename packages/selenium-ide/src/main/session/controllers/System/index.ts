@@ -18,7 +18,6 @@ export default class SystemController extends BaseController {
     if (!this.isDown) {
       if (!this.shuttingDown) {
         this.shuttingDown = true
-        console.log('Shutting down?', this.isDown)
         const confirm = await this.session.projects.onProjectUnloaded()
         if (confirm) {
           await this.session.driver.stopProcess()

@@ -18,7 +18,6 @@ export default class StateController extends BaseController {
     // If this file has been saved, fetch state
     if (this.session.projects.filepath) {
       const path = `projectStates.${this.session.projects.project.id}`
-      console.log('Getting state', storage.get(path))
       this.state = {
         ...defaultState,
         ...storage.get(path),
@@ -31,13 +30,6 @@ export default class StateController extends BaseController {
     if (this.session.projects.filepath) {
       // If this file has been loaded or saved, save state
       const path = `projectStates.${this.session.projects.project}`
-      console.log('Setting state', {
-        ...this.state,
-        commands: {},
-        playback: defaultState.playback,
-        recorder: defaultState.recorder,
-        status: 'idle',
-      })
       storage.set(path, {
         ...this.state,
         commands: {},
