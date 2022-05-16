@@ -1,12 +1,13 @@
 import { Menu } from 'electron'
 import { Session } from 'main/types'
 import menus from './menus'
-export default class MenuController {
+import BaseController from '../Base'
+
+export default class MenuController extends BaseController {
   constructor(session: Session) {
-    this.session = session
+    super(session)
     this.openApplication = this.openApplication.bind(this)
   }
-  session: Session
   async onProjectLoaded() {
     this.openApplication()
     this.session.api.state.onMutate.addListener(this.openApplication)

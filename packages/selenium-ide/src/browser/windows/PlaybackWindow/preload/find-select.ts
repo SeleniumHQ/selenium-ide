@@ -51,9 +51,7 @@ function processSelectionCommand(
 let targetSelector: TargetSelector | null = null
 const locatorBuilders = new LocatorBuilders(window)
 function startSelection(field: LocatorFields) {
-  console.log('Doing this thing?')
   targetSelector = new TargetSelector(function (element, win) {
-    console.log('WTFFFFF')
     if (element && win) {
       const target = locatorBuilders.buildAll(element)
       if (target != null && Array.isArray(target)) {

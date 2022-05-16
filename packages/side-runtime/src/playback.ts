@@ -60,7 +60,7 @@ export interface PlayOptions {
   startingCommandIndex?: number
 }
 
-export type PlayTo = VaguePromiseWrapper & { command: CommandShape }
+export type PlayTo = VaguePromiseWrapper & { command: string }
 
 export default class Playback {
   constructor({
@@ -160,29 +160,22 @@ export default class Playback {
     return this._play()
   }
 
-  async playTo(
-    test: TestShape,
-    commandToStop: CommandShape,
-    commandToStart: CommandShape
-  ) {
-    if (!test.commands.includes(commandToStop)) {
+  async playTo(test: TestShape, stopIndex: number, startIndex: number) {
+    if (!test.commands[stopIndex]) {
       throw new Error('Command not found in test')
-    } else if (commandToStart && !test.commands.includes(commandToStart)) {
+    } else if (startIndex && !test.commands[startIndex]) {
       throw new Error('Command to start from not found in test')
     } else {
       const playToPromise = new Promise((res, rej) => {
         this[state].playTo = {
-          command: commandToStop,
+          command: test.commands[stopIndex].id,
           res,
           rej,
         }
       }).finally(() => {
         this[state].playTo = undefined
       })
-      const startingCommandIndex = commandToStart
-        ? test.commands.indexOf(commandToStart)
-        : undefined
-      const finish = await this.play(test, { startingCommandIndex })
+      const finish = await this.play(test, { startingCommandIndex: startIndex })
       await playToPromise
 
       return finish
@@ -194,9 +187,7 @@ export default class Playback {
     if (index === -1) {
       throw new Error('Command not found in test')
     } else {
-      const finish = await this.play(test, { startingCommandIndex: index })
-
-      return finish
+      return await this.play(test, { startingCommandIndex: index })
     }
   }
 
@@ -414,7 +405,7 @@ export default class Playback {
         (this.currentExecutingNode.command.isBreakpoint &&
           !ignoreBreakpoint &&
           !this.options.ignoreBreakpoints) ||
-        (playTo && playTo.command === this.currentExecutingNode.command)
+        playTo?.command === this.currentExecutingNode.command.id
       ) {
         await this._break()
         return await this._executionLoop({ ignoreBreakpoint: true })
@@ -642,9 +633,8 @@ export default class Playback {
       r()
     }
     if (
-      this.currentExecutingNode &&
-      playTo &&
-      this.currentExecutingNode.command === playTo.command
+      playTo?.command &&
+      this.currentExecutingNode?.command.id === playTo.command
     ) {
       playTo.res()
     }

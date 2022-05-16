@@ -6,6 +6,7 @@ import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
 import storage from 'main/store'
 import { join } from 'path'
+import BaseController from '../Base'
 
 // import { StopOutlined } from '@mui/icons-material'
 
@@ -65,17 +66,10 @@ const makeWindowLoaders = (session: Session): WindowLoaderMap =>
     ])
   )
 
-export default class WindowsController {
-  constructor(session: Session) {
-    this.session = session
-    this.playbackWindows = []
-    this.windowLoaders = makeWindowLoaders(session)
-    this.windows = {}
-  }
-  playbackWindows: BrowserWindow[]
-  session: Session
-  windowLoaders: WindowLoaderMap
-  windows: { [key: string]: BrowserWindow }
+export default class WindowsController extends BaseController {
+  playbackWindows: BrowserWindow[] = []
+  windowLoaders: WindowLoaderMap = makeWindowLoaders(this.session)
+  windows: { [key: string]: BrowserWindow } = {}
 
   async broadcast(path: string, ...args: any) {
     Object.values(this.windows).forEach((window) => {
@@ -118,13 +112,16 @@ export default class WindowsController {
       return false
     }
     const window = this.windowLoaders[name](opts)
-    if (name === 'playback-window') {
-      this.handlePlaybackWindow(window)
-    }
     this.windows[name] = window
     window.on('closed', () => {
       if (!name.startsWith(projectEditorWindowName)) delete this.windows[name]
     })
+    return true
+  }
+
+  async openPlaybackWindow(opts: BrowserWindowConstructorOptions = {}) {
+    const window = this.windowLoaders[playbackWindowName](opts)
+    this.handlePlaybackWindow(window)
     return true
   }
 
@@ -177,8 +174,6 @@ export default class WindowsController {
     if (position.length) projectWindow.setPosition(position[0], position[1])
     projectWindow.show()
 
-    projectWindow.on('closed', () => this.closeAll())
-
     projectWindow.on('close', async (e) => {
       if (!this.session.system.isDown) {
         e.preventDefault()
@@ -191,35 +186,20 @@ export default class WindowsController {
     projectWindow.on('moved', () => {
       const position = projectWindow.getPosition() as [number, number]
       storage.set<'windowPosition'>('windowPosition', position)
-      console.log(' x: ' + position[0] + ' y: ' + position[1])
     })
     projectWindow.on('resize', () => {
       const size = projectWindow.getSize() as [number, number]
       storage.set<'windowSize'>('windowSize', size)
-      console.log('w:' + size[0] + ' h: ' + size[1] + ' x: ')
-    })
-    projectWindow.on('moved', function () {
-      var position = projectWindow.getPosition()
-      storage.set<'windowPosition'>('windowPosition', position)
-      console.log(' x: ' + position[0] + ' y: ' + position[1])
-    })
-    projectWindow.on('resize', function () {
-      var size = projectWindow.getSize()
-      storage.set<'windowSize'>('windowSize', size)
-      console.log('w:' + size[0] + ' h: ' + size[1] + ' x: ')
     })
   }
 
-  async initializePlaybackWindow() {
-    this.playbackWindows.forEach((bw) => {
-      if (!bw.closable) {
-        bw.closable = true
-      }
-      bw.close()
-    })
+  async onProjectUnloaded() {
+    this.closeAll()
+  }
 
-    await this.close(playbackWindowName)
-    await this.open(playbackWindowName)
+  async initializePlaybackWindow() {
+    this.playbackWindows.forEach((bw) => bw.close())
+    await this.openPlaybackWindow()
   }
 
   async getPlaybackWindow() {
