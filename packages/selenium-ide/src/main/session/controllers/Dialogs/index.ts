@@ -1,6 +1,7 @@
 import { dialog } from 'electron'
+import BaseController from '../Base'
 
-export default class DialogsController {
+export default class DialogsController extends BaseController {
   async open() {
     return await dialog.showOpenDialog({ properties: ['openFile'] })
   }

@@ -30,6 +30,13 @@ app.on('open-file', async (_e, path) => {
 app.on('ready', async () => {
   !app.isPackaged && installReactDevtools()
   await session.system.startup()
+
+  process.on('SIGINT', async () => {
+    await session.system.shutdown()
+    if (session.system.isDown) {
+      await session.system.quit()
+    }
+  })
 })
 
 // Respect the OSX convention of having the application in memory even

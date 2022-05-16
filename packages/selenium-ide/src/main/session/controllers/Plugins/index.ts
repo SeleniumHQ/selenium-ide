@@ -1,8 +1,8 @@
 import { loadPlugins, PluginShape } from '@seleniumhq/side-runtime'
 import { ipcMain } from 'electron'
 import storage from 'main/store'
-import { Session } from 'main/types'
 import { join } from 'path'
+import BaseController from '../Base'
 
 export type PluginMessageHandler = (
   event: Electron.IpcMainEvent,
@@ -11,15 +11,9 @@ export type PluginMessageHandler = (
 
 export type PluginHooksState = Record<string, PluginMessageHandler>
 
-export default class PluginsController {
-  constructor(session: Session) {
-    this.session = session
-    this.plugins = []
-    this.pluginHooks = []
-  }
-  plugins: PluginShape[]
-  pluginHooks: PluginHooksState[]
-  session: Session
+export default class PluginsController extends BaseController {
+  plugins: PluginShape[] = []
+  pluginHooks: PluginHooksState[] = []
   async list() {
     const systemPlugins = storage.get<'plugins'>('plugins')
     const project = await this.session.projects.getActive()

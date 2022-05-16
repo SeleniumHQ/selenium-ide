@@ -1,12 +1,10 @@
 import { dialog } from 'electron'
-import { Session } from 'main/types'
+import BaseController from '../Base'
 
 let firstTime = true
-export default class SystemController {
-  constructor(session: Session) {
-    this.session = session
-  }
-  isDown: boolean = true
+export default class SystemController extends BaseController {
+  isDown = true
+  shuttingDown = false
   async startup() {
     if (this.isDown) {
       // await this.session.windows.open('chromedriver')
@@ -18,10 +16,15 @@ export default class SystemController {
   }
   async shutdown() {
     if (!this.isDown) {
-      const confirm = await this.session.projects.onProjectUnloaded()
-      if (confirm) {
-        await this.session.driver.stopProcess()
-        this.isDown = true
+      if (!this.shuttingDown) {
+        this.shuttingDown = true
+        console.log('Shutting down?', this.isDown)
+        const confirm = await this.session.projects.onProjectUnloaded()
+        if (confirm) {
+          await this.session.driver.stopProcess()
+          this.isDown = true
+        }
+        this.shuttingDown = false
       }
     }
   }
@@ -35,7 +38,8 @@ export default class SystemController {
   }
   async quit() {
     await this.shutdown()
-    this.session.app.quit()
+    if (this.isDown) {
+      this.session.app.quit()
+    }
   }
-  session: Session
 }

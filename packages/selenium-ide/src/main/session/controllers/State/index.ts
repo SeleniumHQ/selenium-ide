@@ -3,15 +3,10 @@ import defaultState from 'api/models/state'
 import { CoreSessionData, StateShape } from 'api/types'
 import clone from 'lodash/fp/clone'
 import storage from 'main/store'
-import { Session } from 'main/types'
+import BaseController from '../Base'
 
-export default class StateController {
-  constructor(session: Session) {
-    this.session = session
-    this.state = clone(defaultState)
-  }
-  session: Session
-  state: StateShape
+export default class StateController extends BaseController {
+  state: StateShape = clone(defaultState)
   async get(): Promise<CoreSessionData> {
     return {
       project: this.session.projects.project,
@@ -19,15 +14,39 @@ export default class StateController {
     }
   }
 
+  async onProjectLoaded() {
+    // If this file has been saved, fetch state
+    if (this.session.projects.filepath) {
+      const path = `projectStates.${this.session.projects.project.id}`
+      console.log('Getting state', storage.get(path))
+      this.state = {
+        ...defaultState,
+        ...storage.get(path),
+        commands: defaultState.commands,
+      }
+    }
+  }
+
   async onProjectUnloaded() {
-    let projectStates = storage.get<'projectStates'>('projectStates')
     if (this.session.projects.filepath) {
       // If this file has been loaded or saved, save state
-      projectStates[this.session.projects.project.id] = this.state
-      storage.set<'projectStates'>('projectStates', projectStates)
+      const path = `projectStates.${this.session.projects.project}`
+      console.log('Setting state', {
+        ...this.state,
+        commands: {},
+        playback: defaultState.playback,
+        recorder: defaultState.recorder,
+        status: 'idle',
+      })
+      storage.set(path, {
+        ...this.state,
+        commands: {},
+        playback: defaultState.playback,
+        recorder: defaultState.recorder,
+        status: 'idle',
+      } as StateShape)
     }
     this.state = clone(defaultState)
-    this.session.system.quit
   }
 
   async setActiveCommand(commandID: string): Promise<boolean> {

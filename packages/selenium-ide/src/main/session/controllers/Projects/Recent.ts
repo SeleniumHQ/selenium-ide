@@ -1,5 +1,5 @@
 import storage from 'main/store'
-import { Session } from 'main/types'
+import BaseController from '../Base'
 
 const addToBeginning = (prevList: string[], entry: string) => {
   const list = prevList.slice()
@@ -15,11 +15,7 @@ const addToBeginning = (prevList: string[], entry: string) => {
   return list
 }
 
-export default class RecentProjectsController {
-  constructor(session: Session) {
-    this.session = session
-  }
-  session: Session
+export default class RecentProjectsController extends BaseController {
   add(filepath: string) {
     const entries = storage.get<'recentProjects'>('recentProjects', [])
     const newEntries = addToBeginning(entries, filepath)

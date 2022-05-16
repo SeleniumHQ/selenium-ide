@@ -7,7 +7,6 @@ module.exports = {
     .map((dirname) => path.join(__dirname, 'packages', dirname))
     .filter((dirpath) => {
       const stats = fs.statSync(dirpath)
-
       return stats.isDirectory()
     }),
   overrides: [
