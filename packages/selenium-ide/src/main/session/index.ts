@@ -23,9 +23,9 @@ export default function createSession(
   // Building our session object
   const partialSession: Partial<Session> = {
     app,
-    dialogs: new DialogsController(),
     store,
   }
+  partialSession.dialogs = new DialogsController(partialSession as Session)
   partialSession.argTypes = new ArgTypesController(partialSession as Session)
   partialSession.commands = new CommandsController(partialSession as Session)
   partialSession.driver = new DriverController(partialSession as Session)

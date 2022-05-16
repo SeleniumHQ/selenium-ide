@@ -7,3 +7,5 @@
 **/trace
 **/.eslintrc.js
 **/code-export-*
+# Outside of the style guide due to require
+babel.config.js

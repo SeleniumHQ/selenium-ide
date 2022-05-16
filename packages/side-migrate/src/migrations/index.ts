@@ -46,8 +46,8 @@ type MigratorFunction = {
   (p: ProjectShape): ProjectShape
 }
 
-type MigrationsVersionLibrary = Record<string, MigratorFunction>;
-type MigrationsLibrary = Record<string, MigrationsVersionLibrary>;
+type MigrationsVersionLibrary = Record<string, MigratorFunction>
+type MigrationsLibrary = Record<string, MigrationsVersionLibrary>
 
 const migrations: MigrationsLibrary = Object.keys(migrators).reduce(
   (migs, migName) => {
@@ -59,7 +59,7 @@ const migrations: MigrationsLibrary = Object.keys(migrators).reduce(
 
     return migs
   },
-  {} as MigrationsLibrary,
+  {} as MigrationsLibrary
 )
 
 export default migrations

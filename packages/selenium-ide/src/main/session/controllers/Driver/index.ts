@@ -4,6 +4,7 @@ import { ChildProcess } from 'child_process'
 import { BrowserInfo, Session } from 'main/types'
 import downloadDriver from './download'
 import startDriver, { WebdriverDebugLog } from './start'
+import BaseController from '../Base'
 
 // Escape hatch to avoid dealing with rootDir complexities in TS
 // https://stackoverflow.com/questions/50822310/how-to-import-package-json-in-typescript
@@ -31,13 +32,12 @@ export interface BrowsersInfo {
   selected: BrowserInfo
 }
 
-export default class DriverController {
+export default class DriverController extends BaseController {
   constructor(session: Session) {
-    this.session = session
+    super(session)
     this.build({})
   }
 
-  session: Session
   driverProcess?: ChildProcess
   windowHandle?: string
 

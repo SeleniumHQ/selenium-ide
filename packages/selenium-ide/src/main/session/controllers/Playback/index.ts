@@ -7,12 +7,13 @@ import {
 import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/src/webdriver'
 import { hasID } from 'api/helpers/hasID'
 import { Session } from 'main/types'
+import BaseController from '../Base'
 
-export default class PlaybackController {
+export default class PlaybackController extends BaseController {
   constructor(session: Session) {
-    this.session = session
+    super(session)
     this.handleCommandStateChanged = this.handleCommandStateChanged.bind(this)
-    this.playback = null
+    this.handlePlaybackStateChanged = this.handlePlaybackStateChanged.bind(this)
   }
   static defaultPlayRange = [0, -1]
   currentStepIndex: null | number = null
@@ -20,8 +21,7 @@ export default class PlaybackController {
   playRange = [0, -1]
   playingSuite = ''
   playingTest = ''
-  playback: Playback | null
-  session: Session
+  playback: Playback | null = null
 
   onBeforePlay: NonNullable<WebDriverExecutorHooks['onBeforePlay']> = async ({
     driver: executor,
@@ -104,11 +104,7 @@ export default class PlaybackController {
     }
     if (playRange[1] !== -1) {
       const test = this.session.tests.getByID(testID)
-      this.playback.playTo(
-        test,
-        test.commands[playRange[1]],
-        test.commands[playRange[0]]
-      )
+      await this.playback.playTo(test, playRange[1], playRange[0])
     } else {
       this.playback.play(this.session.tests.getByID(testID), {
         startingCommandIndex: playRange[0],
@@ -153,22 +149,21 @@ export default class PlaybackController {
     this.session.api.playback.onStepUpdate.dispatchEvent(e)
   }
 
-  handlePlaybackStateChanged = (
-    e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']
-  ) => {
-    this.session.api.playback.onPlayUpdate.dispatchEvent(e)
-    switch (e.state) {
-      case 'aborted':
-      case 'errored':
-      case 'failed':
-      case 'finished':
-      case 'stopped':
-        const playback = this.playback as Playback
-        playback.cleanup()
-        this.playback = null
-        if (this.playingSuite) {
-          this.playNextTest()
-        }
+  handlePlaybackStateChanged =
+    (self: this) => (e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
+      self.session.api.playback.onPlayUpdate.dispatchEvent(e)
+      switch (e.state) {
+        case 'aborted':
+        case 'errored':
+        case 'failed':
+        case 'finished':
+        case 'stopped':
+          const playback = this.playback as Playback
+          playback.cleanup()
+          this.playback = null
+          if (this.playingSuite) {
+            this.playNextTest()
+          }
+      }
     }
-  }
 }

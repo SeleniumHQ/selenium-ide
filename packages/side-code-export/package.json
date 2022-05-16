@@ -15,6 +15,7 @@
     "watch": "yarn build -w"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "dependencies": {
     "@seleniumhq/side-model": "^4.0.0",
     "ua-parser-js": "0.7.28"

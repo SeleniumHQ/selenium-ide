@@ -1,14 +1,8 @@
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
-import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
+import BaseController from '../Base'
 
-export default class TestsController {
-  constructor(session: Session) {
-    this.session = session
-  }
-
-  session: Session
-
+export default class TestsController extends BaseController {
   static commandFromData(step: Partial<CommandShape> = {}): CommandShape {
     return {
       ...step,

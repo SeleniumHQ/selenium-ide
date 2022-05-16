@@ -1,13 +1,8 @@
 import { SuiteShape } from '@seleniumhq/side-model'
-import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
+import BaseController from '../Base'
 
-export default class SuitesController {
-  constructor(session: Session) {
-    this.session = session
-  }
-  session: Session
-
+export default class SuitesController extends BaseController {
   async create(): Promise<SuiteShape> {
     return {
       id: randomUUID(),
