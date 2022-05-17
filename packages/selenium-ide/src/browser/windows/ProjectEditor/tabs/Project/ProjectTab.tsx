@@ -71,8 +71,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
             name="insertNewCommandPref"
             value={'After'}
             onChange={(e: any) => {
-              // toggleUserPref({insertCommandPref: e.target.value})
-              console.log(e.target.value)            
+              window.sideAPI.state.toggleUserPref(e.target.value)
             }}
           >
             <MenuItem value={'After'}>After</MenuItem>
