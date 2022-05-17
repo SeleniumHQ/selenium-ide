@@ -5,6 +5,7 @@ import mainEventListener from 'main/api/classes/EventListener'
 import { mutator as recordNewCommandMutator } from './recordNewCommand'
 import { mutator as updateStepTestsMutator } from '../tests/updateStep'
 import { RecordNewCommandInput } from 'main/session/controllers/Recorder'
+import { getActiveCommand } from 'api/helpers/getActiveData'
 
 type windowID = string
 type selectWindowStepID = string
@@ -19,7 +20,7 @@ export const mutator: EventMutator<OnNewWindowRecorder> = (
     {
       params: [
         session.state.activeTestID,
-        session.state.activeCommandID,
+        getActiveCommand(session).id,
         {
           opensWindow: true,
           windowHandleName: windowID,

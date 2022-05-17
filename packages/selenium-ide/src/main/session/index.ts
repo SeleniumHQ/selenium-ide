@@ -1,6 +1,4 @@
 import { App } from 'electron'
-import Api from '../api'
-import { Session, Storage } from '../types'
 import ArgTypesController from './controllers/ArgTypes'
 import CommandsController from './controllers/Commands'
 import DialogsController from './controllers/Dialogs'
@@ -15,6 +13,8 @@ import SuitesController from './controllers/Suites'
 import SystemController from './controllers/System'
 import TestsController from './controllers/Tests'
 import WindowsController from './controllers/Windows'
+import Api from '../api'
+import { Session, Storage } from '../types'
 
 export default function createSession(
   app: App,

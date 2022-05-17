@@ -1,12 +1,10 @@
 import { ProjectShape } from '@seleniumhq/side-model'
 import defaultProject from 'api/models/project'
-import defaultState from 'api/models/state'
 import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
-import { CoreSessionData, StateShape } from 'api/types'
-import storage from 'main/store'
+import { CoreSessionData } from 'api/types'
 import BaseController from '../Base'
 
 export default class ProjectsController {
@@ -22,7 +20,10 @@ export default class ProjectsController {
   session: Session
 
   async executeHook(
-    hookName: keyof Pick<BaseController, 'onProjectLoaded' | 'onProjectUnloaded'>
+    hookName: keyof Pick<
+      BaseController,
+      'onProjectLoaded' | 'onProjectUnloaded'
+    >
   ): Promise<void> {
     await Promise.all(
       Object.values(this.session)
@@ -102,7 +103,7 @@ export default class ProjectsController {
         },
       },
     }
-    this.onProjectLoaded(starterProject)
+    await this.onProjectLoaded(starterProject)
     return starterProject
   }
 
@@ -115,17 +116,8 @@ export default class ProjectsController {
           return null
         }
       }
-      const loadedState = storage.get(
-        `projectStates.${loadedProject.id}`,
-        defaultState
-      ) as StateShape
-
-      this.onProjectLoaded(loadedProject, filepath)
-      const loadedSessionData: CoreSessionData = {
-        project: loadedProject,
-        state: loadedState,
-      }
-      return loadedSessionData
+      await this.onProjectLoaded(loadedProject, filepath)
+      return await this.session.state.get()
     }
     return null
   }
@@ -166,7 +158,6 @@ export default class ProjectsController {
     let project: ProjectShape
     try {
       project = JSON.parse(fileContents)
-
       project.plugins = project.plugins.filter(
         (plugin) => typeof plugin === 'string'
       )

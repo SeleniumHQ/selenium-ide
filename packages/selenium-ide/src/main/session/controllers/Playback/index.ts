@@ -150,8 +150,7 @@ export default class PlaybackController extends BaseController {
   }
 
   handlePlaybackStateChanged =
-    (self: this) => (e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
-      self.session.api.playback.onPlayUpdate.dispatchEvent(e)
+    (e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
       switch (e.state) {
         case 'aborted':
         case 'errored':
@@ -165,5 +164,6 @@ export default class PlaybackController extends BaseController {
             this.playNextTest()
           }
       }
+      this.session.api.playback.onPlayUpdate.dispatchEvent(e)
     }
 }

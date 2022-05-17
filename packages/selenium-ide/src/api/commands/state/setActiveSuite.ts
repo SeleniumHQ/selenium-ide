@@ -13,16 +13,16 @@ export const mutator: Mutator<Shape> = (
   const activeTestID =
     session.project.suites.find(hasID(activeSuiteID))?.tests?.[0] ??
     loadingID
-  const activeCommandID =
-    session.project.tests.find(hasID(activeTestID))?.commands?.[0]
-      ?.id ?? loadingID
   return {
     ...session,
     state: {
       ...session.state,
+      editor: {
+        ...session.state.editor,
+        selectedCommandIndexes: [0],
+      },
       activeSuiteID,
       activeTestID,
-      activeCommandID,
     },
   }
 }

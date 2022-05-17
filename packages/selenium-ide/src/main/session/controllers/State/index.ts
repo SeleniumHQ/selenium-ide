@@ -6,7 +6,10 @@ import storage from 'main/store'
 import BaseController from '../Base'
 
 export default class StateController extends BaseController {
+  static pathFromID = (id: string) => id.replace(/\-/g, '_')
+
   state: StateShape = clone(defaultState)
+
   async get(): Promise<CoreSessionData> {
     return {
       project: this.session.projects.project,
@@ -14,14 +17,18 @@ export default class StateController extends BaseController {
     }
   }
 
+  getStatePath() {
+    const projectID = this.session.projects.project.id
+    const projectIDPath = StateController.pathFromID(projectID)
+    return `projectStates.${projectIDPath}`
+  }
+
   async onProjectLoaded() {
     // If this file has been saved, fetch state
     if (this.session.projects.filepath) {
-      const path = `projectStates.${this.session.projects.project.id}`
       this.state = {
         ...defaultState,
-        ...storage.get(path),
-        commands: defaultState.commands,
+        ...storage.get(this.getStatePath()),
       }
     }
   }
@@ -29,10 +36,8 @@ export default class StateController extends BaseController {
   async onProjectUnloaded() {
     if (this.session.projects.filepath) {
       // If this file has been loaded or saved, save state
-      const path = `projectStates.${this.session.projects.project}`
-      storage.set(path, {
+      storage.set(this.getStatePath(), {
         ...this.state,
-        commands: {},
         playback: defaultState.playback,
         recorder: defaultState.recorder,
         status: 'idle',
