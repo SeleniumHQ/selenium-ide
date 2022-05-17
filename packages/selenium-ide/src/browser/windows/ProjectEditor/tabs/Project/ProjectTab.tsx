@@ -8,13 +8,12 @@ import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
-import storage from 'main/store'
+import { getUserPrefs, setUserPrefs } from 'api/helpers/userPrefs'
 import { CoreSessionData } from 'api/types'
 import TextField from 'browser/components/UncontrolledTextField'
 import React, { FC } from 'react'
 import EditorToolbar from '../../components/Drawer/EditorToolbar'
 import MainHeader from '../../components/Main/Header'
-import { state } from 'api/models'
 
 export interface ProjectTabProps {
   session: CoreSessionData
@@ -70,12 +69,10 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
             id="insertNewCommandPref"
             label="Insert new command placement preference"
             name="insertNewCommandPref"
-            value={state.insertCommandPref}
+            value={getUserPrefs().insertCommandPref}
             onChange={(e: any) => {
-              storage.set<'insertCommandPref'>(
-                'insertCommandPref',
-                e.target.value
-              )
+              setUserPrefs({insertCommandPref: e.target.value})
+              console.log(e.target.value)            
             }}
           >
             <MenuItem value={'After'}>After</MenuItem>

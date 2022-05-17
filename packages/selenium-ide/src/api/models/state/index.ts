@@ -2,8 +2,8 @@ import { CommandShape } from '@seleniumhq/side-model'
 import { CommandTypes } from '@seleniumhq/side-model/dist/Commands'
 import badIndex from 'api/constants/badIndex'
 import loadingID from 'api/constants/loadingID'
+import { InsertCommandPref } from 'api/types'
 import { CommandsStateShape } from './command'
-import storage from 'main/store'
 
 /**
  * State data is the data from the active IDE sessio that will not be persisted.
@@ -11,7 +11,7 @@ import storage from 'main/store'
  */
 
 export interface EditorStateShape {
-  copiedCommands: Omit<CommandShape, 'id'>[]
+  copiedCommands: Omit<CommandShape, 'id'>[],
   selectedCommandIndexes: number[]
   selectedTestIndexes: number[]
 }
@@ -30,11 +30,7 @@ export const defaultRecorderState: RecorderStateShape = {
   activeFrame: 'root',
 }
 
-export const defaultInsertCommandPref = storage.get<'insertCommandPref'>(
-  'insertCommandPref'
-)
-  ? storage.get<'insertCommandPref'>('insertCommandPref')
-  : 'After'
+export const defaultInsertCommandPref = 'After'
 
 export interface PlaybackStateShape {
   commands: CommandsStateShape
@@ -59,7 +55,7 @@ export interface StateShape {
   breakpoints: string[]
   commands: CommandTypes
   editor: EditorStateShape
-  insertCommandPref: 'Before' | 'After'
+  insertCommandPref: InsertCommandPref
   logs: string[]
   playback: PlaybackStateShape
   recorder: RecorderStateShape
