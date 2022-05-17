@@ -38,7 +38,10 @@ export default class StateController {
   }
 
   async toggleUserPref(userPrefs: UserPrefs) {
-    storage.set<'UserPrefs'>('UserPrefs', userPrefs)
+    storage.set<'userPrefs'>('userPrefs', userPrefs)
   }
 
+  async getUserPref(): Promise<UserPrefs> {
+    return storage.get<'userPrefs'>('userPrefs')
+  }
 }
