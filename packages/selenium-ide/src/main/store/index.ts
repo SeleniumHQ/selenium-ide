@@ -11,6 +11,7 @@ export interface StorageSchema {
   recentProjects: string[]
   windowSize: number[]
   windowPosition: number[]
+  insertCommandPref: 'Before' | 'After'
 }
 
 const store = new Store<StorageSchema>({
@@ -24,7 +25,8 @@ const store = new Store<StorageSchema>({
     projectStates: {},
     recentProjects: [],
     windowSize: [],
-    windowPosition: []
+    windowPosition: [],
+    insertCommandPref: 'After'
   },
 })
 

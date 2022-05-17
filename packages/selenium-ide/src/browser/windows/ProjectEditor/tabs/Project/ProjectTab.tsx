@@ -1,15 +1,20 @@
 import CloseIcon from '@mui/icons-material/Close'
 import FormControl from '@mui/material/FormControl'
 import IconButton from '@mui/material/IconButton'
+import InputLabel from '@mui/material/InputLabel'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
+import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
+import storage from 'main/store'
 import { CoreSessionData } from 'api/types'
 import TextField from 'browser/components/UncontrolledTextField'
 import React, { FC } from 'react'
 import EditorToolbar from '../../components/Drawer/EditorToolbar'
 import MainHeader from '../../components/Main/Header'
+import { state } from 'api/models'
 
 export interface ProjectTabProps {
   session: CoreSessionData
@@ -56,6 +61,26 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
             size="small"
             value={project.url}
           />
+        </FormControl>
+        <FormControl>
+          <InputLabel id="insertNewCommandPref">
+            New command insert preference
+          </InputLabel>
+          <Select
+            id="insertNewCommandPref"
+            label="Insert new command placement preference"
+            name="insertNewCommandPref"
+            value={state.insertCommandPref}
+            onChange={(e: any) => {
+              storage.set<'insertCommandPref'>(
+                'insertCommandPref',
+                e.target.value
+              )
+            }}
+          >
+            <MenuItem value={'After'}>After</MenuItem>
+            <MenuItem value={'Before'}>Before</MenuItem>
+          </Select>
         </FormControl>
       </Stack>
       <List
