@@ -200,14 +200,6 @@ export default class WindowsController {
       const size = projectWindow.getSize() as [number, number]
       storage.set<'windowSize'>('windowSize', size)
     })
-    projectWindow.on('moved', function () {
-      var position = projectWindow.getPosition()
-      storage.set<'windowPosition'>('windowPosition', position)
-    })
-    projectWindow.on('resize', function () {
-      var size = projectWindow.getSize()
-      storage.set<'windowSize'>('windowSize', size)
-    })
   }
 
   async initializePlaybackWindow() {
