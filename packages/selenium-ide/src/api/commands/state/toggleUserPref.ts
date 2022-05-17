@@ -1,7 +1,7 @@
 import browserHandler from 'browser/api/classes/Handler'
 import { UserPrefs } from 'api/types'
 import update from 'lodash/fp/update'
-import mainHandler, { passthrough } from 'main/api/classes/Handler'
+import mainHandler from 'main/api/classes/Handler'
 import storage from 'main/store'
 import { Mutator } from 'api/types'
 
