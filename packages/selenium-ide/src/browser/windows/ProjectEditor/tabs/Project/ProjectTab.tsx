@@ -8,7 +8,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
-import { getUserPrefs, setUserPrefs } from 'api/helpers/userPrefs'
+// import { toggleUserPref } from 'api/commands/state'
 import { CoreSessionData } from 'api/types'
 import TextField from 'browser/components/UncontrolledTextField'
 import React, { FC } from 'react'
@@ -69,9 +69,9 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
             id="insertNewCommandPref"
             label="Insert new command placement preference"
             name="insertNewCommandPref"
-            value={getUserPrefs().insertCommandPref}
+            value={'After'}
             onChange={(e: any) => {
-              setUserPrefs({insertCommandPref: e.target.value})
+              // toggleUserPref({insertCommandPref: e.target.value})
               console.log(e.target.value)            
             }}
           >
