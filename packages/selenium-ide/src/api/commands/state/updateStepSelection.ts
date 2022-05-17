@@ -3,9 +3,7 @@ import browserHandler from 'browser/api/classes/Handler'
 import mainHandler, { passthrough } from 'main/api/classes/Handler'
 import { Mutator } from 'api/types'
 import { getActiveTest } from 'api/helpers/getActiveData'
-import { mutator as setActiveCommand } from './setActiveCommand'
 import { updateSelection } from 'api/helpers/updateSelection'
-import loadingID from 'api/constants/loadingID'
 
 export type Shape = (
   commandIndex: number,
@@ -18,7 +16,7 @@ export const browser = browserHandler<Shape>()
 
 export const mutator: Mutator<Shape> = (session, { params }) => {
   const activeTest = getActiveTest(session)
-  const newSession = update(
+  return update(
     `state.editor.selectedCommandIndexes`,
     (indexes: number[]) =>
       updateSelection(
@@ -29,16 +27,6 @@ export const mutator: Mutator<Shape> = (session, { params }) => {
       ),
     session
   )
-  const {
-    state: { editor: { selectedCommandIndexes } },
-  } = newSession
-  const lastCommandIndex = selectedCommandIndexes.slice(-1)[0]
-  const newActiveCommand =
-    activeTest.commands[lastCommandIndex]?.id || loadingID
-  return setActiveCommand(newSession, {
-    params: [newActiveCommand],
-    result: true,
-  })
 }
 
 export const main = mainHandler<Shape>(passthrough)

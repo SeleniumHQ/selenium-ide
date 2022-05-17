@@ -3,15 +3,13 @@ import defaultState from 'api/models/state'
 import { CoreSessionData, StateShape, UserPrefs } from 'api/types'
 import clone from 'lodash/fp/clone'
 import storage from 'main/store'
-import { Session } from 'main/types'
+import BaseController from '../Base'
 
-export default class StateController {
-  constructor(session: Session) {
-    this.session = session
-    this.state = clone(defaultState)
-  }
-  session: Session
-  state: StateShape
+export default class StateController extends BaseController {
+  static pathFromID = (id: string) => id.replace(/\-/g, '_')
+
+  state: StateShape = clone(defaultState)
+
   async get(): Promise<CoreSessionData> {
     return {
       project: this.session.projects.project,
@@ -19,15 +17,33 @@ export default class StateController {
     }
   }
 
+  getStatePath() {
+    const projectID = this.session.projects.project.id
+    const projectIDPath = StateController.pathFromID(projectID)
+    return `projectStates.${projectIDPath}`
+  }
+
+  async onProjectLoaded() {
+    // If this file has been saved, fetch state
+    if (this.session.projects.filepath) {
+      this.state = {
+        ...defaultState,
+        ...storage.get(this.getStatePath()),
+      }
+    }
+  }
+
   async onProjectUnloaded() {
-    let projectStates = storage.get<'projectStates'>('projectStates')
     if (this.session.projects.filepath) {
       // If this file has been loaded or saved, save state
-      projectStates[this.session.projects.project.id] = this.state
-      storage.set<'projectStates'>('projectStates', projectStates)
+      storage.set(this.getStatePath(), {
+        ...this.state,
+        playback: defaultState.playback,
+        recorder: defaultState.recorder,
+        status: 'idle',
+      } as StateShape)
     }
     this.state = clone(defaultState)
-    this.session.system.quit
   }
 
   async setActiveCommand(commandID: string): Promise<boolean> {

@@ -1,4 +1,4 @@
-import { getActiveCommandIndex, getActiveTest } from 'api/helpers/getActiveData'
+import { getActiveCommand, getActiveCommandIndex, getActiveTest } from 'api/helpers/getActiveData'
 import { Menu } from 'electron'
 import { MenuComponent, Session } from 'main/types'
 
@@ -102,7 +102,7 @@ export const recorderList = (session: Session) => async () => {
 
 export const playbackList: MenuComponent = (session) => async (_commandID?: string) => {
   const sessionData = await session.state.get()
-  const commandID = _commandID || sessionData.state.activeCommandID
+  const commandID = _commandID || getActiveCommand(sessionData)
   const editorState = sessionData.state.editor
   const selectedCommandCount = editorState.selectedCommandIndexes.length
   return [

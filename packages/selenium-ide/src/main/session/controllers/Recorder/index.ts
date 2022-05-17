@@ -2,8 +2,8 @@ import { CommandShape } from '@seleniumhq/side-model'
 import { getActiveCommand } from 'api/helpers/getActiveData'
 import { LocatorFields } from 'api/types'
 import { randomInt, randomUUID } from 'crypto'
-import { Session } from 'main/types'
 import { relative } from 'path'
+import BaseController from '../Base'
 
 const makeSelectFrameCMD = (target: string): CommandShape => ({
   command: 'selectFrame',
@@ -41,11 +41,7 @@ export interface RecordNewCommandInput {
   frameLocation?: string
 }
 
-export default class RecorderController {
-  constructor(session: Session) {
-    this.session = session
-  }
-  session: Session
+export default class RecorderController extends BaseController {
   async recordNewCommand(
     cmd: RecordNewCommandInput
   ): Promise<CommandShape[] | null> {

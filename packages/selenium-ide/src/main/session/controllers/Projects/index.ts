@@ -1,12 +1,11 @@
 import { ProjectShape } from '@seleniumhq/side-model'
 import defaultProject from 'api/models/project'
-import defaultState from 'api/models/state'
 import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
-import { CoreSessionData, StateShape } from 'api/types'
-import storage from 'main/store'
+import { CoreSessionData } from 'api/types'
+import BaseController from '../Base'
 
 export default class ProjectsController {
   constructor(session: Session) {
@@ -20,40 +19,35 @@ export default class ProjectsController {
   project: ProjectShape
   session: Session
 
+  async executeHook(
+    hookName: keyof Pick<
+      BaseController,
+      'onProjectLoaded' | 'onProjectUnloaded'
+    >
+  ): Promise<void> {
+    await Promise.all(
+      Object.values(this.session)
+        .filter((v) => v.isController)
+        .map((v) => v[hookName]())
+    )
+  }
+
   async onProjectLoaded(
     project: ProjectShape,
     filepath?: string
   ): Promise<void> {
     if (this.loaded) return
-    const {
-      session: { commands, menus, plugins, windows },
-    } = this
     this.filepath = filepath
     this.project = project
-    // First we need to load any custom commands and hooks
-    await plugins.onProjectLoaded()
-    // Next we need to load our full command list into state
-    await commands.onProjectLoaded()
-    // Set up our application menu
-    await menus.onProjectLoaded()
-    // Display our playback and editor windows
-    await windows.onProjectLoaded()
+    await this.executeHook('onProjectLoaded')
     this.loaded = true
   }
 
   async onProjectUnloaded(): Promise<boolean> {
-    const {
-      session: { plugins, state },
-    } = this
     if (!this.loaded) return true
-
     const confirm = await this.doSaveChangesConfirm()
     if (confirm) {
-      // Cleanup our plugins
-      plugins.onProjectUnloaded()
-      // Cleanup our state
-      state.onProjectUnloaded()
-
+      await this.executeHook('onProjectUnloaded')
       delete this.filepath
       this.loaded = false
     }
@@ -109,7 +103,7 @@ export default class ProjectsController {
         },
       },
     }
-    this.onProjectLoaded(starterProject)
+    await this.onProjectLoaded(starterProject)
     return starterProject
   }
 
@@ -122,17 +116,8 @@ export default class ProjectsController {
           return null
         }
       }
-      const loadedState = storage.get(
-        `projectStates.${loadedProject.id}`,
-        defaultState
-      ) as StateShape
-
-      this.onProjectLoaded(loadedProject, filepath)
-      const loadedSessionData: CoreSessionData = {
-        project: loadedProject,
-        state: loadedState,
-      }
-      return loadedSessionData
+      await this.onProjectLoaded(loadedProject, filepath)
+      return await this.session.state.get()
     }
     return null
   }
@@ -173,7 +158,6 @@ export default class ProjectsController {
     let project: ProjectShape
     try {
       project = JSON.parse(fileContents)
-
       project.plugins = project.plugins.filter(
         (plugin) => typeof plugin === 'string'
       )

@@ -1,11 +1,7 @@
-import { Session } from 'main/types'
 import ArgTypes from '@seleniumhq/side-model/dist/ArgTypes'
+import BaseController from '../Base'
 
-export default class ArgTypesController {
-  constructor(session: Session) {
-    this.session = session
-  }
-  session: Session
+export default class ArgTypesController extends BaseController {
   async get() {
     return ArgTypes
   }

@@ -2,6 +2,7 @@ import browserHandler from 'browser/api/classes/Handler'
 import mainHandler, { passthrough } from 'main/api/classes/Handler'
 import { LocatorFields, Mutator } from 'api/types'
 import { mutator as updateStepMutator } from '../tests/updateStep'
+import { getActiveCommand } from 'api/helpers/getActiveData'
 
 export type Shape = (
   field: LocatorFields,
@@ -13,7 +14,7 @@ export const mutator: Mutator<Shape> = (session, { params }) => updateStepMutato
   {
     params: [
       session.state.activeTestID,
-      session.state.activeCommandID,
+      getActiveCommand(session).id,
       {
         [params[0]]: params[1],
       }
