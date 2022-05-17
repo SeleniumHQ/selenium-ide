@@ -1,6 +1,6 @@
 import { getCommandIndex } from 'api/helpers/getActiveData'
 import defaultState from 'api/models/state'
-import { CoreSessionData, StateShape } from 'api/types'
+import { CoreSessionData, StateShape, UserPrefs } from 'api/types'
 import clone from 'lodash/fp/clone'
 import storage from 'main/store'
 import { Session } from 'main/types'
@@ -36,4 +36,9 @@ export default class StateController {
     this.session.playback.currentStepIndex = commandIndex
     return true
   }
+
+  async toggleUserPref(userPrefs: UserPrefs) {
+    storage.set<'UserPrefs'>('UserPrefs', userPrefs)
+  }
+
 }
