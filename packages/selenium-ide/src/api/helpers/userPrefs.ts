@@ -10,6 +10,6 @@ export const getUserPrefs = (): UserPrefs => {
     return userPrefs
 }
 
-export const setUserPrefs = (prefs: UserPrefs) => {
-    storage.set<'insertCommandPref'>('insertCommandPref', prefs.insertCommandPref)
+export const setUserPrefs = (userPrefs: UserPrefs) => {
+    storage.set<'userPrefs'>('userPrefs', userPrefs)
 }

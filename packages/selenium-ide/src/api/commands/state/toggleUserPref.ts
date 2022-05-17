@@ -1,8 +1,6 @@
 import { UserPrefs } from 'api/types'
-import browserHandler from 'browser/api/classes/Handler'
 import update from 'lodash/fp/update'
 import storage from 'main/store'
-import mainHandler, { passthrough } from 'main/api/classes/Handler'
 import { Mutator } from 'api/types'
 
 export type Shape = (prefs: UserPrefs) => Promise<void>
@@ -15,12 +13,9 @@ export const mutator: Mutator<Shape> = (session, { params: [userPrefs] }) =>
     session
   )
 
-export const browser = browserHandler<Shape>()
-
-export const main = mainHandler<Shape>(passthrough)
 
 export const setUserPrefs = (prefs: UserPrefs) => {
-  storage.set<'insertCommandPref'>('insertCommandPref', prefs.insertCommandPref)
+    storage.set<'userPrefs'>('userPrefs', prefs)
 }
 
 export const getUserPrefs = (): UserPrefs => {
