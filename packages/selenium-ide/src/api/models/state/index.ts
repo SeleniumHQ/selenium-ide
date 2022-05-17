@@ -2,7 +2,7 @@ import { CommandShape } from '@seleniumhq/side-model'
 import { CommandTypes } from '@seleniumhq/side-model/dist/Commands'
 import badIndex from 'api/constants/badIndex'
 import loadingID from 'api/constants/loadingID'
-import { InsertCommandPref } from 'api/types'
+import { UserPrefs } from 'api/types'
 import { CommandsStateShape } from './command'
 
 /**
@@ -30,7 +30,7 @@ export const defaultRecorderState: RecorderStateShape = {
   activeFrame: 'root',
 }
 
-export const defaultInsertCommandPref = 'After'
+export const defaultUserPrefs:UserPrefs = {insertCommandPref: 'After'}
 
 export interface PlaybackStateShape {
   commands: CommandsStateShape
@@ -55,7 +55,7 @@ export interface StateShape {
   breakpoints: string[]
   commands: CommandTypes
   editor: EditorStateShape
-  insertCommandPref: InsertCommandPref
+  userPrefs: UserPrefs
   logs: string[]
   playback: PlaybackStateShape
   recorder: RecorderStateShape
@@ -71,7 +71,7 @@ const action: StateShape = {
   breakpoints: [],
   commands: {},
   editor: defaultEditorState,
-  insertCommandPref: defaultInsertCommandPref,
+  userPrefs: defaultUserPrefs,
   logs: [],
   playback: defaultPlaybackState,
   recorder: defaultRecorderState,

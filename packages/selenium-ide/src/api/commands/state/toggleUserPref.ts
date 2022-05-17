@@ -1,15 +1,14 @@
 import browserHandler from 'browser/api/classes/Handler'
-import { UserPrefs } from 'api/types'
 import update from 'lodash/fp/update'
 import mainHandler from 'main/api/classes/Handler'
 import { Mutator } from 'api/types'
-// import { session } from 'electron'
+import {Session} from 'main/types'
 
-export type Shape = (prefs: UserPrefs) => Promise<void>
+export type Shape = Session['state']['toggleUserPref'];
 
 export const mutator: Mutator<Shape> = (session) =>
   update(
-    'state.userprefs.insertCommandPref',
+    'state.insertCommandPref',
     (pref) => (pref === 'Before' ? 'After' : 'Before'),
     session
   )
