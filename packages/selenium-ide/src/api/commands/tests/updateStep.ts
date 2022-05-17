@@ -5,6 +5,7 @@ import browserHandler from 'browser/api/classes/Handler'
 import mainHandler, { passthrough } from 'main/api/classes/Handler'
 import { CoreSessionData, Mutator } from 'api/types'
 import { hasID } from 'api/helpers/hasID'
+import { getCommandIndex } from 'api/helpers/getActiveData'
 
 export type Shape = (
   testID: string,
@@ -17,8 +18,10 @@ export const mutator: Mutator<Shape> = (
   { params: [testID, stepID, step] }
 ) => {
   const testIndex = session.project.tests.findIndex(hasID(testID))
-  const stepIndex = session.project.tests[testIndex].commands.findIndex(
-    hasID(stepID)
+  const stepIndex = getCommandIndex(
+    session,
+    stepID,
+    session.project.tests[testIndex]
   )
   const updatedSession = update(
     `project.tests[${testIndex}].commands[${stepIndex}]`,

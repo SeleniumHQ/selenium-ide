@@ -5,7 +5,6 @@ import { Session } from 'main/types'
 import { Mutator } from 'api/types'
 import loadingID from 'api/constants/loadingID'
 import { SuiteShape } from '@seleniumhq/side-model'
-import { hasID } from 'api/helpers/hasID'
 
 export type Shape = Session['projects']['load']
 
@@ -26,15 +25,12 @@ export const mutator: Mutator<Shape> = (session, { result }) => {
   const firstSuite = project.suites?.[0] ?? defaultSuite
   const activeSuiteID = firstSuite.id
   const activeTestID = firstSuite.tests[0] ?? loadingID
-  const activeCommandID =
-    project.tests.find(hasID(activeTestID))?.commands?.[0]?.id ?? loadingID
   return {
     project,
     state: {
       ...session.state,
       activeSuiteID,
       activeTestID,
-      activeCommandID,
     },
   }
 }

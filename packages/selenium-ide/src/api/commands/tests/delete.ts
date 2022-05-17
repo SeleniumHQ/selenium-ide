@@ -24,14 +24,13 @@ export const mutator: Mutator<Shape> = (session, { params: [testID] }) => {
   )
   const oldTests = session.project.tests
   const testIndex = oldTests.findIndex(hasID(testID))
-  const newTestIndex = Math.min(testIndex, oldTests.length - 2)
+  const newTestIndex = Math.max(testIndex, 0)
   const newActiveTest = sessionWithNoTestRefs.project.tests[newTestIndex]
   return {
     ...sessionWithNoTestRefs,
     state: {
       ...sessionWithNoTestRefs.state,
       activeTestID: newActiveTest.id,
-      activeCommandID: newActiveTest.commands[0].id,
     },
   }
 }

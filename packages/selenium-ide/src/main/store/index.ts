@@ -7,7 +7,7 @@ export interface StorageSchema {
   config: typeof config
   browserInfo: BrowserInfo
   plugins: string[]
-  projectStates: Record<string, StateShape>
+  projectStates: Record<string, Omit<StateShape, 'playback' | 'recorder' | 'status'>>
   recentProjects: string[]
   windowSize: number[]
   windowPosition: number[]
