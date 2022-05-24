@@ -2,6 +2,7 @@ import config from './config'
 import Store from 'electron-store'
 import { StateShape, UserPrefs } from 'api/types'
 import { BrowserInfo } from 'main/types'
+import { defaultUserPrefs } from 'api/models/state'
 
 export interface StorageSchema {
   config: typeof config
@@ -26,7 +27,7 @@ const store = new Store<StorageSchema>({
     recentProjects: [],
     windowSize: [],
     windowPosition: [],
-    userPrefs: {insertCommandPref: 'After'}
+    userPrefs: defaultUserPrefs
   },
 })
 

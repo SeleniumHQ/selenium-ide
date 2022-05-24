@@ -75,4 +75,3 @@ export type InsertCommandPref = 'Before' | 'After'
 export interface UserPrefs {
   insertCommandPref: InsertCommandPref
 }
-

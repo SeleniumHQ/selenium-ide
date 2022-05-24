@@ -11,7 +11,7 @@ import { CommandsStateShape } from './command'
  */
 
 export interface EditorStateShape {
-  copiedCommands: Omit<CommandShape, 'id'>[],
+  copiedCommands: Omit<CommandShape, 'id'>[]
   selectedCommandIndexes: number[]
   selectedTestIndexes: number[]
 }
@@ -30,7 +30,9 @@ export const defaultRecorderState: RecorderStateShape = {
   activeFrame: 'root',
 }
 
-export const defaultUserPrefs:UserPrefs = {insertCommandPref: 'After'}
+export const defaultUserPrefs: UserPrefs = {
+  insertCommandPref: 'After',
+}
 
 export interface PlaybackStateShape {
   commands: CommandsStateShape
