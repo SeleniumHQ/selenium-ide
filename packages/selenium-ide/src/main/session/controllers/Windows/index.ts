@@ -170,8 +170,6 @@ export default class WindowsController extends BaseController {
     const projectWindow = await this.get(projectEditorWindowName)
     const size = storage.get<'windowSize'>('windowSize')
     const position = storage.get<'windowPosition'>('windowPosition')
-
-    // const userPrefs = storage.get<'insertCommandPref'>('insertCommandPref')
     this.session
 
     if (size.length) projectWindow.setSize(size[0], size[1], true)
