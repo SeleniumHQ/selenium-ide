@@ -34,6 +34,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
     <Paper elevation={1} id="project-editor" square>
       <Stack className="p-4" spacing={1}>
         <FormControl>
+          <TextField label="pref" value={state.userPrefs.insertCommandPref}></TextField>
           <TextField
             id="name"
             label="Name"
@@ -74,8 +75,8 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
               window.sideAPI.state.toggleUserPrefInsert(e.target.value)
             }}
           >
-            <MenuItem value={'After'}>After</MenuItem>
-            <MenuItem value={'Before'}>Before</MenuItem>
+            <MenuItem value="After">After</MenuItem>
+            <MenuItem value="Before">Before</MenuItem>
           </Select>
         </FormControl>
       </Stack>
