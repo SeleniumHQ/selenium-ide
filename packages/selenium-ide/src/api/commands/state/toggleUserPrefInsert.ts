@@ -9,7 +9,7 @@ export type Shape = Session['state']['toggleUserPrefInsert']
 export const mutator: Mutator<Shape> = (
   session,
   { params: [insertCommandPref] }
-) => set('state.userprefs.insertCommandPref', insertCommandPref, session)
+) => set('state.userPrefs.insertCommandPref', insertCommandPref, session)
 
 export const browser = browserHandler<Shape>()
 

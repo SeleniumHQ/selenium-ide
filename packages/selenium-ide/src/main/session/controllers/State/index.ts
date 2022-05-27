@@ -1,10 +1,14 @@
 import { getCommandIndex } from 'api/helpers/getActiveData'
 import defaultState, { defaultUserPrefs } from 'api/models/state'
-import { CoreSessionData, InsertCommandPref, StateShape, UserPrefs } from 'api/types'
+import {
+  CoreSessionData,
+  InsertCommandPref,
+  StateShape,
+  UserPrefs,
+} from 'api/types'
 import clone from 'lodash/fp/clone'
 import storage from 'main/store'
 import BaseController from '../Base'
-
 
 export default class StateController extends BaseController {
   static pathFromID = (id: string) => id.replace(/\-/g, '_')
@@ -55,11 +59,11 @@ export default class StateController extends BaseController {
   }
 
   async toggleUserPrefInsert(insertCommandPref: InsertCommandPref) {
-    let userPrefs = storage.get<'userPrefs'>('userPrefs', defaultUserPrefs)
-    userPrefs.insertCommandPref = insertCommandPref
-
-    storage.set<'userPrefs'>('userPrefs', userPrefs)
-    this.state.userPrefs.insertCommandPref = insertCommandPref
+    const userPrefs = await storage.get<'userPrefs'>(
+      'userPrefs',
+      defaultUserPrefs
+    )
+    storage.set<'userPrefs'>('userPrefs', { ...userPrefs, insertCommandPref })
   }
 
   async getUserPref(): Promise<UserPrefs> {

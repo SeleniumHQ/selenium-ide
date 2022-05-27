@@ -8,7 +8,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
-import state from 'api/models/state'
 import { CoreSessionData } from 'api/types'
 import TextField from 'browser/components/UncontrolledTextField'
 import React, { FC } from 'react'
@@ -28,7 +27,7 @@ const {
   plugins: { projectCreate, projectDelete, projectEdit },
   projects: { update },
 } = window.sideAPI
-const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
+const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
   <>
     <MainHeader />
     <Paper elevation={1} id="project-editor" square>
