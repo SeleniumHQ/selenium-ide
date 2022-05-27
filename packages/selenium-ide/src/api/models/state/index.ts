@@ -6,7 +6,7 @@ import { UserPrefs } from 'api/types'
 import { CommandsStateShape } from './command'
 
 /**
- * State data is the data from the active IDE sessio that will not be persisted.
+ * State data is the data from the active IDE sessio that will not be persisted, except for userPrefs until that is refactored
  * Playback state, breakpoints, status, whatever is from within a session
  */
 
@@ -31,6 +31,7 @@ export const defaultRecorderState: RecorderStateShape = {
 }
 
 export const defaultUserPrefs: UserPrefs = {
+  
   insertCommandPref: 'After',
 }
 
