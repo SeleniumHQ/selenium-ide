@@ -35,12 +35,17 @@ export const defaultUserPrefs: UserPrefs = {
   insertCommandPref: 'After',
 }
 
+export interface TestResultShape {
+  lastCommand: string;
+}
+
 export interface PlaybackStateShape {
   commands: CommandsStateShape
   currentIndex: number
   currentTestIndex: number
   stopIndex: number
   tests: string[]
+  testResults: Record<string, TestResultShape>
 }
 
 export const defaultPlaybackState: PlaybackStateShape = {
@@ -49,6 +54,7 @@ export const defaultPlaybackState: PlaybackStateShape = {
   currentTestIndex: 0,
   stopIndex: badIndex,
   tests: [],
+  testResults: {},
 }
 
 export interface StateShape {

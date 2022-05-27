@@ -11,11 +11,12 @@ export type OnStepUpdatePlayback = [
   PlaybackEventShapes['COMMAND_STATE_CHANGED']
 ]
 
-export type StateUpdateShape =
-  Partial<Omit<StateShape, 'editor' | 'playback'>> & {
-    editor: Partial<EditorStateShape>
-    playback: Partial<PlaybackStateShape>
-  }
+export type StateUpdateShape = Partial<
+  Omit<StateShape, 'editor' | 'playback'>
+> & {
+  editor: Partial<EditorStateShape>
+  playback: Partial<PlaybackStateShape>
+}
 
 const getHasCommand = (commandID: string) => (t: TestShape) =>
   t.commands.find((cmd) => cmd.id === commandID)
@@ -24,12 +25,19 @@ export const mutator: EventMutator<OnStepUpdatePlayback> = (
   session,
   [data]
 ) => {
+  const test = getActiveTest(session)
+  const command = getHasCommand(data.id)
   const stateUpdates: StateUpdateShape = {
     editor: {
       selectedCommandIndexes: [],
     },
     playback: {
       commands: { [data.id]: data },
+      testResults: {
+        [test.id]: {
+          lastCommand: data.id,
+        },
+      },
     },
   }
   const isExecuting = data.state === 'executing'
@@ -38,14 +46,21 @@ export const mutator: EventMutator<OnStepUpdatePlayback> = (
     stateUpdates.playback.currentIndex = commandIndex
     stateUpdates.editor.selectedCommandIndexes = [commandIndex]
   }
-  const test = getActiveTest(session)
-  const hasCommand = getHasCommand(data.id)
-  if (!hasCommand(test)) {
-    const { tests } = session.project
-    const nextActiveTest = tests.find(hasCommand) as TestShape
+  if (!command(test)) {
+    const nextActiveTest = session.project.tests.find(command) as TestShape
     stateUpdates.activeTestID = nextActiveTest.id
+    stateUpdates.playback.testResults = {
+      [nextActiveTest.id]: {
+        lastCommand: data.id,
+      },
+    }
+  } else {
+    stateUpdates.playback.testResults = {
+      [test.id]: {
+        lastCommand: data.id,
+      },
+    }
   }
-
   return merge(session, { state: stateUpdates })
 }
 

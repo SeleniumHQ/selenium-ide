@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add'
+import CheckIcon from '@mui/icons-material/Check';
 import EditIcon from '@mui/icons-material/Edit'
 import RemoveIcon from '@mui/icons-material/Remove'
 import { Box } from '@mui/material'
@@ -10,6 +11,7 @@ interface EditorToolbarProps extends ListSubheaderProps {
   onAdd?: () => void
   onEdit?: () => void
   onRemove?: () => void
+  onComplete?: () => void
 }
 
 const standardIconProps = {
@@ -23,6 +25,7 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
   children,
   className = 'lh-36',
   onAdd,
+  onComplete,
   onEdit,
   onRemove,
   sx = {},
@@ -36,6 +39,13 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
   >
     <Box sx={{ flex: 1 }}>
       {children}
+    </Box>
+    <Box sx={{ flex: 0 }}>
+      {onComplete ? (
+        <IconButton {...standardIconProps} color="success" onClick={onComplete}>
+          <CheckIcon />
+        </IconButton>
+      ) : null}
     </Box>
     <Box sx={{ flex: 0 }}>
       {onAdd ? (

@@ -4,6 +4,7 @@ import browserEventListener from 'browser/api/classes/EventListener'
 import mainEventListener from 'main/api/classes/EventListener'
 import { defaultPlaybackState } from 'api/models/state'
 import badIndex from 'api/constants/badIndex'
+import { TestShape } from '@seleniumhq/side-model'
 
 export type TestID = string
 export type StepID = string
@@ -41,11 +42,23 @@ export const mutator: EventMutator<OnPlayUpdatePlayback> = (
   switch (data.state) {
     case 'playing':
       if (session.state.playback.currentIndex === badIndex) {
-        state.playback.commands = {}
+        const testID = session.state.activeTestID
+        let testResult = state.playback.testResults[session.state.activeTestID]
+        if (!testResult) {
+          const test = session.project.tests.find(
+            (t) => t.id === testID
+          ) as TestShape
+          state.playback.testResults[testID] = {
+            lastCommand: test.commands[0].id,
+          }
+          testResult = state.playback.testResults[session.state.activeTestID]
+        }
       }
       break
     case 'prep':
       state.playback = defaultPlaybackState
+      state.playback.commands = {}
+      state.playback.testResults
       break
     case 'paused':
     case 'breakpoint':
