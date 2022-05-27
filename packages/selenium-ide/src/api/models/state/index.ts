@@ -2,15 +2,16 @@ import { CommandShape } from '@seleniumhq/side-model'
 import { CommandTypes } from '@seleniumhq/side-model/dist/Commands'
 import badIndex from 'api/constants/badIndex'
 import loadingID from 'api/constants/loadingID'
+import { UserPrefs } from 'api/types'
 import { CommandsStateShape } from './command'
 
 /**
- * State data is the data from the active IDE sessio that will not be persisted.
+ * State data is the data from the active IDE sessio that will not be persisted, except for userPrefs until that is refactored
  * Playback state, breakpoints, status, whatever is from within a session
  */
 
 export interface EditorStateShape {
-  copiedCommands: Omit<CommandShape, 'id'>[],
+  copiedCommands: Omit<CommandShape, 'id'>[]
   selectedCommandIndexes: number[]
   selectedTestIndexes: number[]
 }
@@ -27,6 +28,11 @@ export interface RecorderStateShape {
 
 export const defaultRecorderState: RecorderStateShape = {
   activeFrame: 'root',
+}
+
+export const defaultUserPrefs: UserPrefs = {
+  
+  insertCommandPref: 'After',
 }
 
 export interface PlaybackStateShape {
@@ -51,6 +57,7 @@ export interface StateShape {
   breakpoints: string[]
   commands: CommandTypes
   editor: EditorStateShape
+  userPrefs: UserPrefs
   logs: string[]
   playback: PlaybackStateShape
   recorder: RecorderStateShape
@@ -65,6 +72,7 @@ const action: StateShape = {
   breakpoints: [],
   commands: {},
   editor: defaultEditorState,
+  userPrefs: defaultUserPrefs,
   logs: [],
   playback: defaultPlaybackState,
   recorder: defaultRecorderState,
