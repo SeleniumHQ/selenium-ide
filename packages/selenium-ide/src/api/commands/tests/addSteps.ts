@@ -6,6 +6,7 @@ import { Session } from 'main/types'
 import { Mutator } from 'api/types'
 import { hasID } from 'api/helpers/hasID'
 import { mutator as updateStepSelection } from '../state/updateStepSelection'
+import { state } from 'api/models'
 
 export type Shape = Session['tests']['addSteps']
 
@@ -23,7 +24,11 @@ export const mutator: Mutator<Shape> = (
         `${testIndex}.commands`,
         (commands: CommandShape[]) => {
           const commandsWithNewEntry = commands.slice(0)
-          commandsWithNewEntry.splice(index + 1, 0, ...result)
+          let insertIndex = index
+          if (state.userPrefs.insertCommandPref === 'After')
+            insertIndex = insertIndex + 1
+          commandsWithNewEntry.splice(insertIndex, 0, ...result)
+            
           return commandsWithNewEntry
         },
         tests
