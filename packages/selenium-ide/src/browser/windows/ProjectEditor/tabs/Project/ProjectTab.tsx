@@ -100,7 +100,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
         {project.plugins.map((plugin, index) => (
           <ListItem className="py-3" key={index}>
             <TextField
-              defaultValue={typeof plugin === 'string' ? plugin : ''}
+              value={typeof plugin === 'string' ? plugin : ''}
               id={`plugin-${index}`}
               fullWidth
               onBlur={(e) => projectEdit(index, e.target.value)}
