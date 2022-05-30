@@ -63,3 +63,4 @@ export type SessionApiHandler = (
 export type MenuComponent = (
   session: Session
 ) => () => Promise<Electron.MenuItemConstructorOptions[]>
+

@@ -13,6 +13,9 @@
       "path": "./packages/get-driver"
     },
     {
+      "path": "./packages/side-api"
+    },
+    {
       "path": "./packages/side-cli"
     },
     {

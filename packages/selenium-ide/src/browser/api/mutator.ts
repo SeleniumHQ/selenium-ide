@@ -1,5 +1,5 @@
-import processApi from 'api/process'
-import { Api } from 'api/index'
+import { process as processApi } from '@seleniumhq/side-api'
+import { ApiHoist as Api } from '@seleniumhq/side-api'
 
 /**
  * This Converts the chrome API type to something usable

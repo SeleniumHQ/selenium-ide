@@ -1,0 +1,23 @@
+{
+  "name": "@seleniumhq/side-recorder",
+  "version": "4.0.0",
+  "description": "Utils for code export from Selenium IDE",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "keywords": [
+    "selenium",
+    "ide",
+    "export"
+  ],
+  "license": "Apache-2.0",
+  "private": false,
+  "scripts": {
+    "build": "babel -d dist src --ignore=__test__",
+    "watch": "yarn build -w"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "@seleniumhq/side-model": "^4.0.0",
+    "ua-parser-js": "0.7.28"
+  }
+}
