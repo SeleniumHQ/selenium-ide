@@ -1,9 +1,12 @@
 import CloseIcon from '@mui/icons-material/Close'
 import FormControl from '@mui/material/FormControl'
 import IconButton from '@mui/material/IconButton'
+import InputLabel from '@mui/material/InputLabel'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
+import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import { CoreSessionData } from 'api/types'
 import TextField from 'browser/components/UncontrolledTextField'
@@ -24,11 +27,15 @@ const {
   plugins: { projectCreate, projectDelete, projectEdit },
   projects: { update },
 } = window.sideAPI
-const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
+const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
   <>
     <MainHeader />
     <Paper elevation={1} id="project-editor" square>
       <Stack className="p-4" spacing={1}>
+        <FormControl>
+          <TextField value={state.userPrefs.insertCommandPref}>
+          </TextField>
+        </FormControl>
         <FormControl>
           <TextField
             id="name"
@@ -57,6 +64,23 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
             value={project.url}
           />
         </FormControl>
+        <FormControl>
+          <InputLabel id="insertNewCommandPref">
+            New command insert preference
+          </InputLabel>
+          <Select
+            id="insertNewCommandPref"
+            label="Insert new command placement preference"
+            name="insertNewCommandPref"
+            value={state.userPrefs.insertCommandPref}
+            onChange={(e: any) => {
+              window.sideAPI.state.toggleUserPrefInsert(e.target.value)
+            }}
+          >
+            <MenuItem value="After">After</MenuItem>
+            <MenuItem value="Before">Before</MenuItem>
+          </Select>
+        </FormControl>
       </Stack>
       <List
         dense
@@ -76,7 +100,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project } }) => (
         {project.plugins.map((plugin, index) => (
           <ListItem className="py-3" key={index}>
             <TextField
-              defaultValue={typeof plugin === 'string' ? plugin : ''}
+              value={typeof plugin === 'string' ? plugin : ''}
               id={`plugin-${index}`}
               fullWidth
               onBlur={(e) => projectEdit(index, e.target.value)}

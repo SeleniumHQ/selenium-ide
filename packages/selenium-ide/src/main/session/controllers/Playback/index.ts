@@ -29,7 +29,7 @@ export default class PlaybackController extends BaseController {
     const { driver } = executor
     const { windows } = this.session
     if (this.playRange[0] === 0) {
-      await windows.initializePlaybackWindow()
+        await windows.initializePlaybackWindow()
     }
     const playbackWindow = await windows.getPlaybackWindow()
 
