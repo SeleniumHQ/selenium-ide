@@ -23,9 +23,10 @@ export const mutator: Mutator<Shape> = (
         `${testIndex}.commands`,
         (commands: CommandShape[]) => {
           const commandsWithNewEntry = commands.slice(0)
-          let insertIndex = index
-          if (session.state.userPrefs.insertCommandPref === 'After')
-            insertIndex = insertIndex + 1
+          const insertIndex =
+            session.state.userPrefs.insertCommandPref === 'After'
+              ? index + 1
+              : index
           commandsWithNewEntry.splice(insertIndex, 0, ...result)          
           return commandsWithNewEntry
         },
