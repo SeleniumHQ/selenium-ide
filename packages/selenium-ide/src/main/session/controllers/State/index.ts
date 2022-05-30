@@ -34,6 +34,7 @@ export default class StateController extends BaseController {
       this.state = {
         ...defaultState,
         ...storage.get(this.getStatePath()),
+        commands: this.state.commands,
       }
     }
   }

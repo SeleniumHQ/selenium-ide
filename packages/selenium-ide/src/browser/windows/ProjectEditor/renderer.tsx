@@ -11,7 +11,7 @@ import Main from './components/Main'
 import renderWhenReady from 'browser/helpers/renderWhenReady'
 import { PROJECT_TAB, TAB, TESTS_TAB } from './enums/tab'
 
-const ProjectTestCommandList = () => {
+const ProjectEditor = () => {
   const session = subscribeToSession()
   const {
     project: { id },
@@ -53,4 +53,4 @@ const ProjectTestCommandList = () => {
   )
 }
 
-renderWhenReady(ProjectTestCommandList)
+renderWhenReady(ProjectEditor)
