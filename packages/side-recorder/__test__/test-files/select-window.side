@@ -1,0 +1,103 @@
+{
+  "id": "c0f8143d-d29b-43cc-ab08-268ef217f3b4",
+  "version": "2.0",
+  "name": "select window",
+  "url": "http://the-internet.herokuapp.com",
+  "tests": [{
+    "id": "5d92f854-623b-41da-826b-2feb4ad20f2a",
+    "name": "select window",
+    "commands": [{
+      "id": "0441ea10-c31c-4322-965b-6f61e22048cf",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "2d33741e-04a8-4f17-a7f0-fd4a0cb17fc8",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "1260x1027",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "343f1636-850a-4a24-b99c-6702a890e572",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Multiple Windows",
+      "targets": [
+        ["linkText=Multiple Windows", "linkText"],
+        ["css=li:nth-child(33) > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Multiple Windows')]", "xpath:link"],
+        ["xpath=//div[@id='content']/ul/li[33]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/windows')]", "xpath:href"],
+        ["xpath=//li[33]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Multiple Windows')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "ffc4bbd5-e3cb-4a43-ad80-30c1d2ec5f25",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Click Here",
+      "targets": [
+        ["linkText=Click Here", "linkText"],
+        ["css=a:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Click Here')]", "xpath:link"],
+        ["xpath=//div[@id='content']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/windows/new')]", "xpath:href"],
+        ["xpath=//div/div/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Click Here')]", "xpath:innerText"]
+      ],
+      "value": "",
+      "opensWindow": true,
+      "windowHandleName": "win9625",
+      "windowTimeout": 2000
+    }, {
+      "id": "2a1a9e51-71d0-45db-9d77-479d160a67f0",
+      "comment": "",
+      "command": "storeWindowHandle",
+      "target": "root",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "0d33a445-a65b-4a69-82c6-c89bb1d53a5e",
+      "comment": "",
+      "command": "selectWindow",
+      "target": "handle=${win9625}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "528b6f23-22a7-4a4c-993d-c772ceea96bc",
+      "comment": "",
+      "command": "assertTitle",
+      "target": "New Window",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "dd32287e-b69b-4674-8171-e50aef15d904",
+      "comment": "",
+      "command": "selectWindow",
+      "target": "handle=${root}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "f02dff23-83d9-457f-8010-d5d15c32f0c4",
+      "comment": "",
+      "command": "assertTitle",
+      "target": "The Internet",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "988ac055-dcc7-48ba-ab8a-6fe3e3079a54",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["5d92f854-623b-41da-826b-2feb4ad20f2a"]
+  }],
+  "urls": ["http://the-internet.herokuapp.com/"],
+  "plugins": []
+}

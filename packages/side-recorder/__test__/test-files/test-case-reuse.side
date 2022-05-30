@@ -1,0 +1,190 @@
+{
+  "id": "321c0306-0322-418e-8414-c982ded83b5f",
+  "version": "2.0",
+  "name": "test case reuse",
+  "url": "https://the-internet.herokuapp.com",
+  "tests": [{
+    "id": "c8e84558-3efa-4481-a601-f6b7cff1c6d9",
+    "name": "login",
+    "commands": [{
+      "id": "41c451be-96fe-4744-a084-ebedb5b04d01",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "42d24143-2085-4bbe-9e16-b71a7d3e8d6c",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Form Authentication",
+      "targets": [
+        ["linkText=Form Authentication", "linkText"],
+        ["css=li:nth-child(18) > a", "css:finder"],
+        ["xpath=//a[contains(text(),'Form Authentication')]", "xpath:link"],
+        ["xpath=//div[@id='content']/ul/li[18]/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/login')]", "xpath:href"],
+        ["xpath=//li[18]/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Form Authentication')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "918b4af6-2c88-43c7-b145-3b2bc3cba4a0",
+      "comment": "",
+      "command": "type",
+      "target": "id=username",
+      "targets": [
+        ["id=username", "id"],
+        ["name=username", "name"],
+        ["css=#username", "css:finder"],
+        ["xpath=//input[@id='username']", "xpath:attributes"],
+        ["xpath=//form[@id='login']/div/div/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "${username}"
+    }, {
+      "id": "f4f781d9-c051-4a41-a143-a8b3936cb034",
+      "comment": "",
+      "command": "type",
+      "target": "id=password",
+      "targets": [
+        ["id=password", "id"],
+        ["name=password", "name"],
+        ["css=#password", "css:finder"],
+        ["xpath=//input[@id='password']", "xpath:attributes"],
+        ["xpath=//form[@id='login']/div[2]/div/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/input", "xpath:position"]
+      ],
+      "value": "${password}"
+    }, {
+      "id": "0ac586f1-37a8-4059-9e67-241da62f8905",
+      "comment": "",
+      "command": "if",
+      "target": "true",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "8081fd74-50b1-4f5c-95f1-c171519b8700",
+      "comment": "",
+      "command": "click",
+      "target": "css=.fa",
+      "targets": [
+        ["css=.fa", "css:finder"],
+        ["xpath=//form[@id='login']/button/i", "xpath:idRelative"],
+        ["xpath=//i", "xpath:position"],
+        ["xpath=//i[contains(.,' Login')]", "xpath:innerText"]
+      ],
+      "value": ""
+    }, {
+      "id": "ca185097-14b4-4bd1-bdad-380a71bb067b",
+      "comment": "",
+      "command": "end",
+      "target": "",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "0b10e1b2-df70-46c2-8c66-13bdf462f4b2",
+    "name": "valid credentials",
+    "commands": [{
+      "id": "bd7228c9-f47a-4755-ad3d-5b92f50e8a5b",
+      "comment": "",
+      "command": "store",
+      "target": "tomsmith",
+      "targets": [],
+      "value": "username"
+    }, {
+      "id": "02eb7843-9547-434c-b882-81e0301a112e",
+      "comment": "",
+      "command": "store",
+      "target": "SuperSecretPassword!",
+      "targets": [],
+      "value": "password"
+    }, {
+      "id": "3ddd4ccd-ba9c-47df-a963-ba0ebdf84a3a",
+      "comment": "",
+      "command": "run",
+      "target": "login",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "01472588-f710-45f6-a3db-3c931e23a37f",
+    "name": "tiny method",
+    "commands": [{
+      "id": "169d75ba-2626-41e2-8516-a3114d7d8d14",
+      "comment": "",
+      "command": "store",
+      "target": "field",
+      "targets": [],
+      "value": "value"
+    }]
+  }, {
+    "id": "01472588-f710-45f6-a3db-3c931e23a37e",
+    "name": "invalid credentials",
+    "commands": [{
+      "id": "169d75ba-2626-41e2-8516-a3114d7d8d13",
+      "comment": "",
+      "command": "store",
+      "target": "blah",
+      "targets": [],
+      "value": "username"
+    }, {
+      "id": "6959737f-8a00-4a07-b238-c990eaf53b27",
+      "comment": "",
+      "command": "store",
+      "target": "blah",
+      "targets": [],
+      "value": "password"
+    }, {
+      "id": "3e5ed8a5-088a-4b7a-a52d-b47afa233b89",
+      "comment": "",
+      "command": "run",
+      "target": "login",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "01472588-f710-45f6-a3db-3c931e23a37g",
+    "name": "two methods",
+    "commands": [{
+      "id": "169d75ba-2626-41e2-8516-a3114d7d8d15",
+      "comment": "",
+      "command": "store",
+      "target": "blah",
+      "targets": [],
+      "value": "username"
+    }, {
+      "id": "6959737f-8a00-4a07-b238-c990eaf53b29",
+      "comment": "",
+      "command": "store",
+      "target": "blah",
+      "targets": [],
+      "value": "password"
+    }, {
+      "id": "3e5ed8a5-088a-4b7a-a52d-b47afa233b91",
+      "comment": "",
+      "command": "run",
+      "target": "login",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "3e5ed8a5-088a-4b7a-a52d-b47afa233b93",
+      "comment": "",
+      "command": "run",
+      "target": "tiny method",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "ee5f025f-40bf-4295-9a57-c916a4b47c70",
+    "name": "Reused methods",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["01472588-f710-45f6-a3db-3c931e23a37e", "0b10e1b2-df70-46c2-8c66-13bdf462f4b2", "01472588-f710-45f6-a3db-3c931e23a37g"]
+  }],
+  "urls": ["https://the-internet.herokuapp.com/"],
+  "plugins": []
+}

@@ -3,6 +3,10 @@ import { Session } from 'main/types'
 import menus from './menus'
 import BaseController from '../Base'
 
+/**
+ * This just contains a list of menus in the folder
+ * and makes it easy to open a menu by specifying a name.
+ */
 export default class MenuController extends BaseController {
   constructor(session: Session) {
     super(session)

@@ -9,6 +9,10 @@ const serializeCustomCommands = (commands: PluginShape['commands'] = {}) =>
       { ...command },
     ])
   )
+/**
+ * This holds on to all commands currently in the command map.
+ * It's primarily instrumented by loading plugins
+ */
 export default class CommandsController extends BaseController {
   customCommands: PluginShape['commands'] = {}
   async onProjectLoaded() {
