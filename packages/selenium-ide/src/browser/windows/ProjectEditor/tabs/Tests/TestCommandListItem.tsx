@@ -80,6 +80,10 @@ const CommandRow: React.FC<CommandRowProps> = ({
   resetPreview,
   selected,
 }) => {
+  if (typeof command != 'string') {
+    command = '//unknown - could not process'
+  }
+
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
     ? 'dark'
     : 'light'
