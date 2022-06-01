@@ -5,11 +5,11 @@ import { TextField } from '@mui/material'
 import { IconButton } from '@mui/material'
 import { Tooltip } from '@mui/material'
 import React, { FC, useMemo } from 'react'
-import { setField, updateField } from './utils'
+import { setField, updateACField } from './utils'
 import { CommandSelectorProps } from '../types'
 
 const setCommandFactory = setField('command')
-const updateCommand = updateField('command')
+const updateCommand = updateACField('command')
 const CommandSelector: FC<CommandSelectorProps> = ({
   command,
   commands,
