@@ -33,13 +33,6 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
     <Paper elevation={1} id="project-editor" square>
       <Stack className="p-4" spacing={1}>
         <FormControl>
-<<<<<<< HEAD
-          <TextField value={state.userPrefs.insertCommandPref}/>
-=======
-          <TextField value={state.userPrefs.insertCommandPref} />
->>>>>>> trunk
-        </FormControl>
-        <FormControl>
           <TextField
             id="name"
             label="Name"
