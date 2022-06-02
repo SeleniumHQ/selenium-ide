@@ -15,6 +15,10 @@ export const mutator: Mutator<Shape> = (
   session,
   { params: [testID, index], result }
 ) => {
+  const selectIndex =
+    session.state.userPrefs.insertCommandPref === 'After' ? index : index - 1
+
+
   const sessionWithNewCommands = update(
     'project.tests',
     (tests: TestShape[]) => {
@@ -36,8 +40,8 @@ export const mutator: Mutator<Shape> = (
     session
   )
   return updateStepSelection(sessionWithNewCommands, {
-    params: [index + result.length, false, false, true],
-    result: undefined
+    params: [selectIndex + result.length, false, false, true],
+    result: undefined,
   })
 }
 
