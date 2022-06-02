@@ -80,6 +80,10 @@ const CommandRow: React.FC<CommandRowProps> = ({
   resetPreview,
   selected,
 }) => {
+  if (typeof command != 'string') {
+    command = '//unknown - could not process'
+  }
+
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
     ? 'dark'
     : 'light'
@@ -113,7 +117,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
       reorderReset={resetPreview}
       secondaryAction={
         <IconButton
-          color={isBreakpoint ? 'success' : 'default'}
+          color={isBreakpoint ? 'primary' : 'default'}
           edge="end"
           onClick={toggleBreakpoint}
         >

@@ -6,14 +6,18 @@ import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
+import defaultState from 'api/models/state'
 
 interface AppWrapperProps {
-  className?: string;
+  className?: string
 }
 
 const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-
+  const prefersDarkMode = defaultState.userPrefs.themePref 
+  console.log('prefersDarkMode' + prefersDarkMode)
+    defaultState.userPrefs.themePref === 'System'
+      ? useMediaQuery('(prefers-color-scheme: dark)')
+      : defaultState.userPrefs.themePref === 'Dark'
   const theme = React.useMemo(
     () =>
       createTheme({

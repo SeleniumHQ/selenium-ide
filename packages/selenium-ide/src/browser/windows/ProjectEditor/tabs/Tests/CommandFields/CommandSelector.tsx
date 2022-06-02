@@ -1,16 +1,15 @@
 import { CodeOff, HelpCenter } from '@mui/icons-material'
+import { Autocomplete } from '@mui/material'
 import { FormControl } from '@mui/material'
+import { TextField } from '@mui/material'
 import { IconButton } from '@mui/material'
-import { InputLabel } from '@mui/material'
-import { MenuItem } from '@mui/material'
-import { Select } from '@mui/material'
 import { Tooltip } from '@mui/material'
 import React, { FC, useMemo } from 'react'
-import { setField, updateField } from './utils'
+import { setField, updateACField } from './utils'
 import { CommandSelectorProps } from '../types'
 
 const setCommandFactory = setField('command')
-const updateCommand = updateField('command')
+const updateCommand = updateACField('command')
 const CommandSelector: FC<CommandSelectorProps> = ({
   command,
   commands,
@@ -29,28 +28,23 @@ const CommandSelector: FC<CommandSelectorProps> = ({
   }
   const commandData = commands[command.command]
   const setCommand = setCommandFactory(testID, command.id)
+  const commandOptions = commandsList.map((item) => {
+    return { label: item.name, id: item.id }
+  })
+
   return (
     <FormControl className="flex flex-row">
-      <InputLabel id="command-label">Command</InputLabel>
-      <Select
+      <Autocomplete
         className="flex-1"
-        label="Command"
-        labelId="command-label"
-        MenuProps={{
-          sx: {
-            zIndex: 3000,
-          },
-        }}
         onChange={updateCommand(testID, command.id)}
+        getOptionLabel={(option) => option.label}
+        options={commandOptions}
+        renderInput={(params) => <TextField {...params} label="Command" />}
         size="small"
-        value={command.command}
-      >
-        {commandsList.map((cmd) => (
-          <MenuItem key={cmd.id} value={cmd.id}>
-            {cmd.name}
-          </MenuItem>
-        ))}
-      </Select>
+        value={commandOptions.find((entry) => entry.id === command.command)}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+      />
+
       <Tooltip
         className="flex-fixed ml-5 my-auto"
         title={`${isDisabled ? 'En' : 'Dis'}able this command`}
