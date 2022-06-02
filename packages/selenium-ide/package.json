@@ -12,7 +12,7 @@
     "build": "run-s build:webpack build:electron",
     "build:electron": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
     "build:electron:dir": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
-    "build:electron:windows": "node_modules\\.bin\\electron-builder -w -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "build:electron:windows": "node_modules\\.bin\\electron-builder",
     "build:webpack": "webpack",
     "watch": "webpack --watch"
   },
