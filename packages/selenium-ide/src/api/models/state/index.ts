@@ -31,7 +31,7 @@ export const defaultRecorderState: RecorderStateShape = {
 }
 
 export const defaultUserPrefs: UserPrefs = {
-  
+  themePref: 'System',
   insertCommandPref: 'After',
 }
 

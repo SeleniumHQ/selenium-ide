@@ -33,7 +33,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
     <Paper elevation={1} id="project-editor" square>
       <Stack className="p-4" spacing={1}>
         <FormControl>
-          <TextField value={state.userPrefs.insertCommandPref}/>
+          <TextField value={state.userPrefs.insertCommandPref} />
         </FormControl>
         <FormControl>
           <TextField
@@ -62,6 +62,22 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
             size="small"
             value={project.url}
           />
+        </FormControl>
+        <FormControl>
+          <InputLabel id="themePref">Theme preference</InputLabel>
+          <Select
+            id="themePref"
+            label="Theme Preference"
+            name="themePref"
+            value={state.userPrefs.themePref}
+            onChange={(e: any) => {
+              window.sideAPI.state.toggleUserPrefTheme(e.target.value)
+            }}
+          >
+            <MenuItem value="System">System</MenuItem>
+            <MenuItem value="Light">Light</MenuItem>
+            <MenuItem value="Dark">Dark</MenuItem>
+          </Select>
         </FormControl>
         <FormControl>
           <InputLabel id="insertNewCommandPref">
