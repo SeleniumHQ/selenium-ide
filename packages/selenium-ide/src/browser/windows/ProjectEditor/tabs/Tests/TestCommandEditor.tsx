@@ -24,6 +24,9 @@ const CommandEditor: FC<CommandEditorProps> = ({
   selectedCommandIndexes,
   ...props
 }) => {
+  if (typeof command.command != 'string') {
+    command.command = '//unknown - could not process'
+  }
   const { commands } = props
   const isDisabled = command.command.startsWith('//')
   const correctedCommand: CommandShape = {

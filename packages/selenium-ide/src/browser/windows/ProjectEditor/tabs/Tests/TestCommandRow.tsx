@@ -36,7 +36,7 @@ const colorFromCommandState = (
   }
 }
 
-const commandIndexTextFormat = { color: 'primary.main'}
+const commandIndexTextFormat = { color: 'primary.main' }
 
 const commandTextFormat = { color: 'primary.main', typography: 'body2' }
 const commentTextFormat = {
@@ -83,6 +83,9 @@ const CommandRow: React.FC<CommandRowProps> = ({
   resetPreview,
   selected,
 }) => {
+  if (typeof command != 'string') {
+    command = '//unknown - could not process'
+  }
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
     ? 'dark'
     : 'light'
@@ -92,7 +95,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
   if (commandState.state === 'executing') {
     window.scrollTo(0, 20 * index)
   }
-    const isDisabled = command.startsWith('//')
+  const isDisabled = command.startsWith('//')
   const commandText = isDisabled ? command.slice(2) : command
   const mainClass = ['pos-rel'].concat(isDisabled ? ['o-50'] : []).join(' ')
   return (
@@ -172,10 +175,17 @@ const CommandRow: React.FC<CommandRowProps> = ({
           width: 'inherit',
         }}
       >
-        <Box sx={{  flex: 0, flexBasis: 50, textAlign: 'center', ...commandIndexTextFormat }}>
+        <Box
+          sx={{
+            flex: 0,
+            flexBasis: 50,
+            textAlign: 'center',
+            ...commandIndexTextFormat,
+          }}
+        >
           {index + 1}
         </Box>
-        <Box sx={{ paddingLeft:1, flex: 1, ...commandTextFormat }}>
+        <Box sx={{ paddingLeft: 1, flex: 1, ...commandTextFormat }}>
           {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
         </Box>
         <Box sx={{ flex: 2, ...argTextFormat }}>{target}</Box>
@@ -191,7 +201,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
         className="fill pos-abs o-25"
         sx={{
           bgcolor,
-          marginBottom:1,
+          marginBottom: 1,
           pointerEvents: 'none',
           zIndex: 75,
         }}
