@@ -71,7 +71,9 @@ export type EventListenerParams<LISTENER extends BaseListener<any>> =
 export type LocatorFields = 'target' | 'value'
 
 export type InsertCommandPref = 'Before' | 'After'
+export type ThemePref = 'System' | 'Light' | 'Dark' 
 
 export interface UserPrefs {
   insertCommandPref: InsertCommandPref
+  themePref: ThemePref
 }

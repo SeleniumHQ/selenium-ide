@@ -1,4 +1,3 @@
-// import defaultState from 'api/models/state'
 import browserHandler from 'browser/api/classes/Handler'
 import mainHandler from 'main/api/classes/Handler'
 import { Session } from 'main/types'
@@ -17,7 +16,6 @@ export const mutator: Mutator<Shape> = (session, { result }) => {
   if (!result) {
     return session
   }
-  // result.state = defaultState
   const { project, state } = result
   if (state) {
     return result
