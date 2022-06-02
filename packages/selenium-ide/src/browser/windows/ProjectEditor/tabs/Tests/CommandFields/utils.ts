@@ -5,6 +5,13 @@ export const setField =
     })
   }
 
+export const updateACField =
+  (name: string) => (testID: string, commandID: string) => (_e: any, v: any) => {
+    window.sideAPI.tests.updateStep(testID, commandID, {
+      [name]: v.id,
+    })
+  }
+
 export const updateField =
   (name: string) => (testID: string, commandID: string) => (e: any) => {
     window.sideAPI.tests.updateStep(testID, commandID, {
