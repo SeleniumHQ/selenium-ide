@@ -2,6 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "outFiles": [
+        "${workspaceFolder}/**/*.js",
+        "!**/node_modules/**"
+      ],
       "name": "Run Selenium IDE",
       "type": "node",
       "request": "launch",
