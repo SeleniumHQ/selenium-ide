@@ -76,7 +76,7 @@ export default class StateController extends BaseController {
     storage.set<'userPrefs'>('userPrefs', { ...userPrefs, insertCommandPref })
   }
 
-  async getUserPref(): Promise<UserPrefs> {
-    return storage.get<'userPrefs'>('userPrefs')
+  async getUserPrefs(): Promise<UserPrefs> {
+    return storage.get<'userPrefs'>('userPrefs', defaultUserPrefs)
   }
 }

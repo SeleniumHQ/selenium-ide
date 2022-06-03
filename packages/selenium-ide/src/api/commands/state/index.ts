@@ -1,5 +1,6 @@
 export * as closeTestEditor from './closeTestEditor'
 export * as get from './get'
+export * as getUserPrefs from './getUserPrefs'
 export * as onMutate from './onMutate'
 export * as openTestEditor from './openTestEditor'
 export * as setActiveCommand from './setActiveCommand'
