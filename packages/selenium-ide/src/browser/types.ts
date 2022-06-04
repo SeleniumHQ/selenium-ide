@@ -1,4 +1,4 @@
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData } from '@seleniumhq/side-api'
 import { BrowserWindowConstructorOptions } from 'electron'
 import { Session } from 'main/types'
 import Api from './api'

@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
-import { CommandStateShape } from 'api/models/state/command'
+import { CommandStateShape } from '@seleniumhq/side-api/dist/models/state/command'
 import React, { FC } from 'react'
 import CommandOverlay from '../../Tests/TestCommandOverlay'
 

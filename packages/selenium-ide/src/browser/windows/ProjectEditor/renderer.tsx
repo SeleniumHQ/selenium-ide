@@ -1,6 +1,6 @@
 import AppBar from './components/AppBar'
 import Box from '@mui/material/Box'
-import loadingID from 'api/constants/loadingID'
+import loadingID from '@seleniumhq/side-api/dist/constants/loadingID'
 import AppWrapper from 'browser/components/AppWrapper'
 import subscribeToSession from 'browser/helpers/subscribeToSession'
 import React from 'react'

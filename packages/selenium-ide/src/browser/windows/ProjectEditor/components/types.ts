@@ -1,4 +1,4 @@
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData } from '@seleniumhq/side-api'
 import React from 'react'
 import { TAB } from '../enums/tab'
 

@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
-import { camelToTitleCase } from 'api/helpers/string'
+import { camelToTitleCase } from '@seleniumhq/side-api/dist/helpers/string'
 import ReorderableListItem from 'browser/components/ReorderableListItem'
 import React from 'react'
 import { ReorderPreview } from 'browser/hooks/useReorderPreview'
@@ -89,9 +89,6 @@ const CommandRow: React.FC<CommandRowProps> = ({
   if (typeof command != 'string') {
     command = '//unknown - could not process'
   }
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-    ? 'dark'
-    : 'light'
   const toggleBreakpoint = () =>
     updateIsBreakpoint(activeTest, id, !isBreakpoint)
   if (commandState.state === 'executing') {

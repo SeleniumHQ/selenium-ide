@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import defaultProject from 'api/models/project'
-import defaultState from 'api/models/state'
-import { CoreSessionData } from 'api/types'
+import defaultProject from '@seleniumhq/side-api/dist/models/project'
+import defaultState from '@seleniumhq/side-api/dist/models/state'
+import { CoreSessionData } from '@seleniumhq/side-api'
 
 const performSubscription = async (
   updateSession: Dispatch<SetStateAction<CoreSessionData>>

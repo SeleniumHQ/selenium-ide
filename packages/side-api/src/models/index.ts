@@ -6,5 +6,5 @@ export interface AppState {
   state: StateShape
 }
 
-export { default as project } from './project'
-export { default as state } from './state'
+export * from './project'
+export * from './state'

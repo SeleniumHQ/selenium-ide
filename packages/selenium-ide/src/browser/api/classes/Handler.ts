@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { ApiPromiseHandler, DefaultRouteShape, ThenArg } from 'api/types'
+import { ApiPromiseHandler, DefaultRouteShape, ThenArg } from '@seleniumhq/side-api'
 
 const doAPI = <HANDLER extends ApiPromiseHandler>(
   path: string,

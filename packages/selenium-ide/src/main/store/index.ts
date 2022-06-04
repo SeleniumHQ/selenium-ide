@@ -1,8 +1,8 @@
 import config from './config'
 import Store from 'electron-store'
-import { StateShape, UserPrefs } from 'api/types'
+import { StateShape, UserPrefs } from '@seleniumhq/side-api'
 import { BrowserInfo } from 'main/types'
-import { defaultUserPrefs } from 'api/models/state'
+import { defaultUserPrefs } from '@seleniumhq/side-api/dist/models/state'
 
 export interface StorageSchema {
   config: typeof config

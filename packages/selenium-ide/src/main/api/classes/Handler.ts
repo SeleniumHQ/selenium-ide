@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { ApiHandler, DefaultRouteShape, EmptyApiHandler, Mutator } from 'api/types'
+import { ApiHandler, DefaultRouteShape, EmptyApiHandler, Mutator } from '@seleniumhq/side-api'
 import { Session, SessionControllerKeys } from '../../types'
 import getCore from '../helpers/getCore'
 import { COLOR_CYAN, vdebuglog } from 'main/util'

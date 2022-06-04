@@ -1,5 +1,5 @@
 import List from '@mui/material/List'
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData } from '@seleniumhq/side-api'
 import EditorToolbar from '../../../components/Drawer/EditorToolbar'
 import React, { FC } from 'react'
 import SuiteViewerEntry from './Entry'

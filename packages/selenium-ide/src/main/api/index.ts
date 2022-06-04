@@ -1,5 +1,5 @@
-import { Api } from 'api/index'
-import processApi from 'api/process'
+import { Api } from '@seleniumhq/side-api/dist/index'
+import { processApi } from '@seleniumhq/side-api'
 import { Session } from 'main/types'
 
 export type MainApiMapper = {
