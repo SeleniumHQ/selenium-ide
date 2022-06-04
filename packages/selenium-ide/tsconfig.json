@@ -20,6 +20,9 @@
       "path": "../get-driver"
     },
     {
+      "path": "../side-api"
+    },
+    {
       "path": "../side-commons"
     },
     {

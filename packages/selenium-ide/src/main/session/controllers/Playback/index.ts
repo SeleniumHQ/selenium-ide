@@ -9,6 +9,12 @@ import { hasID } from 'api/helpers/hasID'
 import { Session } from 'main/types'
 import BaseController from '../Base'
 
+/**
+ * This is a wrapper on the Playback construct of the side-runtime. Once again,
+ * I am ashamed. When hoisted, the underlying playback thing is accessed at
+ * this.session.playback.playback. In a better world, this would be something
+ * like this.session.playback.runtime, but I am not up to task today. :(
+ */
 export default class PlaybackController extends BaseController {
   constructor(session: Session) {
     super(session)

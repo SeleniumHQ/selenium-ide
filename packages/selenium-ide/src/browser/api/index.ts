@@ -1,18 +1,19 @@
-import processApi from 'api/process'
-import { Api } from 'api/index'
+import { process as processApi } from '@seleniumhq/side-api'
+import { Api } from '@seleniumhq/side-api'
+import EventListener from './classes/EventListener'
+import Handler from './classes/Handler'
 
 /**
  * This Converts the chrome API type to something usable
  * from the front end
  */
-export type BrowserApiMapper = {
-  [Namespace in keyof Api]: {
-    [Handler in keyof Api[Namespace]]: ReturnType<
-      Api[Namespace][Handler]['browser']
-    >
-  }
-}
 
-export default processApi<BrowserApiMapper>((path, handler) =>
-  handler.browser(path, window)
-)
+const api: Api = processApi((path: string) => {
+  const trailingSegment: string = path.split('.').pop() as string
+  if (trailingSegment.startsWith('on')) {
+    return EventListener()(path)
+  }
+  return Handler()(path)
+})
+
+export default api
