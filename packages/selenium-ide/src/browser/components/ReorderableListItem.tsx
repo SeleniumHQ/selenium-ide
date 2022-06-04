@@ -1,8 +1,8 @@
 import ListItem, { ListItemProps } from '@mui/material/ListItem'
+import { Shape as SelectShape } from '@seleniumhq/side-api/dist/commands/state/updateStepSelection'
 import type { XYCoord, Identifier } from 'dnd-core'
 import React, { MutableRefObject } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
-import { Shape as SelectShape } from 'api/commands/state/updateStepSelection'
 
 interface ReorderableListItemProps extends ListItemProps {
   Component?: React.FC | React.ComponentClass

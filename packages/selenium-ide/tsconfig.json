@@ -4,7 +4,6 @@
   "compilerOptions": {
     "jsx": "react",
     "paths": {
-      "api/*": ["./src/api/*"],
       "browser/*": ["./src/browser/*"],
       "main/*": ["./src/main/*"]
     },

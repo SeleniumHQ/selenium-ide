@@ -1,6 +1,7 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import fs from 'fs'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
+import ExtraWatchWebpackPlugin from 'extra-watch-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import kebabCase from 'lodash/fp/kebabCase'
 import path from 'path'
@@ -108,7 +109,19 @@ const rendererConfig: Configuration = {
           to: '[name].css',
         },
       ],
-    })
+    }),
+    new ExtraWatchWebpackPlugin({
+      dirs: [
+        "../browser-info/dist",
+        "../get-driver/dist",
+        "../side-api/dist",
+        "../side-commons/dist",
+        "../side-migrate/dist",
+        "../side-model/dist",
+        "../side-plugin-example/dist",
+        "../side-runtime/dist",
+      ],
+    }) as any
   ),
   target: 'electron-renderer',
 }

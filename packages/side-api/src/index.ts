@@ -13,7 +13,11 @@ import * as tests from './commands/tests'
 import * as windows from './commands/windows'
 export * as models from './models'
 
-export { default as process } from './process'
+/**
+ * The ApiHoist is a keyed object that configures a single api endpoint
+ * It currently only has one optional key: mutator, which updates the
+ * session shape accordingly
+ */
 
 export interface ApiHoist extends BaseApi {
   dialogs: typeof dialogs
@@ -30,6 +34,9 @@ export interface ApiHoist extends BaseApi {
   windows: typeof windows
 }
 
+/**
+ * The Api is the actual network shape that is documented and stuff.
+ */
 export type Api = {
   dialogs: dialogs.Shape
   driver: driver.Shape
@@ -60,6 +67,9 @@ export const api: ApiHoist = {
   windows,
 }
 
+export * from './helpers'
+export * from './models'
+export { default as process } from './process'
 export * from './types'
 
 export default api

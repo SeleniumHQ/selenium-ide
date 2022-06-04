@@ -1,4 +1,4 @@
-import { reorderList } from 'api/helpers/reorderList'
+import { reorderList } from '@seleniumhq/side-api/dist/helpers/reorderList'
 import identity from 'lodash/fp/identity'
 import React from 'react'
 

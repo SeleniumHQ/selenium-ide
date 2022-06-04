@@ -1,5 +1,5 @@
 import { ipcRenderer } from 'electron'
-import { BaseListener, VariadicArgs } from 'api/types'
+import { BaseListener, VariadicArgs } from '@seleniumhq/side-api'
 
 
 const baseListener = <ARGS extends VariadicArgs>(

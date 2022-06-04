@@ -16,6 +16,7 @@ export { StateShape } from './models/state'
 
 export type VariadicArgs = any[]
 
+export type ApiEventListener = BaseListener<any[]>
 export type ApiHandler = (...args: any[]) => any
 export type EmptyApiHandler = (...args: any[]) => void
 
@@ -23,7 +24,7 @@ export type ApiPromiseHandler = (...args: any[]) => PromiseLike<any>
 
 export type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 export interface ApiEntry {
-  mutator?: (...args: any[]) => any
+  mutator?: (session: CoreSessionData, ...args: any[]) => any
 }
 
 export interface ApiNamespace {
@@ -90,4 +91,8 @@ export interface RecordNewCommandInput {
   value: string | [string, string][]
   insertBeforeLastCommand?: boolean
   frameLocation?: string
+}
+
+export type ApiOverrides<API> = {
+  [P in keyof API]?: Partial<Record<keyof API[P], any>>
 }

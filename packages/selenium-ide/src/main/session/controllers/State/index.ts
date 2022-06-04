@@ -1,11 +1,11 @@
-import { getCommandIndex } from 'api/helpers/getActiveData'
-import defaultState, { defaultUserPrefs } from 'api/models/state'
+import { getCommandIndex } from '@seleniumhq/side-api/dist/helpers/getActiveData'
+import defaultState, { defaultUserPrefs } from '@seleniumhq/side-api/dist/models/state'
 import {
   CoreSessionData,
   InsertCommandPref,
   StateShape,
   UserPrefs,
-} from 'api/types'
+} from '@seleniumhq/side-api/dist/types'
 import clone from 'lodash/fp/clone'
 import storage from 'main/store'
 import BaseController from '../Base'
@@ -34,6 +34,13 @@ export default class StateController extends BaseController {
       this.state = {
         ...defaultState,
         ...storage.get(this.getStatePath()),
+        userPrefs: storage.get<'userPrefs'>('userPrefs'),
+        commands: this.state.commands,
+      }
+    } else {
+      this.state = {
+        ...defaultState,
+        userPrefs: storage.get<'userPrefs'>('userPrefs'),
         commands: this.state.commands,
       }
     }

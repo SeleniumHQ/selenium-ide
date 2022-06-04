@@ -1,5 +1,5 @@
 import { CommandShape } from '@seleniumhq/side-model'
-import { CoreSessionData, LocatorFields } from 'api/types'
+import { CoreSessionData, LocatorFields } from '@seleniumhq/side-api/dist/types'
 
 export interface CommandEditorProps {
   command: CommandShape

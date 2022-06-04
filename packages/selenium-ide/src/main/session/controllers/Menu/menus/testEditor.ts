@@ -1,4 +1,4 @@
-import { getActiveCommand, getActiveCommandIndex, getActiveTest } from 'api/helpers/getActiveData'
+import { getActiveCommand, getActiveCommandIndex, getActiveTest } from '@seleniumhq/side-api/dist/helpers/getActiveData'
 import { Menu } from 'electron'
 import { MenuComponent, Session } from 'main/types'
 

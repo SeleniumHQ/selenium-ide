@@ -1,4 +1,4 @@
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData } from '@seleniumhq/side-api/dist/types'
 import React from 'react'
 import { DrawerWrapperProps } from './Wrapper'
 import TabPanel from '../Tab/Panel'

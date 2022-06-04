@@ -2,7 +2,9 @@ import { Chrome } from '@seleniumhq/browser-info'
 import { Browser } from '@seleniumhq/get-driver'
 import { App } from 'electron'
 import Store from 'electron-store'
+import { MainApi } from './api'
 import config from './store/config'
+import { StorageSchema } from './store'
 import ArgTypesController from './session/controllers/ArgTypes'
 import CommandsController from './session/controllers/Commands'
 import DialogsController from './session/controllers/Dialogs'
@@ -14,11 +16,9 @@ import ProjectsController from './session/controllers/Projects'
 import RecorderController from './session/controllers/Recorder'
 import StateController from './session/controllers/State'
 import SuitesController from './session/controllers/Suites'
+import SystemController from './session/controllers/System'
 import TestsController from './session/controllers/Tests'
 import WindowsController from './session/controllers/Windows'
-import { MainApiMapper } from './api'
-import { StorageSchema } from './store'
-import SystemController from './session/controllers/System'
 
 export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
   browser: Browser
@@ -34,7 +34,7 @@ export type Config = typeof config
 export type Storage = Store<StorageSchema>
 
 export interface Session {
-  api: MainApiMapper
+  api: MainApi
   app: App
   argTypes: ArgTypesController
   commands: CommandsController
@@ -63,4 +63,3 @@ export type SessionApiHandler = (
 export type MenuComponent = (
   session: Session
 ) => () => Promise<Electron.MenuItemConstructorOptions[]>
-

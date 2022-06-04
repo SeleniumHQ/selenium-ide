@@ -1,17 +1,24 @@
-import commands from './index'
-import { GenericApi, ApiEntry, ApiHandler, ApiNamespace } from './types'
+import commands, { Api } from './index'
+import { ApiEntry, ApiEventListener, ApiHandler, ApiNamespace } from './types'
 
-export default <FinalApi extends GenericApi>(handler: ApiHandler): FinalApi => {
-  const api: Partial<FinalApi> = {}
+export type ApiProcessor<ENTRY_SHAPE = ApiHandler | ApiEventListener> = (
+  path: string,
+  entry: ApiEntry
+) => ENTRY_SHAPE
+
+export default <SHAPE = Api, ENTRY_SHAPE = ApiHandler | ApiEventListener>(
+  handler: ApiProcessor<ENTRY_SHAPE>
+): SHAPE => {
+  const api: Partial<SHAPE> = {}
   for (const ns in commands) {
-    const namespace: ApiNamespace = commands[ns]
-    const entry: Partial<ApiNamespace> = {}
-    for (const ep in namespace) {
-      const endpoint = namespace[ep] as ApiEntry
-      entry[ep] = handler(`${ns}.${ep}`, endpoint)
+    const apiNamespace: ApiNamespace = commands[ns]
+    const namespace: Partial<ApiNamespace> = {}
+    for (const command in apiNamespace) {
+      const entry = apiNamespace[command] as ApiEntry
+      namespace[command] = handler(`${ns}.${command}`, entry)
     }
     // @ts-expect-error
-    api[ns] = entry as ApiNamespace
+    api[ns] = namespace as ApiNamespace
   }
-  return api as FinalApi
+  return api as SHAPE
 }

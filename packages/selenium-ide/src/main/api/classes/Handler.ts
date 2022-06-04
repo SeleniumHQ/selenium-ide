@@ -1,5 +1,10 @@
 import { ipcMain } from 'electron'
-import { ApiHandler, DefaultRouteShape, EmptyApiHandler, Mutator } from 'api/types'
+import noop from 'lodash/fp/noop'
+import {
+  ApiHandler,
+  DefaultRouteShape,
+  Mutator,
+} from '@seleniumhq/side-api/dist/types'
 import { Session, SessionControllerKeys } from '../../types'
 import getCore from '../helpers/getCore'
 import { COLOR_CYAN, vdebuglog } from 'main/util'
@@ -25,17 +30,13 @@ const defaultHandler = <HANDLER extends ApiHandler>(
     // @ts-expect-error
     return controller[method].bind(controller) as AsyncHandler<HANDLER>
   }
-  throw new Error(`Missing method for path ${path}`)
+  // throw new Error(`Missing method for path ${path}`)
+  /**
+   * For now lets do this:
+   */
+  console.error(`Missing method for path ${path}, treating as passthrough`)
+  return noop as unknown as AsyncHandler<HANDLER>
 }
-
-const passThroughHandler = <HANDLER extends EmptyApiHandler>(
-  _path: string,
-  _session: Session
-): AsyncHandler<HANDLER> => {
-  const handler = async (..._args: Parameters<HANDLER>) => {}
-  return handler as unknown as AsyncHandler<HANDLER>
-}
-export const passthrough = passThroughHandler
 
 const Handler =
   <HANDLER extends ApiHandler = DefaultRouteShape>(

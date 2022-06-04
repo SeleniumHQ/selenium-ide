@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { Mutator } from 'api/types'
+import { Mutator } from '@seleniumhq/side-api/dist/types'
 import { Session, SessionControllerKeys } from '../../types'
 import getCore from '../helpers/getCore'
 import { COLOR_CYAN, vdebuglog } from 'main/util'
