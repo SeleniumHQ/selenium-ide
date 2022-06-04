@@ -7,7 +7,7 @@ import { Mutator } from '../../types'
  */
 export type Shape = (
   testID: string,
-  playRange: [number, number]
+  playRange?: [number, number]
 ) => Promise<void>
 
 const setToPlay = set('state.status', 'playing')

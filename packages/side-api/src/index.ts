@@ -42,6 +42,10 @@ export type Api = {
   windows: Windows
 }
 
+export type ApiOverrides = {
+  [P in keyof Api]?: Partial<Record<keyof Api[P], any>>
+}
+
 export const api: ApiHoist = {
   dialogs,
   driver,

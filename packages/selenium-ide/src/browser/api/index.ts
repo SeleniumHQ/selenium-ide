@@ -1,5 +1,4 @@
-import { process as processApi } from '@seleniumhq/side-api'
-import { Api } from '@seleniumhq/side-api'
+import { Api, processApi } from '@seleniumhq/side-api'
 import EventListener from './classes/EventListener'
 import Handler from './classes/Handler'
 
@@ -15,5 +14,7 @@ const api: Api = processApi((path: string) => {
   }
   return Handler()(path)
 })
+
+export { Api } from '@seleniumhq/side-api'
 
 export default api

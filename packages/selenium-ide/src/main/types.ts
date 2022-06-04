@@ -16,7 +16,7 @@ import StateController from './session/controllers/State'
 import SuitesController from './session/controllers/Suites'
 import TestsController from './session/controllers/Tests'
 import WindowsController from './session/controllers/Windows'
-import { MainApiMapper } from './api'
+import { MainApi } from './api'
 import { StorageSchema } from './store'
 import SystemController from './session/controllers/System'
 
@@ -34,7 +34,7 @@ export type Config = typeof config
 export type Storage = Store<StorageSchema>
 
 export interface Session {
-  api: MainApiMapper
+  api: MainApi
   app: App
   argTypes: ArgTypesController
   commands: CommandsController

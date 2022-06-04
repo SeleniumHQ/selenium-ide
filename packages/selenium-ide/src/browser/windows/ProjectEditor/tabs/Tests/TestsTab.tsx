@@ -7,7 +7,7 @@ import CommandList from './TestCommandList'
 import CommandTable from './TestCommandTable'
 import { CoreSessionData } from '@seleniumhq/side-api'
 import MainHeader from '../../components/Main/Header'
-import loadingID from '@seleniumhq/side-api/dist/constants/loadingID'
+import { loadingID } from '@seleniumhq/side-api/dist/constants/loadingID'
 import { Typography, useMediaQuery } from '@mui/material'
 
 const sxCenter = { textAlign: 'center' }

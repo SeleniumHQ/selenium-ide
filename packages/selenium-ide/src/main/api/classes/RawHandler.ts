@@ -1,9 +1,10 @@
-import { ipcMain } from 'electron'
 import { Mutator } from '@seleniumhq/side-api'
-import { Session, SessionControllerKeys } from '../../types'
-import getCore from '../helpers/getCore'
+import { ipcMain } from 'electron'
+import noop from 'lodash/fp/noop'
 import { COLOR_CYAN, vdebuglog } from 'main/util'
 import { AsyncHandler, HandlerFactory } from './Handler'
+import getCore from '../helpers/getCore'
+import { Session, SessionControllerKeys } from '../../types'
 
 const apiDebugLog = vdebuglog('api', COLOR_CYAN)
 
@@ -33,7 +34,8 @@ const defaultHandler = <HANDLER extends EventApiHandler>(
     // @ts-expect-error
     return controller[method].bind(controller) as AsyncHandler<HANDLER>
   }
-  throw new Error(`Missing method for path ${path}`)
+  console.warn(`Missing method for path ${path}, using passthrough`)
+  return noop as unknown as AsyncHandler<HANDLER>
 }
 
 const Handler =

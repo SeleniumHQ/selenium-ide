@@ -30,13 +30,16 @@ export const defaultRecorderState: RecorderStateShape = {
 }
 
 export type InsertCommandPref = 'Before' | 'After'
+export type ThemePref = 'Dark' | 'Light' | 'System'
 
 export interface UserPrefs {
   insertCommandPref: InsertCommandPref
+  themePref: ThemePref
 }
 
 export const defaultUserPrefs: UserPrefs = {
   insertCommandPref: 'After',
+  themePref: 'System',
 }
 
 export interface PlaybackStateShape {
@@ -45,6 +48,7 @@ export interface PlaybackStateShape {
   currentTestIndex: number
   stopIndex: number
   tests: string[]
+  testResults: Record<string, { lastCommand: string }>
 }
 
 export const defaultPlaybackState: PlaybackStateShape = {
@@ -53,6 +57,7 @@ export const defaultPlaybackState: PlaybackStateShape = {
   currentTestIndex: 0,
   stopIndex: badIndex,
   tests: [],
+  testResults: {},
 }
 
 export interface StateShape {
@@ -80,3 +85,5 @@ export const state: StateShape = {
   recorder: defaultRecorderState,
   status: 'idle',
 }
+
+export * from './command'

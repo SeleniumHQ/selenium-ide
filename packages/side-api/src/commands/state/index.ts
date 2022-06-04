@@ -1,5 +1,6 @@
 import type { Shape as CloseTestEditor } from './closeTestEditor'
 import type { Shape as Get } from './get'
+import type { Shape as GetUserPrefs } from './getUserPrefs'
 import type { Shape as OnMutate } from './onMutate'
 import type { Shape as OpenTestEditor } from './openTestEditor'
 import type { Shape as SetActiveCommand } from './setActiveCommand'
@@ -8,11 +9,13 @@ import type { Shape as SetActiveTest } from './setActiveTest'
 import type { Shape as SetCopiedCommands } from './setCopiedCommands'
 import type { Shape as ToggleBreakpoint } from './toggleBreakpoint'
 import type { Shape as ToggleUserPrefInsert } from './toggleUserPrefInsert'
+import type { Shape as ToggleUserPrefTheme } from './toggleUserPrefTheme'
 import type { Shape as UpdateStepSelection } from './updateStepSelection'
 import type { Shape as UpdateTestSelection } from './updateTestSelection'
 
 import * as closeTestEditor from './closeTestEditor'
 import * as get from './get'
+import * as getUserPrefs from './getUserPrefs'
 import * as onMutate from './onMutate'
 import * as openTestEditor from './openTestEditor'
 import * as setActiveCommand from './setActiveCommand'
@@ -21,12 +24,14 @@ import * as setActiveTest from './setActiveTest'
 import * as setCopiedCommands from './setCopiedCommands'
 import * as toggleBreakpoint from './toggleBreakpoint'
 import * as toggleUserPrefInsert from './toggleUserPrefInsert'
+import * as toggleUserPrefTheme from './toggleUserPrefTheme'
 import * as updateStepSelection from './updateStepSelection'
 import * as updateTestSelection from './updateTestSelection'
 
 export const commands = {
   closeTestEditor,
   get,
+  getUserPrefs,
   onMutate,
   openTestEditor,
   setActiveCommand,
@@ -35,6 +40,7 @@ export const commands = {
   setCopiedCommands,
   toggleBreakpoint,
   toggleUserPrefInsert,
+  toggleUserPrefTheme,
   updateStepSelection,
   updateTestSelection,
 }
@@ -45,6 +51,7 @@ export const commands = {
 export type Shape = {
   closeTestEditor: CloseTestEditor
   get: Get
+  getUserPrefs: GetUserPrefs
   onMutate: OnMutate
   openTestEditor: OpenTestEditor
   setActiveCommand: SetActiveCommand
@@ -53,6 +60,7 @@ export type Shape = {
   setCopiedCommands: SetCopiedCommands
   toggleBreakpoint: ToggleBreakpoint
   toggleUserPrefInsert: ToggleUserPrefInsert
+  toggleUserPrefTheme: ToggleUserPrefTheme
   updateStepSelection: UpdateStepSelection
   updateTestSelection: UpdateTestSelection
 }

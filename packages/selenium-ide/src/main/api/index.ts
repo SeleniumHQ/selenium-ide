@@ -1,18 +1,27 @@
-import { Api } from '@seleniumhq/side-api/dist/index'
-import { processApi } from '@seleniumhq/side-api'
+import { Api, ApiOverrides, processApi } from '@seleniumhq/side-api'
 import { Session } from 'main/types'
+import EventListener from './classes/EventListener'
+import Handler from './classes/Handler'
+import RawHandler from './classes/RawHandler'
 
-export type MainApiMapper = {
-  [Namespace in keyof Api]: {
-    [Handler in keyof Api[Namespace]]: ReturnType<
-      Api[Namespace][Handler]['main']
-    >
-  }
+export const overrides: ApiOverrides = {
+  recorder: {
+    getFrameLocation: RawHandler<Session['recorder']['getFrameLocation']>(),
+  },
 }
+export type MainApi = Api & ApiOverrides
 
-export default (session: Session) =>
-  processApi<MainApiMapper>((name, handler) => {
-    if (handler.main) {
-      return handler.main(name, session, handler.mutator)
+export default (session: Session): MainApi => ({
+  ...processApi((path, handler) => {
+    const [namespace, command] = path.split('.') as [keyof Api, string]
+    // @ts-expect-error dunno dont care
+    if (overrides?.[namespace]?.[command]) {
+      // @ts-expect-error dunno dont care
+      return overrides[namespace][command](path, session, handler.mutator);
     }
+    if (command.startsWith('on')) {
+      return EventListener()(path, session, handler.mutator)
+    }
+    return Handler()(path, session, handler.mutator)
   })
+})
