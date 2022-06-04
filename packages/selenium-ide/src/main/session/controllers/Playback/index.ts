@@ -29,7 +29,7 @@ export default class PlaybackController extends BaseController {
     const { driver } = executor
     const { windows } = this.session
     if (this.playRange[0] === 0) {
-        await windows.initializePlaybackWindow()
+      await windows.initializePlaybackWindow()
     }
     const playbackWindow = await windows.getPlaybackWindow()
 
@@ -149,21 +149,22 @@ export default class PlaybackController extends BaseController {
     this.session.api.playback.onStepUpdate.dispatchEvent(e)
   }
 
-  handlePlaybackStateChanged =
-    (e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
-      switch (e.state) {
-        case 'aborted':
-        case 'errored':
-        case 'failed':
-        case 'finished':
-        case 'stopped':
-          const playback = this.playback as Playback
-          playback.cleanup()
-          this.playback = null
-          if (this.playingSuite) {
-            this.playNextTest()
-          }
-      }
-      this.session.api.playback.onPlayUpdate.dispatchEvent(e)
+  handlePlaybackStateChanged = (
+    e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']
+  ) => {
+    switch (e.state) {
+      case 'aborted':
+      case 'errored':
+      case 'failed':
+      case 'finished':
+      case 'stopped':
+        const playback = this.playback as Playback
+        playback.cleanup()
+        this.playback = null
+        if (this.playingSuite) {
+          this.playNextTest()
+        }
     }
+    this.session.api.playback.onPlayUpdate.dispatchEvent(e)
+  }
 }
