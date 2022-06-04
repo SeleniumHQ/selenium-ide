@@ -107,18 +107,16 @@ export const recorderList = (session: Session) => async () => {
 export const playbackList: MenuComponent =
   (session) => async (_commandID?: string) => {
     const sessionData = await session.state.get()
-    const commandID = _commandID || getActiveCommand(sessionData)
+    const commandID: string = _commandID || getActiveCommand(sessionData).id
     const editorState = sessionData.state.editor
     const selectedCommandCount = editorState.selectedCommandIndexes.length
     return [
       {
         click: async () => {
           const activeTest = getActiveTest(sessionData)
-          const commandIDval =
-            typeof commandID === 'object' ? commandID.id : commandID
           await session.api.playback.play(sessionData.state.activeTestID, [
             0,
-            activeTest.commands.findIndex((cmd) => cmd.id === commandIDval),
+            activeTest.commands.findIndex((cmd) => cmd.id === commandID),
           ])
         },
         label: 'Play To Here',
