@@ -1,4 +1,8 @@
-import { getActiveCommand, getActiveCommandIndex, getActiveTest } from 'api/helpers/getActiveData'
+import {
+  getActiveCommand,
+  getActiveCommandIndex,
+  getActiveTest,
+} from 'api/helpers/getActiveData'
 import { Menu } from 'electron'
 import { MenuComponent, Session } from 'main/types'
 
@@ -100,60 +104,57 @@ export const recorderList = (session: Session) => async () => {
   ]
 }
 
-export const playbackList: MenuComponent = (session) => async (_commandID?: string) => {
-  const sessionData = await session.state.get()
-  const commandID = _commandID || getActiveCommand(sessionData)
-  const editorState = sessionData.state.editor
-  const selectedCommandCount = editorState.selectedCommandIndexes.length
-  return [
-    {
-      click: async () => {
-        const activeTest = getActiveTest(sessionData)
-        await session.api.playback.play(sessionData.state.activeTestID, [
-          0,
-          activeTest.commands.findIndex(
-            (cmd) => cmd.id === commandID
-          ),
-        ])
+export const playbackList: MenuComponent =
+  (session) => async (_commandID?: string) => {
+    const sessionData = await session.state.get()
+    const commandID = _commandID || getActiveCommand(sessionData)
+    const editorState = sessionData.state.editor
+    const selectedCommandCount = editorState.selectedCommandIndexes.length
+    return [
+      {
+        click: async () => {
+          const activeTest = getActiveTest(sessionData)
+          const commandIDval =
+            typeof commandID === 'object' ? commandID.id : commandID
+          await session.api.playback.play(sessionData.state.activeTestID, [
+            0,
+            activeTest.commands.findIndex((cmd) => cmd.id === commandIDval),
+          ])
+        },
+        label: 'Play To Here',
       },
-      label: 'Play To Here',
-    },
-    {
-      accelerator: 'CommandOrControl+P',
-      click: async () => {
-        const activeTest = getActiveTest(sessionData)
-        await session.api.playback.play(sessionData.state.activeTestID, [
-          activeTest.commands.findIndex(
-            (cmd) => cmd.id === commandID
-          ),
-          activeTest.commands.length - 1,
-        ])
+      {
+        accelerator: 'CommandOrControl+P',
+        click: async () => {
+          const activeTest = getActiveTest(sessionData)
+          await session.api.playback.play(sessionData.state.activeTestID, [
+            activeTest.commands.findIndex((cmd) => cmd.id === commandID),
+            activeTest.commands.length - 1,
+          ])
+        },
+        enabled: selectedCommandCount === 1,
+        label: 'Play From Here',
       },
-      enabled: selectedCommandCount === 1,
-      label: 'Play From Here',
-    },
-    {
-      click: async () => {
-        const activeTest = getActiveTest(sessionData)
-        await session.api.playback.play(sessionData.state.activeTestID, [
-          activeTest.commands.findIndex(
-            (cmd) => cmd.id === commandID
-          ),
-          activeTest.commands.length - 1,
-        ])
+      {
+        click: async () => {
+          const activeTest = getActiveTest(sessionData)
+          await session.api.playback.play(sessionData.state.activeTestID, [
+            activeTest.commands.findIndex((cmd) => cmd.id === commandID),
+            activeTest.commands.length - 1,
+          ])
+        },
+        enabled: selectedCommandCount === 1,
+        label: 'Play This Step',
       },
-      enabled: selectedCommandCount === 1,
-      label: 'Play This Step',
-    },
-    {
-      accelerator: 'CommandOrControl+Shift+P',
-      click: async () => {
-        await session.api.playback.play(sessionData.state.activeTestID)
+      {
+        accelerator: 'CommandOrControl+Shift+P',
+        click: async () => {
+          await session.api.playback.play(sessionData.state.activeTestID)
+        },
+        label: 'Play From Start',
       },
-      label: 'Play From Start',
-    },
-  ]
-}
+    ]
+  }
 
 export const testEditorCommands: MenuComponent = (session) => async () => {
   const commands = await commandList(session)()

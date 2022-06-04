@@ -1,4 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close'
+import FormHelperText from '@mui/material/FormHelperText'
 import FormControl from '@mui/material/FormControl'
 import IconButton from '@mui/material/IconButton'
 import InputLabel from '@mui/material/InputLabel'
@@ -62,6 +63,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
         </FormControl>
         <FormControl>
           <InputLabel id="themePref">Theme preference</InputLabel>
+          <FormHelperText>restart required to take effect</FormHelperText>
           <Select
             id="themePref"
             label="Theme Preference"

@@ -22,7 +22,6 @@ const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
     themePref === 'System'
       ? useMediaQuery('(prefers-color-scheme: dark)')
       : themePref === 'Dark'
-  console.log('prefersDarkMode ' + prefersDarkMode)
   const theme = React.useMemo(
     () =>
       createTheme({
