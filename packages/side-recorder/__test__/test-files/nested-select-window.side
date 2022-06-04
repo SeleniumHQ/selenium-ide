@@ -1,0 +1,71 @@
+{
+  "id": "212f1831-7949-459d-a0ba-daf472ed3e53",
+  "version": "2.0",
+  "name": "nested select window",
+  "url": "http://the-internet.herokuapp.com",
+  "tests": [{
+    "id": "3147925e-12c9-4b8e-aac1-90f4f13e8404",
+    "name": "reuse",
+    "commands": [{
+      "id": "4c01a3a4-9547-4233-8d45-92496d6a6307",
+      "comment": "",
+      "command": "run",
+      "target": "select window",
+      "targets": [],
+      "value": ""
+    }]
+  }, {
+    "id": "b85e7efd-0f6f-4626-b815-24ddc3f8fbd1",
+    "name": "select window",
+    "commands": [{
+      "id": "6b96f8fe-141f-4e2d-8675-1698ad725c79",
+      "comment": "",
+      "command": "open",
+      "target": "/windows",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "ee184b06-b880-4fed-ae23-b924f16284d9",
+      "comment": "",
+      "command": "click",
+      "target": "linkText=Click Here",
+      "targets": [
+        ["linkText=Click Here", "linkText"],
+        ["css=a:nth-child(2)", "css:finder"],
+        ["xpath=//a[contains(text(),'Click Here')]", "xpath:link"],
+        ["xpath=//div[@id='content']/div/a", "xpath:idRelative"],
+        ["xpath=//a[contains(@href, '/windows/new')]", "xpath:href"],
+        ["xpath=//div/div/a", "xpath:position"],
+        ["xpath=//a[contains(.,'Click Here')]", "xpath:innerText"]
+      ],
+      "value": "",
+      "opensWindow": true,
+      "windowHandleName": "win9425",
+      "windowTimeout": 2000
+    }, {
+      "id": "f08b16ff-85df-4bcc-82f7-e8861bdb5eb2",
+      "comment": "",
+      "command": "selectWindow",
+      "target": "handle=${win9425}",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c3319e1c-cd44-4213-a7f5-e780069cd1f0",
+      "comment": "",
+      "command": "assertTitle",
+      "target": "New Window",
+      "targets": [],
+      "value": ""
+    }]
+  }],
+  "suites": [{
+    "id": "696ca955-3e12-4f0a-a4ef-369b647fd7eb",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["3147925e-12c9-4b8e-aac1-90f4f13e8404"]
+  }],
+  "urls": ["http://the-internet.herokuapp.com/"],
+  "plugins": []
+}
