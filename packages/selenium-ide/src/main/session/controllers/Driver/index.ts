@@ -32,6 +32,16 @@ export interface BrowsersInfo {
   selected: BrowserInfo
 }
 
+/**
+ * This is a shameful controller truly. It is a wrapper on the side-runtime
+ * WebdriverExecutor class, which is in itself a wrapper on an selenium-
+ * webdriver. This is why, when mounted onto the session, we may have to
+ * do this pattern of de-referencing (I'm sorry):
+ * 
+ * this.session.driver.driver.driver
+ * 
+ * :(
+ */
 export default class DriverController extends BaseController {
   constructor(session: Session) {
     super(session)
