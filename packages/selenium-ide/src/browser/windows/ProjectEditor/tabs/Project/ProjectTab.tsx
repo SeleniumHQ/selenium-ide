@@ -1,5 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close'
-import { FormHelperText } from '@mui/material'
+import FormHelperText from '@mui/material/FormHelperText'
 import FormControl from '@mui/material/FormControl'
 import IconButton from '@mui/material/IconButton'
 import InputLabel from '@mui/material/InputLabel'
