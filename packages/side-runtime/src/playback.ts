@@ -44,8 +44,12 @@ export interface PlaybackConstructorOptions {
 }
 
 export interface ExtendedEventEmitter extends EventEmitter {
-  emitCommandStateChange: Fn
-  emitControlFlowChange: Fn
+  emitCommandStateChange: (
+    state: PlaybackEventShapes['COMMAND_STATE_CHANGED']
+  ) => void
+  emitControlFlowChange: (
+    state: PlaybackEventShapes['CONTROL_FLOW_CHANGED']
+  ) => void
 }
 
 export type RunningPromise = Promise<any>
@@ -706,7 +710,7 @@ export default class Playback {
 export interface PlaybackEventShapes {
   COMMAND_STATE_CHANGED: {
     id: string
-    callstackIndex: number
+    callstackIndex?: number
     state: typeof CommandStates[keyof typeof CommandStates]
     message?: string
   }

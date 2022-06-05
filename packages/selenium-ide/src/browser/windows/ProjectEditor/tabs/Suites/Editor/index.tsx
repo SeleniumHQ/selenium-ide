@@ -26,7 +26,7 @@ const SuiteCustomizer: React.FC<{
   return (
     <>
       <EditorToolbar
-        onComplete={() => window.sideAPI.state.toggleSuiteMode('viewer')}
+        onView={() => window.sideAPI.state.toggleSuiteMode('viewer')}
       >
         <span className="ml-4">Suite Editor</span>
       </EditorToolbar>

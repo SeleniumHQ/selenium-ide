@@ -48,6 +48,13 @@ export const mutator: EventMutator<OnStepUpdatePlayback> = (
     const { tests } = session.project
     const nextActiveTest = tests.find(hasCommand) as TestShape
     stateUpdates.activeTestID = nextActiveTest.id
+  } else {
+    stateUpdates.activeTestID = test.id
+  }
+  stateUpdates.playback.testResults = {
+    [stateUpdates.activeTestID]: {
+      lastCommand: data.id,
+    },
   }
 
   return merge(session, { state: stateUpdates })
