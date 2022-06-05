@@ -1,15 +1,20 @@
-import { Api, ApiOverrides, processApi } from '@seleniumhq/side-api'
+import { Api, processApi } from '@seleniumhq/side-api'
 import { Session } from 'main/types'
 import EventListener from './classes/EventListener'
 import Handler from './classes/Handler'
 import RawHandler from './classes/RawHandler'
 
-export const overrides: ApiOverrides = {
+export const overrides = {
   recorder: {
     getFrameLocation: RawHandler<Session['recorder']['getFrameLocation']>(),
-  },
+  }
+} as const
+
+export type MainApi = Api & {
+  recorder: {
+    getFrameLocation: Session['recorder']['getFrameLocation']
+  }
 }
-export type MainApi = Api & ApiOverrides
 
 export default (session: Session): MainApi => ({
   ...processApi((path, handler) => {

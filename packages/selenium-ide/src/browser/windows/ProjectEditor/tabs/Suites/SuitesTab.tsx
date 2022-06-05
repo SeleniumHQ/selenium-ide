@@ -1,15 +1,19 @@
+import { CoreSessionData } from '@seleniumhq/side-api'
 import React from 'react'
+import MainHeader from '../../components/Main/Header'
 import SuiteEditor from './Editor'
 import SuiteViewer from './Viewer'
 
-const SuitesTab: React.FC<any> = (props) => {
-  const [isEditing, setIsEditing] = React.useState(false)
+const SuitesTab: React.FC<{ session: CoreSessionData }> = ({ session }) => {
+  const Component =
+    session.state.editor.suiteMode === 'editor' ? SuiteEditor : SuiteViewer
 
-  if (isEditing) {
-    return <SuiteEditor setIsEditing={setIsEditing} {...props} />
-  } else {
-    return <SuiteViewer setIsEditing={setIsEditing} {...props} />
-  }
+  return (
+    <>
+      <MainHeader />
+      <Component session={session} />
+    </>
+  )
 }
 
 export default SuitesTab

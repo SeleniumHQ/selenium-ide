@@ -4,7 +4,6 @@ import React from 'react'
 import SuiteEditor from './SuiteEditor'
 import AvailableSuiteTestList from './AvailableSuiteTestList'
 import { CoreSessionData } from '@seleniumhq/side-api'
-import MainHeader from '../../../components/Main/Header'
 import EditorToolbar from '../../../components/Drawer/EditorToolbar'
 import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
 import { TestShape } from '@seleniumhq/side-model'
@@ -12,8 +11,7 @@ import CurrentSuiteTestList from './CurrentSuiteTestList'
 
 const SuiteCustomizer: React.FC<{
   session: CoreSessionData
-  setIsEditing: (isEditing: boolean) => void
-}> = ({ session, setIsEditing }) => {
+}> = ({ session }) => {
   const activeSuite = getActiveSuite(session)
   const activeTests = activeSuite.tests.map(
     (id) => session.project.tests.find((t) => t.id === id) as TestShape
@@ -27,9 +25,10 @@ const SuiteCustomizer: React.FC<{
 
   return (
     <>
-      <MainHeader />
-      <EditorToolbar onComplete={() => setIsEditing(false)}>
-        Suite Editor
+      <EditorToolbar
+        onComplete={() => window.sideAPI.state.toggleSuiteMode('viewer')}
+      >
+        <span className="ml-4">Suite Editor</span>
       </EditorToolbar>
       <CurrentSuiteTestList
         activeSuite={activeSuiteID}

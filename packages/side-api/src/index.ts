@@ -1,16 +1,25 @@
 import { BaseApi } from './types'
-import { commands as dialogs, Shape as Dialogs } from './commands/dialogs'
-import { commands as driver, Shape as Driver } from './commands/driver'
-import { commands as menus, Shape as Menus } from './commands/menus'
-import { commands as playback, Shape as Playback } from './commands/playback'
-import { commands as plugins, Shape as Plugins } from './commands/plugins'
-import { commands as projects, Shape as Projects } from './commands/projects'
-import { commands as recorder, Shape as Recorder } from './commands/recorder'
-import { commands as state, Shape as State } from './commands/state'
-import { commands as suites, Shape as Suites } from './commands/suites'
-import { commands as system, Shape as System } from './commands/system'
-import { commands as tests, Shape as Tests } from './commands/tests'
-import { commands as windows, Shape as Windows } from './commands/windows'
+import { commands as dialogs, type Shape as Dialogs } from './commands/dialogs'
+import { commands as driver, type Shape as Driver } from './commands/driver'
+import { commands as menus, type Shape as Menus } from './commands/menus'
+import {
+  commands as playback,
+  type Shape as Playback,
+} from './commands/playback'
+import { commands as plugins, type Shape as Plugins } from './commands/plugins'
+import {
+  commands as projects,
+  type Shape as Projects,
+} from './commands/projects'
+import {
+  commands as recorder,
+  type Shape as Recorder,
+} from './commands/recorder'
+import { commands as state, type Shape as State } from './commands/state'
+import { commands as suites, type Shape as Suites } from './commands/suites'
+import { commands as system, type Shape as System } from './commands/system'
+import { commands as tests, type Shape as Tests } from './commands/tests'
+import { commands as windows, type Shape as Windows } from './commands/windows'
 
 export interface ApiHoist extends BaseApi {
   dialogs: typeof dialogs
@@ -27,6 +36,9 @@ export interface ApiHoist extends BaseApi {
   windows: typeof windows
 }
 
+/**
+ * The full API usable by Selenium IDE
+ */
 export type Api = {
   dialogs: Dialogs
   driver: Driver

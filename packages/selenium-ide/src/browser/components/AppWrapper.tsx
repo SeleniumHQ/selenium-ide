@@ -15,6 +15,7 @@ interface AppWrapperProps {
 const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
   const [themePref, setThemePref] = React.useState<ThemePref>('System')
   React.useEffect(() => {
+    if (!window?.sideAPI?.state) return;
     window.sideAPI.state
       .getUserPrefs()
       .then((prefs) => setThemePref(prefs.themePref || 'System'))

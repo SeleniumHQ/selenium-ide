@@ -10,11 +10,9 @@ declare global {
     __originalPrompt: typeof window['prompt']
     __originalConfirmation: typeof window['confirm']
     __originalAlert: typeof window['alert']
-    sideAPI: FullBrowserAPI
+    sideAPI: Api & { mutators: typeof ApiMutators }
   }
 }
-
-export type FullBrowserAPI = Api & { mutators: typeof ApiMutators }
 
 export type CurriedApiField<Config extends any[], Shape> = (
   ...args: Config

@@ -1,11 +1,7 @@
-import { Api, processApi } from '@seleniumhq/side-api'
+import type { Api } from '@seleniumhq/side-api'
+import { processApi } from '@seleniumhq/side-api'
 import EventListener from './classes/EventListener'
 import Handler from './classes/Handler'
-
-/**
- * This Converts the chrome API type to something usable
- * from the front end
- */
 
 const api: Api = processApi((path: string) => {
   const trailingSegment: string = path.split('.').pop() as string

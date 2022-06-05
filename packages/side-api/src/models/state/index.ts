@@ -13,12 +13,14 @@ export interface EditorStateShape {
   copiedCommands: Omit<CommandShape, 'id'>[]
   selectedCommandIndexes: number[]
   selectedTestIndexes: number[]
+  suiteMode: 'viewer' | 'editor'
 }
 
 export const defaultEditorState: EditorStateShape = {
   copiedCommands: [],
   selectedCommandIndexes: [],
   selectedTestIndexes: [],
+  suiteMode: 'viewer',
 }
 
 export interface RecorderStateShape {
