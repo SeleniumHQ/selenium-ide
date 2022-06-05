@@ -1,19 +1,25 @@
-import { Shape as list } from './list'
-import { Shape as projectCreate } from './projectCreate'
-import { Shape as projectDelete } from './projectDelete'
-import { Shape as projectEdit } from './projectEdit'
+import type { Shape as List } from './list'
+import type { Shape as ProjectCreate } from './projectCreate'
+import type { Shape as ProjectDelete } from './projectDelete'
+import type { Shape as ProjectEdit } from './projectEdit'
 
-export * as list from './list'
-export * as projectCreate from './projectCreate'
-export * as projectDelete from './projectDelete'
-export * as projectEdit from './projectEdit'
+import * as list from './list'
+import * as projectCreate from './projectCreate'
+import * as projectDelete from './projectDelete'
+import * as projectEdit from './projectEdit'
 
+export const commands = {
+  list,
+  projectCreate,
+  projectDelete,
+  projectEdit,
+}
 /**
  * Governs binding plugins to projects, and changing plugin paths
  */
 export type Shape = {
-  list: list
-  projectCreate: projectCreate
-  projectDelete: projectDelete
-  projectEdit: projectEdit
+  list: List
+  projectCreate: ProjectCreate
+  projectDelete: ProjectDelete
+  projectEdit: ProjectEdit
 }

@@ -1,4 +1,4 @@
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData } from '@seleniumhq/side-api'
 import { Session } from 'main/types'
 
 export default (session: Session): CoreSessionData => ({

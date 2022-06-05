@@ -1,7 +1,6 @@
 import { SnapshotShape } from '@seleniumhq/side-model'
 
-export type Shape = SnapshotShape
-export default {
+export const snapshot: SnapshotShape = {
   tests: [],
   dependencies: {},
   jest: {

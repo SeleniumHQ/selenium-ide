@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { EventListenerParams, LocatorFields } from 'api/types'
+import { EventListenerParams, LocatorFields } from '@seleniumhq/side-api'
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed'
 import LocatorBuilders from './locator-builders'
 import TargetSelector from './target-selector'

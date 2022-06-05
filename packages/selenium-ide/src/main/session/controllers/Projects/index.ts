@@ -1,10 +1,9 @@
 import { ProjectShape } from '@seleniumhq/side-model'
-import defaultProject from 'api/models/project'
+import { project as defaultProject, CoreSessionData } from '@seleniumhq/side-api'
 import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
-import { CoreSessionData } from 'api/types'
 import BaseController from '../Base'
 
 export default class ProjectsController {

@@ -1,43 +1,19 @@
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import ListItemText from '@mui/material/ListItemText'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
-import { camelToTitleCase } from 'api/helpers/string'
+import { camelToTitleCase } from '@seleniumhq/side-api/dist/helpers/string'
 import ReorderableListItem from 'browser/components/ReorderableListItem'
-import React from 'react'
 import { ReorderPreview } from 'browser/hooks/useReorderPreview'
+import React from 'react'
+import CommandOverlay from './TestCommandOverlay'
 
 const {
   state: { updateStepSelection },
   tests: { updateStep },
 } = window.sideAPI
-
-type ColorMode = 'light' | 'dark'
-
-const colorFromCommandState = (
-  state: PlaybackEventShapes['COMMAND_STATE_CHANGED']['state'] | undefined,
-  mode: ColorMode
-) => {
-  switch (state) {
-    case 'skipped':
-    case 'undetermined':
-      return `warning.${mode}`
-    case 'executing':
-      return `info.${mode}`
-    case 'pending':
-      return `secondary.${mode}`
-    case 'errored':
-    case 'failed':
-      return `error.${mode}`
-    case 'passed':
-      return `success.${mode}`
-    default:
-      return 'transparent'
-  }
-}
 
 const commandTextFormat = { color: 'primary.main', typography: 'body2' }
 const argTextFormat = {
@@ -84,12 +60,8 @@ const CommandRow: React.FC<CommandRowProps> = ({
     command = '//unknown - could not process'
   }
 
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-    ? 'dark'
-    : 'light'
   const toggleBreakpoint = () =>
     updateIsBreakpoint(activeTest, id, !isBreakpoint)
-  const bgcolor = colorFromCommandState(commandState.state, prefersDarkMode)
   const isDisabled = command.startsWith('//')
   const commandText = isDisabled ? command.slice(2) : command
   const mainClass = ['pos-rel'].concat(isDisabled ? ['o-50'] : []).join(' ')
@@ -142,10 +114,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
           </>
         }
       />
-      <Box
-        className="fill pos-abs o-25"
-        sx={{ bgcolor, marginLeft: -2, pointerEvents: 'none', zIndex: 75 }}
-      />
+      <CommandOverlay state={commandState.state ?? null} />
     </ReorderableListItem>
   )
 }

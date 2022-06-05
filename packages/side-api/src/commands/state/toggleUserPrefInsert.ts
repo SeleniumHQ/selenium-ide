@@ -1,5 +1,6 @@
 import set from 'lodash/fp/set'
-import { InsertCommandPref, Mutator } from '../../types'
+import { InsertCommandPref } from '../../models/state'
+import { Mutator } from '../../types'
 
 /**
  * Customizes command insert behavior to either follow or lead the current

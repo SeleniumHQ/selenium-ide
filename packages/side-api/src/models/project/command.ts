@@ -1,12 +1,10 @@
 import { CommandShape } from '@seleniumhq/side-model'
-import loadingID from '../../constants/loadingID'
+import { loadingID } from '../../constants/loadingID'
 
 /**
  * Command shape is the shape of command data in Selenium IDE
  * step files
  */
-
-export type Shape = CommandShape
 
 export const command: CommandShape = {
   command: '',
@@ -16,5 +14,3 @@ export const command: CommandShape = {
   targets: [],
   value: '',
 }
-
-export default command

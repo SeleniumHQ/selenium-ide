@@ -1,11 +1,14 @@
-import { Box, IconButton, Typography, useMediaQuery } from '@mui/material'
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
 import PauseIcon from '@mui/icons-material/Pause'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
-import { camelToTitleCase } from 'api/helpers/string'
+import { camelToTitleCase } from '@seleniumhq/side-api/dist/helpers/string'
 import ReorderableListItem from 'browser/components/ReorderableListItem'
 import React from 'react'
 import { ReorderPreview } from 'browser/hooks/useReorderPreview'
+import CommandOverlay from './TestCommandOverlay'
 
 const {
   state: { updateStepSelection },
@@ -14,7 +17,7 @@ const {
 
 type ColorMode = 'light' | 'dark'
 
-const colorFromCommandState = (
+export const colorFromCommandState = (
   state: PlaybackEventShapes['COMMAND_STATE_CHANGED']['state'] | undefined,
   mode: ColorMode
 ) => {
@@ -86,12 +89,8 @@ const CommandRow: React.FC<CommandRowProps> = ({
   if (typeof command != 'string') {
     command = '//unknown - could not process'
   }
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-    ? 'dark'
-    : 'light'
   const toggleBreakpoint = () =>
     updateIsBreakpoint(activeTest, id, !isBreakpoint)
-  const bgcolor = colorFromCommandState(commandState.state, prefersDarkMode)
   if (commandState.state === 'executing') {
     window.scrollTo(0, 20 * index)
   }
@@ -197,15 +196,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
           <Typography>{commandState.message}</Typography>
         </Box>
       )}
-      <Box
-        className="fill pos-abs o-25"
-        sx={{
-          bgcolor,
-          marginBottom: 1,
-          pointerEvents: 'none',
-          zIndex: 75,
-        }}
-      />
+      <CommandOverlay state={commandState.state ?? null} />
       <Box />
     </ReorderableListItem>
   )

@@ -1,5 +1,5 @@
 import { CommandShape } from '@seleniumhq/side-model'
-import { CommandsStateShape } from 'api/models/state/command'
+import { CommandsStateShape } from '@seleniumhq/side-api'
 import useReorderPreview from 'browser/hooks/useReorderPreview'
 import React, { FC } from 'react'
 import CommandRow from './TestCommandRow'

@@ -1,7 +1,7 @@
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import { StateShape } from 'api/types'
+import { StateShape } from '@seleniumhq/side-api'
 import React, { FC } from 'react'
 import baseControlProps from './BaseProps'
 

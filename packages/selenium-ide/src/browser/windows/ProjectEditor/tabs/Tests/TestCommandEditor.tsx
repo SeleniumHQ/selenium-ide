@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { CommandShape } from '@seleniumhq/side-model'
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData } from '@seleniumhq/side-api'
 import React, { FC } from 'react'
 import CommandSelector from './CommandFields/CommandSelector'
 import ArgField from './CommandFields/ArgField'

@@ -1,7 +1,9 @@
 import commands from './index'
 import { GenericApi, ApiEntry, ApiHandler, ApiNamespace } from './types'
 
-export default <FinalApi extends GenericApi>(handler: ApiHandler): FinalApi => {
+export const processApi = <FinalApi extends GenericApi>(
+  handler: ApiHandler
+): FinalApi => {
   const api: Partial<FinalApi> = {}
   for (const ns in commands) {
     const namespace: ApiNamespace = commands[ns]

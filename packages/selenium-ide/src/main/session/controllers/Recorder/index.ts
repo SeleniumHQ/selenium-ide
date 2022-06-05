@@ -1,6 +1,6 @@
 import { CommandShape } from '@seleniumhq/side-model'
-import { getActiveCommand } from 'api/helpers/getActiveData'
-import { LocatorFields } from 'api/types'
+import { getActiveCommand } from '@seleniumhq/side-api/dist/helpers/getActiveData'
+import { LocatorFields } from '@seleniumhq/side-api'
 import { randomInt, randomUUID } from 'crypto'
 import { relative } from 'path'
 import BaseController from '../Base'

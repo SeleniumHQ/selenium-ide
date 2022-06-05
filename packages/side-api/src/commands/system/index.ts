@@ -1,13 +1,18 @@
-import { Shape as crash } from './crash'
-import { Shape as quit } from './quit'
+import type { Shape as Crash } from './crash'
+import type { Shape as Quit } from './quit'
 
-export * as crash from './crash'
-export * as quit from './quit'
+import * as crash from './crash'
+import * as quit from './quit'
+
+export const commands = {
+  crash,
+  quit,
+}
 
 /**
  * Allows for the IDE process to be exited gracefully or non-gracefully.
  */
 export type Shape = {
-  crash: crash
-  quit: quit
+  crash: Crash
+  quit: Quit
 }

@@ -1,4 +1,4 @@
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData } from '@seleniumhq/side-api'
 import React from 'react'
 import { DrawerWrapperProps } from './Wrapper'
 import TabPanel from '../Tab/Panel'
@@ -14,7 +14,7 @@ interface SIDEDrawerProps extends Omit<DrawerWrapperProps, 'footerID' | 'header'
 const SIDEDrawer: React.FC<SIDEDrawerProps> = ({ session, tab, ...props }) => {
   const {
     project: { suites, tests },
-    state: { activeSuiteID, activeTestID },
+    state: { activeSuiteID, activeTestID, editor: { suiteMode } },
   } = session
   return (
     <>
@@ -22,7 +22,7 @@ const SIDEDrawer: React.FC<SIDEDrawerProps> = ({ session, tab, ...props }) => {
         <TestsDrawer activeTest={activeTestID} tests={tests} {...props} />
       </TabPanel>
       <TabPanel index={SUITES_TAB} value={tab}>
-        <SuitesDrawer activeSuite={activeSuiteID} suites={suites} {...props} />
+        <SuitesDrawer activeSuite={activeSuiteID} suiteMode={suiteMode} suites={suites} {...props} />
       </TabPanel>
     </>
   )

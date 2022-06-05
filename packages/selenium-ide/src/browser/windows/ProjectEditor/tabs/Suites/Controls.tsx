@@ -1,4 +1,4 @@
-import { StateShape } from 'api/types'
+import { StateShape } from '@seleniumhq/side-api'
 import React, { FC } from 'react'
 import PauseButton from '../../components/Controls/PauseButton'
 import PlayListButton from '../../components/Controls/PlayListButton'

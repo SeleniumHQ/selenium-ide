@@ -5,7 +5,7 @@ import {
   Variables,
 } from '@seleniumhq/side-runtime'
 import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/src/webdriver'
-import { hasID } from 'api/helpers/hasID'
+import { hasID } from '@seleniumhq/side-api/dist/helpers/hasID'
 import { Session } from 'main/types'
 import BaseController from '../Base'
 
