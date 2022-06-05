@@ -11,7 +11,7 @@ import { Mutator } from '../../types'
 export type Shape = (
   testID: string,
   index: number,
-  stepFields: Partial<CommandShape>[]
+  stepFields?: Partial<CommandShape>[]
 ) => Promise<CommandShape[]>
 
 export const mutator: Mutator<Shape> = (

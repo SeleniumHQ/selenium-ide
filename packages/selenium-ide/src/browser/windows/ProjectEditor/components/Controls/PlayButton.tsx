@@ -1,9 +1,9 @@
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import { StateShape } from 'api/types'
+import { StateShape } from '@seleniumhq/side-api'
 import React, { FC } from 'react'
-import badIndex from 'api/constants/badIndex'
+import { badIndex } from '@seleniumhq/side-api/dist/constants/badIndex'
 import baseControlProps from './BaseProps'
 
 export interface PlayButtonProps {

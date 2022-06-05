@@ -1,10 +1,15 @@
-import { Shape as close } from './close'
-import { Shape as open } from './open'
+import type { Shape as Close } from './close'
+import type { Shape as Open } from './open'
 
-export * as close from './close'
-export * as open from './open'
+import * as close from './close'
+import * as open from './open'
+
+export const commands = {
+  close,
+  open,
+}
 
 export type Shape = {
-  close: close
-  open: open
+  close: Close
+  open: Open
 }

@@ -1,8 +1,7 @@
 import { CommandShape } from '@seleniumhq/side-model'
 import { CommandTypes } from '@seleniumhq/side-model/dist/Commands'
-import badIndex from '../../constants/badIndex'
-import loadingID from '../../constants/loadingID'
-import { UserPrefs } from '../../types'
+import { badIndex } from '../../constants/badIndex'
+import { loadingID } from '../../constants/loadingID'
 import { CommandsStateShape } from './command'
 
 /**
@@ -14,12 +13,14 @@ export interface EditorStateShape {
   copiedCommands: Omit<CommandShape, 'id'>[]
   selectedCommandIndexes: number[]
   selectedTestIndexes: number[]
+  suiteMode: 'viewer' | 'editor'
 }
 
 export const defaultEditorState: EditorStateShape = {
   copiedCommands: [],
   selectedCommandIndexes: [],
   selectedTestIndexes: [],
+  suiteMode: 'viewer',
 }
 
 export interface RecorderStateShape {
@@ -30,8 +31,17 @@ export const defaultRecorderState: RecorderStateShape = {
   activeFrame: 'root',
 }
 
+export type InsertCommandPref = 'Before' | 'After'
+export type ThemePref = 'Dark' | 'Light' | 'System'
+
+export interface UserPrefs {
+  insertCommandPref: InsertCommandPref
+  themePref: ThemePref
+}
+
 export const defaultUserPrefs: UserPrefs = {
   insertCommandPref: 'After',
+  themePref: 'System',
 }
 
 export interface PlaybackStateShape {
@@ -40,6 +50,7 @@ export interface PlaybackStateShape {
   currentTestIndex: number
   stopIndex: number
   tests: string[]
+  testResults: Record<string, { lastCommand: string }>
 }
 
 export const defaultPlaybackState: PlaybackStateShape = {
@@ -48,6 +59,7 @@ export const defaultPlaybackState: PlaybackStateShape = {
   currentTestIndex: 0,
   stopIndex: badIndex,
   tests: [],
+  testResults: {},
 }
 
 export interface StateShape {
@@ -63,9 +75,7 @@ export interface StateShape {
   status: 'idle' | 'paused' | 'playing' | 'recording'
 }
 
-export type Shape = StateShape
-
-const action: StateShape = {
+export const state: StateShape = {
   activeSuiteID: loadingID,
   activeTestID: loadingID,
   breakpoints: [],
@@ -78,4 +88,4 @@ const action: StateShape = {
   status: 'idle',
 }
 
-export default action
+export * from './command'

@@ -1,7 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import defaultProject from 'api/models/project'
-import defaultState from 'api/models/state'
-import { CoreSessionData } from 'api/types'
+import { project as defaultProject, state as defaultState } from '@seleniumhq/side-api'
+import { CoreSessionData } from '@seleniumhq/side-api'
 
 const performSubscription = async (
   updateSession: Dispatch<SetStateAction<CoreSessionData>>
@@ -12,7 +11,7 @@ const performSubscription = async (
       const [namespace, method] = path.split('.')
       console.debug('Queueing Mutator', path, data)
       updateSession((session) => {
-        // @ts-expect-error
+        // @ts-expect-error - We know this object to be truthy because onMutate always does 
         const newSession = window.sideAPI.mutators[namespace][method](
           session,
           data

@@ -1,8 +1,7 @@
 import { SnapshotTestShape } from '@seleniumhq/side-model'
-import loadingID from '../../constants/loadingID'
+import { loadingID } from '../../constants/loadingID'
 
-export type Shape = SnapshotTestShape
-const snapshotTest: SnapshotTestShape = {
+export const snapshotTest: SnapshotTestShape = {
   id: loadingID,
   snapshot: {
     commands: {},
@@ -10,4 +9,3 @@ const snapshotTest: SnapshotTestShape = {
     teardownHooks: [],
   },
 }
-export default snapshotTest

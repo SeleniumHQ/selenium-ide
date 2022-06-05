@@ -1,31 +1,42 @@
-import { Shape as addSteps } from './addSteps'
-import { Shape as create } from './create'
-import { Shape as deleteTest } from './delete'
-import { Shape as removeSteps } from './removeSteps'
-import { Shape as rename } from './rename'
-import { Shape as reorderSteps } from './reorderSteps'
-import { Shape as toggleStepDisability } from './toggleStepDisability'
-import { Shape as updateStep } from './updateStep'
+import type { Shape as AddSteps } from './addSteps'
+import type { Shape as Create } from './create'
+import type { Shape as DeleteTest } from './delete'
+import type { Shape as RemoveSteps } from './removeSteps'
+import type { Shape as Rename } from './rename'
+import type { Shape as ReorderSteps } from './reorderSteps'
+import type { Shape as ToggleStepDisability } from './toggleStepDisability'
+import type { Shape as UpdateStep } from './updateStep'
 
-export * as addSteps from './addSteps'
-export * as create from './create'
-export * as delete from './delete'
-export * as removeSteps from './removeSteps'
-export * as rename from './rename'
-export * as reorderSteps from './reorderSteps'
-export * as toggleStepDisability from './toggleStepDisability'
-export * as updateStep from './updateStep'
+import * as addSteps from './addSteps'
+import * as create from './create'
+import * as deleteTest from './delete'
+import * as removeSteps from './removeSteps'
+import * as rename from './rename'
+import * as reorderSteps from './reorderSteps'
+import * as toggleStepDisability from './toggleStepDisability'
+import * as updateStep from './updateStep'
+
+export const commands = {
+  addSteps,
+  create,
+  delete: deleteTest,
+  removeSteps,
+  rename,
+  reorderSteps,
+  toggleStepDisability,
+  updateStep,
+}
 
 /**
  * Body of functions around editing test steps and creating / deleting tests
  */
 export type Shape = {
-  addSteps: addSteps
-  create: create
-  delete: deleteTest
-  removeSteps: removeSteps
-  rename: rename
-  reorderSteps: reorderSteps
-  toggleStepDisability: toggleStepDisability
-  updateStep: updateStep
+  addSteps: AddSteps
+  create: Create
+  delete: DeleteTest
+  removeSteps: RemoveSteps
+  rename: Rename
+  reorderSteps: ReorderSteps
+  toggleStepDisability: ToggleStepDisability
+  updateStep: UpdateStep
 }

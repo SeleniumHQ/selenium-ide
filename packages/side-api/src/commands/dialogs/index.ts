@@ -1,10 +1,14 @@
-import { Shape as open } from './open'
+import type { Shape as Open } from './open'
 
-export * as open from './open'
+import * as open from './open'
+
+export const commands = {
+  open,
+}
 
 /**
  * Manages the presenting of dialogs to the user
  */
 export type Shape = {
-  open: open
+  open: Open
 }

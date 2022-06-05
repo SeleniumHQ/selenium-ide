@@ -1,27 +1,28 @@
-import React, { FC } from 'react'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import { ThemePref } from '@seleniumhq/side-api'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
+import React, { FC } from 'react'
 
 interface AppWrapperProps {
   className?: string
 }
 
 const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
-  const [themePref, setThemePref] = React.useState('system')
+  const [themePref, setThemePref] = React.useState<ThemePref>('System')
   React.useEffect(() => {
+    if (!window?.sideAPI?.state) return;
     window.sideAPI.state
       .getUserPrefs()
-      .then((test) => setThemePref(test.themePref))
+      .then((prefs) => setThemePref(prefs.themePref || 'System'))
   }, [])
+  const systemPref = useMediaQuery('(prefers-color-scheme: dark)')
   const prefersDarkMode =
-    themePref === 'System'
-      ? useMediaQuery('(prefers-color-scheme: dark)')
-      : themePref === 'Dark'
+    themePref === 'System' ? systemPref : themePref === 'Dark'
   const theme = React.useMemo(
     () =>
       createTheme({

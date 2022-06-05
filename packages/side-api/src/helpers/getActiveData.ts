@@ -1,7 +1,7 @@
 import { CommandShape, SuiteShape, TestShape } from '@seleniumhq/side-model'
-import defaultCommand from '../models/project/command'
-import defaultSuite from '../models/project/suite'
-import defaultTest from '../models/project/test'
+import { command as defaultCommand } from '../models/project/command'
+import { suite as defaultSuite } from '../models/project/suite'
+import { test as defaultTest } from '../models/project/test'
 import { CoreSessionData } from '../types'
 import { hasID } from './hasID'
 

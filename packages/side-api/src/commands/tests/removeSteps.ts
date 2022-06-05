@@ -4,7 +4,7 @@ import { Mutator } from '../../types'
 import { hasID } from '../../helpers/hasID'
 
 /**
- * Remove the selected steps from the chosen test
+ * Remove the chosen indexes from a test
  */
 export type Shape = (testID: string, stepIndexes: number[]) => Promise<void>
 

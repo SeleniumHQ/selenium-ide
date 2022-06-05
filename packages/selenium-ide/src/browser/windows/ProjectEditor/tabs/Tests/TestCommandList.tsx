@@ -1,5 +1,5 @@
 import { CommandShape } from '@seleniumhq/side-model'
-import { CommandsStateShape } from 'api/models/state/command'
+import { CommandsStateShape } from '@seleniumhq/side-api'
 import ReorderableList from 'browser/components/ReorderableList'
 import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
 import useReorderPreview from 'browser/hooks/useReorderPreview'

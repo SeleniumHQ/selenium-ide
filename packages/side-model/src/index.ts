@@ -16,5 +16,5 @@
 // under the License.
 
 export * from './types'
-export {default as ArgTypes} from './ArgTypes'
-export {default as Commands} from './Commands'
+export { default as ArgTypes } from './ArgTypes'
+export { default as Commands } from './Commands'

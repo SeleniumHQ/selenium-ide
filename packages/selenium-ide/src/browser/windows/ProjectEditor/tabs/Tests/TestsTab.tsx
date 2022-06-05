@@ -1,13 +1,13 @@
 import Paper from '@mui/material/Paper'
-import { getActiveCommand, getActiveTest } from 'api/helpers/getActiveData'
+import { getActiveCommand, getActiveTest } from '@seleniumhq/side-api/dist/helpers/getActiveData'
 import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
 import React, { useEffect } from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import CommandTable from './TestCommandTable'
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData } from '@seleniumhq/side-api'
 import MainHeader from '../../components/Main/Header'
-import loadingID from 'api/constants/loadingID'
+import { loadingID } from '@seleniumhq/side-api/dist/constants/loadingID'
 import { Typography, useMediaQuery } from '@mui/material'
 
 const sxCenter = { textAlign: 'center' }

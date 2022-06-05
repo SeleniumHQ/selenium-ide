@@ -6,7 +6,7 @@ import {
   StateShape,
 } from '../../types'
 import { defaultPlaybackState } from '../../models/state'
-import badIndex from '../../constants/badIndex'
+import { badIndex } from '../../constants/badIndex'
 
 /**
  * Runs whenever a test begins, ends, pauses, or errors

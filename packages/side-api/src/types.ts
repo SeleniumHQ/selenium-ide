@@ -78,12 +78,6 @@ export type EventListenerParams<LISTENER extends BaseListener<any>> =
 
 export type LocatorFields = 'target' | 'value'
 
-export type InsertCommandPref = 'Before' | 'After'
-
-export interface UserPrefs {
-  insertCommandPref: InsertCommandPref
-}
-
 export interface RecordNewCommandInput {
   command: string
   target: string | [string, string][]

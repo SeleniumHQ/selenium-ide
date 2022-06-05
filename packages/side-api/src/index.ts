@@ -1,19 +1,25 @@
 import { BaseApi } from './types'
-import * as dialogs from './commands/dialogs'
-import * as driver from './commands/driver'
-import * as menus from './commands/menus'
-import * as playback from './commands/playback'
-import * as plugins from './commands/plugins'
-import * as projects from './commands/projects'
-import * as recorder from './commands/recorder'
-import * as state from './commands/state'
-import * as suites from './commands/suites'
-import * as system from './commands/system'
-import * as tests from './commands/tests'
-import * as windows from './commands/windows'
-export * as models from './models'
-
-export { default as process } from './process'
+import { commands as dialogs, type Shape as Dialogs } from './commands/dialogs'
+import { commands as driver, type Shape as Driver } from './commands/driver'
+import { commands as menus, type Shape as Menus } from './commands/menus'
+import {
+  commands as playback,
+  type Shape as Playback,
+} from './commands/playback'
+import { commands as plugins, type Shape as Plugins } from './commands/plugins'
+import {
+  commands as projects,
+  type Shape as Projects,
+} from './commands/projects'
+import {
+  commands as recorder,
+  type Shape as Recorder,
+} from './commands/recorder'
+import { commands as state, type Shape as State } from './commands/state'
+import { commands as suites, type Shape as Suites } from './commands/suites'
+import { commands as system, type Shape as System } from './commands/system'
+import { commands as tests, type Shape as Tests } from './commands/tests'
+import { commands as windows, type Shape as Windows } from './commands/windows'
 
 export interface ApiHoist extends BaseApi {
   dialogs: typeof dialogs
@@ -30,19 +36,26 @@ export interface ApiHoist extends BaseApi {
   windows: typeof windows
 }
 
+/**
+ * The full API usable by Selenium IDE
+ */
 export type Api = {
-  dialogs: dialogs.Shape
-  driver: driver.Shape
-  menus: menus.Shape
-  playback: playback.Shape
-  plugins: plugins.Shape
-  projects: projects.Shape
-  recorder: recorder.Shape
-  state: state.Shape
-  suites: suites.Shape
-  system: system.Shape
-  tests: tests.Shape
-  windows: windows.Shape
+  dialogs: Dialogs
+  driver: Driver
+  menus: Menus
+  playback: Playback
+  plugins: Plugins
+  projects: Projects
+  recorder: Recorder
+  state: State
+  suites: Suites
+  system: System
+  tests: Tests
+  windows: Windows
+}
+
+export type ApiOverrides = {
+  [P in keyof Api]?: Partial<Record<keyof Api[P], any>>
 }
 
 export const api: ApiHoist = {
@@ -60,6 +73,8 @@ export const api: ApiHoist = {
   windows,
 }
 
+export * from './helpers'
+export * from './models'
+export * from './process'
 export * from './types'
-
 export default api

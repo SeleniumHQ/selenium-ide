@@ -1,4 +1,4 @@
-import { process as processApi } from '@seleniumhq/side-api'
+import { processApi } from '@seleniumhq/side-api'
 import { ApiHoist as Api } from '@seleniumhq/side-api'
 
 /**

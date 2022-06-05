@@ -10,4 +10,4 @@ export type MenuNames =
  * Opens one of our available menu types. Types are governed
  * by Selenium IDE internals (sorry, no custom menus -_-)
  */
-export type Shape = (name: MenuNames) => Promise<void>
+export type Shape = (name: MenuNames, ...args: any[]) => Promise<void>

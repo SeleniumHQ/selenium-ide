@@ -1,4 +1,5 @@
 import List from '@mui/material/List'
+import { EditorStateShape } from '@seleniumhq/side-api'
 import { SuiteShape } from '@seleniumhq/side-model'
 import React, { FC } from 'react'
 import Drawer from '../../components/Drawer/Wrapper'
@@ -9,6 +10,7 @@ export interface SuiteListProps {
   activeSuite: string
   open: boolean
   setOpen: (b: boolean) => void
+  suiteMode: EditorStateShape['suiteMode']
   suites: SuiteShape[]
 }
 
@@ -23,10 +25,11 @@ const SuiteList: FC<SuiteListProps> = ({
   activeSuite,
   open,
   setOpen,
+  suiteMode,
   suites,
 }) => (
   <Drawer
-    footerID="suite-editor"
+    footerID={suiteMode === 'editor' ? "suite-editor" : ''}
     open={open}
     header="Select Suite"
     setOpen={setOpen}

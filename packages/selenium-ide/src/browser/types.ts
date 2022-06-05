@@ -1,7 +1,7 @@
-import { CoreSessionData } from 'api/types'
+import { CoreSessionData } from '@seleniumhq/side-api'
 import { BrowserWindowConstructorOptions } from 'electron'
 import { Session } from 'main/types'
-import Api from './api'
+import type { Api } from './api'
 import ApiMutators from './api/mutator'
 import Recorder from './windows/PlaybackWindow/preload/recorder'
 
@@ -10,11 +10,9 @@ declare global {
     __originalPrompt: typeof window['prompt']
     __originalConfirmation: typeof window['confirm']
     __originalAlert: typeof window['alert']
-    sideAPI: FullBrowserAPI
+    sideAPI: Api & { mutators: typeof ApiMutators }
   }
 }
-
-export type FullBrowserAPI = typeof Api & { mutators: typeof ApiMutators }
 
 export type CurriedApiField<Config extends any[], Shape> = (
   ...args: Config

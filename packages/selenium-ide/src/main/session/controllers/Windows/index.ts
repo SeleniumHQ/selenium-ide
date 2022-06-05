@@ -25,13 +25,17 @@ const projectEditorWindowName = 'project-editor'
 export type WindowLoader = (
   opts?: BrowserWindowConstructorOptions
 ) => BrowserWindow
+
 export interface WindowLoaderMap {
   [key: string]: WindowLoader
 }
+
 export type WindowLoaderFactory = (session: Session) => WindowLoader
+
 export interface WindowLoaderFactoryMap {
   [key: string]: WindowLoaderFactory
 }
+
 const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
   Object.entries(windowConfigs).map(
     ([key, { window }]: [string, WindowConfig]) => {

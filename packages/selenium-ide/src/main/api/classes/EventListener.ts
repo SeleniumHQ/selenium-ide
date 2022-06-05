@@ -1,5 +1,5 @@
 import { ipcMain, WebContents } from 'electron'
-import { BaseListener, EventMutator, ListenerFn, VariadicArgs } from 'api/types'
+import { BaseListener, EventMutator, ListenerFn, VariadicArgs } from '@seleniumhq/side-api'
 import { Session } from 'main/types'
 import getCore from '../helpers/getCore'
 import { COLOR_CYAN, vdebuglog } from 'main/util'

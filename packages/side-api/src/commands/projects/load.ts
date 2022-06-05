@@ -1,5 +1,5 @@
 import { SuiteShape } from '@seleniumhq/side-model'
-import loadingID from '../../constants/loadingID'
+import { loadingID } from '../../constants/loadingID'
 import { CoreSessionData, Mutator } from '../../types'
 
 /**

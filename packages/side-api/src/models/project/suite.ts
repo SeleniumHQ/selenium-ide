@@ -1,8 +1,7 @@
 import { SuiteShape } from '@seleniumhq/side-model'
-import loadingID from '../../constants/loadingID'
+import { loadingID } from '../../constants/loadingID'
 
-export type Shape = SuiteShape
-const suite: SuiteShape = {
+export const suite: SuiteShape = {
   id: loadingID,
   name: '',
   persistSession: false,
@@ -10,5 +9,3 @@ const suite: SuiteShape = {
   timeout: 30000,
   tests: [],
 }
-
-export default suite
