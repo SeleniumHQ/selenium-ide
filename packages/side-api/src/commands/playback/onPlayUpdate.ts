@@ -5,7 +5,6 @@ import {
   EventMutator,
   StateShape,
 } from '../../types'
-import { defaultPlaybackState } from '../../models/state'
 import { badIndex } from '../../constants/badIndex'
 
 /**
@@ -47,14 +46,6 @@ export const mutator: EventMutator<OnPlayUpdatePlayback> = (
     status: playStatusFromPlaybackState[data.state],
   }
   switch (data.state) {
-    case 'playing':
-      if (session.state.playback.currentIndex === badIndex) {
-        state.playback.commands = {}
-      }
-      break
-    case 'prep':
-      state.playback = defaultPlaybackState
-      break
     case 'paused':
     case 'breakpoint':
       state.status = 'paused'

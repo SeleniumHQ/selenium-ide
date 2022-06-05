@@ -46,6 +46,8 @@ const CommandOverlay: React.FC<CommandOverlayProps> = ({
         marginBottom: 1,
         pointerEvents: 'none',
         zIndex: 75,
+        top: 0,
+        left: 0
       }}
     />
   )

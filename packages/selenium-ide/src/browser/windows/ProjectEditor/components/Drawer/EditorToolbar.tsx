@@ -1,8 +1,8 @@
 import AddIcon from '@mui/icons-material/Add'
-import CheckIcon from '@mui/icons-material/Check';
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import EditIcon from '@mui/icons-material/Edit'
 import RemoveIcon from '@mui/icons-material/Remove'
-import { Box } from '@mui/material'
+import { Box, Tooltip } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import ListSubheader, { ListSubheaderProps } from '@mui/material/ListSubheader'
 import React, { FC } from 'react'
@@ -11,7 +11,7 @@ interface EditorToolbarProps extends ListSubheaderProps {
   onAdd?: () => void
   onEdit?: () => void
   onRemove?: () => void
-  onComplete?: () => void
+  onView?: () => void
 }
 
 const standardIconProps = {
@@ -25,9 +25,9 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
   children,
   className = 'lh-36',
   onAdd,
-  onComplete,
   onEdit,
   onRemove,
+  onView,
   sx = {},
   ...props
 }) => (
@@ -37,37 +37,43 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
     sx={{ zIndex: 100, display: 'flex', flexDirection: 'row', ...sx }}
     {...props}
   >
-    <Box sx={{ flex: 1 }}>
-      {children}
-    </Box>
-    <Box sx={{ flex: 0 }}>
-      {onComplete ? (
-        <IconButton {...standardIconProps} color="success" onClick={onComplete}>
-          <CheckIcon />
-        </IconButton>
-      ) : null}
-    </Box>
-    <Box sx={{ flex: 0 }}>
-      {onAdd ? (
-        <IconButton {...standardIconProps} color="success" onClick={onAdd}>
-          <AddIcon />
-        </IconButton>
-      ) : null}
-    </Box>
-    <Box sx={{ flex: 0 }}>
-      {onEdit ? (
-        <IconButton {...standardIconProps} color="info" onClick={onEdit}>
-          <EditIcon />
-        </IconButton>
-      ) : null}
-    </Box>
-    <Box sx={{ flex: 0 }}>
-      {onRemove ? (
-        <IconButton {...standardIconProps} color="warning" onClick={onRemove}>
-          <RemoveIcon />
-        </IconButton>
-      ) : null}
-    </Box>
+    <Box sx={{ flex: 1 }}>{children}</Box>
+    {onAdd ? (
+      <Box sx={{ flex: 0 }}>
+        <Tooltip title="Add">
+          <IconButton {...standardIconProps} color="success" onClick={onAdd}>
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ) : null}
+    {onRemove ? (
+      <Box sx={{ flex: 0 }}>
+        <Tooltip title="Remove">
+          <IconButton {...standardIconProps} color="warning" onClick={onRemove}>
+            <RemoveIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ) : null}
+    {onEdit ? (
+      <Box sx={{ flex: 0 }}>
+        <Tooltip title="Edit">
+          <IconButton {...standardIconProps} color="info" onClick={onEdit}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ) : null}
+    {onView ? (
+      <Box sx={{ flex: 0 }}>
+        <Tooltip title="View Playback Results">
+          <IconButton {...standardIconProps} color="info" onClick={onView}>
+            <VisibilityIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ) : null}
   </ListSubheader>
 )
 
