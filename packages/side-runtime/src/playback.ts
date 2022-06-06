@@ -253,9 +253,10 @@ export default class Playback {
     if (!graceful) {
       await this.executor.cancel()
     }
-    await new Promise((res) => {
-      this[state].pausingResolve = res
-    })
+    this[state].isPlaying = false
+    // await new Promise((res) => {
+    //   this[state].pausingResolve = res
+    // })
   }
 
   resume() {
