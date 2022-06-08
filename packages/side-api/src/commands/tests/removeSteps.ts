@@ -24,14 +24,16 @@ export const mutator: Mutator<Shape> = (
   )
   return update(
     `state.editor.selectedCommandIndexes`,
-    (selectedCommandIndexes: number[]) => {
-      const filteredCommands = selectedCommandIndexes.filter(
-        (_id, index) => !stepIndexes.includes(index)
-      )
-      if (filteredCommands.length) {
-        return filteredCommands
+    (selectedCommandIndexes: number[]): number[] => {
+      {
+        const filteredCommands = selectedCommandIndexes.filter(
+          (_id, index) => !stepIndexes.includes(index)
+        )
+        if (filteredCommands.length) {
+          return filteredCommands
+        }
+        return [Math.max(selectedCommandIndexes.slice(-1)[0] - 1, 0)]
       }
-      return Math.max(selectedCommandIndexes.slice(-1)[0] - 1, 0)
     },
     sessionWithRemovedCommands
   )
