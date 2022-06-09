@@ -1,7 +1,6 @@
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import update from 'lodash/fp/update'
 import { mutator as updateStepSelection } from '../state/updateStepSelection'
-import { state } from '../../models'
 import { hasID } from '../../helpers/hasID'
 import { Mutator } from '../../types'
 
@@ -18,6 +17,13 @@ export const mutator: Mutator<Shape> = (
   session,
   { params: [testID, index], result }
 ) => {
+  const selectIndex =
+    session.state.status === 'recording'
+      ? index + 1
+      : session.state.userPrefs.insertCommandPref === 'After'
+      ? index + 1
+      : index
+
   const sessionWithNewCommands = update(
     'project.tests',
     (tests: TestShape[]) => {
@@ -26,11 +32,13 @@ export const mutator: Mutator<Shape> = (
         `${testIndex}.commands`,
         (commands: CommandShape[]) => {
           const commandsWithNewEntry = commands.slice(0)
-          let insertIndex = index
-          if (state.userPrefs.insertCommandPref === 'After')
-            insertIndex = insertIndex + 1
+          const insertIndex =
+            session.state.status === 'recording'
+              ? index + 1
+              : session.state.userPrefs.insertCommandPref === 'After'
+              ? index + 1
+              : index
           commandsWithNewEntry.splice(insertIndex, 0, ...result)
-
           return commandsWithNewEntry
         },
         tests
@@ -39,7 +47,7 @@ export const mutator: Mutator<Shape> = (
     session
   )
   return updateStepSelection(sessionWithNewCommands, {
-    params: [index + result.length, false, false, true],
+    params: [selectIndex, false, false, true],
     result: undefined,
   })
 }
