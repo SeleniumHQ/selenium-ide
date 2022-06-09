@@ -22,24 +22,26 @@ const SuiteViewer: FC<CurrentSuiteTestListProps> = ({ session }) => {
         <span className="ml-4">Suite Player</span>
       </EditorToolbar>
       <List dense>
-        {activeSuite.tests.map((testID) => {
-          const test = tests.find(hasID(testID)) as TestShape
-          const lastCommand = testResults[test.id]?.lastCommand
-          const command = lastCommand
-            ? test.commands.find((t) => t.id === lastCommand) || null
-            : null
-          const result = lastCommand
-            ? commandResults[lastCommand] ?? null
-            : null
-          return (
-            <SuiteViewerEntry
-              key={test.id}
-              command={command}
-              result={result}
-              test={test}
-            />
-          )
-        })}
+        {activeSuite.tests
+          .sort((a, b) => a.localeCompare(b))
+          .map((testID) => {
+            const test = tests.find(hasID(testID)) as TestShape
+            const lastCommand = testResults[test.id]?.lastCommand
+            const command = lastCommand
+              ? test.commands.find((t) => t.id === lastCommand) || null
+              : null
+            const result = lastCommand
+              ? commandResults[lastCommand] ?? null
+              : null
+            return (
+              <SuiteViewerEntry
+                key={test.id}
+                command={command}
+                result={result}
+                test={test}
+              />
+            )
+          })}
       </List>
     </>
   )
