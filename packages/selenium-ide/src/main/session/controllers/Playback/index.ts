@@ -28,6 +28,7 @@ export default class PlaybackController extends BaseController {
   playingSuite = ''
   playingTest = ''
   playback: Playback | null = null
+  variables: Variables = new Variables()
 
   onBeforePlay: NonNullable<WebDriverExecutorHooks['onBeforePlay']> = async ({
     driver: executor,
@@ -89,13 +90,16 @@ export default class PlaybackController extends BaseController {
     this.playingTest = testID
     this.playRange = playRange
     this.isPlaying = true
+    /**
+     * Create playback if none exists
+     */
     if (!this.playback) {
       const playback = new Playback({
         baseUrl: this.session.projects.project.url,
         executor: await this.session.driver.build({}),
         getTestByName: (name: string) => this.session.tests.getByName(name),
         logger: console,
-        variables: new Variables(),
+        variables: this.variables,
       })
       const EE = playback['event-emitter']
       EE.addListener(
@@ -108,9 +112,18 @@ export default class PlaybackController extends BaseController {
       )
       this.playback = playback
     }
+    /**
+     * If not ending at end of test, use playTo command
+     * or playSingleCommand if just one command specified.
+     * Otherwise, use full play command.
+     */
     if (playRange[1] !== -1) {
       const test = this.session.tests.getByID(testID)
-      await this.playback.playTo(test, playRange[1], playRange[0])
+      if (playRange[0] === playRange[1]) {
+        this.playback.playSingleCommand(test.commands[playRange[0]])
+      } else {
+        this.playback.playTo(test, playRange[1], playRange[0])
+      }
     } else {
       this.playback.play(this.session.tests.getByID(testID), {
         startingCommandIndex: playRange[0],
@@ -167,6 +180,7 @@ export default class PlaybackController extends BaseController {
         const playback = this.playback as Playback
         playback.cleanup()
         this.playback = null
+        this.variables = new Variables()
         if (this.playingSuite) {
           this.playNextTest()
         }

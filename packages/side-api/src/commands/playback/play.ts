@@ -1,4 +1,3 @@
-import set from 'lodash/fp/set'
 import { defaultPlaybackState } from '../../models'
 import { Mutator } from '../../types'
 
@@ -11,9 +10,16 @@ export type Shape = (
   playRange?: [number, number]
 ) => Promise<void>
 
-export const mutator: Mutator = (session) =>
-  set(
-    'state.playback',
-    defaultPlaybackState,
-    set('state.status', 'playing', session)
-  )
+export const mutator: Mutator<Shape> = (
+  session,
+  { params: [_testID, playRange = [0, -1]] }
+) => ({
+  ...session,
+  state: {
+    ...session.state,
+    playback:
+      playRange[0] === 0 ? defaultPlaybackState : session.state.playback,
+    status: 'playing',
+    stopIndex: playRange[1],
+  },
+})
