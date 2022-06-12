@@ -254,9 +254,9 @@ export default class Playback {
       await this.executor.cancel()
     }
     this[state].isPlaying = false
-    // await new Promise((res) => {
-    //   this[state].pausingResolve = res
-    // })
+    await new Promise((res) => {
+      this[state].pausingResolve = res
+    })
   }
 
   resume() {
@@ -386,13 +386,14 @@ export default class Playback {
         message: undefined,
       })
 
+      const steps = this[state].steps
       if (this[state].stopping) {
         return
       } else if (this[state].pausing) {
         await this._pause()
         return await this._executionLoop({ ignoreBreakpoint: true })
-      } else if (this[state].steps !== undefined) {
-        if (this[state].steps === 0) {
+      } else if (steps !== undefined) {
+        if (steps === 0) {
           this[state].steps = undefined
           const stepPromise = this[state].stepPromise
           if (stepPromise) {
@@ -401,8 +402,7 @@ export default class Playback {
           await this._pause()
           return await this._executionLoop({ ignoreBreakpoint: true })
         }
-        // @ts-expect-error
-        this[state].steps--
+        this[state].steps = steps - 1
       }
 
       const playTo = this[state].playTo
@@ -641,6 +641,7 @@ export default class Playback {
       playTo?.command &&
       this.currentExecutingNode?.command.id === playTo.command
     ) {
+      this[state].isPlaying = false
       playTo.res()
     }
 

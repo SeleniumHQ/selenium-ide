@@ -1,3 +1,4 @@
+import { hasID } from '@seleniumhq/side-api'
 import {
   getActiveCommand,
   getActiveCommandIndex,
@@ -127,7 +128,7 @@ export const playbackList: MenuComponent =
           const activeTest = getActiveTest(sessionData)
           await session.api.playback.play(sessionData.state.activeTestID, [
             activeTest.commands.findIndex((cmd) => cmd.id === commandID),
-            activeTest.commands.length - 1,
+            -1,
           ])
         },
         enabled: selectedCommandCount === 1,
@@ -136,9 +137,10 @@ export const playbackList: MenuComponent =
       {
         click: async () => {
           const activeTest = getActiveTest(sessionData)
+          const index = activeTest.commands.findIndex(hasID(commandID))
           await session.api.playback.play(sessionData.state.activeTestID, [
-            activeTest.commands.findIndex((cmd) => cmd.id === commandID),
-            activeTest.commands.length - 1,
+            index,
+            index,
           ])
         },
         enabled: selectedCommandCount === 1,
