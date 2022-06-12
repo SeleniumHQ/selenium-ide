@@ -14,5 +14,7 @@ jobs:
           node-version: '16.x'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Build app
+      - name: Build selenium-ide JS
         run: yarn build
+      - name: Build selenium-ide binaries
+        run: yarn build:electron
