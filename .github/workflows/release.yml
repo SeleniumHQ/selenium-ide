@@ -17,6 +17,6 @@ jobs:
       - name: Build selenium-ide JS
         run: yarn build
       - name: Install electron-builder dependencies
-        run: yarn add dmg-license
+        run: yarn workspace @seleniumhq/selenium-ide add dmg-license
       - name: Build selenium-ide binaries
         run: yarn build:electron
