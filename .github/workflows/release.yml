@@ -1,7 +1,8 @@
-name: 'Release new versions'
+name: 'Release'
 
-on: push
-  branches: frunk
+on:
+  push:
+    branches: frunk
 
 jobs:
   action:
