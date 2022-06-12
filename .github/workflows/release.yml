@@ -5,10 +5,10 @@ on:
     branches: frunk
 
 jobs:
-  action:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Install dependencies
-      - run: yarn
+        run: yarn
       - name: Build app
-      - run: yarn build
+        run: yarn build
