@@ -1,0 +1,13 @@
+name: 'Release new versions'
+
+on: push
+  branches: frunk
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+      - run: yarn
+      - name: Build app
+      - run: yarn build
