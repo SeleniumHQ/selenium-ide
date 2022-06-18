@@ -4,7 +4,6 @@ import { LocatorFields } from '@seleniumhq/side-api'
 import { randomInt, randomUUID } from 'crypto'
 import { relative } from 'path'
 import BaseController from '../Base'
-import { BrowserWindow } from 'electron'
 
 const makeSelectFrameCMD = (target: string): CommandShape => ({
   command: 'selectFrame',
@@ -43,7 +42,6 @@ export interface RecordNewCommandInput {
 }
 
 export default class RecorderController extends BaseController {
-  windowIDs: number[] = []
   async recordNewCommand(
     cmd: RecordNewCommandInput
   ): Promise<CommandShape[] | null> {
@@ -58,14 +56,6 @@ export default class RecorderController extends BaseController {
       targets: Array.isArray(cmd.target) ? cmd.target : [[cmd.target, '']],
       value: Array.isArray(cmd.value) ? cmd.value[0][0] : cmd.value,
     }
-    const windows = BrowserWindow.getAllWindows();
-    const newWindowIDs = windows.map((window) => window.id);
-    const opensWindow = this.windowIDs.length < newWindowIDs.length;
-    if (opensWindow) {
-      mainCommand.opensWindow = true
-      mainCommand.windowHandleName = 
-    }
-    this.windowIDs = windows.map((window) => window.id);
     return getFrameTraversalCommands(
       session.state.recorder.activeFrame,
       cmd.frameLocation as string
