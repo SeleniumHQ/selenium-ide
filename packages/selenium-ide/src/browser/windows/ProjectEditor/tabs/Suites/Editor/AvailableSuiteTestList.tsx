@@ -30,17 +30,19 @@ const AvailableSuiteTestList: FC<AvailableSuiteTestListProps> = ({
       </ListSubheader>
     }
   >
-    {allTests.map((test, index) => {
-      const { id } = test
-      return (
-        <AvailableSuiteTestRow
-          activeSuite={activeSuite}
-          index={index}
-          key={id}
-          test={test}
-        />
-      )
-    })}
+    {allTests
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((test, index) => {
+        const { id } = test
+        return (
+          <AvailableSuiteTestRow
+            activeSuite={activeSuite}
+            index={index}
+            key={id}
+            test={test}
+          />
+        )
+      })}
   </List>
 )
 
