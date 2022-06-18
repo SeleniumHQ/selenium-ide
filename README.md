@@ -59,3 +59,38 @@ If you have questions, check out [our FAQ](https://github.com/SeleniumHQ/seleniu
 You can also find us on the [#selenium](irc://freenode.net/selenium) IRC
 channel, which is also available on
 [Slack](https://www.selenium.dev/support/#ChatRoom).
+
+## Architecture
+
+The codebase is javascript, and relies heavily on the NodeJS, Electron, and
+React ecosystem. This is a collection of packages arranged in a monorepo
+config. Excepting the code-export packages, which are fully untyped, these
+packages are fully typed using Typescript.
+
+### Packages
+
+These are the main packages. They're used to run the thing:
+
+- selenium-ide: Main Electron app. Built with webpack, react frontend. Communicates
+via the IPC protocols.
+
+- side-runner: NodeJS Task Runner. Built with typescript.
+
+- side-cli: Experimental cli using react and ink.
+
+- side-runtime: Playback system wrapper. Takes side files and executes
+them. Used by both selenium-ide and side-runner.
+
+- side-api: This is the api shape of selenium-ide. This is intended to be used
+to help share the api types with plugins in a lower footprint way.
+
+- side-model: This is used to provide metadata around the standard commands and
+argument types.
+
+- side-commons: This is like the typical utils/helpers folder, except meant to
+be shared across packages instead of just folders.
+
+- side-code-export: NodeJS transpiler for .side files. Used to export to other
+languages (csharp, java, javascript, python, ruby).
+
+- code-export-*: Code export format for various languages

@@ -61,7 +61,13 @@ export default class ProjectsController {
     return this.recentProjects.get()
   }
 
-  async new(): Promise<ProjectShape> {
+  async new(): Promise<ProjectShape | null> {
+    if (this.loaded) {
+      const confirm = await this.onProjectUnloaded()
+      if (!confirm) {
+        return null
+      }
+    }
     const testID = randomUUID()
     const starterProject: ProjectShape = {
       id: randomUUID(),
@@ -166,6 +172,7 @@ export default class ProjectsController {
       return null
     }
   }
+
   async save_v3(filepath: string): Promise<boolean> {
     await fs.writeFile(filepath, JSON.stringify(this.project, undefined, 2))
     this.recentProjects.add(filepath)
