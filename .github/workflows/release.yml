@@ -14,6 +14,8 @@ jobs:
           node-version: '16.x'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Publish non IDE packages to npm
+        run: npx lerna publish from-package
       - name: Build selenium-ide JS
         run: yarn build
       - name: Install electron-builder dependencies
