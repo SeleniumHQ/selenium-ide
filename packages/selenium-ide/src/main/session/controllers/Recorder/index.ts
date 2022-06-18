@@ -5,6 +5,7 @@ import { randomInt, randomUUID } from 'crypto'
 import { Session } from 'main/types'
 import { relative } from 'path'
 import BaseController from '../Base'
+import { BrowserWindow } from 'electron'
 
 const makeSelectFrameCMD = (target: string): CommandShape => ({
   command: 'selectFrame',
@@ -52,15 +53,7 @@ export interface RecordNewCommandInput {
 }
 
 export default class RecorderController extends BaseController {
-  constructor(session: Session) {
-    super(session)
-  }
-  async requestHighlightElement(fieldName: LocatorFields) {
-    const activeCommand = getActiveCommand(await this.session.state.get())
-    this.session.api.recorder.onHighlightElement.dispatchEvent(
-      activeCommand[fieldName] as string
-    )
-  }
+  windowIDs: number[] = []
 
   async recordNewCommand(
     cmd: RecordNewCommandInput
@@ -76,10 +69,25 @@ export default class RecorderController extends BaseController {
       targets: Array.isArray(cmd.target) ? cmd.target : [[cmd.target, '']],
       value: Array.isArray(cmd.value) ? cmd.value[0][0] : cmd.value,
     }
+    const windows = BrowserWindow.getAllWindows();
+    const newWindowIDs = windows.map((window) => window.id);
+    const opensWindow = this.windowIDs.length < newWindowIDs.length;
+    if (opensWindow) {
+      mainCommand.opensWindow = true
+      mainCommand.windowHandleName = `win${randomInt(1, 9999)}`
+    }
+    this.windowIDs = windows.map((window) => window.id);
     return getFrameTraversalCommands(
       session.state.recorder.activeFrame,
       cmd.frameLocation as string
     ).concat(mainCommand)
+  }
+
+  async requestHighlightElement(fieldName: LocatorFields) {
+    const activeCommand = getActiveCommand(await this.session.state.get())
+    this.session.api.recorder.onHighlightElement.dispatchEvent(
+      activeCommand[fieldName] as string
+    )
   }
 
   async handleNewWindow(_details: Electron.HandlerDetails) {
