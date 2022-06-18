@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-migrate",
-  "version": "4.0.0",
+  "version": "4.0.0-alpha.0",
   "private": true,
   "description": "Selenium IDE format migrations",
   "author": "Tomer <tomer@corevo.io>",
@@ -9,7 +9,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
-    "prepublishOnly": "yarn clean && yarn build",
     "watch": "tsc --watch"
   },
   "main": "dist/migrate.js",
@@ -28,7 +27,7 @@
     "@types/xml-js": "1.0.0"
   },
   "dependencies": {
-    "@seleniumhq/side-model": "^4.0.0",
+    "@seleniumhq/side-model": "^4.0.0-alpha.0",
     "unescape": "^1.0.1",
     "xml-escape": "^1.1.0",
     "xml-js": "^1.5.2"

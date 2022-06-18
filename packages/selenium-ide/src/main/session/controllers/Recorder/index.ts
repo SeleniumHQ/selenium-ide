@@ -65,8 +65,9 @@ export default class RecorderController extends BaseController {
   async handleNewWindow(_details: Electron.HandlerDetails) {
     const session = await this.session.state.get()
     if (session.state.status !== 'recording') return
+    const newWindowID = `win${randomInt(1, 9999)}`
     this.session.api.recorder.onNewWindow.dispatchEvent(
-      `win${randomInt(1, 9999)}`,
+      newWindowID,
       randomUUID()
     )
   }
@@ -89,9 +90,7 @@ export default class RecorderController extends BaseController {
     }
     return frameLocation
   }
-  async setWindowHandle(sessionID: string, handle: string) {
-    console.log('Setting window handle', sessionID, handle)
-  }
+
   async start(): Promise<string | null> {
     const playbackWindow = await this.session.windows.getLastPlaybackWindow()
     const playbackURL = playbackWindow.webContents.getURL()

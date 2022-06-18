@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-testkit",
-  "version": "4.0.0",
+  "version": "4.0.0-alpha.0",
   "private": true,
   "description": "Selenium IDE test stuff",
   "author": "Tomer <tomer@corevo.io>",
@@ -9,7 +9,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
-    "prepublishOnly": "yarn clean && yarn build",
     "watch": "tsc --watch"
   },
   "main": "dist/index.js",

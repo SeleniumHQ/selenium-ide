@@ -85,7 +85,7 @@ export default function createRecorderSyncronizer({
 
   async function syncWindowHandle(windowHandle: string) {
     await executeAsyncScript({
-      script: `return window.__side.setWindowHandle("${pendingWindows[windowHandle]}", "${sessionId}")`,
+      script: `return window.sideAPI.setWindowHandle("${pendingWindows[windowHandle]}", "${sessionId}")`,
       argv: [],
     })
     syncedWindows[windowHandle] = pendingWindows[windowHandle]
