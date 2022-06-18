@@ -15,7 +15,9 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Publish non IDE packages to npm
-        run: npx lerna publish from-package
+        run: npx lerna publish -y from-package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Build selenium-ide JS
         run: yarn build
       - name: Install electron-builder dependencies
