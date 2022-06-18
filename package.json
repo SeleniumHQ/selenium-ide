@@ -2,7 +2,7 @@
   "name": "selenium-ide-monorepo",
   "repository": "git@github.com:SeleniumHQ/selenium-ide.git",
   "license": "Apache-2.0",
-  "private": false,
+  "private": true,
   "scripts": {
     "start": "cd packages/selenium-ide && pnpm run start",
     "build": "run-s build:ts build:ide",
