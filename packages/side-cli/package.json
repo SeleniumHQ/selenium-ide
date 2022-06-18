@@ -9,7 +9,6 @@
   "scripts": {
     "build": "babel --root-mode upward -d dist src --extensions \".js,.jsx,.ts,.tsx\" --source-maps true",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
-    "prepublishOnly": "yarn clean && yarn build",
     "start": "node dist/index.js",
     "watch": "yarn build -w"
   },

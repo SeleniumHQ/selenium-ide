@@ -6,7 +6,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
-    "prepublishOnly": "yarn clean && yarn build",
     "start": "node dist/bin.js",
     "watch": "tsc --watch"
   },

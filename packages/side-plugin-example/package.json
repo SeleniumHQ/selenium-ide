@@ -12,7 +12,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
-    "prepublishOnly": "yarn clean && yarn build",
     "watch": "tsc --watch"
   },
   "devDependencies": {
