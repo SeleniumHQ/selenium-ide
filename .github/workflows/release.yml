@@ -14,12 +14,12 @@ jobs:
           node-version: '16.x'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Build all JS
+        run: yarn build
       - name: Publish non IDE packages to npm
         run: npx lerna publish --canary --yes --no-verify-access from-package
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Build selenium-ide JS
-        run: yarn build
       - name: Install electron-builder dependencies
         run: yarn workspace @seleniumhq/selenium-ide add dmg-license
       - name: Build selenium-ide binaries
