@@ -132,10 +132,14 @@ export default class WindowsController extends BaseController {
   handlePlaybackWindow(window: BrowserWindow) {
     this.playbackWindows.push(window)
     window.webContents.insertCSS(playbackCSS)
-    window.webContents.setWindowOpenHandler(() => ({
-      action: 'allow',
-      overrideBrowserWindowOptions: playbackWindowOptions,
-    }))
+    window.webContents.setWindowOpenHandler((details) => {
+      this.session.recorder.handleNewWindow(details)
+      return {
+        action: 'allow',
+        overrideBrowserWindowOptions: playbackWindowOptions,
+      }
+    })
+  
     window.webContents.on('did-create-window', (win) =>
       this.handlePlaybackWindow(win)
     )
@@ -145,10 +149,11 @@ export default class WindowsController extends BaseController {
     // This is to overcome a quirk in Electron where
     // the preload scripts will sometimes just fail to register or something
     window.webContents.on('frame-created', async (_event, details) => {
-      await details.frame.once('dom-ready', async () => {
-        const hasAPI = await details.frame.executeJavaScript('window.sideAPI')
+      const frame = details.frame;
+      await frame.once('dom-ready', async () => {
+        const hasAPI = await frame.executeJavaScript('window.sideAPI')
         if (!hasAPI) {
-          details.frame.reload()
+          frame.reload()
         }
         await this.session.api.recorder.onFrameRecalculate.dispatchEvent()
       })

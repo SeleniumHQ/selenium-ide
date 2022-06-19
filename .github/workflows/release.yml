@@ -1,0 +1,27 @@
+name: 'Release'
+
+on:
+  push:
+    branches: frunk
+
+jobs:
+  release:
+    runs-on: macos-11
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build all JS
+        run: yarn build
+      - name: Publish non IDE packages to npm
+        run: npx lerna publish --canary --yes --no-verify-access from-package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Install electron-builder dependencies
+        run: yarn workspace @seleniumhq/selenium-ide add dmg-license
+      - name: Build selenium-ide binaries
+        run: yarn build:electron
