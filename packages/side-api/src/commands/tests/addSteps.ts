@@ -19,9 +19,9 @@ export const mutator: Mutator<Shape> = (
 ) => {
   const selectIndex =
     session.state.status === 'recording'
-      ? index + 1
+      ? index + result.length
       : session.state.userPrefs.insertCommandPref === 'After'
-      ? index + 1
+      ? index + result.length
       : index
 
   const sessionWithNewCommands = update(
@@ -32,13 +32,7 @@ export const mutator: Mutator<Shape> = (
         `${testIndex}.commands`,
         (commands: CommandShape[]) => {
           const commandsWithNewEntry = commands.slice(0)
-          const insertIndex =
-            session.state.status === 'recording'
-              ? index + 1
-              : session.state.userPrefs.insertCommandPref === 'After'
-              ? index + 1
-              : index
-          commandsWithNewEntry.splice(insertIndex, 0, ...result)
+          commandsWithNewEntry.splice(selectIndex, 0, ...result)
           return commandsWithNewEntry
         },
         tests

@@ -1,6 +1,7 @@
 {
   "name": "@seleniumhq/side-plugin-example",
-  "version": "4.0.0",
+  "private": true,
+  "version": "4.0.0-alpha.0",
   "description": "Selenium IDE example plugin",
   "author": "Todd <tarsitodd@gmail.com>",
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
@@ -12,11 +13,10 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
-    "prepublishOnly": "yarn clean && yarn build",
     "watch": "tsc --watch"
   },
   "devDependencies": {
-    "@seleniumhq/side-runtime": "*"
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.0"
   },
   "repository": {
     "type": "git",

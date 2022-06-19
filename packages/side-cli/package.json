@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-cli",
-  "version": "4.0.0",
+  "version": "4.0.0-alpha.0",
   "private": true,
   "description": "Selenium IDE cli",
   "author": "Tomer <tomer@corevo.io>",
@@ -9,7 +9,6 @@
   "scripts": {
     "build": "babel --root-mode upward -d dist src --extensions \".js,.jsx,.ts,.tsx\" --source-maps true",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
-    "prepublishOnly": "yarn clean && yarn build",
     "start": "node dist/index.js",
     "watch": "yarn build -w"
   },
@@ -31,8 +30,8 @@
     "@babel/preset-react": "^7.0.0"
   },
   "dependencies": {
-    "@seleniumhq/side-model": "^4.0.0",
-    "@seleniumhq/side-runtime": "^4.0.0",
+    "@seleniumhq/side-model": "^4.0.0-alpha.0",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.0",
     "ink": "^3.2.0",
     "ink-select-input": "^4.2.1",
     "ink-spinner": "^4.0.3",
