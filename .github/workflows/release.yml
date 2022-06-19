@@ -25,3 +25,25 @@ jobs:
         run: yarn workspace @seleniumhq/selenium-ide add dmg-license
       - name: Build selenium-ide binaries
         run: yarn build:electron
+      - name: Set env from current release
+        run: >
+          echo "SIDE_RELEASE_VERSION=$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
+        working-directory: ./packages/selenium-ide
+      - name: Check env is there
+        run: echo "${{ env.SIDE_RELEASE_VERSION }}"
+      - name: Release latest selenium-ide on github
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GH_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Nightly (Unstable)"
+          files: packages/selenium-ide/dist/Selenium*
+      - name: Release selenium-ide on github
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GH_TOKEN }}"
+          automatic_release_tag: "${{ env.SIDE_RELEASE_VERSION }}"
+          prerelease: false
+          files: packages/selenium-ide/dist/Selenium*
+        continue-on-error: true
