@@ -27,7 +27,7 @@ jobs:
         run: yarn build:electron
       - name: Set env from current release
         run: >
-          echo "SIDE_RELEASE_VERSION=$(node -pe \"require('./package.json').version\")" >> $GITHUB_ENV
+          echo "SIDE_RELEASE_VERSION=$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
         working-directory: ./packages/selenium-ide
       - name: Check env is there
         run: echo "${{ env.SIDE_RELEASE_VERSION }}"
