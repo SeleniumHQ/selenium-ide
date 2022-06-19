@@ -39,8 +39,12 @@ export const mutator: Mutator<Shape> = (
   { params: [cmdInput], result }
 ) => {
   if (!result) return session
-  const commandIndex = getActiveCommandIndex(session)
-  const sessionWithNewSteps = addStepsMutator(session, {
+  const sessionWithSelectFrameCommands = result.reduce(
+    processSelectFrameCommands,
+    session
+  )
+  const commandIndex = getActiveCommandIndex(sessionWithSelectFrameCommands)
+  return addStepsMutator(sessionWithSelectFrameCommands, {
     params: [
       session.state.activeTestID,
       commandIndex,
@@ -48,5 +52,4 @@ export const mutator: Mutator<Shape> = (
     ],
     result,
   })
-  return result.reduce(processSelectFrameCommands, sessionWithNewSteps)
 }
