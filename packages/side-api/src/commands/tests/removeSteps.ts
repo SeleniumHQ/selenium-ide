@@ -27,7 +27,7 @@ export const mutator: Mutator<Shape> = (
     (selectedCommandIndexes: number[]): number[] => {
       {
         const filteredCommands = selectedCommandIndexes.filter(
-          (_id, index) => !stepIndexes.includes(index)
+          (index) => !stepIndexes.includes(index)
         )
         if (filteredCommands.length) {
           return filteredCommands

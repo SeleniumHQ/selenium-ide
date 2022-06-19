@@ -15,7 +15,7 @@ export interface CommandListProps {
   selectedCommandIndexes: number[]
 }
 
-const useKeyboundNav = makeKeyboundNav(window.sideAPI.state.updateTestSelection)
+const useKeyboundNav = makeKeyboundNav(window.sideAPI.state.updateStepSelection)
 
 const CommandList: FC<CommandListProps> = ({
   activeTest,
