@@ -1319,21 +1319,21 @@
     c8 "~7.5.0"
     jasmine-reporters "~2.5.0"
 
-"@bazel/typescript@^5.3.0":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-5.3.0.tgz#84ff0f0d5a1c885c8246b52dc4351029d03213cb"
-  integrity sha512-n49HdHo/qFqXGYnNlzol203MKb5EytvC1GChroBzqoT6woWpb+p4e/xEatiMOEKWnlyPT/ZUAMQ8Ve/6yv1Dig==
+"@bazel/typescript@^5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@bazel/typescript/-/typescript-5.5.0.tgz#053c255acb1b3cac23d24984cd8d5d5542fe1f7c"
+  integrity sha512-Ord0+nCj+B1M4NDbe0uqZf2FyOCzaDAlc4DAsr5UKJrArCipIbMTEAxlsEk+WAYBNAFGO/FS9/zlDtLceqpHqw==
   dependencies:
-    "@bazel/worker" "5.3.0"
+    "@bazel/worker" "5.5.0"
     protobufjs "6.8.8"
     semver "5.6.0"
     source-map-support "0.5.9"
     tsutils "3.21.0"
 
-"@bazel/worker@5.3.0":
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/@bazel/worker/-/worker-5.3.0.tgz#c3a1296d741057a1ea380afc2fda06b74c182cd6"
-  integrity sha512-Tgyaud2/6mtYeaH+uCFQuuIVd/VRDvbUDFJgz8b+/LxTcXaDCb8OSI0ZnrEzLV7FJizMCam3/vWE2x9Ul4SOJw==
+"@bazel/worker@5.5.0":
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/@bazel/worker/-/worker-5.5.0.tgz#d30b75e46f2052d33bcda251b328d36655a5636f"
+  integrity sha512-pYfjJKg4D1CQ/AJ1UGC5ySyH09gDqNiBrQJ0uMYVewIBW24uOAkKsJfTE2y4ES0UL1Ik758WO0la0mJeFOKScg==
   dependencies:
     google-protobuf "^3.6.1"
 
