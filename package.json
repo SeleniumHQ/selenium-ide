@@ -57,7 +57,7 @@
     "@bazel/buildifier": "^5.0.1",
     "@bazel/ibazel": "^0.16.2",
     "@bazel/jasmine": "^5.3.0",
-    "@bazel/typescript": "^5.3.0",
+    "@bazel/typescript": "^5.5.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@types/jest": "^27.4.1",
     "@types/node": "^16.11.26",
