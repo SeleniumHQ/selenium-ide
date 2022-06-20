@@ -2,7 +2,7 @@ name: 'Release'
 
 on:
   push:
-    branches: frunk
+    branches: trunk
 
 jobs:
   release:
