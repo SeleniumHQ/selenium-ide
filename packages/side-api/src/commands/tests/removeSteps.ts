@@ -32,7 +32,8 @@ export const mutator: Mutator<Shape> = (
         if (filteredCommands.length) {
           return filteredCommands
         }
-        return [Math.max(selectedCommandIndexes.slice(-1)[0] - 1, 0)]
+        // Go to just before the command block
+        return [Math.max(Math.min(...selectedCommandIndexes) - 1, 0)]
       }
     },
     sessionWithRemovedCommands
