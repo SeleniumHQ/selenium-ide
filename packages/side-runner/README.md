@@ -4,14 +4,13 @@ Runs exported Selenium IDE tests in command line
 
 ## Installation
 
-Node.js is required to use `selenium-side-runner`.  
+Node.js is required to use the Selenium side-runner.
 The project guarantees support for the [active LTS major version](https://github.com/nodejs/Release) (e.g. [10](https://nodejs.org/en/download/) & [12](https://nodejs.org/en/download/current/)).  
-
 __NOTE: The minimum supported version of Node is now 10.15.0 LTS__
 
-```yarn global add selenium-side-runner```  
+```yarn global add @seleniumhq/side-runner```  
 or  
-```npm install -g selenium-side-runner```  
+```npm install -g @seleniumhq/side-runner```  
 
 ## Usage
 
@@ -134,7 +133,3 @@ proxyType: system
 When running your projects make sure that the command is aware of the locator strategy __before__ variables are evaluated.  
 For example `click | id=${myButton}` vs `click | ${idOfMyButton}`.  
 Always use the first one, since the strategy is hardcoded in the command, the second would yield an error.  
-
->But it works in the IDE.  
-
-That is because the IDE calculates locator strategies differently than the runner, it is a known current issue.
