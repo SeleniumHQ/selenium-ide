@@ -35,6 +35,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
   return (
     <FormControl className="flex flex-row">
       <Autocomplete
+        id='command-selector'
         className="flex-1"
         onChange={updateCommand(testID, command.id)}
         getOptionLabel={(option) => option.label}
