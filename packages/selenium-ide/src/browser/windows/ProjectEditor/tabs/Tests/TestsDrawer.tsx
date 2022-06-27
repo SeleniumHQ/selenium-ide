@@ -29,7 +29,10 @@ const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => (
       sx={{ borderColor: 'primary.main' }}
       subheader={
         <EditorToolbar
-          onAdd={() => window.sideAPI.tests.create()}
+          onAdd={async () => {
+            activeTest = (await window.sideAPI.tests.create()).id      
+            setSelected(activeTest)  
+          }}
           onRemove={
             tests.length > 1
               ? () => window.sideAPI.tests.delete(activeTest)
