@@ -9,6 +9,7 @@ import type { Shape as SetActiveTest } from './setActiveTest'
 import type { Shape as SetCopiedCommands } from './setCopiedCommands'
 import type { Shape as ToggleBreakpoint } from './toggleBreakpoint'
 import type { Shape as ToggleSuiteMode } from './toggleSuiteMode'
+import type { Shape as ToggleUserPrefCamelCase } from './toggleUserPrefCamelCase'
 import type { Shape as ToggleUserPrefInsert } from './toggleUserPrefInsert'
 import type { Shape as ToggleUserPrefTheme } from './toggleUserPrefTheme'
 import type { Shape as UpdateStepSelection } from './updateStepSelection'
@@ -25,6 +26,7 @@ import * as setActiveTest from './setActiveTest'
 import * as setCopiedCommands from './setCopiedCommands'
 import * as toggleBreakpoint from './toggleBreakpoint'
 import * as toggleSuiteMode from './toggleSuiteMode'
+import * as toggleUserPrefCamelCase from './toggleUserPrefCamelCase'
 import * as toggleUserPrefInsert from './toggleUserPrefInsert'
 import * as toggleUserPrefTheme from './toggleUserPrefTheme'
 import * as updateStepSelection from './updateStepSelection'
@@ -42,6 +44,7 @@ export const commands = {
   setCopiedCommands,
   toggleBreakpoint,
   toggleSuiteMode,
+  toggleUserPrefCamelCase,
   toggleUserPrefInsert,
   toggleUserPrefTheme,
   updateStepSelection,
@@ -63,6 +66,7 @@ export type Shape = {
   setCopiedCommands: SetCopiedCommands
   toggleBreakpoint: ToggleBreakpoint
   toggleSuiteMode: ToggleSuiteMode
+  toggleUserPrefCamelCase: ToggleUserPrefCamelCase
   toggleUserPrefInsert: ToggleUserPrefInsert
   toggleUserPrefTheme: ToggleUserPrefTheme
   updateStepSelection: UpdateStepSelection

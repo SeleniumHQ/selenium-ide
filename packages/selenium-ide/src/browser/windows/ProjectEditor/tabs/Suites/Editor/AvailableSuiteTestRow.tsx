@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import ListItemText from '@mui/material/ListItemText'
+import { state } from '@seleniumhq/side-api'
 import { TestShape } from '@seleniumhq/side-model'
 import DraggableListItem from 'browser/components/DraggableListItem'
 import React, { FC } from 'react'
@@ -37,7 +38,7 @@ const AvailableSuiteTestRow: FC<AvailableSuiteTestRowProps> = ({
   >
     <ListItemText
       disableTypography
-      primary={<Box sx={commandTextFormat}>{camelToTitleCase(test.name)}</Box>}
+      primary={<Box sx={commandTextFormat}>{state.userPrefs.camelCaseNamesPref === "Yes" ? camelToTitleCase(test.name) : test.name}</Box>}
     />
   </DraggableListItem>
 )

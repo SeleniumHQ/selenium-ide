@@ -1,6 +1,7 @@
 import { getCommandIndex } from '@seleniumhq/side-api/dist/helpers/getActiveData'
 import { state as defaultState, defaultUserPrefs } from '@seleniumhq/side-api'
 import {
+  CamelCaseNamesPref,
   CoreSessionData,
   InsertCommandPref,
   StateShape,
@@ -58,6 +59,14 @@ export default class StateController extends BaseController {
     const commandIndex = commandID ? getCommandIndex(session, commandID) : 0
     this.session.playback.currentStepIndex = commandIndex
     return true
+  }
+
+  async toggleUserPrefCamelCase(camelCaseNamesPref: CamelCaseNamesPref) {
+    const userPrefs = await storage.get<'userPrefs'>(
+      'userPrefs',
+      defaultUserPrefs
+    )
+    storage.set<'userPrefs'>('userPrefs', { ...userPrefs, camelCaseNamesPref })
   }
 
   async toggleUserPrefTheme(themePref: ThemePref) {

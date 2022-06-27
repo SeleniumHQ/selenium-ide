@@ -2,6 +2,7 @@ import { Close } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
 import Box from '@mui/material/Box'
 import ListItemText from '@mui/material/ListItemText'
+import { state } from '@seleniumhq/side-api'
 import { TestShape } from '@seleniumhq/side-model'
 import ReorderableListItem from 'browser/components/ReorderableListItem'
 import { ReorderPreview } from 'browser/hooks/useReorderPreview'
@@ -79,7 +80,7 @@ const CurrentSuiteTestRow: FC<CurrentSuiteTestRowProps> = ({
   >
     <ListItemText
       disableTypography
-      primary={<Box sx={commandTextFormat}>{camelToTitleCase(test.name)}</Box>}
+      primary={<Box sx={commandTextFormat}>{state.userPrefs.camelCaseNamesPref === "Yes" ? camelToTitleCase(test.name) : test.name }</Box>}
     />
   </ReorderableListItem>
 )
