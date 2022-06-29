@@ -20,6 +20,13 @@ export const projectEditorCommands: MenuComponent = (session) => async () =>
         await session.api.projects.load(response.filePaths[0])
       },
     },
+    {
+      accelerator: 'CommandOrControl+R',
+      label: 'Load Recent',
+      click: async () => {
+        await session.projects.showRecents()
+      },
+    },
     { type: 'separator' },
     {
       accelerator: 'CommandOrControl+S',
