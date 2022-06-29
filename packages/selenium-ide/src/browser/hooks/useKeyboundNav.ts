@@ -15,23 +15,25 @@ const useKeyboundNav =
   <T>(entries: T[], selectedIndexes: number[]) => {
     useEffect(() => {
       const handler = (e: KeyboardEvent) => {
-        if (traverseKeys.includes(e.key)) {
-          let activeIndex = 0
-          if (selectedIndexes.length) {
-            activeIndex = selectedIndexes.slice(-1)[0]
-          }
-          const nextIndex =
-            e.key === 'ArrowUp' ? activeIndex - 1 : activeIndex + 1
-          const nextEntry = entries[nextIndex]
-          if (nextEntry) {
-            const removeKey = e.altKey
-            const anyAddKey = e.shiftKey || e.ctrlKey || e.metaKey
-            select(
-              nextIndex,
-              e.shiftKey,
-              !removeKey && anyAddKey,
-              !removeKey && !anyAddKey
-            )
+        if (document!.activeElement!.id != "command-selector") {
+          if (traverseKeys.includes(e.key)) {
+            let activeIndex = 0
+            if (selectedIndexes.length) {
+              activeIndex = selectedIndexes.slice(-1)[0]
+            }
+            const nextIndex =
+              e.key === 'ArrowUp' ? activeIndex - 1 : activeIndex + 1
+            const nextEntry = entries[nextIndex]
+            if (nextEntry) {
+              const removeKey = e.altKey
+              const anyAddKey = e.shiftKey || e.ctrlKey || e.metaKey
+              select(
+                nextIndex,
+                e.shiftKey,
+                !removeKey && anyAddKey,
+                !removeKey && !anyAddKey
+              )
+            }
           }
         }
       }

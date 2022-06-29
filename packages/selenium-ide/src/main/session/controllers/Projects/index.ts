@@ -1,5 +1,8 @@
 import { ProjectShape } from '@seleniumhq/side-model'
-import { project as defaultProject, CoreSessionData } from '@seleniumhq/side-api'
+import {
+  project as defaultProject,
+  CoreSessionData,
+} from '@seleniumhq/side-api'
 import { promises as fs } from 'fs'
 import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
@@ -171,6 +174,18 @@ export default class ProjectsController {
       console.log((e as Error).message)
       return null
     }
+  }
+
+  async showRecents(): Promise<null> {
+    const confirm = await this.onProjectUnloaded()
+    if (!confirm) {
+      return null
+    }
+    await this.session.system.shutdown()
+    if (this.session.system.isDown) {
+      await this.session.windows.open('splash')
+    }
+    return null
   }
 
   async save_v3(filepath: string): Promise<boolean> {
