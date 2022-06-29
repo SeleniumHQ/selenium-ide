@@ -30,7 +30,7 @@ const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => (
       subheader={
         <EditorToolbar
           onAdd={async () => {
-            activeTest = (await window.sideAPI.tests.create()).id      
+            const activeTest = (await window.sideAPI.tests.create()).id      
             setSelected(activeTest)  
           }}
           onRemove={
