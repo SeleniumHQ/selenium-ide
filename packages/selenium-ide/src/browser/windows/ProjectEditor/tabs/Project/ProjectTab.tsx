@@ -95,6 +95,23 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
             <MenuItem value="Before">Before</MenuItem>
           </Select>
         </FormControl>
+        <FormControl>
+          <InputLabel id="camelCaseNames">
+            Camel case various names in UI
+          </InputLabel>
+          <Select
+            id="camelCaseNamesPref"
+            label="Camel case various names in UI"
+            name="camelCaseNamesPref"
+            value={state.userPrefs.camelCaseNamesPref}
+            onChange={(e: any) => {
+              window.sideAPI.state.toggleUserPrefCamelCase(e.target.value)
+            }}
+          >
+            <MenuItem value="Yes">Yes</MenuItem>
+            <MenuItem value="No">No</MenuItem>
+          </Select>
+        </FormControl>
       </Stack>
       <List
         dense
