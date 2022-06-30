@@ -35,12 +35,20 @@ const CommandSelector: FC<CommandSelectorProps> = ({
   return (
     <FormControl className="flex flex-row">
       <Autocomplete
-        id='command-selector'
         className="flex-1"
         onChange={updateCommand(testID, command.id)}
         getOptionLabel={(option) => option.label}
         options={commandOptions}
-        renderInput={(params) => <TextField {...params} label="Command" />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            inputProps={{
+              ...params.inputProps,
+              ['data-overrideArrowKeys']: true,
+            }}
+            label="Command"
+          />
+        )}
         size="small"
         value={commandOptions.find((entry) => entry.id === command.command)}
         isOptionEqualToValue={(option, value) => option.id === value.id}
