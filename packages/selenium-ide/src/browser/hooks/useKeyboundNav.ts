@@ -15,7 +15,8 @@ const useKeyboundNav =
   <T>(entries: T[], selectedIndexes: number[]) => {
     useEffect(() => {
       const handler = (e: KeyboardEvent) => {
-        if (document!.activeElement!.id != "command-selector") {
+        const element = document.activeElement as HTMLInputElement
+        if (!element.dataset.overridearrowkeys) {
           if (traverseKeys.includes(e.key)) {
             let activeIndex = 0
             if (selectedIndexes.length) {

@@ -60,7 +60,15 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         onInputChange={onChangeAutoComplete}
         options={(command[fieldNames] ?? []).map((entry) => entry.join('='))}
         renderInput={(params) => (
-          <TextField {...params} label={label} name={fieldName} />
+          <TextField
+            {...params}
+            inputProps={{
+              ...params.inputProps,
+              ['data-overrideArrowKeys']: true,
+            }}
+            label={label}
+            name={fieldName}
+          />
         )}
         size="small"
         text-overflow="ellipsis"
