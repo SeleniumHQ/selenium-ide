@@ -12,12 +12,13 @@ const {
 
 type CloseReason = 'Create' | 'Cancel'
 
-export default function FormDialog() {
-  const [open, setOpen] = React.useState(true)
-    const [testName, setTestName] = React.useState('')
-    // setOpen(mode)
+export interface TestNewDialogProps {
+  confirmNew: boolean
+  setConfirmNew: React.Dispatch<React.SetStateAction<boolean>>
+}
 
-  console.log('open is ' + open)
+const TestNewDialog: React.FC<TestNewDialogProps> = ({ confirmNew, setConfirmNew }) => {
+  const [testName, setTestName] = React.useState('')
 
   const handleClose = async (value: CloseReason) => {
     if (value === 'Create') {
@@ -26,12 +27,12 @@ export default function FormDialog() {
       console.log('activeTest is ' + activeTest)
       setSelected(activeTest)
     }
-    setOpen(false)
+    setConfirmNew(false)
   }
 
   return (
     <div>
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={confirmNew} onClose={handleClose}>
         <DialogContent>
           <DialogContentText>
             Please specify the new test name
@@ -54,3 +55,5 @@ export default function FormDialog() {
     </div>
   )
 }
+
+export default TestNewDialog
