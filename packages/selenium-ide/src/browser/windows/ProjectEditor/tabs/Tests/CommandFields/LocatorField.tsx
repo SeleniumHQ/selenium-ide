@@ -64,7 +64,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
             {...params}
             inputProps={{
               ...params.inputProps,
-              ['data-overrideArrowKeys']: true,
+              ['data-overridearrowkeys']: true,
             }}
             label={label}
             name={fieldName}
