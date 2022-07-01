@@ -20,7 +20,7 @@ const {
 } = window.sideAPI
 
 const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => {
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [confirmNew, setConfirmNew] = React.useState(false)
 
   return (
     <Drawer
@@ -29,7 +29,7 @@ const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => {
       header="Select Test"
       setOpen={setOpen}
     >
-      {isOpen && <TestNewDialog />}
+      <TestNewDialog confirmNew={confirmNew} setConfirmNew={setConfirmNew} />
       <List
         dense
         sx={{ borderColor: 'primary.main' }}
@@ -37,7 +37,7 @@ const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => {
           <EditorToolbar
             onAdd={async () => {
               console.log('setIsOpen(true)')
-              setIsOpen(true)
+              setConfirmNew(true)
             }}
             onRemove={
               tests.length > 1
