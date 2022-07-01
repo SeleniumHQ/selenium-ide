@@ -36,10 +36,10 @@ export default class TestsController extends BaseController {
     return stepFields.map(TestsController.commandFromData)
   }
 
-  async create(): Promise<TestShape> {
+  async create(name?: string): Promise<TestShape> {
     return {
       id: randomUUID(),
-      name: 'New Test',
+      name: name===undefined? 'New Test' : name,
       commands: [
         {
           id: randomUUID(),
