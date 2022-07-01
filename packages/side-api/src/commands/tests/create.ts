@@ -5,7 +5,7 @@ import { Mutator } from '../../types'
 /**
  * Create a new test
  */
-export type Shape = () => Promise<TestShape>
+export type Shape = (name?: string) => Promise<TestShape>
 
 export const mutator: Mutator<Shape> = (session, { result }) =>
   update('project.tests', (tests) => tests.concat(result), session)
