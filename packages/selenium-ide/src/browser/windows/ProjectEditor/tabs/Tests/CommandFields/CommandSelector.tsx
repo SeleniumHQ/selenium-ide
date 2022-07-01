@@ -44,7 +44,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
             {...params}
             inputProps={{
               ...params.inputProps,
-              ['data-overrideArrowKeys']: true,
+              ['data-overridearrowkeys']: true,
             }}
             label="Command"
           />
