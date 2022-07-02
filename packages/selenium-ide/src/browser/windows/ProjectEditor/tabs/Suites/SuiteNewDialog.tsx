@@ -29,7 +29,6 @@ const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({ confirmNew, setConfirmN
   }
 
   return (
-    <div>
       <Dialog open={confirmNew} onClose={handleClose}>
         <DialogContent>
           <DialogContentText>
@@ -50,7 +49,6 @@ const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({ confirmNew, setConfirmN
           <Button onClick={() => handleClose('Create')}>Create</Button>
         </DialogActions>
       </Dialog>
-    </div>
   )
 }
 
