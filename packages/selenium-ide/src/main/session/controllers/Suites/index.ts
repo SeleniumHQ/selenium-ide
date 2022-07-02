@@ -3,10 +3,10 @@ import { randomUUID } from 'crypto'
 import BaseController from '../Base'
 
 export default class SuitesController extends BaseController {
-  async create(): Promise<SuiteShape> {
+  async create(name?: string): Promise<SuiteShape> {
     return {
       id: randomUUID(),
-      name: 'New Suite',
+      name: name === undefined ? 'New Suite' : name,
       persistSession: false,
       parallel: false,
       tests: [],
