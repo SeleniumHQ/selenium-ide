@@ -66,4 +66,3 @@ const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({ confirmNew, setConfirmN
 }
 
 export default SuiteNewDialog
-
