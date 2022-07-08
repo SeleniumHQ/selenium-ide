@@ -17,7 +17,10 @@ export interface SuiteNewDialogProps {
   setConfirmNew: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({ confirmNew, setConfirmNew }) => {
+const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({
+  confirmNew,
+  setConfirmNew,
+}) => {
   const [suiteName, setSuiteName] = React.useState('')
 
   const handleClose = async (value: CloseReason) => {
