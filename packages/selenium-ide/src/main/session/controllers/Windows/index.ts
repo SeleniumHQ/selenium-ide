@@ -7,6 +7,7 @@ import { Session } from 'main/types'
 import storage from 'main/store'
 import { join } from 'path'
 import BaseController from '../Base'
+// import { Tune } from '@mui/icons-material'
 
 // import { StopOutlined } from '@mui/icons-material'
 
@@ -181,7 +182,13 @@ export default class WindowsController extends BaseController {
     const position = storage.get<'windowPosition'>('windowPosition')
 
     if (size.length) projectWindow.setSize(size[0], size[1], true)
-    if (position.length) projectWindow.setPosition(position[0], position[1])
+
+    if (position.length) {
+      const adjustedX = position[0] < 0 ? 50 : position[0]
+      const adjustedY = position[1] < 0 ? 50 : position[1]
+      projectWindow.setPosition(adjustedX, adjustedY)
+    }
+    
     projectWindow.show()
 
     projectWindow.on('close', async (e) => {
