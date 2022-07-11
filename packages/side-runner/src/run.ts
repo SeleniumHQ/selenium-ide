@@ -52,7 +52,7 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
         onBeforePlay: async () => {
           await Promise.all(
             plugins.map((plugin) => {
-              const onBeforePlay = plugin.hooks.onBeforePlay
+              const onBeforePlay = plugin.hooks?.onBeforePlay
               if (onBeforePlay) {
                 return onBeforePlay({ driver })
               }

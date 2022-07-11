@@ -61,9 +61,19 @@ export interface PluginHooks extends WebDriverExecutorHooks {
   onMessage?: (...args: any[]) => void
 }
 
+export interface FormatShape {
+  opts?: {
+    fileExtension?: string
+    commandPrefixPadding?: string
+    terminatingKeyword?: string
+    commentPrefix?: string
+  }
+}
+
 export interface PluginShape {
   commands?: Record<string, CustomCommandShape>
-  hooks: PluginHooks
+  formats?: FormatShape[]
+  hooks?: PluginHooks
 }
 
 export interface PluginPreloadOutputShape {

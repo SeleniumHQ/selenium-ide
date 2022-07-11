@@ -143,7 +143,9 @@ export class CommandNode {
         'Unexpected error occured during command:',
         this.command.command
       )
-      if (Date.now() > timeout) throw e
+      if (Date.now() > timeout) {
+        throw e
+      }
       console.error(e)
       return this._executeCoreCommand(commandExecutor, timeout)
     }

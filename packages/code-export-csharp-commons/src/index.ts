@@ -15,35 +15,20 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
 
-const emitters = {
-  id: emitId,
-  value: emitValue,
-  label: emitLabel,
-  index: emitIndex,
+import Command from './command'
+import location from './location'
+import { ExportFormat } from '@seleniumhq/side-code-export'; 
+
+const exportFormat: ExportFormat = {
+  Command,
+  location,
+  opts: {
+    fileExtension: '.cs',
+    commandPrefixPadding: '  ',
+    terminatingKeyword: '}',
+    commentPrefix: '//',
+  },
 }
 
-export function emit(location) {
-  return exporter.emit.selection(location, emitters)
-}
-
-export default {
-  emit,
-}
-
-function emitId(id) {
-  return Promise.resolve(`By.CssSelector("*[id='${id}']")`)
-}
-
-function emitValue(value) {
-  return Promise.resolve(`By.CssSelector("*[value='${value}']")`)
-}
-
-function emitLabel(label) {
-  return Promise.resolve(`By.XPath("//option[. = '${label}']")`)
-}
-
-function emitIndex(index) {
-  return Promise.resolve(`By.CssSelector("*:nth-child(${index})")`)
-}
+module.exports = exportFormat;

@@ -22,7 +22,7 @@ import { CommandShape } from '@seleniumhq/side-model'
 
 export function validateControlFlowSyntax(commandStack: CommandShape[]) {
   let state = new State()
-  commandStack.forEach(function(command, commandIndex) {
+  commandStack.forEach(function (command, commandIndex) {
     validateCommand(command, commandIndex, state)
   })
   if (!state.empty()) {
@@ -35,7 +35,11 @@ export function validateControlFlowSyntax(commandStack: CommandShape[]) {
   }
 }
 
-function validateCommand(command: CommandShape, commandIndex: number, state: State) {
+function validateCommand(
+  command: CommandShape,
+  commandIndex: number,
+  state: State
+) {
   if (!command.skip && commandValidators[command.command]) {
     return commandValidators[command.command](
       command.command,
@@ -54,10 +58,15 @@ const commandValidators = {
   [ControlFlowCommandNames.if]: trackControlFlowBranchOpen,
   [ControlFlowCommandNames.repeatIf]: validateRepeatIf,
   [ControlFlowCommandNames.times]: trackControlFlowBranchOpen,
+  [ControlFlowCommandNames.try]: trackControlFlowBranchOpen,
   [ControlFlowCommandNames.while]: trackControlFlowBranchOpen,
 }
 
-function trackControlFlowBranchOpen(commandName: string, commandIndex: number, state: State) {
+function trackControlFlowBranchOpen(
+  commandName: string,
+  commandIndex: number,
+  state: State
+) {
   state.push({ command: commandName, index: commandIndex })
 }
 
@@ -77,7 +86,11 @@ function validateElse(commandName: string, commandIndex: number, state: State) {
   state.push({ command: commandName, index: commandIndex })
 }
 
-function validateElseIf(commandName: string, commandIndex: number, state: State) {
+function validateElseIf(
+  commandName: string,
+  commandIndex: number,
+  state: State
+) {
   if (!ControlFlowCommandChecks.isIfBlock(state.top())) {
     throw new ControlFlowSyntaxError(
       'An else if used outside of an if block',
@@ -107,7 +120,11 @@ function validateEnd(commandName: string, commandIndex: number, state: State) {
   }
 }
 
-function validateRepeatIf(_commandName: string, commandIndex: number, state: State) {
+function validateRepeatIf(
+  _commandName: string,
+  commandIndex: number,
+  state: State
+) {
   if (!ControlFlowCommandChecks.isDo(state.top())) {
     repeatIfError(commandIndex)
   }
