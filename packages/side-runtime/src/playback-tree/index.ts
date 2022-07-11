@@ -252,5 +252,6 @@ const commandNodeConnectors = {
   [ControlFlowCommandNames.if]: connectConditionalForBranchOpen,
   [ControlFlowCommandNames.repeatIf]: connectDo,
   [ControlFlowCommandNames.times]: connectConditionalForBranchOpen,
+  [ControlFlowCommandNames.try]: connectConditionalForBranchOpen,
   [ControlFlowCommandNames.while]: connectConditionalForBranchOpen,
 }

@@ -23,6 +23,16 @@ import * as find from './find'
 import render from './render'
 import * as parsers from './parsers'
 
+export * from './emit'
+export * from './find'
+export * from './hook'
+export * from './parsers'
+export * from './preprocessor'
+export * from './prettify'
+export * from './register'
+export * from './render'
+export * from './utils'
+
 export default {
   emit: { ...emit },
   prettify,

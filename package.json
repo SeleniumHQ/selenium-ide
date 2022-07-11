@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "start": "cd packages/selenium-ide && yarn start",
-    "build": "run-s build:ts build:ide",
+    "build": "run-s build:js build:ts build:ide",
     "build:electron": "lerna run --scope @seleniumhq/selenium-ide --loglevel verbose build:electron",
     "build:ide": "lerna run --scope @seleniumhq/selenium-ide --loglevel verbose build:webpack",
+    "build:js": "lerna run --scope @seleniumhq/code-export-* --loglevel verbose build",
     "build:ts": "tsc --build --verbose",
     "clean": "rimraf packages/*/build packages/*/dist packages/*/node_modules packages/*/tsconfig.tsbuildinfo node_modules",
     "clean:nuke": "git clean -fdx",
@@ -16,8 +17,9 @@
     "lint": "yarn lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
     "typecheck": "tsc --noEmit --composite false",
-    "watch": "run-p watch:ts watch:webpack",
+    "watch": "run-p watch:js watch:ts watch:webpack",
     "watch:webpack": "lerna run --parallel --stream --scope @seleniumhq/selenium-ide --loglevel verbose watch",
+    "watch:js": "lerna run --scope @seleniumhq/code-export-* --loglevel verbose watch",
     "watch:ts": "tsc --build --verbose --watch"
   },
   "engines": {

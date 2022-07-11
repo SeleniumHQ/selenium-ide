@@ -25,5 +25,5 @@ export const getCustomCommands = (
       ...commands,
       ...plugin.commands,
     }),
-    {}
+    {} as Record<string, CustomCommandShape>
   )
