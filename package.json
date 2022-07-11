@@ -6,8 +6,9 @@
   "scripts": {
     "start": "cd packages/selenium-ide && pnpm run start",
     "build": "run-s build:ts build:ide",
-    "build:electron": "pnpm run --filter @seleniumhq/selenium-ide build:electron",
-    "build:ide": "pnpm run --filter @seleniumhq/selenium-ide build:webpack",
+    "build:electron": "pnpm run --stream --filter @seleniumhq/selenium-ide build:electron",
+    "build:ide": "pnpm run --stream --filter @seleniumhq/selenium-ide build:webpack",
+    "build:js": "pnpm run --stream --filter @seleniumhq/code-export-* build",
     "build:ts": "tsc --build --verbose",
     "clean": "rimraf packages/*/build packages/*/dist packages/*/node_modules packages/*/tsconfig.tsbuildinfo node_modules",
     "clean:nuke": "git clean -fdx",
@@ -19,6 +20,7 @@
     "typecheck": "tsc --noEmit --composite false",
     "watch": "run-p watch:ts watch:webpack",
     "watch:webpack": "pnpm run --stream --filter @seleniumhq/selenium-ide watch",
+    "watch:js": "pnpm run --stream --filter @seleniumhq/code-export-* --loglevel verbose watch",
     "watch:ts": "tsc --build --verbose --watch"
   },
   "engines": {

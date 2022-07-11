@@ -26,6 +26,7 @@ export const ControlFlowCommandNames = {
   if: 'if',
   repeatIf: 'repeatIf',
   times: 'times',
+  try: 'try',
   while: 'while',
 }
 
@@ -42,7 +43,10 @@ function isCommandEnabled(command: CommandShape) {
 }
 
 function isBlockOpen(command: CommandShape) {
-  return isCommandEnabled(command) && (isIf(command) || isLoop(command))
+  return (
+    isCommandEnabled(command) &&
+    (isIf(command) || isLoop(command) || isTry(command))
+  )
 }
 
 function isConditional(command: CommandShape) {
@@ -71,6 +75,7 @@ function isControlFlow(command: CommandShape) {
     case ControlFlowCommandNames.do:
     case ControlFlowCommandNames.repeatIf:
     case ControlFlowCommandNames.times:
+    case ControlFlowCommandNames.try:
     case ControlFlowCommandNames.while:
       return true
     default:
@@ -146,6 +151,13 @@ function isTimes(command: CommandShape) {
   )
 }
 
+function isTry(command: CommandShape) {
+  return (
+    isCommandEnabled(command) &&
+    commandNamesEqual(command, ControlFlowCommandNames.try)
+  )
+}
+
 function isForEach(command: CommandShape) {
   return (
     isCommandEnabled(command) &&
@@ -154,17 +166,18 @@ function isForEach(command: CommandShape) {
 }
 
 export const ControlFlowCommandChecks = {
-  isIfBlock: isIfBlock,
-  isConditional: isConditional,
-  isDo: isDo,
-  isElse: isElse,
-  isElseOrElseIf: isElseOrElseIf,
-  isEnd: isEnd,
-  isIf: isIf,
-  isLoop: isLoop,
-  isBlockOpen: isBlockOpen,
-  isTerminal: isTerminal,
-  isControlFlow: isControlFlow,
-  isTimes: isTimes,
-  isForEach: isForEach,
+  isIfBlock,
+  isConditional,
+  isDo,
+  isElse,
+  isElseOrElseIf,
+  isEnd,
+  isIf,
+  isLoop,
+  isBlockOpen,
+  isTerminal,
+  isControlFlow,
+  isTimes,
+  isForEach,
+  isTry,
 }

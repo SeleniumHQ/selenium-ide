@@ -19,5 +19,8 @@
     "@babel/core": "^7.17.8",
     "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/preset-env": "^7.4.5"
+  },
+  "peerDependencies": {
+    "@seleniumhq/side-code-export": "^4.0.0-alpha.0"
   }
 }

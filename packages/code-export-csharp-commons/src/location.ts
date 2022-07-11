@@ -16,8 +16,9 @@
 // under the License.
 
 import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import { LocationEmitters } from '@seleniumhq/side-code-export/src/code-export/emit'
 
-const emitters = {
+const emitters: LocationEmitters = {
   id: emitId,
   name: emitName,
   link: emitLink,
@@ -27,7 +28,7 @@ const emitters = {
   xpath: emitXpath,
 }
 
-export function emit(location) {
+export function emit(location: string) {
   return exporter.emit.location(location, emitters)
 }
 
@@ -35,26 +36,26 @@ export default {
   emit,
 }
 
-function emitId(selector) {
+function emitId(selector: string) {
   return Promise.resolve(`By.Id("${selector}")`)
 }
 
-function emitName(selector) {
+function emitName(selector: string) {
   return Promise.resolve(`By.Name("${selector}")`)
 }
 
-function emitLink(selector) {
+function emitLink(selector: string) {
   return Promise.resolve(`By.LinkText("${selector}")`)
 }
 
-function emitPartialLinkText(selector) {
+function emitPartialLinkText(selector: string) {
   return Promise.resolve(`By.PartialLinkText("${selector}")`)
 }
 
-function emitCss(selector) {
+function emitCss(selector: string) {
   return Promise.resolve(`By.CssSelector("${selector}")`)
 }
 
-function emitXpath(selector) {
+function emitXpath(selector: string) {
   return Promise.resolve(`By.XPath("${selector}")`)
 }

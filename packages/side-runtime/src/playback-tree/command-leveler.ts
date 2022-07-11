@@ -21,7 +21,7 @@ import { CommandShape } from '@seleniumhq/side-model'
 export function deriveCommandLevels(commandStack: CommandShape[]): number[] {
   let level = 0
   let levels: number[] = []
-  commandStack.forEach(function(command) {
+  commandStack.forEach(function (command) {
     const result = levelCommand(command, level, levels)
     level = result.level
     levels = result.levels
@@ -33,10 +33,10 @@ export type LevelCommand = (
   command: CommandShape,
   level: number,
   levels: number[]
-) => ({
+) => {
   level: number
   levels: number[]
-})
+}
 
 const levelDefault: LevelCommand = (_command, level, _levels) => {
   let levels = [..._levels]
@@ -82,5 +82,6 @@ const commandLevelers = {
   [ControlFlowCommandNames.if]: levelBranchOpen,
   [ControlFlowCommandNames.repeatIf]: levelBranchEnd,
   [ControlFlowCommandNames.times]: levelBranchOpen,
+  [ControlFlowCommandNames.try]: levelBranchOpen,
   [ControlFlowCommandNames.while]: levelBranchOpen,
 }

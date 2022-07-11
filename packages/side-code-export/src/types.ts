@@ -4,8 +4,33 @@ import {
   SuiteShape,
   TestShape,
 } from '@seleniumhq/side-model'
+import { VariableLookup } from './code-export'
 
 import Hook from './code-export/hook'
+
+export interface ExportCommandFormat {
+  emitters,
+  variableLookup: VariableLookup
+  variableSetter: (name: string, value: any) => string
+  canEmit,
+  emit,
+  register,
+  extras: { emitWaitForWindow, emitNewWindowHandling },
+}
+export interface ExportLocationFormat {
+  emit: (location: string) => Promise<string>
+}
+export interface ExportFormat {
+  Command: ExportCommandFormat
+  location: ExportLocationFormat
+  opts: {
+    name?: string
+    fileExtension?: string
+    commandPrefixPadding?: string
+    terminatingKeyword?: string
+    commentPrefix?: string
+  }
+}
 
 export type ExportCommandShape = { level: number; statement: string } | string
 export type ExportCommandsShape = {
@@ -37,7 +62,10 @@ export type EmitterExtra = () => {
   generateMethodDeclaration: (name: string) => string
 }
 
-export type PrebuildEmitter = (target: string, value: string) => Promise<string>
+export type PrebuildEmitter = (
+  target: string,
+  value: string
+) => Promise<ExportCommandShape | ExportCommandsShape>
 export interface LanguageEmitterOpts {
   emitter: {
     canEmit: (command: CommandShape) => boolean
