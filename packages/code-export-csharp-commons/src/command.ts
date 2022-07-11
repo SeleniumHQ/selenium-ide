@@ -16,10 +16,13 @@
 // under the License.
 
 import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import { ProcessedCommandEmitter } from '@seleniumhq/side-code-export/dist/code-export/emit'
+import { ScriptShape } from '@seleniumhq/side-code-export/src/code-export/preprocessor'
+import { CommandShape } from '@seleniumhq/side-model'
 import location from './location'
 import selection from './selection'
 
-export const emitters = {
+export const emitters: Record<string, ProcessedCommandEmitter> = {
   addSelection: emitSelect,
   answerOnNextPrompt: skip,
   assert: emitAssert,
@@ -114,7 +117,8 @@ export const emitters = {
   waitForElementNotVisible: emitWaitForElementNotVisible,
   waitForText: emitWaitForText,
   webDriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
-  webDriverChooseCancelOnVisibleConfirmation: emitChooseCancelOnNextConfirmation,
+  webDriverChooseCancelOnVisibleConfirmation:
+    emitChooseCancelOnNextConfirmation,
   webDriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
   webDriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
   while: emitControlFlowWhile,
@@ -122,31 +126,31 @@ export const emitters = {
 
 exporter.register.preprocessors(emitters)
 
-function register(command, emitter) {
+function register(command: any, emitter: any) {
   exporter.register.emitter({ command, emitter, emitters })
 }
 
-function emit(command) {
+function emit(command: CommandShape) {
   return exporter.emit.command(command, emitters[command.command], {
     variableLookup,
     emitNewWindowHandling,
   })
 }
 
-function canEmit(commandName) {
+function canEmit(commandName: string | number) {
   return !!emitters[commandName]
 }
 
-function variableLookup(varName) {
+function variableLookup(varName: string) {
   return `vars["${varName}"].ToString()`
 }
 
-function variableSetter(varName, value) {
+function variableSetter(varName: string, value: string) {
   return varName ? `vars["${varName}"] = ${value};` : ''
 }
 
 function emitWaitForWindow() {
-  const generateMethodDeclaration = name => {
+  const generateMethodDeclaration = (name: string) => {
     return `public string ${name}(int timeout) {`
   }
   const commands = [
@@ -178,7 +182,10 @@ function emitWaitForWindow() {
   })
 }
 
-async function emitNewWindowHandling(command, emittedCommand) {
+async function emitNewWindowHandling(
+  command: CommandShape,
+  emittedCommand: any
+) {
   return Promise.resolve(
     `vars["WindowHandles"] = driver.WindowHandles;\n${await emittedCommand}\nvars["${
       command.windowHandleName
@@ -186,7 +193,7 @@ async function emitNewWindowHandling(command, emittedCommand) {
   )
 }
 
-function emitAssert(varName, value) {
+function emitAssert(varName: string, value: string) {
   const _value =
     value === 'true' || value === 'false'
       ? exporter.parsers.capitalize(value)
@@ -196,13 +203,13 @@ function emitAssert(varName, value) {
   )
 }
 
-function emitAssertAlert(alertText) {
+function emitAssertAlert(alertText: any) {
   return Promise.resolve(
     `Assert.That(driver.SwitchTo().Alert().Text, Is.EqualTo("${alertText}"));`
   )
 }
 
-function emitAnswerOnNextPrompt(textToSend) {
+function emitAnswerOnNextPrompt(textToSend: any) {
   const commands = [
     { level: 0, statement: '{' },
     { level: 1, statement: 'var Alert = driver.SwitchTo().Alert();' },
@@ -213,7 +220,7 @@ function emitAnswerOnNextPrompt(textToSend) {
   return Promise.resolve({ commands })
 }
 
-async function emitCheck(locator) {
+async function emitCheck(locator: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -238,7 +245,7 @@ function emitChooseOkOnNextConfirmation() {
   return Promise.resolve(`driver.SwitchTo().Alert().Accept();`)
 }
 
-async function emitClick(target) {
+async function emitClick(target: any) {
   return Promise.resolve(
     `driver.FindElement(${await location.emit(target)}).Click();`
   )
@@ -248,7 +255,7 @@ async function emitClose() {
   return Promise.resolve(`driver.Close();`)
 }
 
-function generateExpressionScript(script) {
+function generateExpressionScript(script: ScriptShape) {
   const scriptString = script.script.replace(/"/g, "'")
   return `(Boolean) js.ExecuteScript("return (${scriptString})"${generateScriptArguments(
     script
@@ -270,7 +277,7 @@ function emitControlFlowElse() {
   })
 }
 
-function emitControlFlowElseIf(script) {
+function emitControlFlowElseIf(script: any) {
   return Promise.resolve({
     commands: [
       {
@@ -290,7 +297,7 @@ function emitControlFlowEnd() {
   })
 }
 
-function emitControlFlowIf(script) {
+function emitControlFlowIf(script: any) {
   return Promise.resolve({
     commands: [
       { level: 0, statement: `if (${generateExpressionScript(script)}) {` },
@@ -299,7 +306,7 @@ function emitControlFlowIf(script) {
   })
 }
 
-function emitControlFlowForEach(collectionVarName, iteratorVarName) {
+function emitControlFlowForEach(collectionVarName: string, iteratorVarName: string) {
   return Promise.resolve({
     commands: [
       {
@@ -322,7 +329,7 @@ function emitControlFlowForEach(collectionVarName, iteratorVarName) {
   })
 }
 
-function emitControlFlowRepeatIf(script) {
+function emitControlFlowRepeatIf(script: any) {
   return Promise.resolve({
     commands: [
       { level: 0, statement: `} while (${generateExpressionScript(script)});` },
@@ -331,7 +338,7 @@ function emitControlFlowRepeatIf(script) {
   })
 }
 
-function emitControlFlowTimes(target) {
+function emitControlFlowTimes(target: any) {
   const commands = [
     { level: 0, statement: `var times = ${target};` },
     { level: 0, statement: 'for(int i = 0; i < times; i++) {' },
@@ -339,7 +346,7 @@ function emitControlFlowTimes(target) {
   return Promise.resolve({ commands, endingLevelAdjustment: 1 })
 }
 
-function emitControlFlowWhile(script) {
+function emitControlFlowWhile(script: any) {
   return Promise.resolve({
     commands: [
       { level: 0, statement: `while (${generateExpressionScript(script)}) {` },
@@ -348,7 +355,7 @@ function emitControlFlowWhile(script) {
   })
 }
 
-async function emitDoubleClick(target) {
+async function emitDoubleClick(target: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -364,7 +371,7 @@ async function emitDoubleClick(target) {
   return Promise.resolve({ commands })
 }
 
-async function emitDragAndDrop(dragged, dropped) {
+async function emitDragAndDrop(dragged: any, dropped: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -386,12 +393,12 @@ async function emitDragAndDrop(dragged, dropped) {
   return Promise.resolve({ commands })
 }
 
-async function emitEcho(message) {
+async function emitEcho(message: string) {
   const _message = message.startsWith('vars[') ? message : `"${message}"`
   return Promise.resolve(`Console.WriteLine(${_message});`)
 }
 
-async function emitEditContent(locator, content) {
+async function emitEditContent(locator: any, content: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -409,27 +416,27 @@ async function emitEditContent(locator, content) {
   return Promise.resolve({ commands })
 }
 
-async function emitExecuteScript(script, varName) {
+async function emitExecuteScript(script: ScriptShape, varName: string) {
   const result = `js.ExecuteScript("${script.script}"${generateScriptArguments(
     script
   )})`
   return Promise.resolve(variableSetter(varName, result))
 }
 
-async function emitExecuteAsyncScript(script, varName) {
+async function emitExecuteAsyncScript(script: ScriptShape, varName: string) {
   const result = `js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
     script.script
   }.then(callback).catch(callback);${generateScriptArguments(script)}")`
   return Promise.resolve(variableSetter(varName, result))
 }
 
-function generateScriptArguments(script) {
+function generateScriptArguments(script: ScriptShape) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map(varName => `vars["${varName}"]`)
+    .map((varName: string) => `vars["${varName}"]`)
     .join(',')}`
 }
 
-async function emitMouseDown(locator) {
+async function emitMouseDown(locator: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -448,7 +455,7 @@ async function emitMouseDown(locator) {
   return Promise.resolve({ commands })
 }
 
-async function emitMouseMove(locator) {
+async function emitMouseMove(locator: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -478,7 +485,7 @@ async function emitMouseOut() {
   return Promise.resolve({ commands })
 }
 
-async function emitMouseUp(locator) {
+async function emitMouseUp(locator: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -497,14 +504,15 @@ async function emitMouseUp(locator) {
   return Promise.resolve({ commands })
 }
 
-function emitOpen(target) {
+function emitOpen(target: string) {
   const url = /^(file|http|https):\/\//.test(target)
     ? `"${target}"`
-    : `"${global.baseUrl}${target}"`
+    : // @ts-expect-error globals yuck
+      `"${global.baseUrl}${target}"`
   return Promise.resolve(`driver.Navigate().GoToUrl(${url});`)
 }
 
-async function emitPause(time) {
+async function emitPause(time: any) {
   const commands = [
     { level: 0, statement: 'try {' },
     { level: 1, statement: `Thread.Sleep(${time});` },
@@ -515,24 +523,26 @@ async function emitPause(time) {
   return Promise.resolve({ commands })
 }
 
-async function emitRun(testName) {
+async function emitRun(testName: string) {
   return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
 }
 
-async function emitRunScript(script) {
+async function emitRunScript(script: ScriptShape) {
   return Promise.resolve(
     `js.ExecuteScript("${script.script}${generateScriptArguments(script)}");`
   )
 }
 
-async function emitSetWindowSize(size) {
+async function emitSetWindowSize(size: {
+  split: (arg0: string) => [any, any]
+}) {
   const [width, height] = size.split('x')
   return Promise.resolve(
     `driver.Manage().Window.Size = new System.Drawing.Size(${width}, ${height});`
   )
 }
 
-async function emitSelect(selectElement, option) {
+async function emitSelect(selectElement: any, option: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -549,16 +559,16 @@ async function emitSelect(selectElement, option) {
     },
     { level: 0, statement: '}' },
   ]
-  return Promise.resolve({ commands })
+  return { commands }
 }
 
-async function emitSelectFrame(frameLocation) {
+async function emitSelectFrame(frameLocation: string) {
   if (frameLocation === 'relative=top' || frameLocation === 'relative=parent') {
     return Promise.resolve('driver.SwitchTo().DefaultContent();')
   } else if (/^index=/.test(frameLocation)) {
     return Promise.resolve(
       `driver.SwitchTo().Frame(${Math.floor(
-        frameLocation.split('index=')[1]
+        Number(frameLocation.split('index=')[1])
       )});`
     )
   } else {
@@ -578,7 +588,7 @@ async function emitSelectFrame(frameLocation) {
   }
 }
 
-async function emitSelectWindow(windowLocation) {
+async function emitSelectWindow(windowLocation: string) {
   if (/^handle=/.test(windowLocation)) {
     return Promise.resolve(
       `driver.SwitchTo().Window(${windowLocation.split('handle=')[1]});`
@@ -626,14 +636,14 @@ async function emitSelectWindow(windowLocation) {
   }
 }
 
-function generateSendKeysInput(value) {
-  if (typeof value === 'object') {
+function generateSendKeysInput(value: string | string[]) {
+  if (Array.isArray(value)) {
     return value
-      .map(s => {
+      .map((s) => {
         if (s.startsWith('vars[')) {
           return s
         } else if (s.startsWith('Key[')) {
-          const key = s.match(/\['(.*)'\]/)[1]
+          const key = (s.match(/\['(.*)'\]/) as RegExpMatchArray)[1]
           return `Keys.${exporter.parsers.capitalize(key.toLowerCase())}`
         } else {
           return `"${s}"`
@@ -649,7 +659,7 @@ function generateSendKeysInput(value) {
   }
 }
 
-async function emitSendKeys(target, value) {
+async function emitSendKeys(target: any, value: any) {
   return Promise.resolve(
     `driver.FindElement(${await location.emit(
       target
@@ -663,13 +673,13 @@ function emitSetSpeed() {
   )
 }
 
-async function emitStore(value, varName) {
+async function emitStore(value: any, varName: string) {
   return Promise.resolve(variableSetter(varName, `"${value}"`))
 }
 
-async function emitStoreAttribute(locator, varName) {
+async function emitStoreAttribute(locator: string | string[], varName: string) {
   const attributePos = locator.lastIndexOf('@')
-  const elementLocator = locator.slice(0, attributePos)
+  const elementLocator = locator.slice(0, attributePos) as string
   const attributeName = locator.slice(attributePos + 1)
   const commands = [
     { level: 0, statement: '{' },
@@ -689,44 +699,44 @@ async function emitStoreAttribute(locator, varName) {
   return Promise.resolve({ commands })
 }
 
-async function emitStoreJson(_json, _varName) {
+async function emitStoreJson(_json: any, _varName: string) {
   return Promise.resolve(
     'throw new System.Exception("The `storeJson` command is not yet implemented for this language.");'
   )
 }
 
-async function emitStoreText(locator, varName) {
+async function emitStoreText(locator: any, varName: string) {
   const result = `driver.FindElement(${await location.emit(locator)}).Text`
   return Promise.resolve(variableSetter(varName, result))
 }
 
-async function emitStoreTitle(_, varName) {
+async function emitStoreTitle(_: any, varName: string) {
   return Promise.resolve(variableSetter(varName, 'driver.Title'))
 }
 
-async function emitStoreValue(locator, varName) {
+async function emitStoreValue(locator: any, varName: string) {
   const result = `driver.FindElement(${await location.emit(
     locator
   )}).GetAttribute("value")`
   return Promise.resolve(variableSetter(varName, result))
 }
 
-async function emitStoreWindowHandle(varName) {
+async function emitStoreWindowHandle(varName: string) {
   return Promise.resolve(variableSetter(varName, 'driver.CurrentWindowHandle'))
 }
 
-async function emitStoreXpathCount(locator, varName) {
+async function emitStoreXpathCount(locator: any, varName: string) {
   const result = `driver.FindElements(${await location.emit(locator)}).Count`
   return Promise.resolve(variableSetter(varName, result))
 }
 
-async function emitSubmit(_locator) {
+async function emitSubmit(_locator: any) {
   return Promise.resolve(
     `throw new System.Exception("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.");`
   )
 }
 
-async function emitType(target, value) {
+async function emitType(target: any, value: any) {
   return Promise.resolve(
     `driver.FindElement(${await location.emit(
       target
@@ -734,7 +744,7 @@ async function emitType(target, value) {
   )
 }
 
-async function emitUncheck(locator) {
+async function emitUncheck(locator: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -751,13 +761,13 @@ async function emitUncheck(locator) {
   return Promise.resolve({ commands })
 }
 
-async function emitVerifyChecked(locator) {
+async function emitVerifyChecked(locator: any) {
   return Promise.resolve(
     `Assert.True(driver.FindElement(${await location.emit(locator)}).Selected);`
   )
 }
 
-async function emitVerifyEditable(locator) {
+async function emitVerifyEditable(locator: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -777,7 +787,7 @@ async function emitVerifyEditable(locator) {
   return Promise.resolve({ commands })
 }
 
-async function emitVerifyElementPresent(locator) {
+async function emitVerifyElementPresent(locator: any) {
   const commands = [
     {
       level: 0,
@@ -790,7 +800,7 @@ async function emitVerifyElementPresent(locator) {
   return Promise.resolve({ commands })
 }
 
-async function emitVerifyElementNotPresent(locator) {
+async function emitVerifyElementNotPresent(locator: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -805,7 +815,7 @@ async function emitVerifyElementNotPresent(locator) {
   return Promise.resolve({ commands })
 }
 
-async function emitVerifyNotChecked(locator) {
+async function emitVerifyNotChecked(locator: any) {
   return Promise.resolve(
     `Assert.False(driver.FindElement(${await location.emit(
       locator
@@ -813,7 +823,7 @@ async function emitVerifyNotChecked(locator) {
   )
 }
 
-async function emitVerifyNotEditable(locator) {
+async function emitVerifyNotEditable(locator: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -833,7 +843,7 @@ async function emitVerifyNotEditable(locator) {
   return Promise.resolve({ commands })
 }
 
-async function emitVerifyNotSelectedValue(locator, expectedValue) {
+async function emitVerifyNotSelectedValue(locator: any, expectedValue: string) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -853,14 +863,14 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
   return Promise.resolve({ commands })
 }
 
-async function emitVerifyNotText(locator, text) {
+async function emitVerifyNotText(locator: any, text: string) {
   const result = `driver.FindElement(${await location.emit(locator)}).Text`
   return Promise.resolve(
     `Assert.That(${result}, Is.Not.EqualTo("${exporter.emit.text(text)}"));`
   )
 }
 
-async function emitVerifySelectedLabel(locator, labelValue) {
+async function emitVerifySelectedLabel(locator: any, labelValue: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -890,11 +900,11 @@ async function emitVerifySelectedLabel(locator, labelValue) {
   })
 }
 
-async function emitVerifySelectedValue(locator, value) {
+async function emitVerifySelectedValue(locator: any, value: any) {
   return emitVerifyValue(locator, value)
 }
 
-async function emitVerifyText(locator, text) {
+async function emitVerifyText(locator: any, text: string) {
   return Promise.resolve(
     `Assert.That(driver.FindElement(${await location.emit(
       locator
@@ -902,7 +912,7 @@ async function emitVerifyText(locator, text) {
   )
 }
 
-async function emitVerifyValue(locator, value) {
+async function emitVerifyValue(locator: any, value: any) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -917,11 +927,11 @@ async function emitVerifyValue(locator, value) {
   return Promise.resolve({ commands })
 }
 
-async function emitVerifyTitle(title) {
+async function emitVerifyTitle(title: any) {
   return Promise.resolve(`Assert.That(driver.Title, Is.EqualTo("${title}"));`)
 }
 
-async function emitWaitForElementEditable(locator, timeout) {
+async function emitWaitForElementEditable(locator: any, timeout: number) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -941,7 +951,7 @@ async function emitWaitForElementEditable(locator, timeout) {
   return Promise.resolve({ commands })
 }
 
-async function emitWaitForText(locator, text) {
+async function emitWaitForText(locator: any, text: any) {
   const timeout = 30000
   const commands = [
     { level: 0, statement: '{' },
@@ -966,7 +976,7 @@ function skip() {
   return Promise.resolve('')
 }
 
-async function emitWaitForElementPresent(locator, timeout) {
+async function emitWaitForElementPresent(locator: any, timeout: number) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -986,7 +996,7 @@ async function emitWaitForElementPresent(locator, timeout) {
   return Promise.resolve({ commands })
 }
 
-async function emitWaitForElementVisible(locator, timeout) {
+async function emitWaitForElementVisible(locator: any, timeout: number) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -1008,7 +1018,7 @@ async function emitWaitForElementVisible(locator, timeout) {
   })
 }
 
-async function emitWaitForElementNotEditable(locator, timeout) {
+async function emitWaitForElementNotEditable(locator: any, timeout: number) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -1030,7 +1040,7 @@ async function emitWaitForElementNotEditable(locator, timeout) {
   })
 }
 
-async function emitWaitForElementNotPresent(locator, timeout) {
+async function emitWaitForElementNotPresent(locator: any, timeout: number) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -1052,7 +1062,7 @@ async function emitWaitForElementNotPresent(locator, timeout) {
   })
 }
 
-async function emitWaitForElementNotVisible(locator, timeout) {
+async function emitWaitForElementNotVisible(locator: any, timeout: number) {
   const commands = [
     { level: 0, statement: '{' },
     {

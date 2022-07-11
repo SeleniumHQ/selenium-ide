@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-export * as codeExport from './code-export'
+export { default as codeExport } from './code-export'
 export { default as stringEscape } from './string-escape'
 export * as project from './project'
+export * from './types'

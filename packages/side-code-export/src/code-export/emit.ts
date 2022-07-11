@@ -33,6 +33,7 @@ import {
 } from '@seleniumhq/side-model'
 import {
   ExportCommandShape,
+  ExportCommandsShape,
   LanguageEmitterOpts,
   LanguageHooks,
 } from '../types'
@@ -79,13 +80,13 @@ function validateCommand(command: CommandShape) {
 export interface EmitCommandContext {
   emitNewWindowHandling: (
     command: CommandShape,
-    result: string
-  ) => Promise<string>
+    result: ExportCommandShape | ExportCommandsShape
+  ) => Promise<ExportCommandShape | ExportCommandsShape>
   variableLookup: VariableLookup
 }
 
 export interface ProcessedCommandEmitter {
-  (target?: any, value?: any): string
+  (target?: any, value?: any): Promise<ExportCommandsShape | ExportCommandShape>
   targetPreprocessor?: Preprocessor
   valuePreprocessor?: Preprocessor
 }
@@ -98,7 +99,7 @@ export async function emitCommand(
   validateCommand(command)
   if (emitter) {
     const ignoreEscaping = command.command === 'storeJson'
-    let result = emitter(
+    let result = await emitter(
       preprocessParameter(
         command.target as string,
         emitter.targetPreprocessor,
@@ -113,14 +114,14 @@ export async function emitCommand(
       )
     )
     if (command.opensWindow) {
-      result = await emitNewWindowHandling(command, result)
+      return await emitNewWindowHandling(command, result)
     }
     return result
   }
   return ''
 }
 
-export type StringEmitter = (selector: string) => string
+export type StringEmitter = (selector: string) => Promise<string>
 export interface LocationEmitters {
   id: StringEmitter
   name: StringEmitter

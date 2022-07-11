@@ -20,6 +20,7 @@ export default class PluginsController extends BaseController {
     return systemPlugins
       .concat(correctPluginPaths(projectPath, activeProject.plugins))
   }
+
   async onProjectLoaded() {
     const pluginPaths = await this.list()
     const plugins = await loadPlugins(
@@ -31,16 +32,18 @@ export default class PluginsController extends BaseController {
       return this.load(pluginPath, plugin)
     })
   }
+
   async onProjectUnloaded() {
     this.plugins.forEach((plugin) => {
       return this.unload(plugin)
     })
   }
+
   async load(pluginPath: string, plugin: PluginShape) {
     this.plugins.push(plugin)
     const index = this.plugins.length - 1
     this.pluginHooks[index] = {}
-    Object.entries(plugin.hooks).forEach(([event, hook]) => {
+    Object.entries(plugin?.hooks ?? {}).forEach(([event, hook]) => {
       const key = event === 'onMessage' ? `message-${pluginPath}` : event
       const handler: PluginMessageHandler = (_event, ...args) => hook(...args)
       ipcMain.on(key, handler)
