@@ -53,6 +53,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
           },
         }}
         onChange={(event: any, newValue: string | null) => {
+          console.log(event)
           onChange(newValue)
         }}
         onContextMenu={() => {
