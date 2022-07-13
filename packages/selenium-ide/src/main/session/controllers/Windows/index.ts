@@ -1,12 +1,16 @@
 import * as windowConfigs from 'browser/windows/controller'
 import { WindowConfig } from 'browser/types'
-import { BrowserWindow, BrowserWindowConstructorOptions } from 'electron'
+import electron, {
+  BrowserWindow,
+  BrowserWindowConstructorOptions,
+} from 'electron'
 import { existsSync, readFileSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
 import storage from 'main/store'
 import { join } from 'path'
 import BaseController from '../Base'
+// import { Tune } from '@mui/icons-material'
 
 // import { StopOutlined } from '@mui/icons-material'
 
@@ -139,7 +143,7 @@ export default class WindowsController extends BaseController {
         overrideBrowserWindowOptions: playbackWindowOptions,
       }
     })
-  
+
     window.webContents.on('did-create-window', (win) =>
       this.handlePlaybackWindow(win)
     )
@@ -149,7 +153,7 @@ export default class WindowsController extends BaseController {
     // This is to overcome a quirk in Electron where
     // the preload scripts will sometimes just fail to register or something
     window.webContents.on('frame-created', async (_event, details) => {
-      const frame = details.frame;
+      const frame = details.frame
       await frame.once('dom-ready', async () => {
         const hasAPI = await frame.executeJavaScript('window.sideAPI')
         if (!hasAPI) {
@@ -181,7 +185,26 @@ export default class WindowsController extends BaseController {
     const position = storage.get<'windowPosition'>('windowPosition')
 
     if (size.length) projectWindow.setSize(size[0], size[1], true)
-    if (position.length) projectWindow.setPosition(position[0], position[1])
+
+    var screenElectron = electron.screen.getPrimaryDisplay()
+
+    const sWidth = screenElectron.bounds.width
+    const sHeight = screenElectron.bounds.height
+
+    if (position.length) {
+      const adjustedX = position[0] < 0 ? 50 : position[0]
+      const adjustedY = position[1] < 0 ? 50 : position[1]
+      projectWindow.setPosition(adjustedX, adjustedY)
+
+      if (size.length) {
+        const adjustedW =
+          adjustedX + size[0] > sWidth ? sWidth - adjustedX - 50 : size[0]
+        const adjustedH =
+          adjustedY + size[1] > sHeight ? sHeight - adjustedY - 50 : size[1]
+        projectWindow.setSize(adjustedW, adjustedH)
+      }
+    }
+
     projectWindow.show()
 
     projectWindow.on('close', async (e) => {
