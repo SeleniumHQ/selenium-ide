@@ -28,8 +28,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
   const updateTargetAutoComplete = updateFieldAutoComplete(fieldName)
   const [localValue, setLocalValue] = React.useState(command[fieldName])
   const onChange = (e: any) => {
-    const el = e.target as HTMLInputElement
-    setLocalValue(el.value)
+    setLocalValue(e)
     updateTarget(testID, command.id)(e)
   }
   const onChangeAutoComplete = (e: any, value: string) => {
@@ -53,11 +52,16 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
             },
           },
         }}
-        onChange={onChange}
+        onChange={(event: any, newValue: string | null) => {
+          console.log(event)
+          onChange(newValue)
+        }}
         onContextMenu={() => {
           window.sideAPI.menus.open('textField')
         }}
-        onInputChange={onChangeAutoComplete}
+        onInputChange={(event, newInputValue) => {
+          onChangeAutoComplete(event, newInputValue)
+        }}
         options={(command[fieldNames] ?? []).map((entry) => entry.join('='))}
         renderInput={(params) => (
           <TextField
