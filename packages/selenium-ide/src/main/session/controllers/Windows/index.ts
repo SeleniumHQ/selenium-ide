@@ -186,7 +186,7 @@ export default class WindowsController extends BaseController {
 
     if (size.length) projectWindow.setSize(size[0], size[1], true)
 
-    var screenElectron = electron.screen.getPrimaryDisplay()
+    const screenElectron = electron.screen.getPrimaryDisplay()
 
     const sWidth = screenElectron.bounds.width
     const sHeight = screenElectron.bounds.height
