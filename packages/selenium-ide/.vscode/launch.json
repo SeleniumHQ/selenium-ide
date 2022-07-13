@@ -2,28 +2,67 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Run Selenium IDE",
       "outFiles": [
         "${workspaceFolder}/**/*.js",
         "!**/node_modules/**"
       ],
-      "name": "Run Selenium IDE",
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**", //use source maps for files in workspace folder
+        "!**/node_modules/**" //but ignore everything in the node_modules folder
+      ],
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+      "runtimeArgs": [
+        "--remote-debugging-port=8315" //open debugging port for renderer process
+      ],
       "windows": {
         "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
       },
       "environment": [
-        { "name": "ELECTRON_RUN_AS_NODE", "value": "" },
-        { "name": "NODE_DEBUG", "value": "api,webdriver" },
-        { "name": "NODE_OPTIONS", "value": "--no-warnings" },
-        { "name": "SIDE_DEBUG", "value": "true" }
+        {
+          "name": "ELECTRON_RUN_AS_NODE",
+          "value": ""
+        },
+        {
+          "name": "NODE_DEBUG",
+          "value": "api,webdriver"
+        },
+        {
+          "name": "NODE_OPTIONS",
+          "value": "--no-warnings"
+        },
+        {
+          "name": "SIDE_DEBUG",
+          "value": "true"
+        }
       ],
-      "args": ["--trace-uncaught", "${workspaceFolder}/build/main-bundle.js"],
+      "args": [
+        "--trace-uncaught",
+        "${workspaceFolder}/build/main-bundle.js"
+      ],
       "outputCapture": "std",
       "webRoot": "${workspaceFolder}/build",
       "sourceMaps": true,
+    },
+    {
+      "name": "Electron: Renderer",
+      "type": "chrome", //use the Chrome debugger that comes with VS Code
+      "request": "attach",
+      "port": 8315, //use debug port opened in Electron: Main configuration
+      "webRoot": "${workspaceFolder}",
+      "timeout": 30000
+    }
+  ],
+  "compounds": [ //launch multiple configurations concurrently
+    {
+      "name": "Electron: All",
+      "configurations": [
+        "Run Selenium IDE",
+        "Electron: Renderer"
+      ]
     }
   ]
 }
