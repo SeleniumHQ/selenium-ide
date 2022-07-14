@@ -62,7 +62,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         onInputChange={(event, newInputValue) => {
           onChangeAutoComplete(event, newInputValue)
         }}
-        options={(command[fieldNames] ?? []).map((entry) => entry.join('='))}
+        options={(command[fieldNames] ?? []).map((entry) => entry[0])}
         renderInput={(params) => (
           <TextField
             {...params}
