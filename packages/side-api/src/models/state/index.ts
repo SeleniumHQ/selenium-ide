@@ -34,17 +34,20 @@ export const defaultRecorderState: RecorderStateShape = {
 export type InsertCommandPref = 'Before' | 'After'
 export type ThemePref = 'Dark' | 'Light' | 'System'
 export type CamelCaseNamesPref = 'Yes' | 'No'
+export type IgnoreCertificateErrorsPref = 'Yes' | 'No'
 
 export interface UserPrefs {
   insertCommandPref: InsertCommandPref
   themePref: ThemePref
   camelCaseNamesPref: CamelCaseNamesPref
+  ignoreCertificateErrorsPref: IgnoreCertificateErrorsPref
 }
 
 export const defaultUserPrefs: UserPrefs = {
   insertCommandPref: 'After',
   themePref: 'System',
   camelCaseNamesPref: 'No',
+  ignoreCertificateErrorsPref: 'No',
 }
 
 export interface PlaybackStateShape {

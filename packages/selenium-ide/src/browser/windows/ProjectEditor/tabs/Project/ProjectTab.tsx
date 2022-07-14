@@ -112,6 +112,25 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
             <MenuItem value="No">No</MenuItem>
           </Select>
         </FormControl>
+        <FormControl>
+          <InputLabel id="ignoreSSLErrors">
+            Ignore Certificate/SSL errors
+          </InputLabel>
+          <Select
+            id="ignoreCertificateErrorsPref"
+            label="Ignore Certificate/SSL errors"
+            name="ignoreCertificateErrorsPref"
+            value={state.userPrefs.ignoreCertificateErrorsPref}
+            onChange={(e: any) => {
+              window.sideAPI.state.toggleUserPrefIgnoreCertificateErrors(
+                e.target.value
+              )
+            }}
+          >
+            <MenuItem value="Yes">Yes</MenuItem>
+            <MenuItem value="No">No</MenuItem>
+          </Select>
+        </FormControl>
       </Stack>
       <List
         dense

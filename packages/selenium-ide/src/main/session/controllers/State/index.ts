@@ -1,8 +1,10 @@
 import { getCommandIndex } from '@seleniumhq/side-api/dist/helpers/getActiveData'
-import { state as defaultState, defaultUserPrefs } from '@seleniumhq/side-api'
+import { state as defaultState } from '@seleniumhq/side-api'
 import {
   CamelCaseNamesPref,
   CoreSessionData,
+  defaultUserPrefs,
+  IgnoreCertificateErrorsPref,
   InsertCommandPref,
   StateShape,
   ThemePref,
@@ -83,6 +85,14 @@ export default class StateController extends BaseController {
       defaultUserPrefs
     )
     storage.set<'userPrefs'>('userPrefs', { ...userPrefs, insertCommandPref })
+  }
+
+  async toggleUserPrefIgnoreCertificateErrors(ignoreCertificateErrorsPref: IgnoreCertificateErrorsPref) {
+    const userPrefs = await storage.get<'userPrefs'>(
+      'userPrefs',
+      defaultUserPrefs
+    )
+    storage.set<'userPrefs'>('userPrefs', { ... userPrefs, ignoreCertificateErrorsPref})
   }
 
   async getUserPrefs(): Promise<UserPrefs> {
