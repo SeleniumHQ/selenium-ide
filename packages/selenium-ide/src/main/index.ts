@@ -22,6 +22,7 @@ process.on('uncaughtException', (error) => {
 
 // Instantiate the session
 const session = createSession(app, store)
+
 app.on('open-file', async (_e, path) => {
   await session.projects.load(path)
 })
@@ -57,3 +58,18 @@ app.on('window-all-closed', async () => {
     await session.system.quit()
   }
 })
+
+app.on(
+  'certificate-error',
+  (event, _webContents, _url, _error, _certificate, callback) => {
+    session.state.getUserPrefs().then((userPrefs) => {
+      console.log(userPrefs)
+      if (userPrefs.ignoreCertificateErrorsPref === 'Yes') {
+        event.preventDefault()
+        callback(true)
+      }
+      else
+        callback(false)
+    })
+  }
+)
