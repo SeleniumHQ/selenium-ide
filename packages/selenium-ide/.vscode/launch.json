@@ -53,7 +53,7 @@
       "request": "attach",
       "port": 8315, //use debug port opened in Electron: Main configuration
       "webRoot": "${workspaceFolder}",
-      "timeout": 30000
+      "timeout": 90000
     }
   ],
   "compounds": [ //launch multiple configurations concurrently
