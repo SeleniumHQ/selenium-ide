@@ -64,12 +64,13 @@ app.on(
   (event, _webContents, _url, _error, _certificate, callback) => {
     session.state.getUserPrefs().then((userPrefs) => {
       console.log(userPrefs)
-      if (userPrefs.ignoreCertificateErrorsPref === 'Yes') {
+      if (
+        userPrefs.ignoreCertificateErrorsPref === 'Yes' &&
+        _url.startsWith(session.projects.project.url)
+      ) {
         event.preventDefault()
         callback(true)
-      }
-      else
-        callback(false)
+      } else callback(false)
     })
   }
 )

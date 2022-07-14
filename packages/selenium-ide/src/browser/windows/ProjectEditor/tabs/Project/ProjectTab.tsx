@@ -118,7 +118,7 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
           </InputLabel>
           <Select
             id="ignoreCertificateErrorsPref"
-            label="Ignore Certificate/SSL errors"
+            label="Ignore Certificate/SSL errors - Please be aware of the risks of ignoring SSL errors"
             name="ignoreCertificateErrorsPref"
             value={state.userPrefs.ignoreCertificateErrorsPref}
             onChange={(e: any) => {
