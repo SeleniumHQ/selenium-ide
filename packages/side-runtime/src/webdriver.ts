@@ -317,7 +317,24 @@ export default class WebDriverExecutor {
       const frameTargets = frameIndex.split('\\')
       for (let frameTarget of frameTargets) {
         if (frameTarget === '..') await targetLocator.parentFrame()
-        else await targetLocator.frame(Number(frameTarget))
+        else {
+          const frameIndex = locator.substring('index='.length)
+          // Delay for a second. Check too fast, and browser will think this iframe location is 'about:blank'
+          await new Promise((f) => setTimeout(f, 1000))
+          const frameUrl = await this.driver.executeScript(
+            "return window.frames['" + frameIndex + "'].location.href"
+          )
+          const windowFrames = await this.driver.findElements(By.css('iframe'))
+          let matchIndex = 0
+          for (let frame of windowFrames) {
+            let localFrameUrl = await frame.getAttribute('src')
+            if (localFrameUrl === frameUrl) {
+              break
+            }
+            matchIndex++
+          }
+          this.driver.switchTo().frame(matchIndex)
+        }
       }
     } else {
       const element = await this.waitForElement(locator)
