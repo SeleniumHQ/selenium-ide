@@ -20,17 +20,26 @@ const getFrameTraversalCommands = (
     return []
   }
 
-  const relativePath = relative(startingFrame, endingFrame).replace(/^.*root/, 'root').split('/')
-  return relativePath.map((part: string) => {
-    switch (part) {
-      case '..':
-        return makeSelectFrameCMD('relative=parent')
-      case 'root':
-        return makeSelectFrameCMD('relative=top')
-      default:
-        return makeSelectFrameCMD(`index=${part}`)
+  const relativePath = relative(startingFrame, endingFrame)
+    .replace(/^.*root/, 'root')
+    .split('/')
+  const relPathString = relativePath[0]
+  switch (relPathString) {
+    case '..':
+      return [makeSelectFrameCMD('relative=parent')]
+    case 'root':
+      return [makeSelectFrameCMD('relative=top')]
+    default: {
+      let frameCommands = []
+      const frameTargets = relPathString.split('\\')
+      for (let frameTarget of frameTargets) {
+        if (frameTarget === '..')
+          frameCommands.push(makeSelectFrameCMD('relative=parent'))
+        else frameCommands.push(makeSelectFrameCMD(`index=${frameTarget}`))
+      }
+      return frameCommands
     }
-  })
+  }
 }
 
 export interface RecordNewCommandInput {
