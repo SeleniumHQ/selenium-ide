@@ -1,6 +1,7 @@
 {
   "folders": [
     { "path": "../", "name": "root" },
+    { "path": "../packages/browser-info" },
     { "path": "../packages/code-export-csharp-commons" },
     { "path": "../packages/code-export-csharp-nunit" },
     { "path": "../packages/code-export-csharp-xunit" },

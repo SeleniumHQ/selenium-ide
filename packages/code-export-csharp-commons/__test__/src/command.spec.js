@@ -16,10 +16,7 @@
 // under the License.
 
 import Command from '../../src/command'
-import {
-  Commands,
-  ControlFlowCommandNames,
-} from '../../../selenium-ide/src/neo/models/Command'
+import { Commands, ControlFlowCommandNames } from '@seleniumhq/side-runtime'
 import { opts } from '../../src/index'
 import { codeExport as exporter } from '@seleniumhq/side-code-export'
 
@@ -36,7 +33,7 @@ async function prettify(command, { fullPayload } = {}) {
 describe('command code emitter', () => {
   it.skip('should emit all known commands', () => {
     let result = []
-    Commands.array.forEach(command => {
+    Commands.array.forEach((command) => {
       if (!Command.canEmit(command)) {
         result.push(command)
       }

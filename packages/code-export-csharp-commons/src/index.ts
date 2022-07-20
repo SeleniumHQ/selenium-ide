@@ -15,12 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-
 import Command from './command'
 import location from './location'
-import { ExportFormat } from '@seleniumhq/side-code-export'; 
 
-const exportFormat: ExportFormat = {
+export {default as Command} from './command'
+export {default as location} from './location'
+
+export default {
   Command,
   location,
   opts: {
@@ -30,5 +31,3 @@ const exportFormat: ExportFormat = {
     commentPrefix: '//',
   },
 }
-
-module.exports = exportFormat;

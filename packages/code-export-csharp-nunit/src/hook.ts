@@ -15,9 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import {
+  codeExport as exporter,
+  HookProps,
+  LanguageHooks,
+} from '@seleniumhq/side-code-export'
 
-const emitters = {
+const emitters: Record<
+  keyof LanguageHooks,
+  () => HookProps
+> = {
   afterAll,
   afterEach,
   beforeAll,
@@ -29,16 +36,13 @@ const emitters = {
   inEachEnd: empty,
 }
 
-function generate(hookName) {
-  return new exporter.hook(emitters[hookName]())
-}
-
 export function generateHooks() {
-  let result = {}
-  Object.keys(emitters).forEach(hookName => {
-    result[hookName] = generate(hookName)
+  let result: Partial<LanguageHooks> = {}
+  Object.keys(emitters).forEach((name) => {
+    const hookName = name as keyof LanguageHooks
+    result[hookName] = new exporter.hook(emitters[hookName]())
   })
-  return result
+  return result as LanguageHooks
 }
 
 function afterAll() {
@@ -91,7 +95,7 @@ function beforeAll() {
 
 function beforeEach() {
   const params = {
-    startingSyntax: ({ browserName, gridUrl } = {}) => ({
+    startingSyntax: ({ browserName, gridUrl } = { browserName: 'Chrome', gridUrl: '' }) => ({
       commands: [
         { level: 0, statement: '[SetUp]' },
         { level: 0, statement: 'public void SetUp() {' },

@@ -15,7 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import {
+  codeExport as exporter,
+  LanguageEmitter,
+} from '@seleniumhq/side-code-export'
 import emitter from './command'
 import { location } from '@seleniumhq/code-export-csharp-commons'
 import { generateHooks } from './hook'
@@ -23,37 +26,41 @@ import { generateHooks } from './hook'
 // Define language options
 export const displayName = 'C# NUnit'
 
-export let opts = {}
-opts.emitter = emitter
-opts.hooks = generateHooks()
-opts.fileExtension = '.cs'
-opts.commandPrefixPadding = '  '
-opts.terminatingKeyword = '}'
-opts.commentPrefix = '//'
-opts.generateMethodDeclaration = generateMethodDeclaration
+export let opts = {
+  emitter: emitter,
+  hooks: generateHooks(),
+  fileExtension: '.cs',
+  commandPrefixPadding: '  ',
+  terminatingKeyword: '}',
+  commentPrefix: '//',
+  generateFilename,
+  generateMethodDeclaration,
+  generateSuiteDeclaration,
+  generateTestDeclaration,
+}
 
 // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
-function generateTestDeclaration(name) {
+function generateTestDeclaration(name: string) {
   return `[Test]\npublic void ${exporter.parsers.uncapitalize(
     exporter.parsers.sanitizeName(name)
   )}() {`
 }
-function generateMethodDeclaration(name) {
+function generateMethodDeclaration(name: string) {
   return `public void ${exporter.parsers.sanitizeName(name)}() {`
 }
-function generateSuiteDeclaration(name) {
+function generateSuiteDeclaration(name: string) {
   return `[TestFixture]\npublic class ${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
   )}Test {`
 }
-function generateFilename(name) {
+function generateFilename(name: string) {
   return `${exporter.parsers.capitalize(
     exporter.parsers.sanitizeName(name)
   )}Test${opts.fileExtension}`
 }
 
 // Emit an individual test, wrapped in a suite (using the test name as the suite name)
-export async function emitTest({
+export const emitTest: LanguageEmitter['emit']['test'] = async ({
   baseUrl,
   test,
   tests,
@@ -61,7 +68,7 @@ export async function emitTest({
   enableOriginTracing,
   beforeEachOptions,
   enableDescriptionAsComment,
-}) {
+}) => {
   global.baseUrl = baseUrl
   const testDeclaration = generateTestDeclaration(test.name)
   const result = await exporter.emit.test(test, tests, {
@@ -87,7 +94,7 @@ export async function emitTest({
 }
 
 // Emit a suite with all of its tests
-export async function emitSuite({
+export const emitSuite: LanguageEmitter['emit']['suite'] = async ({
   baseUrl,
   suite,
   tests,
@@ -95,7 +102,7 @@ export async function emitSuite({
   enableOriginTracing,
   beforeEachOptions,
   enableDescriptionAsComment,
-}) {
+}) => {
   global.baseUrl = baseUrl
   const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
     enableOriginTracing,
@@ -117,7 +124,7 @@ export async function emitSuite({
   }
 }
 
-export default {
+const exportFormat: LanguageEmitter = {
   emit: {
     test: emitTest,
     suite: emitSuite,

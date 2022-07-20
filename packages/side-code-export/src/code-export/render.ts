@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { ExportCommandShape, ExportCommandsShape } from '../types'
+import { ExportCommandsShape, ExportFlexCommandsShape } from '../types'
 import prettify, { PrettifyOutput } from './prettify'
 
 export interface RenderOptions {
@@ -26,10 +26,7 @@ export interface RenderOptions {
   enableOriginTracing?: boolean
 }
 
-export type PartialRenderParameters = [
-  ExportCommandsShape | ExportCommandShape,
-  RenderOptions
-]
+export type PartialRenderParameters = [ExportFlexCommandsShape, RenderOptions]
 
 export type RenderParameters = [string, ...PartialRenderParameters]
 

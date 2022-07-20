@@ -15,7 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import {
+  codeExport as exporter,
+  ExportCommandFormat,
+  PrebuildEmitter,
+} from '@seleniumhq/side-code-export'
 import { ProcessedCommandEmitter } from '@seleniumhq/side-code-export/dist/code-export/emit'
 import { ScriptShape } from '@seleniumhq/side-code-export/src/code-export/preprocessor'
 import { CommandShape } from '@seleniumhq/side-model'
@@ -126,7 +130,7 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
 
 exporter.register.preprocessors(emitters)
 
-function register(command: any, emitter: any) {
+function register(command: string, emitter: PrebuildEmitter) {
   exporter.register.emitter({ command, emitter, emitters })
 }
 
@@ -182,16 +186,11 @@ function emitWaitForWindow() {
   })
 }
 
-async function emitNewWindowHandling(
-  command: CommandShape,
-  emittedCommand: any
-) {
-  return Promise.resolve(
-    `vars["WindowHandles"] = driver.WindowHandles;\n${await emittedCommand}\nvars["${
-      command.windowHandleName
-    }"] = waitForWindow(${command.windowTimeout});`
-  )
-}
+const emitNewWindowHandling: ExportCommandFormat['extras']['emitNewWindowHandling'] =
+  async (command, emittedCommand) =>
+    Promise.resolve(
+      `vars["WindowHandles"] = driver.WindowHandles;\n${emittedCommand}\nvars["${command.windowHandleName}"] = waitForWindow(${command.windowTimeout});`
+    )
 
 function emitAssert(varName: string, value: string) {
   const _value =
@@ -306,7 +305,10 @@ function emitControlFlowIf(script: any) {
   })
 }
 
-function emitControlFlowForEach(collectionVarName: string, iteratorVarName: string) {
+function emitControlFlowForEach(
+  collectionVarName: string,
+  iteratorVarName: string
+) {
   return Promise.resolve({
     commands: [
       {
@@ -1084,7 +1086,7 @@ async function emitWaitForElementNotVisible(locator: any, timeout: number) {
   })
 }
 
-export default {
+const command: ExportCommandFormat = {
   emitters,
   variableLookup,
   variableSetter,
@@ -1093,3 +1095,5 @@ export default {
   register,
   extras: { emitWaitForWindow, emitNewWindowHandling },
 }
+
+export default command

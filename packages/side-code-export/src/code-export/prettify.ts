@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { ExportCommandShape, ExportCommandsShape } from '../types'
+import { ExportCommandsShape, ExportFlexCommandsShape } from '../types'
 import { renderCommands } from './render'
 
 export interface PrettifyOptions {
@@ -24,7 +24,7 @@ export interface PrettifyOptions {
 }
 
 export type PrettifyParameters = [
-  commandBlock: ExportCommandShape | ExportCommandsShape,
+  commandBlock: ExportFlexCommandsShape,
   opts: PrettifyOptions
 ]
 

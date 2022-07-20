@@ -20,15 +20,18 @@ import {
   EmitOptions,
   ExportCommandShape,
   ExportCommandsShape,
+  ExportFlexCommandsShape,
   LanguageHooks,
 } from '../types'
 
-export type SyntaxFactory = string | ((opts: any) => ExportCommandsShape)
+export type SyntaxFactory =
+  | ExportFlexCommandsShape
+  | ((opts: any) => ExportFlexCommandsShape)
 
 export interface HookProps {
-  startingSyntax: SyntaxFactory
-  endingSyntax: SyntaxFactory
-  registrationLevel: number
+  startingSyntax?: SyntaxFactory
+  endingSyntax?: SyntaxFactory
+  registrationLevel?: number
 }
 
 export interface HookEmitterInput {
@@ -37,16 +40,14 @@ export interface HookEmitterInput {
   project: ProjectShape
 }
 
-export type HookEmitter = (
-  input: HookEmitterInput
-) => ExportCommandsShape | ExportCommandShape
+export type HookEmitter = (input: HookEmitterInput) => ExportFlexCommandsShape
 
 export default class Hook {
   constructor({
     startingSyntax = '',
     endingSyntax = '',
     registrationLevel = 0,
-  }) {
+  }: HookProps) {
     this.startingSyntax = startingSyntax
     this.endingSyntax = endingSyntax
     this.registrationLevel = registrationLevel
@@ -79,12 +80,16 @@ export default class Hook {
       if (typeof _startingSyntax === 'string') {
         commands.push({ level: 0, statement: _startingSyntax })
       } else {
-        _startingSyntax.commands.forEach((command) => {
-          commands.push(command)
-          if (typeof command !== 'string') {
-            registeredCommandLevel = command.level
-          }
-        })
+        if ('commands' in _startingSyntax) {
+          _startingSyntax.commands.forEach((command) => {
+            commands.push(command)
+            if (typeof command !== 'string') {
+              registeredCommandLevel = command.level
+            }
+          })
+        } else {
+          commands.push(_startingSyntax)
+        }
       }
     }
     const name = test ? test.name : suite ? suite.name : ''
@@ -119,9 +124,13 @@ export default class Hook {
     if (typeof _endingSyntax === 'string') {
       commands.push({ level: 0, statement: _endingSyntax })
     } else {
-      _endingSyntax.commands.forEach((command) => {
-        commands.push(command)
-      })
+      if ('commands' in _endingSyntax) {
+        _endingSyntax.commands.forEach((command) => {
+          commands.push(command)
+        })
+      } else {
+        commands.push(_endingSyntax)
+      }
     }
     return { commands }
   }

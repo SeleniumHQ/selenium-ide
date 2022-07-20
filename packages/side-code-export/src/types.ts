@@ -4,32 +4,30 @@ import {
   SuiteShape,
   TestShape,
 } from '@seleniumhq/side-model'
-import { VariableLookup } from './code-export'
+import { ProcessedCommandEmitter, VariableLookup } from './code-export'
 
 import Hook from './code-export/hook'
 
+export { HookProps, default as Hook } from './code-export/hook'
+
 export interface ExportCommandFormat {
-  emitters,
+  emitters: Record<string, ProcessedCommandEmitter>
   variableLookup: VariableLookup
   variableSetter: (name: string, value: any) => string
-  canEmit,
-  emit,
-  register,
-  extras: { emitWaitForWindow, emitNewWindowHandling },
+  canEmit: (name: string) => boolean
+  emit: (command: CommandShape) => Promise<ExportFlexCommandsShape>
+  register: (command: string, emitter: PrebuildEmitter) => void
+  extras: {
+    emitWaitForWindow: () => Promise<ExportFlexCommandsShape>
+    emitNewWindowHandling: (
+      command: CommandShape,
+      emittedCommand: ExportFlexCommandsShape
+    ) => Promise<ExportFlexCommandsShape>
+  }
 }
+
 export interface ExportLocationFormat {
   emit: (location: string) => Promise<string>
-}
-export interface ExportFormat {
-  Command: ExportCommandFormat
-  location: ExportLocationFormat
-  opts: {
-    name?: string
-    fileExtension?: string
-    commandPrefixPadding?: string
-    terminatingKeyword?: string
-    commentPrefix?: string
-  }
 }
 
 export type ExportCommandShape = { level: number; statement: string } | string
@@ -39,6 +37,7 @@ export type ExportCommandsShape = {
   skipEmitting?: boolean
   startingLevelAdjustment?: number
 }
+export type ExportFlexCommandsShape = ExportCommandShape | ExportCommandsShape
 export type ExportCommandFactory = (opts: any) => ExportCommandsShape
 
 export interface EmitOptions {
@@ -50,12 +49,6 @@ export interface EmitOptions {
   startingSyntaxOptions?: any
 }
 
-export interface HookProps {
-  startingSyntax: ExportCommandsShape
-  endingSyntax: ExportCommandsShape
-  registrationLevel: number
-}
-
 export type EmitterExtra = () => {
   name: string
   commands: ExportCommandShape[]
@@ -65,14 +58,15 @@ export type EmitterExtra = () => {
 export type PrebuildEmitter = (
   target: string,
   value: string
-) => Promise<ExportCommandShape | ExportCommandsShape>
+) => Promise<ExportFlexCommandsShape>
+
 export interface LanguageEmitterOpts {
   emitter: {
-    canEmit: (command: CommandShape) => boolean
-    emit: (command: CommandShape) => ExportCommandShape | ExportCommandsShape
+    canEmit: (command: string) => boolean
+    emit: (command: CommandShape) => ExportFlexCommandsShape
     extras?: Record<string, EmitterExtra>
     emitters: Record<string, PrebuildEmitter>
-    register: (command: CommandShape, emitter: any) => void
+    register: (command: string, emitter: PrebuildEmitter) => void
   }
   hooks: LanguageHookEmitters
   fileExtension: string
@@ -101,20 +95,20 @@ export interface EmitTestOptions {
 }
 
 // Emit an individual test, wrapped in a suite (using the test name as the suite name)
-export type EmitTest = (opts: EmitTestOptions) => {
+export type EmitTest = (opts: EmitTestOptions) => Promise<{
   filename: string
   body: string
-}
+}>
 
 export interface EmitSuiteOptions extends Omit<EmitTestOptions, 'test'> {
   suite: SuiteShape
 }
 
 // Emit a suite with all of its tests
-export type EmitSuite = (opts: EmitSuiteOptions) => {
+export type EmitSuite = (opts: EmitSuiteOptions) => Promise<{
   filename: string
   body: string
-}
+}>
 
 export interface HookFunctionInputs {
   startingSyntax: ExportCommandsShape

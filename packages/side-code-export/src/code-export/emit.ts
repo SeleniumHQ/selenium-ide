@@ -32,8 +32,9 @@ import {
   TestShape,
 } from '@seleniumhq/side-model'
 import {
+  ExportCommandFormat,
   ExportCommandShape,
-  ExportCommandsShape,
+  ExportFlexCommandsShape,
   LanguageEmitterOpts,
   LanguageHooks,
 } from '../types'
@@ -78,15 +79,12 @@ function validateCommand(command: CommandShape) {
 }
 
 export interface EmitCommandContext {
-  emitNewWindowHandling: (
-    command: CommandShape,
-    result: ExportCommandShape | ExportCommandsShape
-  ) => Promise<ExportCommandShape | ExportCommandsShape>
+  emitNewWindowHandling: ExportCommandFormat['extras']['emitNewWindowHandling']
   variableLookup: VariableLookup
 }
 
 export interface ProcessedCommandEmitter {
-  (target?: any, value?: any): Promise<ExportCommandsShape | ExportCommandShape>
+  (target?: any, value?: any): Promise<ExportFlexCommandsShape>
   targetPreprocessor?: Preprocessor
   valuePreprocessor?: Preprocessor
 }
@@ -493,7 +491,7 @@ async function emitSuite(
     suite?: SuiteShape
     suiteDeclaration: string
     suiteLevel?: number
-    suiteName: string
+    suiteName?: string
     testLevel?: number
   }
 ) {
@@ -504,7 +502,7 @@ async function emitSuite(
   if (!suite) {
     suite = {
       id: '',
-      name: suiteName,
+      name: suiteName || 'New Suite',
       tests: [],
       timeout: 30000,
       parallel: false,
