@@ -72,6 +72,7 @@ export interface WindowAPI {
 export interface WebDriverExecutorConstructorArgs {
   capabilities?: ExpandedCapabilities
   customCommands?: PluginShape['commands']
+  disableCodeExportCompat?: boolean
   driver?: WebDriver
   hooks?: WebDriverExecutorHooks
   implicitWait?: number
@@ -131,6 +132,7 @@ const defaultWindowAPI: WindowAPI = {
 export default class WebDriverExecutor {
   constructor({
     customCommands = {},
+    disableCodeExportCompat = false,
     driver,
     capabilities,
     server,
@@ -144,6 +146,7 @@ export default class WebDriverExecutor {
       this.capabilities = capabilities || DEFAULT_CAPABILITIES
       this.server = server
     }
+    this.disableCodeExportCompat = disableCodeExportCompat
     this.initialized = false
     this.implicitWait = implicitWait || 5 * 1000
     this.hooks = hooks
@@ -157,6 +160,7 @@ export default class WebDriverExecutor {
   cancellable?: { cancel: () => void }
   capabilities?: ExpandedCapabilities
   customCommands: Required<PluginShape>['commands']
+  disableCodeExportCompat: boolean
   // @ts-expect-error
   driver: WebDriver
   server?: string
@@ -318,22 +322,26 @@ export default class WebDriverExecutor {
       for (let frameTarget of frameTargets) {
         if (frameTarget === '..') await targetLocator.parentFrame()
         else {
-          const frameIndex = locator.substring('index='.length)
-          // Delay for a second. Check too fast, and browser will think this iframe location is 'about:blank'
-          await new Promise((f) => setTimeout(f, 1000))
-          const frameUrl = await this.driver.executeScript(
-            "return window.frames['" + frameIndex + "'].location.href"
-          )
-          const windowFrames = await this.driver.findElements(By.css('iframe'))
-          let matchIndex = 0
-          for (let frame of windowFrames) {
-            let localFrameUrl = await frame.getAttribute('src')
-            if (localFrameUrl === frameUrl) {
-              break
+          if (this.disableCodeExportCompat) {
+            const frameIndex = locator.substring('index='.length)
+            // Delay for a second. Check too fast, and browser will think this iframe location is 'about:blank'
+            await new Promise((f) => setTimeout(f, 1000))
+            const frameUrl = await this.driver.executeScript(
+              "return window.frames['" + frameIndex + "'].location.href"
+            )
+            const windowFrames = await this.driver.findElements(By.css('iframe'))
+            let matchIndex = 0
+            for (let frame of windowFrames) {
+              let localFrameUrl = await frame.getAttribute('src')
+              if (localFrameUrl === frameUrl) {
+                break
+              }
+              matchIndex++
             }
-            matchIndex++
+            this.driver.switchTo().frame(matchIndex)
+          } else {
+            await targetLocator.frame(Number(frameTarget))
           }
-          this.driver.switchTo().frame(matchIndex)
         }
       }
     } else {

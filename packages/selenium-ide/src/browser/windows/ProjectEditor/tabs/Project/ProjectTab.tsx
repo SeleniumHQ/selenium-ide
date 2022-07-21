@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Paper from '@mui/material/Paper'
 import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
-import { CoreSessionData } from '@seleniumhq/side-api'
+import { CoreSessionData, VerboseBoolean } from '@seleniumhq/side-api'
 import TextField from 'browser/components/UncontrolledTextField'
 import React, { FC } from 'react'
 import EditorToolbar from '../../components/Drawer/EditorToolbar'
@@ -124,6 +124,25 @@ const ProjectTab: FC<ProjectTabProps> = ({ session: { project, state } }) => (
             onChange={(e: any) => {
               window.sideAPI.state.toggleUserPrefIgnoreCertificateErrors(
                 e.target.value
+              )
+            }}
+          >
+            <MenuItem value="Yes">Yes</MenuItem>
+            <MenuItem value="No">No</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl>
+          <InputLabel id="disableCodeExportCompat">
+            Disable code export compatibility mode
+          </InputLabel>
+          <Select
+            id="disableCodeExportCompatPref"
+            label="Disable code export compatibility mode"
+            name="ignoreCertificateErrorsPref"
+            value={state.userPrefs.disableCodeExportCompat}
+            onChange={(e) => {
+              window.sideAPI.state.toggleUserPrefDisableCodeExportCompat(
+                e.target.value as VerboseBoolean
               )
             }}
           >

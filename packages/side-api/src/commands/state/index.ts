@@ -10,6 +10,7 @@ import type { Shape as SetCopiedCommands } from './setCopiedCommands'
 import type { Shape as ToggleBreakpoint } from './toggleBreakpoint'
 import type { Shape as ToggleSuiteMode } from './toggleSuiteMode'
 import type { Shape as ToggleUserPrefCamelCase } from './toggleUserPrefCamelCase'
+import type { Shape as ToggleUserPrefDisableCodeExportCompat } from './toggleUserPrefDisableCodeExportCompat'
 import type { Shape as ToggleUserPrefIgnoreCertificateErrors } from './toggleUserPrefIgnoreCertificateErrors'
 import type { Shape as ToggleUserPrefInsert } from './toggleUserPrefInsert'
 import type { Shape as ToggleUserPrefTheme } from './toggleUserPrefTheme'
@@ -28,6 +29,7 @@ import * as setCopiedCommands from './setCopiedCommands'
 import * as toggleBreakpoint from './toggleBreakpoint'
 import * as toggleSuiteMode from './toggleSuiteMode'
 import * as toggleUserPrefCamelCase from './toggleUserPrefCamelCase'
+import * as toggleUserPrefDisableCodeExportCompat from './toggleUserPrefDisableCodeExportCompat'
 import * as toggleUserPrefIgnoreCertificateErrors from './toggleUserPrefIgnoreCertificateErrors'
 import * as toggleUserPrefInsert from './toggleUserPrefInsert'
 import * as toggleUserPrefTheme from './toggleUserPrefTheme'
@@ -47,6 +49,7 @@ export const commands = {
   toggleBreakpoint,
   toggleSuiteMode,
   toggleUserPrefCamelCase,
+  toggleUserPrefDisableCodeExportCompat,
   toggleUserPrefIgnoreCertificateErrors,
   toggleUserPrefInsert,
   toggleUserPrefTheme,
@@ -70,6 +73,7 @@ export type Shape = {
   toggleBreakpoint: ToggleBreakpoint
   toggleSuiteMode: ToggleSuiteMode
   toggleUserPrefCamelCase: ToggleUserPrefCamelCase
+  toggleUserPrefDisableCodeExportCompat: ToggleUserPrefDisableCodeExportCompat
   toggleUserPrefIgnoreCertificateErrors: ToggleUserPrefIgnoreCertificateErrors
   toggleUserPrefInsert: ToggleUserPrefInsert
   toggleUserPrefTheme: ToggleUserPrefTheme

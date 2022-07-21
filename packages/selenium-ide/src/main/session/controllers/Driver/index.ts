@@ -37,9 +37,9 @@ export interface BrowsersInfo {
  * WebdriverExecutor class, which is in itself a wrapper on an selenium-
  * webdriver. This is why, when mounted onto the session, we may have to
  * do this pattern of de-referencing (I'm sorry):
- * 
+ *
  * this.session.driver.driver.driver
- * 
+ *
  * :(
  */
 export default class DriverController extends BaseController {
@@ -68,6 +68,10 @@ export default class DriverController extends BaseController {
         ...capabilities,
       },
       customCommands: this.session.commands.customCommands,
+      disableCodeExportCompat:
+        this.session.state.state.userPrefs.disableCodeExportCompat === 'Yes'
+          ? true
+          : false,
       hooks: {
         onBeforePlay: (v) => this.session.playback.onBeforePlay(v),
       },
@@ -75,12 +79,13 @@ export default class DriverController extends BaseController {
       windowAPI: {
         setWindowSize: async (_executor, width, height) => {
           const window = this.session.windows.getLastPlaybackWindow()
-          const pbWinCount = this.session.windows.playbackWindows.length          
+          const pbWinCount = this.session.windows.playbackWindows.length
           const b = await window.getBounds()
           const calcNewX = b.x + Math.floor(b.width / 2) - Math.floor(width / 2)
-          const calcNewY = b.y + Math.floor(b.height / 2) - Math.floor(height / 2)
-          const newX = calcNewX < 0 ? pbWinCount*20 : calcNewX
-          const newY = calcNewY < 0 ? pbWinCount*20 : calcNewY
+          const calcNewY =
+            b.y + Math.floor(b.height / 2) - Math.floor(height / 2)
+          const newX = calcNewX < 0 ? pbWinCount * 20 : calcNewX
+          const newY = calcNewY < 0 ? pbWinCount * 20 : calcNewY
           await window.setBounds({
             x: newX,
             y: newY,
