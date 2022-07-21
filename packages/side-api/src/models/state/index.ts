@@ -31,12 +31,14 @@ export const defaultRecorderState: RecorderStateShape = {
   activeFrame: 'root',
 }
 
+export type VerboseBoolean = 'Yes' | 'No'
 export type InsertCommandPref = 'Before' | 'After'
 export type ThemePref = 'Dark' | 'Light' | 'System'
-export type CamelCaseNamesPref = 'Yes' | 'No'
-export type IgnoreCertificateErrorsPref = 'Yes' | 'No'
+export type CamelCaseNamesPref = VerboseBoolean
+export type IgnoreCertificateErrorsPref = VerboseBoolean
 
 export interface UserPrefs {
+  disableCodeExportCompat: VerboseBoolean
   insertCommandPref: InsertCommandPref
   themePref: ThemePref
   camelCaseNamesPref: CamelCaseNamesPref
@@ -44,6 +46,7 @@ export interface UserPrefs {
 }
 
 export const defaultUserPrefs: UserPrefs = {
+  disableCodeExportCompat: 'No',
   insertCommandPref: 'After',
   themePref: 'System',
   camelCaseNamesPref: 'No',
