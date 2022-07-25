@@ -4,18 +4,30 @@ import {
   SuiteShape,
   TestShape,
 } from '@seleniumhq/side-model'
-import { VariableLookup } from './code-export'
+import { ExportFlexCommandShape, VariableLookup } from './code-export'
 
-import Hook from './code-export/hook'
+import Hook, { LanguageHooks } from './code-export/hook'
+
+export type LanguageExportExtras = {
+  emitWaitForWindow: () => Promise<{
+    name: string
+    commands: ExportCommandShape[]
+    generateMethodDeclaration: (name: string) => string
+  }>
+  emitNewWindowHandling: (
+    command: CommandShape,
+    emittedCommand: string
+  ) => Promise<ExportFlexCommandShape>
+}
 
 export interface ExportCommandFormat {
-  emitters,
+  emitters: Record<string, PrebuildEmitter>
   variableLookup: VariableLookup
   variableSetter: (name: string, value: any) => string
-  canEmit,
-  emit,
-  register,
-  extras: { emitWaitForWindow, emitNewWindowHandling },
+  canEmit: (name: string) => boolean
+  emit: (command: CommandShape) => string
+  register: (command: CommandShape) => void
+  extras: LanguageExportExtras
 }
 export interface ExportLocationFormat {
   emit: (location: string) => Promise<string>
@@ -50,35 +62,29 @@ export interface EmitOptions {
   startingSyntaxOptions?: any
 }
 
-export interface HookProps {
-  startingSyntax: ExportCommandsShape
-  endingSyntax: ExportCommandsShape
-  registrationLevel: number
-}
-
-export type EmitterExtra = () => {
-  name: string
-  commands: ExportCommandShape[]
-  generateMethodDeclaration: (name: string) => string
-}
-
 export type PrebuildEmitter = (
   target: string,
   value: string
-) => Promise<ExportCommandShape | ExportCommandsShape>
+) => Promise<ExportFlexCommandShape>
+
+export type LanguageExportEmitterEmit = (
+  command: CommandShape
+) => Promise<ExportFlexCommandShape> | ExportFlexCommandShape
+
+export type LanguageExportEmitter = {
+  canEmit: (name: string | number) => boolean
+  emit: LanguageExportEmitterEmit
+  extras: ExportCommandFormat['extras']
+  emitters: Record<string, PrebuildEmitter>
+  register: (command: CommandShape, emitter: any) => void
+}
+
 export interface LanguageEmitterOpts {
-  emitter: {
-    canEmit: (command: CommandShape) => boolean
-    emit: (command: CommandShape) => ExportCommandShape | ExportCommandsShape
-    extras?: Record<string, EmitterExtra>
-    emitters: Record<string, PrebuildEmitter>
-    register: (command: CommandShape, emitter: any) => void
-  }
-  hooks: LanguageHookEmitters
-  fileExtension: string
-  commandPrefixPadding: string
-  terminatingKeyword: string
   commentPrefix: string
+  commandPrefixPadding: string
+  emitter: LanguageExportEmitter
+  fileExtension: string
+  generateFilename: (name: string) => string
   generateMethodDeclaration: (name: string) =>
     | string
     | {
@@ -87,7 +93,8 @@ export interface LanguageEmitterOpts {
       }
   generateSuiteDeclaration: (name: string) => string
   generateTestDeclaration: (name: string) => string
-  generateFilename: (name: string) => string
+  hooks: LanguageHooks
+  terminatingKeyword: string
 }
 
 export interface EmitTestOptions {
@@ -101,52 +108,20 @@ export interface EmitTestOptions {
 }
 
 // Emit an individual test, wrapped in a suite (using the test name as the suite name)
-export type EmitTest = (opts: EmitTestOptions) => {
+export type EmitTest = (opts: EmitTestOptions) => Promise<{
   filename: string
   body: string
-}
+}>
 
 export interface EmitSuiteOptions extends Omit<EmitTestOptions, 'test'> {
   suite: SuiteShape
 }
 
 // Emit a suite with all of its tests
-export type EmitSuite = (opts: EmitSuiteOptions) => {
+export type EmitSuite = (opts: EmitSuiteOptions) => Promise<{
   filename: string
   body: string
-}
-
-export interface HookFunctionInputs {
-  startingSyntax: ExportCommandsShape
-  endingSyntax: ExportCommandsShape
-  registrationLevel: number
-}
-
-export type HookFunction = () => HookFunctionInputs
-
-export interface LanguageHookEmitters {
-  afterAll?: HookFunction
-  afterEach?: HookFunction
-  beforeAll?: HookFunction
-  beforeEach?: HookFunction
-  declareDependencies: HookFunction
-  declareMethods: HookFunction
-  declareVariables: HookFunction
-  inEachBegin: HookFunction
-  inEachEnd: HookFunction
-}
-
-export interface LanguageHooks {
-  afterAll: Hook
-  afterEach: Hook
-  beforeAll: Hook
-  beforeEach: Hook
-  declareDependencies: Hook
-  declareMethods: Hook
-  declareVariables: Hook
-  inEachBegin: Hook
-  inEachEnd: Hook
-}
+}>
 
 export interface LanguageEmitterRegister {
   command: LanguageEmitterOpts['emitter']['register']
@@ -162,24 +137,24 @@ export interface LanguageEmitterRegister {
 
 export type LocationEmitter = (selector: string) => Promise<string>
 
+export type LanguageEmitterEmitLocator = {
+  id: LocationEmitter
+  name: LocationEmitter
+  link: LocationEmitter
+  linkText: LocationEmitter
+  partialLinkText: LocationEmitter
+  css: LocationEmitter
+  xpath: LocationEmitter
+}
+
+export type LanguageEmitterEmit = {
+  test: EmitTest
+  suite: EmitSuite
+  locator: (locator: string) => Promise<string>
+  command: LanguageEmitterOpts['emitter']['emit']
+}
+
 export interface LanguageEmitter {
-  displayName: string
-  emit: {
-    test: EmitTest
-    suite: EmitSuite
-    locator: {
-      id: LocationEmitter
-      name: LocationEmitter
-      link: LocationEmitter
-      linkText: LocationEmitter
-      partialLinkText: LocationEmitter
-      css: LocationEmitter
-      xpath: LocationEmitter
-    }
-    command: LanguageEmitterOpts['emitter']['emit']
-  }
-  emitSuite: EmitSuite
-  emitTest: EmitTest
-  opts: LanguageEmitterOpts
+  emit: LanguageEmitterEmit
   register: LanguageEmitterRegister
 }

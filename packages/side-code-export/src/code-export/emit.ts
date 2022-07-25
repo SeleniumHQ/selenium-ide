@@ -35,9 +35,9 @@ import {
   ExportCommandShape,
   ExportCommandsShape,
   LanguageEmitterOpts,
-  LanguageHooks,
 } from '../types'
 import { writeCommands } from './utils'
+import { LanguageHooks } from './hook'
 
 export interface EmitterContext extends Omit<LanguageEmitterOpts, 'hooks'> {
   testLevel?: number
@@ -77,16 +77,18 @@ function validateCommand(command: CommandShape) {
   }
 }
 
+export type ExportFlexCommandShape = ExportCommandShape | ExportCommandsShape
+
 export interface EmitCommandContext {
   emitNewWindowHandling: (
     command: CommandShape,
-    result: ExportCommandShape | ExportCommandsShape
-  ) => Promise<ExportCommandShape | ExportCommandsShape>
+    result: ExportFlexCommandShape
+  ) => Promise<ExportFlexCommandShape>
   variableLookup: VariableLookup
 }
 
 export interface ProcessedCommandEmitter {
-  (target?: any, value?: any): Promise<ExportCommandsShape | ExportCommandShape>
+  (target?: any, value?: any): Promise<ExportFlexCommandShape>
   targetPreprocessor?: Preprocessor
   valuePreprocessor?: Preprocessor
 }
@@ -335,13 +337,10 @@ async function emitTest(
   // handle extra dynamic emitters that aren't tied to an explicit command
   if (emitter.extras) {
     for (const emitter_name in emitter.extras) {
-      let ignore = true
       if (
         emitter_name === 'emitWaitForWindow' &&
         findCommandThatOpensWindow(test, tests)
-      )
-        ignore = false
-      if (!ignore) {
+      ) {
         const method = await emitter.extras[emitter_name]()
         const result = await emitMethod(method, {
           emitter,
@@ -462,7 +461,7 @@ export interface EmittedSuite {
   afterEach: string
   afterAll: string
   methods: string
-  tests: Record<string, EmittedTest>
+  tests: Record<string, EmittedTest> | EmittedTest
   suiteEnd: string
 }
 
@@ -599,8 +598,9 @@ function emitOrderedSuite(emittedSuite: EmittedSuite) {
     result += test.inEachEnd
     result += test.testEnd
   } else {
-    for (const testName in emittedSuite.tests) {
-      const test = emittedSuite.tests[testName]
+    const tests = emittedSuite.tests as Record<string, EmittedTest>
+    for (const testName in tests) {
+      const test = tests[testName]
       result += test.testDeclaration
       result += test.inEachBegin
       result += test.commands

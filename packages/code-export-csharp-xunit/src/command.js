@@ -22,7 +22,7 @@ const emitters = { ...Command.emitters }
 exporter.register.preprocessors(emitters)
 
 function register(command, emitter) {
-  exporter.register.emitter({ command, emitter, emitters: emitters })
+  exporter.register.emitter({ command, emitter, emitters })
 }
 
 function emit(command) {

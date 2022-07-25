@@ -15,31 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
-
 const emitters = {
   afterAll,
   afterEach,
   beforeAll,
   beforeEach,
   declareDependencies,
-  declareMethods: empty,
   declareVariables,
-  inEachBegin: empty,
-  inEachEnd: empty,
-}
+} as const
 
-function generate(hookName) {
-  return new exporter.hook(emitters[hookName]())
-}
-
-export function generateHooks() {
-  let result = {}
-  Object.keys(emitters).forEach(hookName => {
-    result[hookName] = generate(hookName)
-  })
-  return result
-}
+export default emitters
 
 function afterAll() {
   const params = {
@@ -91,7 +76,9 @@ function beforeAll() {
 
 function beforeEach() {
   const params = {
-    startingSyntax: ({ browserName, gridUrl } = {}) => ({
+    startingSyntax: (
+      { browserName, gridUrl } = { browserName: '', gridUrl: '' }
+    ) => ({
       commands: [
         { level: 0, statement: '[SetUp]' },
         { level: 0, statement: 'public void SetUp() {' },
@@ -154,8 +141,4 @@ function declareVariables() {
     },
   }
   return params
-}
-
-function empty() {
-  return {}
 }

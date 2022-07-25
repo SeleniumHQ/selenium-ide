@@ -9,7 +9,10 @@
   "exclude": ["**/__mocks__", "**/__tests__"],
   "references": [
     {
+      "path": "../code-export-csharp-commons"
+    },
+    {
       "path": "../side-code-export"
-    }
+    },
   ]
 }
