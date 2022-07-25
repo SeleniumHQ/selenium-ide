@@ -18,7 +18,8 @@
     "typecheck": "tsc --noEmit --composite false",
     "watch": "run-p watch:ts watch:webpack",
     "watch:webpack": "lerna run --parallel --stream --scope @seleniumhq/selenium-ide --loglevel verbose watch",
-    "watch:ts": "tsc --build --verbose --watch"
+    "watch:ts": "tsc --build --verbose --watch",
+    "dev": "concurrently \"tsc -w\" \"electron .\""
   },
   "engines": {
     "node": "16.x"
@@ -44,7 +45,9 @@
     }
   },
   "workspaces": {
-    "packages": ["packages/*"]
+    "packages": [
+      "packages/*"
+    ]
   },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
@@ -65,6 +68,9 @@
     "@typescript-eslint/parser": "^5.15.0",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^27.5.1",
+    "concurrently": "^7.3.0",
+    "electron-reload": "^2.0.0-alpha.1",
+    "electron-reloader": "^1.2.3",
     "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^2.5.0",
