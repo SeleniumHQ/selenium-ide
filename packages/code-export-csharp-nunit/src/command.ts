@@ -19,25 +19,4 @@ import { codeExport as exporter } from '@seleniumhq/side-code-export'
 import { Command } from '@seleniumhq/code-export-csharp-commons'
 
 exporter.register.preprocessors(Command.emitters)
-
-function register(command, emitter) {
-  exporter.register.emitter({ command, emitter, emitters: Command.emitters })
-}
-
-function emit(command) {
-  return exporter.emit.command(command, Command.emitters[command.command], {
-    variableLookup: Command.variableLookup,
-    emitNewWindowHandling: Command.extras.emitNewWindowHandling,
-  })
-}
-
-function canEmit(commandName) {
-  return !!Command.emitters[commandName]
-}
-
-export default {
-  canEmit,
-  emit,
-  register,
-  extras: { emitWaitForWindow: Command.extras.emitWaitForWindow },
-}
+export default Command

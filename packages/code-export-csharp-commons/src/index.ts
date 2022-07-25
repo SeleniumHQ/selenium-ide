@@ -18,9 +18,8 @@
 
 import Command from './command'
 import location from './location'
-import { ExportFormat } from '@seleniumhq/side-code-export'; 
 
-const exportFormat: ExportFormat = {
+const exportFormat = {
   Command,
   location,
   opts: {
@@ -29,6 +28,8 @@ const exportFormat: ExportFormat = {
     terminatingKeyword: '}',
     commentPrefix: '//',
   },
-}
+} as const
 
-module.exports = exportFormat;
+export default exportFormat;
+export {default as Command} from './command'
+export {default as location} from './location'

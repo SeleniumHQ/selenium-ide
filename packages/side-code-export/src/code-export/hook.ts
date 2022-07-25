@@ -16,18 +16,24 @@
 // under the License.
 
 import { ProjectShape, TestShape } from '@seleniumhq/side-model'
-import {
-  EmitOptions,
-  ExportCommandShape,
-  ExportCommandsShape,
-  LanguageHooks,
-} from '../types'
+import { EmitOptions, ExportCommandShape } from '../types'
+import { ExportFlexCommandShape } from './emit'
 
-export type SyntaxFactory = string | ((opts: any) => ExportCommandsShape)
+export interface HookFunctionInputs {
+  startingSyntax?: SyntaxFactory
+  endingSyntax?: SyntaxFactory
+  registrationLevel?: number
+}
+
+export type HookFunction = () => HookFunctionInputs
+
+export type SyntaxFactory =
+  | ExportFlexCommandShape
+  | ((opts: any) => ExportFlexCommandShape)
 
 export interface HookProps {
-  startingSyntax: SyntaxFactory
-  endingSyntax: SyntaxFactory
+  startingSyntax?: SyntaxFactory
+  endingSyntax?: SyntaxFactory
   registrationLevel: number
 }
 
@@ -37,16 +43,14 @@ export interface HookEmitterInput {
   project: ProjectShape
 }
 
-export type HookEmitter = (
-  input: HookEmitterInput
-) => ExportCommandsShape | ExportCommandShape
+export type HookEmitter = (input: HookEmitterInput) => ExportFlexCommandShape
 
 export default class Hook {
   constructor({
     startingSyntax = '',
     endingSyntax = '',
     registrationLevel = 0,
-  }) {
+  }: HookFunctionInputs) {
     this.startingSyntax = startingSyntax
     this.endingSyntax = endingSyntax
     this.registrationLevel = registrationLevel
@@ -68,7 +72,7 @@ export default class Hook {
     tests,
     project,
     startingSyntaxOptions,
-  }: EmitOptions): Promise<ExportCommandsShape> {
+  }: EmitOptions): Promise<ExportFlexCommandShape> {
     let commands: ExportCommandShape[] = []
     let registeredCommandLevel = 0
     if (this.startingSyntax) {
@@ -78,6 +82,8 @@ export default class Hook {
           : this.startingSyntax
       if (typeof _startingSyntax === 'string') {
         commands.push({ level: 0, statement: _startingSyntax })
+      } else if ('statement' in _startingSyntax) {
+        commands.push(_startingSyntax)
       } else {
         _startingSyntax.commands.forEach((command) => {
           commands.push(command)
@@ -118,6 +124,8 @@ export default class Hook {
         : this.endingSyntax
     if (typeof _endingSyntax === 'string') {
       commands.push({ level: 0, statement: _endingSyntax })
+    } else if ('statement' in _endingSyntax) {
+      commands.push(_endingSyntax)
     } else {
       _endingSyntax.commands.forEach((command) => {
         commands.push(command)
@@ -145,8 +153,61 @@ export default class Hook {
   }
 }
 
+export interface LanguageHookEmitters {
+  afterAll?: HookFunction
+  afterEach?: HookFunction
+  beforeAll?: HookFunction
+  beforeEach?: HookFunction
+  declareDependencies: HookFunction
+  declareMethods: HookFunction
+  declareVariables: HookFunction
+  inEachBegin: HookFunction
+  inEachEnd: HookFunction
+}
+
+export interface LanguageHooks {
+  afterAll: Hook
+  afterEach: Hook
+  beforeAll: Hook
+  beforeEach: Hook
+  declareDependencies: Hook
+  declareMethods: Hook
+  declareVariables: Hook
+  inEachBegin: Hook
+  inEachEnd: Hook
+}
+
 export function clearHooks(hooks: LanguageHooks) {
   Object.values(hooks).forEach((hook) => {
     hook.clearRegister()
   })
+}
+
+export const hookKeys = [
+  'afterAll',
+  'afterEach',
+  'beforeAll',
+  'beforeEach',
+  'declareDependencies',
+  'declareMethods',
+  'declareVariables',
+  'inEachBegin',
+  'inEachEnd',
+] as const
+
+export function generateHooks(hooks: Partial<LanguageHookEmitters>) {
+  const result: Partial<LanguageHooks> = {}
+  hookKeys.forEach((key) => {
+    const hook = hooks[key]
+    if (hook) {
+      result[key] = new Hook(hook())
+    } else {
+      result[key] = new Hook(empty())
+    }
+  })
+  return result as LanguageHooks
+}
+
+function empty() {
+  return {}
 }
