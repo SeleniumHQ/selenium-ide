@@ -15,6 +15,7 @@ const AppPanelWrapper: FC<AppPanelWrapperProps> = ({
     () => `fill ${horizontal ? 'outside-v-nav' : 'outside-nav'}`,
     [horizontal]
   )
+  console.log('Hey');
   return (
     <AppWrapper>
       <PanelNav horizontal={horizontal} />
