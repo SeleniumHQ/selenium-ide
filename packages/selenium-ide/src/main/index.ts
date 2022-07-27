@@ -1,9 +1,11 @@
 import 'v8-compile-cache'
 import 'source-map-support/register'
 import { app } from 'electron'
+import installReactDevtools from './install-react-devtools'
 import store from './store'
 import createSession from './session'
-import installReactDevtools from './install-react-devtools'
+import watch from './watch'
+
 
 // Enable debugging - required for electron-chromedriver
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
@@ -29,7 +31,10 @@ app.on('open-file', async (_e, path) => {
 
 // Start and stop hooks
 app.on('ready', async () => {
-  !app.isPackaged && installReactDevtools()
+  if (!app.isPackaged) {
+    installReactDevtools()
+    watch()
+  }
   await session.system.startup()
 
   process.on('SIGINT', async () => {
