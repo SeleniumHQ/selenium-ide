@@ -5,7 +5,7 @@ import { loadingID } from '../../constants/loadingID'
 import { CommandsStateShape } from './command'
 
 /**
- * State data is the data from the active IDE sessio that will not be persisted.
+ * State data is the data from the active IDE session that will not be persisted.
  * Playback state, breakpoints, status, whatever is from within a session
  */
 
