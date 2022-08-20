@@ -166,7 +166,11 @@ configuration.baseUrl = program.baseUrl
 
 program.debug && console.debug(util.inspect(configuration))
 
-spawn('jest', ['--verbose', path.join(__dirname, 'main.test.js')], {
+spawn('jest', [
+  '--config=' + path.join(__dirname, '..', 'jest.config.js'),
+  '--runTestsByPath',
+  path.join(__dirname, 'main.test.js'),
+], {
   env: {
     ...process.env,
     SE_CONFIGURATION: JSON.stringify(configuration),

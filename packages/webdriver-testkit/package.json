@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/webdriver-testkit",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.1",
   "private": true,
   "description": "Manage test driver installation",
   "author": "Tomer <tomer@corevo.io>",
@@ -30,8 +30,8 @@
     "selenium-webdriver": "^4.1.0"
   },
   "dependencies": {
-    "@seleniumhq/browser-info": "^4.0.0-alpha.0",
-    "@seleniumhq/get-driver": "^4.0.0-alpha.0",
+    "@seleniumhq/browser-info": "^4.0.0-alpha.1",
+    "@seleniumhq/get-driver": "^4.0.0-alpha.1",
     "fs-extra": "^8.1.0"
   }
 }

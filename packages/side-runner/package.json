@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-runner",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.1",
   "description": "Run Selenium IDE projects in cli",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "scripts": {
@@ -22,14 +22,9 @@
   ],
   "license": "Apache-2.0",
   "private": false,
-  "jest": {
-    "testMatch": [
-      "**/*.js"
-    ]
-  },
   "dependencies": {
-    "@seleniumhq/side-model": "^4.0.0-alpha.0",
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.0",
+    "@seleniumhq/side-model": "^4.0.0-alpha.1",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.1",
     "commander": "^9.1.0",
     "glob": "^7.2.0",
     "jest": "^27.5.1",

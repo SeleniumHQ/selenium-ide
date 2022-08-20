@@ -45,36 +45,38 @@ const logger = createLogger({
 
 logger.debug(util.inspect(configuration))
 
-describe('Running all of the selected projects', () => {
-  const projects: Project[] = [
-    ...configuration.projects.reduce((projects, project) => {
-      glob.sync(project).forEach((p) => {
-        projects.add(p)
-      })
-      return projects
-    }, new Set<string>()),
-  ].map((p) => {
-    const project = JSON.parse(fs.readFileSync(p, 'utf8'))
-    project.path = p
-    return project
+export default (describe: jest.Describe) => {
+  describe('Running all of the selected projects', () => {
+    const projects: Project[] = [
+      ...configuration.projects.reduce((projects, project) => {
+        glob.sync(project).forEach((p) => {
+          projects.add(p)
+        })
+        return projects
+      }, new Set<string>()),
+    ].map((p) => {
+      const project = JSON.parse(fs.readFileSync(p, 'utf8'))
+      project.path = p
+      return project
+    })
+    const factoryParams = {
+      configuration,
+      logger: logger as unknown as Console,
+    }
+    const register = buildRegister(factoryParams)
+    const runners = buildRunners(factoryParams)
+    each(projects).describe('Running project $name', (project: Project) => {
+      each(project.suites).describe(
+        'Running suite $name',
+        (suite: SuiteShape) => {
+          each(suite.tests.map((tID) => register.test(project, tID))).it(
+            'Running tests $name',
+            async (test) => {
+              await runners.test(project, test)
+            }
+          )
+        }
+      )
+    })
   })
-  const factoryParams = {
-    configuration,
-    logger: logger as unknown as Console,
-  }
-  const register = buildRegister(factoryParams)
-  const runners = buildRunners(factoryParams)
-  each(projects).describe('Running project $name', (project: Project) => {
-    each(project.suites).describe(
-      'Running suite $name',
-      (suite: SuiteShape) => {
-        each(suite.tests.map((tID) => register.test(project, tID))).it(
-          'Running tests $name',
-          async (test) => {
-            await runners.test(project, test)
-          }
-        )
-      }
-    )
-  })
-})
+}

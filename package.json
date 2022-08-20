@@ -15,6 +15,7 @@
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
+    "test:side-runner": "./node_modules/@seleniumhq/side-runner/dist/bin.js ./tests/blank.side",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "run-p watch:ts watch:webpack",
     "watch:webpack": "lerna run --parallel --stream --scope @seleniumhq/selenium-ide --loglevel verbose watch",
