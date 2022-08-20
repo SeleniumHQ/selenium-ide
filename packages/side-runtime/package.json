@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@seleniumhq/side-testkit": "^4.0.0-alpha.1",
-    "@seleniumhq/webdriver-testkit": "^4.0.0-alpha.1",
+    "@seleniumhq/webdriver-testkit": "^4.0.0-alpha.1"
   },
   "dependencies": {
     "@seleniumhq/side-commons": "^4.0.0-alpha.1",
