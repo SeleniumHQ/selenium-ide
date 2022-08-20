@@ -40,7 +40,7 @@ export interface SideRunnerCLIConfig {
   server: string
   // The maximimum amount of time, in milliseconds, to spend attempting to locate
   // an element. (default: ${DEFAULT_TIMEOUT})
-  timeout?: string | number
+  timeout: number
 }
 
 export type SideRunnerAPI = Command & SideRunnerCLIConfig

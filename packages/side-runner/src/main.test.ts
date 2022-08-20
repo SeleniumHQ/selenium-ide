@@ -32,7 +32,7 @@ process.title = metadata.name
 const configuration: Configuration = JSON.parse(
   process.env.SE_CONFIGURATION as string
 )
-jest.setTimeout(parseInt('' + configuration.timeout))
+jest.setTimeout(configuration.timeout)
 
 const logger = createLogger({
   level: configuration.debug ? 'debug' : 'info',
@@ -68,7 +68,7 @@ describe('Running all of the selected projects', () => {
     each(project.suites).describe(
       'Running suite $name',
       (suite: SuiteShape) => {
-        each(suite.tests.map((tID) => register.test(project, tID))).it(
+        each(suite.tests.map((tID) => register.test(project, tID))).test(
           'Running tests $name',
           async (test) => {
             await runners.test(project, test)

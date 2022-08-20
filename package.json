@@ -15,7 +15,7 @@
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
-    "test:side-runner": "./node_modules/@seleniumhq/side-runner/dist/bin.js ./tests/blank.side",
+    "test:side-runner": "./node_modules/@seleniumhq/side-runner/dist/bin.js --timeout 200000 ./tests/examples/wait-for.side",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "run-p watch:ts watch:webpack",
     "watch:webpack": "lerna run --parallel --stream --scope @seleniumhq/selenium-ide --loglevel verbose watch",
@@ -25,25 +25,6 @@
     "node": "16.x"
   },
   "files": [],
-  "jest": {
-    "testURL": "http://localhost/index.html",
-    "moduleNameMapper": {
-      "^.+\\.(css|scss)$": "identity-obj-proxy"
-    },
-    "setupFilesAfterEnv": [
-      "./scripts/jest/test.config.js"
-    ],
-    "testMatch": [
-      "**/packages/**/__test?(s)__/**/*.spec.[jt]s?(x)"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest",
-      "^.+\\.tsx?$": "ts-jest"
-    }
-  },
   "workspaces": {
     "packages": ["packages/*"]
   },

@@ -1,9 +1,13 @@
 module.exports = {
-  testEnvironment: 'node',
-  reporters: ['default'],
-  transform: { '^.+\\.jsx?$': 'babel-jest' },
-  testMatch: ['**/__tests__/*.js', '**/__tests__/**/*.js'],
+  testURL: 'http://localhost/index.html',
   moduleNameMapper: {
-    'seleniumide/(.*)': '<rootDir>/$1',
-  }
-};
+    '^.+\\.(css|scss)$': 'identity-obj-proxy',
+  },
+  setupFilesAfterEnv: ['./scripts/jest/test.config.js'],
+  testMatch: ['**/packages/**/__test?(s)__/**/*.spec.[jt]s?(x)'],
+  testPathIgnorePatterns: ['/node_modules/'],
+  transform: {
+    '^.+\\.jsx?$': 'babel-jest',
+    '^.+\\.tsx?$': 'ts-jest',
+  },
+}

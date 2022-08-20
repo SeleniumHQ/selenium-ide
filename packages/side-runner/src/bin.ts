@@ -17,6 +17,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import os from 'os'
 import path from 'path'
 import crypto from 'crypto'
 import util from 'util'
@@ -44,35 +45,39 @@ program
   .option('-f, --filter [string]', 'Run suites matching name')
   .option(
     '-w, --max-workers [number]',
-    'Maximum amount of workers that will run your tests, defaults to number of cores'
+    `Maximum amount of workers that will run your tests, defaults to number of cores`,
+    (str) => parseInt(str),
+    os.cpus().length
   )
   .option(
-    '--timeout [number | undefined]',
-    `The maximimum amount of time, in milliseconds, to spend attempting to locate an element. (default: ${DEFAULT_TIMEOUT})`
+    '-t, --timeout [number]',
+    `The maximimum amount of time, in milliseconds, to spend attempting to locate an element. (default: ${DEFAULT_TIMEOUT})`,
+    (str) => parseInt(str),
+    DEFAULT_TIMEOUT
   )
   .option(
-    '--proxy-type [type]',
+    '-x, --proxy-type [type]',
     'Type of proxy to use (one of: direct, manual, pac, socks, system)'
   )
   .option(
-    '--proxy-options [list]',
+    '-y, --proxy-options [list]',
     'Proxy options to pass, for use with manual, pac and socks proxies'
   )
   .option(
-    '--config-file [filepath]',
+    '-n, --config-file [filepath]',
     'Use specified YAML file for configuration. (default: .side.yml)'
   )
   .option(
-    '--output-directory [directory]',
+    '-o, --output-directory [directory]',
     'Write test results to files, format is defined by --output-format'
   )
   .option(
-    '--force',
+    '-f, --force',
     "Forcibly run the project, regardless of project's version"
   )
-  .option('--debug', 'Print debug logs')
+  .option('-d, --debug', 'Print debug logs')
 
-program.parse(process.argv)
+program.parse()
 
 if (!program.args.length) {
   program.outputHelp()
@@ -80,66 +85,65 @@ if (!program.args.length) {
   process.exit(1)
 }
 
+console.log(program)
+const options = program.opts()
 const configuration: Configuration = {
   baseUrl: '',
   capabilities: {
     browserName: 'chrome',
   },
-  debug: program.debug,
+  debug: options.debug,
   filter: '*',
-  force: program.force,
-  maxWorkers: program.maxWorkers,
+  force: options.force,
+  maxWorkers: options.maxWorkers,
   params: {},
   projects: program.args.map((arg) => path.join(process.cwd(), arg)),
   proxyOptions: {},
   runId: crypto.randomBytes(16).toString('hex'),
   path: path.join(__dirname, '../../'),
   server: '',
-  timeout: DEFAULT_TIMEOUT,
+  timeout: options.timeout,
 }
+console.log(configuration, options.timeout)
 
-const confPath = program.configFile || '.side.yml'
+const confPath = options.configFile || '.side.yml'
 const configFilePath = path.isAbsolute(confPath)
   ? confPath
   : path.join(process.cwd(), confPath)
 try {
   Object.assign(configuration, Config.load(configFilePath))
 } catch (e) {
-  program.debug && console.debug('Could not load ' + configFilePath)
+  options.debug && console.debug('Could not load ' + configFilePath)
 }
 
-if (program.filter) {
-  configuration.filter = program.filter
+if (options.filter) {
+  configuration.filter = options.filter
 }
-configuration.server = program.server ? program.server : configuration.server
+configuration.server = options.server ? options.server : configuration.server
 
-if (program.timeout) {
-  configuration.timeout = +program.timeout
-}
-
-if (program.capabilities) {
+if (options.capabilities) {
   try {
-    configuration.capabilities = Capabilities.parseString(program.capabilities)
+    configuration.capabilities = Capabilities.parseString(options.capabilities)
   } catch (e) {
-    program.debug && console.debug('Failed to parse inline capabilities')
+    options.debug && console.debug('Failed to parse inline capabilities')
   }
 }
 
-if (program.params) {
+if (options.params) {
   try {
-    configuration.params = Capabilities.parseString(program.params)
+    configuration.params = Capabilities.parseString(options.params)
   } catch (e) {
-    program.debug && console.debug('Failed to parse additional params')
+    options.debug && console.debug('Failed to parse additional params')
   }
 }
 
-if (program.proxyType) {
+if (options.proxyType) {
   try {
     let opts
-    if (program.proxyType === 'manual' || program.proxyType === 'socks') {
-      opts = Capabilities.parseString(program.proxyOptions as string)
+    if (options.proxyType === 'manual' || options.proxyType === 'socks') {
+      opts = Capabilities.parseString(options.proxyOptions as string)
     }
-    const proxy = ParseProxy(program.proxyType, opts as Record<string, JSON>)
+    const proxy = ParseProxy(options.proxyType, opts as Record<string, JSON>)
     Object.assign(configuration, proxy)
   } catch (e) {
     console.error((e as Error).message)
@@ -160,11 +164,11 @@ if (program.proxyType) {
   }
 }
 
-configuration.baseUrl = program.baseUrl
-  ? program.baseUrl
+configuration.baseUrl = options.baseUrl
+  ? options.baseUrl
   : configuration.baseUrl
 
-program.debug && console.debug(util.inspect(configuration))
+options.debug && console.debug(util.inspect(configuration))
 
 spawn(
   'jest',
