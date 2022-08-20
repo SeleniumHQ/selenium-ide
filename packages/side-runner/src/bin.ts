@@ -85,7 +85,6 @@ if (!program.args.length) {
   process.exit(1)
 }
 
-console.log(program)
 const options = program.opts()
 const configuration: Configuration = {
   baseUrl: '',
@@ -104,7 +103,6 @@ const configuration: Configuration = {
   server: '',
   timeout: options.timeout,
 }
-console.log(configuration, options.timeout)
 
 const confPath = options.configFile || '.side.yml'
 const configFilePath = path.isAbsolute(confPath)
