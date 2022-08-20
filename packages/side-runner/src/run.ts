@@ -76,7 +76,6 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
         const onComplete = (failure: any) => {
           logger.info('Completing with failure', failure)
           playback.cleanup()
-          driver.driver.quit()
           if (failure) {
             return reject(failure)
           } else {
