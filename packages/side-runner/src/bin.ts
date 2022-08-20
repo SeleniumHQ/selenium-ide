@@ -90,7 +90,7 @@ const configuration: Configuration = {
   force: program.force,
   maxWorkers: program.maxWorkers,
   params: {},
-  projects: program.args,
+  projects: program.args.map((arg) => path.join(process.cwd(), arg)),
   proxyOptions: {},
   runId: crypto.randomBytes(16).toString('hex'),
   path: path.join(__dirname, '../../'),
@@ -166,14 +166,18 @@ configuration.baseUrl = program.baseUrl
 
 program.debug && console.debug(util.inspect(configuration))
 
-spawn('jest', [
-  '--config=' + path.join(__dirname, '..', 'jest.config.js'),
-  '--runTestsByPath',
-  path.join(__dirname, 'main.test.js'),
-], {
-  env: {
-    ...process.env,
-    SE_CONFIGURATION: JSON.stringify(configuration),
-  },
-  stdio: 'inherit',
-})
+spawn(
+  'jest',
+  [
+    '--config=' + path.join(__dirname, '..', 'jest.config.js'),
+    '--runTestsByPath',
+    path.join(__dirname, 'main.test.js'),
+  ],
+  {
+    env: {
+      ...process.env,
+      SE_CONFIGURATION: JSON.stringify(configuration),
+    },
+    stdio: 'inherit',
+  }
+)
