@@ -14,7 +14,6 @@ const plugin: PluginShape = {
         await driver.doClick(
           command.target as string,
           command.value || '',
-          command
         )
       },
     },
