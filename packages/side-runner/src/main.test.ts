@@ -32,7 +32,10 @@ process.title = metadata.name
 const configuration: Configuration = JSON.parse(
   process.env.SE_CONFIGURATION as string
 )
-jest.setTimeout(configuration.timeout)
+
+// Jest timeout should be really far back, otherwise it will impede people
+// When working right, we should close shop and detonate on our own much sooner
+jest.setTimeout(60 * 60 * 1000) // 60 minutes before we just cut it off
 
 const logger = createLogger({
   level: configuration.debug ? 'debug' : 'info',

@@ -271,13 +271,11 @@ export default class WebDriverExecutor {
   }
 
   // Commands go after this line
-
   async skip() {
     return Promise.resolve()
   }
 
   // window commands
-
   async doOpen(url: string) {
     await this.driver.get(absolutifyUrl(url, this.baseUrl as string))
   }
@@ -329,7 +327,9 @@ export default class WebDriverExecutor {
             const frameUrl = await this.driver.executeScript(
               "return window.frames['" + frameIndex + "'].location.href"
             )
-            const windowFrames = await this.driver.findElements(By.css('iframe'))
+            const windowFrames = await this.driver.findElements(
+              By.css('iframe')
+            )
             let matchIndex = 0
             for (let frame of windowFrames) {
               let localFrameUrl = await frame.getAttribute('src')
@@ -429,16 +429,8 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doClick(
-    locator: string,
-    _: string,
-    commandObject: Partial<CommandShape> = {}
-  ) {
-    // This technically uses double the implicitWait but o well darn
-    const element = await this.waitForElement(locator, commandObject.targets)
-
-    const timeout = Date.now() + this.implicitWait
-    await this.wait(until.elementIsVisible(element), timeout - Date.now())
+  async doClick(locator: string, _: string) {
+    const element = await this.waitForElementVisible(locator, this.implicitWait)
     await element.click()
   }
 
