@@ -28,6 +28,8 @@ import ParseProxy from './proxy'
 import { Configuration, ProxyInputOptions, SideRunnerAPI } from './types'
 import { spawn } from 'child_process'
 
+const isWindows = os.platform() === 'win32'
+
 const metadata = require('../package.json')
 
 const DEFAULT_TIMEOUT = 15000
@@ -171,8 +173,9 @@ configuration.baseUrl = options.baseUrl
 
 options.debug && console.debug(util.inspect(configuration))
 
+const jestExecutable = isWindows ? 'jest.cmd' : 'jest'
 spawn(
-  path.join(__dirname, '..', 'node_modules', '.bin', 'jest'),
+  path.join(__dirname, '..', 'node_modules', '.bin', jestExecutable),
   [
     '--config=' + path.join(__dirname, '..', 'jest.config.js'),
     '--maxConcurrency=' + configuration.maxWorkers,
