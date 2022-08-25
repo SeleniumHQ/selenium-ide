@@ -172,7 +172,7 @@ configuration.baseUrl = options.baseUrl
 options.debug && console.debug(util.inspect(configuration))
 
 spawn(
-  'jest',
+  path.join(__dirname, '..', 'node_modules', '.bin', 'jest'),
   [
     '--config=' + path.join(__dirname, '..', 'jest.config.js'),
     '--maxConcurrency=' + configuration.maxWorkers,
