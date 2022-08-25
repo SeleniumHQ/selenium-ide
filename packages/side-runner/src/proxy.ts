@@ -15,49 +15,48 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { JSON, ProxyType } from './types'
+import { ProxyCapabilities, ProxyInputOptions, ProxyType } from './types'
 
 export default function ParseProxy(
   type: ProxyType,
-  options: Record<string, JSON>
-) {
+  options?: ProxyInputOptions
+): ProxyCapabilities {
   if (type === 'direct' || type === 'system') {
     return {
       proxyType: type,
     }
   } else if (type === 'pac') {
-    if (!options) {
+    if (!options || typeof options !== 'string') {
       throw new Error(
         'A proxy autoconfig URL was not passed (e.g. --proxy-options="http://localhost/pac")'
       )
     }
     return {
       proxyType: type,
-      proxyOptions: options,
+      proxyAutoconfigUrl: options,
     }
   } else if (type === 'manual') {
     if (!options) {
       return {
         proxyType: type,
-        proxyOptions: {},
       }
     } else if (typeof options !== 'object') {
       throw new Error(
         'Proxy options were not passed to manual proxy (e.g. --proxy-options="http=localhost:321 ftp=localhost:4324")'
       )
     } else {
-      let opts: Record<string, JSON> = {}
-      if (options.http) opts.http = options.http
-      if (options.https) opts.https = options.https
-      if (options.ftp) opts.ftp = options.ftp
-      if (options.bypass) opts.bypass = options.bypass
+      let opts: Omit<ProxyCapabilities, 'proxyType'> = {}
+      if (options.http) opts.httpProxy = options.http as string
+      if (options.https) opts.sslProxy = options.https as string
+      if (options.ftp) opts.ftpProxy = options.ftp as string
+      if (options.bypass) opts.noProxy = options.bypass as string[]
       return {
         proxyType: type,
-        proxyOptions: opts,
+        ...opts,
       }
     }
   } else if (type === 'socks') {
-    if (!options || !options.socksProxy) {
+    if (!options || typeof options === 'string' || !options.socksProxy) {
       throw new Error(
         'Proxy options were not passed to socks proxy (e.g. --proxy-options="socksProxy=localhost:321")'
       )
@@ -66,11 +65,9 @@ export default function ParseProxy(
         const ver = parseInt(options.socksVersion as string)
         if (ver) {
           return {
-            proxyType: type,
-            proxyOptions: {
-              socksProxy: options.socksProxy,
-              socksVersion: ver,
-            },
+            proxyType: 'manual',
+            socksProxy: options.socksProxy as string,
+            socksVersion: ver,
           }
         } else {
           throw new Error(
@@ -79,10 +76,8 @@ export default function ParseProxy(
         }
       } else {
         return {
-          proxyType: type,
-          proxyOptions: {
-            socksProxy: options.socksProxy,
-          },
+          proxyType: 'manual',
+          socksProxy: options.socksProxy as string,
         }
       }
     }

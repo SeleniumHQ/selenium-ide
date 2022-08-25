@@ -13,7 +13,28 @@ export interface Project extends ProjectShape {
   path: string
 }
 
-export type ProxyType = 'direct' | 'manual' | 'pac' | 'socks' | 'system'
+export type ProxyType =
+  | 'autodetect'
+  | 'direct'
+  | 'manual'
+  | 'pac'
+  | 'socks'
+  | 'system'
+
+export type ProxyInputOptions =
+  | string
+  | Record<string, string | string[] | number>
+
+export type ProxyCapabilities = {
+  proxyType: 'autodetect' | 'direct' | 'manual' | 'pac' | 'system'
+  proxyAutoconfigUrl?: string
+  ftpProxy?: string
+  httpProxy?: string
+  noProxy?: string[]
+  sslProxy?: string
+  socksProxy?: string
+  socksVersion?: number
+}
 
 export interface SideRunnerCLIConfig {
   // Override the base URL that was set in the IDE
@@ -55,7 +76,7 @@ export type Configuration = Required<
     capabilities: Record<string, JSON>
     params: Record<string, JSON>
     projects: string[]
-    proxyOptions: Record<string, JSON>
+    proxyOptions: ProxyInputOptions
     runId: string
     path: string
   }

@@ -81,6 +81,7 @@ describe('proxy parser', () => {
     })
   })
   it('should throw if non object was passed to manual proxy type', () => {
+    // @ts-expect-error intentionally invalid type
     expect(() => ParseProxy('manual', 5)).toThrowError(
       'Proxy options were not passed to manual proxy (e.g. --proxy-options="http=localhost:321 ftp=localhost:4324")'
     )
@@ -129,6 +130,7 @@ describe('proxy parser', () => {
     )
   })
   it('should throw if an invalid proxy type was passed', () => {
+    // @ts-expect-error intentionally invalid type
     expect(() => ParseProxy('invalid')).toThrowError(
       'An unknown proxy type was passed, use one of: direct, system, manual, socks or pac (e.g. --proxy-type="direct")'
     )

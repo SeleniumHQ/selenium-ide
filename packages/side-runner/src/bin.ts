@@ -25,7 +25,7 @@ import { Command } from 'commander'
 import Capabilities from './capabilities'
 import Config from './config'
 import ParseProxy from './proxy'
-import { Configuration, JSON, SideRunnerAPI } from './types'
+import { Configuration, ProxyInputOptions, SideRunnerAPI } from './types'
 import { spawn } from 'child_process'
 
 const metadata = require('../package.json')
@@ -42,7 +42,10 @@ program
   .option('-c, --capabilities [list]', 'Webdriver capabilities')
   .option('-s, --server [url]', 'Webdriver remote server')
   .option('-p, --params [list]', 'General parameters')
-  .option('-f, --filter [string]', 'Run suites matching name')
+  .option(
+    '-f, --filter [string]',
+    'Run suites matching name, takes a regex without slashes, eg (^(hello|goodbye).*$)'
+  )
   .option(
     '-w, --max-workers [number]',
     `Maximum amount of workers that will run your tests, defaults to number of cores`,
@@ -92,7 +95,7 @@ const configuration: Configuration = {
     browserName: 'chrome',
   },
   debug: options.debug,
-  filter: '*',
+  filter: '.*',
   force: options.force,
   maxWorkers: options.maxWorkers,
   params: {},
@@ -141,8 +144,8 @@ if (options.proxyType) {
     if (options.proxyType === 'manual' || options.proxyType === 'socks') {
       opts = Capabilities.parseString(options.proxyOptions as string)
     }
-    const proxy = ParseProxy(options.proxyType, opts as Record<string, JSON>)
-    Object.assign(configuration, proxy)
+    const proxy = ParseProxy(options.proxyType, opts as ProxyInputOptions)
+    Object.assign(configuration.capabilities, proxy)
   } catch (e) {
     console.error((e as Error).message)
     // eslint-disable-next-line no-process-exit
@@ -154,7 +157,7 @@ if (options.proxyType) {
       configuration.proxyType,
       configuration.proxyOptions
     )
-    Object.assign(configuration, proxy)
+    Object.assign(configuration.capabilities, proxy)
   } catch (e) {
     console.error((e as Error).message)
     // eslint-disable-next-line no-process-exit
@@ -172,6 +175,7 @@ spawn(
   'jest',
   [
     '--config=' + path.join(__dirname, '..', 'jest.config.js'),
+    '--maxConcurrency=' + configuration.maxWorkers,
     '--runTestsByPath',
     path.join(__dirname, 'main.test.js'),
   ],

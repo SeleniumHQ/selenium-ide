@@ -23,7 +23,7 @@ import { createLogger, format, transports } from 'winston'
 import { Configuration, Project } from './types'
 import buildRegister from './register'
 import buildRunners from './run'
-import { SuiteShape } from '@seleniumhq/side-model'
+import { SuiteShape, TestShape } from '@seleniumhq/side-model'
 
 const metadata = require('../package.json')
 
@@ -48,6 +48,10 @@ const logger = createLogger({
 
 logger.debug(util.inspect(configuration))
 
+const projectTitle = 'Running project $name'
+const suiteTitle = 'Running suite $name'
+const testTitle = 'Running test $name'
+
 describe('Running all of the selected projects', () => {
   const projects: Project[] = [
     ...configuration.projects.reduce((projects, project) => {
@@ -67,17 +71,19 @@ describe('Running all of the selected projects', () => {
   }
   const register = buildRegister(factoryParams)
   const runners = buildRunners(factoryParams)
-  each(projects).describe('Running project $name', (project: Project) => {
-    each(project.suites).describe(
-      'Running suite $name',
-      (suite: SuiteShape) => {
-        each(suite.tests.map((tID) => register.test(project, tID))).test(
-          'Running tests $name',
-          async (test) => {
-            await runners.test(project, test)
-          }
-        )
-      }
-    )
+  each(projects).describe(projectTitle, (project: Project) => {
+    each(project.suites).describe(suiteTitle, (suite: SuiteShape) => {
+      const isParallel = suite.parallel
+      const tests = suite.tests
+        .map((tID) => register.test(project, tID))
+        .filter((test) => new RegExp(configuration.filter).test(test.name))
+      const testExecutor = each(tests)
+      const testMethod = isParallel
+        ? testExecutor.test.concurrent
+        : testExecutor.test
+      testMethod(testTitle, async (test: TestShape) => {
+        await runners.test(project, test)
+      })
+    })
   })
 })
