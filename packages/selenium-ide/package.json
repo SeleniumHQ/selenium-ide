@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -114,7 +114,7 @@
     "@seleniumhq/side-api": "^4.0.0-alpha.2",
     "@seleniumhq/side-model": "^4.0.0-alpha.1",
     "@seleniumhq/side-plugin-example": "^4.0.0-alpha.1",
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.1",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.2",
     "electron-chromedriver": "16.0.0",
     "electron-log": "4.4.6",
     "electron-store": "^8.0.0",
