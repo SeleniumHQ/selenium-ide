@@ -20,6 +20,7 @@ import os from 'os'
 import { Chrome } from '@seleniumhq/browser-info'
 import { downloadDriver } from '@seleniumhq/get-driver'
 import { CACHE_PATH } from './cache'
+import { Arch } from '@seleniumhq/get-driver/src/types'
 
 export async function updateDrivers() {
   const downloadDirectory = CACHE_PATH
@@ -33,7 +34,7 @@ export async function updateDrivers() {
     downloadDirectory,
     browser: 'chrome',
     platform: os.platform(),
-    arch: os.arch(),
+    arch: os.arch() as Arch,
     version: chromeInfo.version,
     artifactName: 'chromedriver',
   })
@@ -43,7 +44,7 @@ export async function updateDrivers() {
     downloadDirectory,
     browser: 'firefox',
     platform: os.platform(),
-    arch: os.arch(),
+    arch: os.arch() as Arch,
     version: '70.0', // hard coded until browser-info will support firefox
     artifactName: 'geckodriver',
   })

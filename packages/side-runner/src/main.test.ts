@@ -52,38 +52,55 @@ const projectTitle = 'Running project $name'
 const suiteTitle = 'Running suite $name'
 const testTitle = 'Running test $name'
 
-describe('Running all of the selected projects', () => {
-  const projects: Project[] = [
-    ...configuration.projects.reduce((projects, project) => {
-      glob.sync(project).forEach((p) => {
-        projects.add(p)
-      })
-      return projects
-    }, new Set<string>()),
-  ].map((p) => {
+const projects: Project[] = [
+  ...configuration.projects.reduce((projects, project) => {
+    glob.sync(project).forEach((p) => {
+      projects.add(p)
+    })
+    return projects
+  }, new Set<string>()),
+]
+  .map((p) => {
     const project = JSON.parse(fs.readFileSync(p, 'utf8'))
     project.path = p
     return project
   })
-  const factoryParams = {
-    configuration,
-    logger: logger as unknown as Console,
+  .filter((p) => Boolean(p))
+
+if (!projects.length) {
+  throw new Error(
+    'No matching projects found, supplied filepaths: ' +
+      configuration.projects.join(', ')
+  )
+}
+
+const factoryParams = {
+  configuration,
+  logger: logger as unknown as Console,
+}
+const register = buildRegister(factoryParams)
+const runners = buildRunners(factoryParams)
+each(projects).describe(projectTitle, (project: Project) => {
+  const suites = project.suites.filter(
+    (suite) =>
+      suite.tests.length && new RegExp(configuration.filter).test(suite.name)
+  )
+  if (!suites.length) {
+    throw new Error(`
+      Project ${project.name} doesn't have any suites matching filter ${configuration.filter}
+    `)
   }
-  const register = buildRegister(factoryParams)
-  const runners = buildRunners(factoryParams)
-  each(projects).describe(projectTitle, (project: Project) => {
-    each(project.suites).describe(suiteTitle, (suite: SuiteShape) => {
-      const isParallel = suite.parallel
-      const tests = suite.tests
-        .map((tID) => register.test(project, tID))
-        .filter((test) => new RegExp(configuration.filter).test(test.name))
-      const testExecutor = each(tests)
-      const testMethod = isParallel
-        ? testExecutor.test.concurrent
-        : testExecutor.test
-      testMethod(testTitle, async (test: TestShape) => {
-        await runners.test(project, test)
-      })
+  each(suites).describe(suiteTitle, (suite: SuiteShape) => {
+    const isParallel = suite.parallel
+    const tests = suite.tests
+      .map((tID) => register.test(project, tID))
+      .filter((test) => new RegExp(configuration.filter).test(test.name))
+    const testExecutor = each(tests)
+    const testMethod = isParallel
+      ? testExecutor.test.concurrent
+      : testExecutor.test
+    testMethod(testTitle, async (test: TestShape) => {
+      await runners.test(project, test)
     })
   })
 })

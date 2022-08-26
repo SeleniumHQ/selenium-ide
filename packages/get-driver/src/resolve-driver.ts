@@ -16,6 +16,7 @@
 // under the License.
 
 import fetch from 'node-fetch'
+import { Arch } from './types'
 
 export async function resolveDriverUrl({
   browser,
@@ -25,17 +26,25 @@ export async function resolveDriverUrl({
 }: {
   browser: Browser
   platform: Platform
-  arch: string
+  arch: Arch
   version: string
 }) {
   switch (browser) {
     case 'electron': {
-      throw new Error('Installation of electron browser handled by electron-chromedriver package');
+      throw new Error(
+        'Installation of electron browser handled by electron-chromedriver package'
+      )
     }
     case 'chrome': {
       return `https://chromedriver.storage.googleapis.com/${await getChromedriverVersion(
         version
       )}/chromedriver_${getChromedriverPlatformName(platform)}.zip`
+    }
+    case 'edge': {
+      return `https://msedgedriver.azureedge.net/${version}/edgedriver_${getEdgePlatformName(
+        platform,
+        arch
+      )}.zip`
     }
     case 'firefox': {
       return `https://github.com/mozilla/geckodriver/releases/download/v${getGeckodriverVersion(
@@ -63,12 +72,13 @@ export function resolveDriverName({
   }`
 }
 
-export type Browser = 'chrome' | 'electron' | 'firefox'
+export type Browser = 'chrome' | 'edge' | 'electron' | 'firefox'
 
 export type Platform = NodeJS.Platform
 
 const DriverNames: BrowserToDriver = {
   chrome: 'chromedriver',
+  edge: 'edge',
   electron: 'chromedriver',
   firefox: 'geckodriver',
 }
@@ -91,7 +101,17 @@ async function getChromedriverVersion(version: string) {
   return await res.text()
 }
 
-function getGeckodriverPlatformName(platform: Platform, arch: string) {
+function getEdgePlatformName(platform: Platform, arch: Arch) {
+  if (platform === 'darwin') {
+    return 'mac64'
+  } else if (platform === 'win32') {
+    return arch === 'x64' ? 'win64' : 'win32'
+  } else {
+    return arch === 'arm64' ? 'arm64' : 'linux64'
+  }
+}
+
+function getGeckodriverPlatformName(platform: Platform, arch: Arch) {
   if (platform === 'darwin') {
     return 'macos'
   } else if (platform === 'win32') {

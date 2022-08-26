@@ -62,9 +62,10 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
       },
       server: configuration.server,
     })
-    return await playbackUntilComplete()
+    await playbackUntilComplete()
     function playbackUntilComplete() {
-      return new Promise((resolve, reject) => {
+      // eslint-disable-next-line no-async-promise-executor
+      return new Promise(async (resolve, reject) => {
         const playback = new Playback({
           baseUrl: project.url,
           executor: driver,
@@ -113,16 +114,22 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
             logger.debug(`${state} ${niceString}`)
           }
         )
-        playback.play(test, {
-          startingCommandIndex: 0,
-        })
+        try {
+          await playback.play(test, {
+            startingCommandIndex: 0,
+          })
+        } catch (e) {
+          console.error(e)
+          playback.cleanup()
+          return reject(e)
+        }
       })
     }
   }
 
   const runSuite = async (project: Project, suite: SuiteShape) => {
     logger.info(`Running suite ${suite.name}`)
-    if (!project.suites.length) {
+    if (!suite.tests.length) {
       throw new Error(
         `The suite ${suite.name} has no tests, add tests to the suite using the IDE.`
       )

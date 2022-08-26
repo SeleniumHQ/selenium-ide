@@ -27,6 +27,7 @@ import {
   Browser,
   Platform,
 } from './resolve-driver'
+import { Arch } from './types'
 
 export default async function downloadDriver({
   downloadDirectory,
@@ -39,12 +40,12 @@ export default async function downloadDriver({
   downloadDirectory: string
   browser: Browser
   platform: Platform
-  arch: string
+  arch: Arch
   version: string
   artifactName?: string
 }) {
   let end: () => Promise<undefined>
-  const p = new Promise(res => {
+  const p = new Promise((res) => {
     end = res as () => Promise<undefined>
   })
   const url = await resolveDriverUrl({ browser, platform, arch, version })
@@ -61,7 +62,7 @@ export default async function downloadDriver({
     res?.body?.pipe(unzipper.Parse()).pipe(
       new stream.Transform({
         objectMode: true,
-        transform: function(entry, _e, cb) {
+        transform: function (entry, _e, cb) {
           const fileName = entry.path
           if (
             fileName === 'chromedriver' ||
@@ -83,7 +84,7 @@ export default async function downloadDriver({
     res?.body?.pipe(
       tar.t({
         filter: (path, _stat) => path === 'geckodriver',
-        onentry: entry => {
+        onentry: (entry) => {
           entry.pipe(fs.createWriteStream(downloadDestination)).on('close', end)
         },
       })

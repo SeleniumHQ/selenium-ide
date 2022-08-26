@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/get-driver",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "private": true,
   "description": "Download browser drivers",
   "author": "Tomer <tomer@corevo.io>",

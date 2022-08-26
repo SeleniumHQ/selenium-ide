@@ -136,7 +136,11 @@ export default class Playback {
   currentExecutingNode?: CommandNode
 
   async init() {
-    await this._prepareToPlay()
+    await this.executor.init({
+      baseUrl: this.baseUrl,
+      logger: this.logger,
+      variables: this.variables,
+    })
     this[state].initialized = true
   }
 
@@ -144,6 +148,7 @@ export default class Playback {
     test: TestShape,
     { pauseImmediately, startingCommandIndex }: PlayOptions = {}
   ) {
+    await this._prepareToPlay()
     this.commands = test.commands
     this.playbackTree = createPlaybackTree(test.commands, {
       emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
@@ -196,6 +201,7 @@ export default class Playback {
   }
 
   async playSingleCommand(command: CommandShape) {
+    await this._prepareToPlay()
     if (!this[state].initialized) await this.init()
     if (this[state].callstack) {
       if (!this[state].resumeResolve) {
@@ -309,11 +315,6 @@ export default class Playback {
   async _prepareToPlay() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PREPARATION,
-    })
-    await this.executor.init({
-      baseUrl: this.baseUrl,
-      logger: this.logger,
-      variables: this.variables,
     })
   }
 

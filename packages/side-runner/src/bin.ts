@@ -89,7 +89,6 @@ if (!program.args.length) {
   // eslint-disable-next-line no-process-exit
   process.exit(1)
 }
-
 const options = program.opts()
 const configuration: Configuration = {
   baseUrl: '',
@@ -101,7 +100,11 @@ const configuration: Configuration = {
   force: options.force,
   maxWorkers: options.maxWorkers,
   params: {},
-  projects: program.args.map((arg) => path.join(process.cwd(), arg)),
+  // Convert all project paths into absolute paths
+  projects: program.args.map((arg) => {
+    if (path.isAbsolute(arg)) return arg
+    return path.join(process.cwd(), arg)
+  }),
   proxyOptions: {},
   runId: crypto.randomBytes(16).toString('hex'),
   path: path.join(__dirname, '../../'),

@@ -181,11 +181,13 @@ export default class WebDriverExecutor {
     if (!this.driver) {
       const { browserName, ...capabilities } = this
         .capabilities as ExpandedCapabilities
+      this.logger.info('Building driver for ' + browserName)
       this.driver = await new webdriver.Builder()
         .withCapabilities(capabilities)
         .usingServer(this.server as string)
         .forBrowser(browserName)
         .build()
+      this.logger.info('Driver has been built for ' + browserName)
     }
     this.initialized = true
   }
