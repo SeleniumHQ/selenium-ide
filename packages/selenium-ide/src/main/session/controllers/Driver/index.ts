@@ -45,7 +45,6 @@ export interface BrowsersInfo {
 export default class DriverController extends BaseController {
   constructor(session: Session) {
     super(session)
-    this.build({})
   }
 
   driverProcess?: ChildProcess

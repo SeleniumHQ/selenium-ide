@@ -170,9 +170,11 @@ export default class WindowsController extends BaseController {
         this.playbackWindows.push(window)
       }
     })
-    window.on('closed', () =>
-      this.playbackWindows.splice(this.playbackWindows.indexOf(window), 1)
-    )
+    window.on('closed', () => this.removePlaybackWIndow(window))
+  }
+
+  removePlaybackWIndow(window: Electron.BrowserWindow) {
+    this.playbackWindows.splice(this.playbackWindows.indexOf(window), 1)
   }
 
   async onProjectLoaded() {
@@ -231,7 +233,10 @@ export default class WindowsController extends BaseController {
   }
 
   async initializePlaybackWindow() {
-    this.playbackWindows.forEach((bw) => bw.close())
+    this.playbackWindows.forEach((bw) => {
+      this.removePlaybackWIndow(bw);
+      bw.close();
+    })
     await this.openPlaybackWindow()
   }
 

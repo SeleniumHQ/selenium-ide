@@ -18,7 +18,7 @@
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import * as os from 'os'
-import { downloadDriver as doDownloadDriver } from '@seleniumhq/get-driver'
+import { Arch, downloadDriver as doDownloadDriver } from '@seleniumhq/get-driver'
 import { BrowserInfo } from 'main/types'
 
 const downloadDriver = async (browserInfo: BrowserInfo) => {
@@ -45,7 +45,7 @@ const downloadDriver = async (browserInfo: BrowserInfo) => {
       downloadDirectory,
       browser: 'chrome',
       platform: os.platform(),
-      arch: os.arch(),
+      arch: os.arch() as Arch,
       version: browserInfo.version,
     })
   }

@@ -79,6 +79,7 @@ export interface StateShape {
   editor: EditorStateShape
   userPrefs: UserPrefs
   logs: string[]
+  logPath: string
   playback: PlaybackStateShape
   recorder: RecorderStateShape
   status: 'idle' | 'paused' | 'playing' | 'recording'
@@ -92,6 +93,7 @@ export const state: StateShape = {
   editor: defaultEditorState,
   userPrefs: defaultUserPrefs,
   logs: [],
+  logPath: '',
   playback: defaultPlaybackState,
   recorder: defaultRecorderState,
   status: 'idle',

@@ -52,22 +52,7 @@ const wrappedListener = <ARGS extends VariadicArgs>(
   const senderCounts: number[] = []
   const senderFns: ListenerFn<ARGS>[] = []
 
-  ipcMain.on(`${path}.addListener`, ({ sender }) => {
-    const index = senders.indexOf(sender)
-    if (index !== -1) {
-      senderCounts[index] += 1
-      return
-    }
-    const senderFn = (...args: ARGS) => {
-      sender.send(path, ...args)
-    }
-    api.addListener(senderFn)
-    senders.push(sender)
-    senderCounts.push(1)
-    senderFns.push(senderFn)
-  })
-
-  ipcMain.on(`${path}.removeListener`, ({ sender }) => {
+  const removeListener = ({ sender }: Electron.IpcMainEvent) => {
     const index = senders.indexOf(sender)
     if (index !== -1) {
       senderCounts[index] -= 1
@@ -79,7 +64,30 @@ const wrappedListener = <ARGS extends VariadicArgs>(
       }
       return
     }
-  })
+  }
+  ipcMain.on(`${path}.removeListener`, removeListener)
+
+  const addListener = (event: Electron.IpcMainEvent) => {
+    const { sender } = event
+    const index = senders.indexOf(sender)
+    if (index !== -1) {
+      senderCounts[index] += 1
+      return
+    }
+    const senderFn = (...args: ARGS) => {
+      try {
+        sender.send(path, ...args)
+      } catch (e) {
+        // Sender has expired
+        removeListener(event)
+      }
+    }
+    api.addListener(senderFn)
+    senders.push(sender)
+    senderCounts.push(1)
+    senderFns.push(senderFn)
+  }
+  ipcMain.on(`${path}.addListener`, addListener)
 
   ipcMain.on(path, (_event, ...args) => {
     api.dispatchEvent(...(args as ARGS))

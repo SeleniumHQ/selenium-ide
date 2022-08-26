@@ -78,7 +78,7 @@ export namespace Chrome {
             getChromeInfo(CHROME_STABLE_MACOS_INSTALL_LOCATIONS),
             getChromeInfo(CHROME_BETA_MACOS_INSTALL_LOCATIONS),
             getChromeInfo(CHROME_CANARY_MACOS_INSTALL_LOCATIONS),
-          ].map(p => p.catch(() => {}))
+          ].map((p) => p.catch(() => {}))
         )
       ).filter(Boolean) as BrowserInfo[]
     } else if (platform === 'linux') {
@@ -100,7 +100,7 @@ export namespace Chrome {
           [
             getChromeInfo(CHROME_STABLE_LINUX_INSTALL_LOCATIONS),
             getChromeInfo(CHROME_BETA_LINUX_INSTALL_LOCATIONS),
-          ].map(p => p.catch(() => {}))
+          ].map((p) => p.catch(() => {}))
         )
       ).filter(Boolean) as BrowserInfo[]
     } else {

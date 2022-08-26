@@ -5,6 +5,10 @@ let firstTime = true
 export default class SystemController extends BaseController {
   isDown = true
   shuttingDown = false
+
+  async getLogPath() {
+    return this.session.app.getPath('logs')
+  }
   async startup() {
     if (this.isDown) {
       // await this.session.windows.open('chromedriver')

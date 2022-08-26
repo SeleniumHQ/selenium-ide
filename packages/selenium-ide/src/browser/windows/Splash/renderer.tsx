@@ -10,8 +10,10 @@ import React, { useEffect, useState } from 'react'
 import renderWhenReady from 'browser/helpers/renderWhenReady'
 
 const ProjectEditor = () => {
+  const [logPath, setLogPath] = useState<string>('...')
   const [recentProjects, setRecentProjects] = useState<string[]>([])
   useEffect(() => {
+    window.sideAPI.system.getLogPath().then(setLogPath)
     window.sideAPI.projects.getRecent().then(setRecentProjects)
   }, [])
   const loadProject = async () => {
@@ -29,6 +31,9 @@ const ProjectEditor = () => {
       <Grid className="centered pt-4" container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="h4">Welcome to Selenium IDE v4</Typography>
+          <Typography variant="caption">
+            Your logfiles are located at "{logPath}"
+          </Typography>
           <Typography variant="subtitle1">
             Please load a project or create a new one
           </Typography>

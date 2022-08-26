@@ -38,7 +38,9 @@ process.title = metadata.name
 
 const program: SideRunnerAPI = new Command() as SideRunnerAPI
 program
-  .usage('[options] project.side [project.side] [*.side]')
+  .usage(
+    '[options] your-project-glob-here-*.side [variadic-project-globs-*.side]'
+  )
   .version(metadata.version)
   .option('--base-url [url]', 'Override the base URL that was set in the IDE')
   .option('-c, --capabilities [list]', 'Webdriver capabilities')
