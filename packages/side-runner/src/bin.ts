@@ -194,4 +194,8 @@ spawn(
     },
     stdio: 'inherit',
   }
-)
+).on('exit', (code) => {
+  // This is my bin, my process
+  // eslint-disable-next-line no-process-exit
+  process.exit(code as number)
+})
