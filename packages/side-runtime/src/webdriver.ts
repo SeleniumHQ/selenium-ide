@@ -125,7 +125,7 @@ export interface ScriptShape {
 
 const defaultWindowAPI: WindowAPI = {
   setWindowSize: async (executor: WebDriverExecutor, width, height) => {
-    await executor.driver.manage().window().setSize(width, height)
+    await executor.driver.manage().window().setRect({ width, height })
   },
 }
 
