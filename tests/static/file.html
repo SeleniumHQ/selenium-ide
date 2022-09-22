@@ -1,0 +1,15 @@
+<script type="text/javascript">
+    function handleFiles(files) {
+        const up = document.getElementById("f");
+        const file = files[0];
+        const img = document.getElementById("i");
+        img.file = file;
+
+        var reader = new FileReader();
+        reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+        reader.readAsDataURL(file);
+    }
+</script>
+<input id="f" name="f" type="file" multiple onchange="handleFiles(this.files)" />
+<br />
+<img id="i" />

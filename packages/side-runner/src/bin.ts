@@ -192,6 +192,7 @@ spawn(
       ...process.env,
       SE_CONFIGURATION: JSON.stringify(configuration),
     },
+    shell: true,
     stdio: 'inherit',
   }
 ).on('exit', (code) => {

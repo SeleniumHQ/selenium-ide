@@ -27,11 +27,12 @@ export default class ProjectsController {
       'onProjectLoaded' | 'onProjectUnloaded'
     >
   ): Promise<void> {
-    await Promise.all(
-      Object.values(this.session)
-        .filter((v) => v.isController)
-        .map((v) => v[hookName]())
-    )
+    const controllers = Object.values(this.session)
+      .filter((v) => v.isController)
+      .sort((a: BaseController, b: BaseController) => a.priority - b.priority)
+    for (let i = 0, ii = controllers.length; i !== ii; i++) {
+      await controllers[i][hookName]()
+    }
   }
 
   async onProjectLoaded(
@@ -49,9 +50,9 @@ export default class ProjectsController {
     if (!this.loaded) return true
     const confirm = await this.doSaveChangesConfirm()
     if (confirm) {
+      this.loaded = false
       await this.executeHook('onProjectUnloaded')
       delete this.filepath
-      this.loaded = false
     }
     return confirm
   }

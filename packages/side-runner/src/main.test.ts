@@ -85,22 +85,36 @@ each(projects).describe(projectTitle, (project: Project) => {
     (suite) =>
       suite.tests.length && new RegExp(configuration.filter).test(suite.name)
   )
-  if (!suites.length) {
-    throw new Error(`
-      Project ${project.name} doesn't have any suites matching filter ${configuration.filter}
+  if (suites.length) {
+    each(suites).describe(suiteTitle, (suite: SuiteShape) => {
+      const isParallel = suite.parallel
+      const tests = suite.tests
+        .map((tID) => register.test(project, tID))
+        .filter((test) => new RegExp(configuration.filter).test(test.name))
+      const testExecutor = each(tests)
+      const testMethod = isParallel
+        ? testExecutor.test.concurrent
+        : testExecutor.test
+      testMethod(testTitle, async (test: TestShape) => {
+        await runners.test(project, test)
+      })
+    })
+  } else {
+    console.info(`
+      Project ${project.name} doesn't have any suites matching filter ${configuration.filter},
+      attempting to iterate all tests in project
     `)
-  }
-  each(suites).describe(suiteTitle, (suite: SuiteShape) => {
-    const isParallel = suite.parallel
-    const tests = suite.tests
-      .map((tID) => register.test(project, tID))
+    const tests = project.tests
+      .map((test) => register.test(project, test.id))
       .filter((test) => new RegExp(configuration.filter).test(test.name))
+    if (!tests.length) {
+      throw new Error(
+        `No suites or tests found in project ${project.name} matching filter ${configuration.filter}, unable to test!`
+      )
+    }
     const testExecutor = each(tests)
-    const testMethod = isParallel
-      ? testExecutor.test.concurrent
-      : testExecutor.test
-    testMethod(testTitle, async (test: TestShape) => {
+    testExecutor.test(testTitle, async (test: TestShape) => {
       await runners.test(project, test)
     })
-  })
+  }
 })

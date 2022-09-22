@@ -1,7 +1,7 @@
 {
   "id": "8e43685a-112a-455b-a6b2-748a19071100",
   "version": "2.0",
-  "name": "plugin",
+  "name": "Plugin",
   "url": "https://www.google.com",
   "tests": [
     {

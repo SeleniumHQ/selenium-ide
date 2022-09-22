@@ -34,12 +34,12 @@ export interface PlaybackTree {
 
 function createPlaybackTree(
   commandStack: CommandShape[],
-  { isValidationDisabled, emitControlFlowEvent }: CommandNodeOptions = {}
+  { isValidationDisabled, emitControlFlowChange }: CommandNodeOptions = {}
 ): PlaybackTree {
   let nodes = createCommandNodesFromCommandStack(
     commandStack,
     isValidationDisabled,
-    emitControlFlowEvent
+    emitControlFlowChange
   )
   return {
     startingCommandNode: nodes[0],
@@ -55,22 +55,22 @@ function containsControlFlow(nodes: CommandNode[]) {
 function createCommandNodesFromCommandStack(
   commandStack: CommandShape[],
   isValidationDisabled: boolean = false,
-  emitControlFlowEvent?: Fn
+  emitControlFlowChange?: Fn
 ) {
   if (!isValidationDisabled) validateControlFlowSyntax(commandStack)
   let levels = deriveCommandLevels(commandStack)
-  let nodes = createCommandNodes(commandStack, levels, emitControlFlowEvent)
+  let nodes = createCommandNodes(commandStack, levels, emitControlFlowChange)
   return connectCommandNodes(nodes)
 }
 
 function createCommandNodes(
   commandStack: CommandShape[],
   levels: number[],
-  emitControlFlowEvent?: Fn
+  emitControlFlowChange?: Fn
 ): CommandNode[] {
   let commandNodes: CommandNode[] = []
   commandStack.forEach(function (command, index) {
-    let node = new CommandNode(command, { emitControlFlowEvent })
+    let node = new CommandNode(command, { emitControlFlowChange })
     node.index = index
     node.level = levels[index]
     commandNodes.push(node)

@@ -6,7 +6,7 @@ import WebDriverExecutor, { WebDriverExecutorHooks } from './webdriver'
 export { Capabilities } from 'selenium-webdriver'
 
 export interface CommandNodeOptions {
-  emitControlFlowEvent?: Fn
+  emitControlFlowChange?: Fn
   isValidationDisabled?: boolean
 }
 

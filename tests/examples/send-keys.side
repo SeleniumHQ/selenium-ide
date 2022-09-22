@@ -1,7 +1,7 @@
 {
   "id": "8e43685a-112a-455b-a6b2-748a19071100",
   "version": "1.1",
-  "name": "send-keys",
+  "name": "Send Keys",
   "url": "https://www.google.com",
   "tests": [
     {
@@ -115,12 +115,5 @@
   "urls": [
     "https://en.wikipedia.org/",
     "https://www.google.com/"
-  ],
-  "plugins": [
-    {
-      "id": "nknickobkcecmkiiefhjmiaihliikohm",
-      "name": "Applitools",
-      "version": "1.0.0"
-    }
   ]
 }

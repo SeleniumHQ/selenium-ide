@@ -23,9 +23,12 @@ export default class CommandsController extends BaseController {
       }),
       {}
     )
+    console.log(this.customCommands)
     this.session.state.state.commands = {
       ...Commands,
       ...serializeCustomCommands(this.customCommands),
     }
   }
+  // This needs to build after plugins
+  priority = 5
 }

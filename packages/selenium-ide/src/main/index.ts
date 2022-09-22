@@ -1,9 +1,16 @@
 import 'v8-compile-cache'
 import 'source-map-support/register'
 import { app } from 'electron'
+import log from 'electron-log'
 import store from './store'
 import createSession from './session'
 import installReactDevtools from './install-react-devtools'
+import { join } from 'path'
+
+// Configure log file
+const logFile = new Date().toISOString() + '.main.log'
+log.transports.file.resolvePath = () => join(app.getPath('logs'), logFile)
+Object.assign(console, log.functions);
 
 // Enable debugging - required for electron-chromedriver
 app.commandLine.appendSwitch('remote-debugging-port', '8315')

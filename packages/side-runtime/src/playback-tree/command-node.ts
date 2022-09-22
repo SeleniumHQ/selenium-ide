@@ -37,7 +37,7 @@ export interface CommandExecutionResult {
 export class CommandNode {
   constructor(
     command: CommandShape,
-    { emitControlFlowEvent }: CommandNodeOptions = {}
+    { emitControlFlowChange }: CommandNodeOptions = {}
   ) {
     this.command = command
     this.next = undefined
@@ -46,13 +46,14 @@ export class CommandNode {
     this.index = 0
     this.level = 0
     this.timesVisited = 0
-    this.emitControlFlowEvent = emitControlFlowEvent
-      ? emitControlFlowEvent
+    this.emitControlFlowChange = emitControlFlowChange
+      ? emitControlFlowChange
       : () => {}
   }
   command: CommandShape
-  emitControlFlowEvent: Fn
+  emitControlFlowChange: Fn
   next?: CommandNode
+  transientError?: string
   left?: CommandNode
   right?: CommandNode
   index: number
@@ -114,10 +115,12 @@ export class CommandNode {
     } else if (this.isTerminal()) {
       return Promise.resolve()
     } else {
-      if (commandExecutor.customCommands[this.command.command]) {
-        return commandExecutor.customCommands[this.command.command].execute(
-          this.command,
-          commandExecutor
+      const customCommand = commandExecutor.customCommands[this.command.command]
+      if (customCommand) {
+        return this.retryCommand(
+          async () =>
+            await customCommand.execute(this.command, commandExecutor),
+          Date.now() + commandExecutor.implicitWait
         )
       }
       return this._executeCoreCommand(
@@ -127,26 +130,38 @@ export class CommandNode {
     }
   }
 
+  async retryCommand(
+    execute: () => Promise<unknown>,
+    timeout: number
+  ): Promise<unknown> {
+    try {
+      const timeLimit = timeout - Date.now()
+      setTimeout(() => {
+        throw new Error('Operation timed out!')
+      }, timeLimit)
+      return await execute()
+    } catch (e) {
+      this.handleTransientError(e, timeout)
+      return this.retryCommand(execute, timeout)
+    }
+  }
+
   async _executeCoreCommand(
     commandExecutor: WebDriverExecutor,
     timeout: number
   ): Promise<unknown> {
-    try {
-      // @ts-expect-error
-      return await commandExecutor[commandExecutor.name(this.command.command)](
-        this.command.target,
-        this.command.value,
-        this.command
-      )
-    } catch (e) {
-      console.warn(
-        'Unexpected error occured during command:',
-        this.command.command
-      )
-      if (Date.now() > timeout) throw e
-      console.error(e)
-      return this._executeCoreCommand(commandExecutor, timeout)
-    }
+    const { command } = this
+    const { target, value } = command
+    return await this.retryCommand(
+      async () =>
+        // @ts-expect-error webdriver is too kludged by here
+        await commandExecutor[commandExecutor.name(this.command.command)](
+          target,
+          value,
+          command
+        ),
+      timeout
+    )
   }
 
   _executionResult(result: CommandExecutionResult = {}) {
@@ -154,6 +169,32 @@ export class CommandNode {
     return {
       next: this.isControlFlow() ? result.next : this.next,
       skipped: result.skipped,
+    }
+  }
+
+  handleTransientError(e: unknown, timeout: number) {
+    const { command, target, value } = this.command
+    const thisCommand = `${command}-${target}-${value}`
+    const thisErrorMessage = e instanceof Error ? e.message : ''
+    const thisTransientError = `${thisCommand}-${thisErrorMessage}`
+    const lastTransientError = this.transientError
+    const isNewErrorMessage = lastTransientError !== thisTransientError
+    const notRetrying = Date.now() > timeout
+    if (isNewErrorMessage) {
+      this.transientError = thisTransientError
+      console.debug(
+        'Unexpected error occured during command:',
+        thisCommand,
+        notRetrying ? '' : 'retrying...'
+      )
+      if (thisErrorMessage) {
+        console.debug(thisErrorMessage)
+      }
+    }
+
+    if (notRetrying) {
+      console.error('Command failure:', thisCommand)
+      throw e
     }
   }
 
@@ -168,7 +209,7 @@ export class CommandNode {
     )
     const result = this.timesVisited < collection.length
     if (result)
-      this.emitControlFlowEvent({
+      this.emitControlFlowChange({
         commandId: this.command.id,
         type: CommandType.LOOP,
         index: this.timesVisited,
@@ -196,7 +237,7 @@ export class CommandNode {
     } else if (ControlFlowCommandChecks.isForEach(this.command)) {
       const result = this.evaluateForEach(commandExecutor.variables)
       if (!result) {
-        this.emitControlFlowEvent({
+        this.emitControlFlowChange({
           commandId: this.command.id,
           type: CommandType.LOOP,
           end: true,

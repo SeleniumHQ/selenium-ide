@@ -1,7 +1,7 @@
 {
   "id": "b0eb1ebb-ea28-4dba-b86e-1e94a925fc6a",
   "version": "1.1",
-  "name": "select window",
+  "name": "Select Window",
   "url": "http://the-internet.herokuapp.com",
   "tests": [
     {

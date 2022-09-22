@@ -1,6 +1,6 @@
 {
   "id": "8e43685a-112a-455b-a6b2-748a19071100",
-  "name": "executescript",
+  "name": "Execute Script",
   "url": "https://en.wikipedia.org",
   "tests": [{
     "id": "c01d1c80-48af-431f-846a-220086a8d9ee",

@@ -151,7 +151,7 @@ export default class Playback {
     await this._prepareToPlay()
     this.commands = test.commands
     this.playbackTree = createPlaybackTree(test.commands, {
-      emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
+      emitControlFlowChange: this[EE].emitControlFlowChange.bind(this),
     })
     if (startingCommandIndex) {
       this.currentExecutingNode = this.playbackTree.nodes[startingCommandIndex]
@@ -222,7 +222,7 @@ export default class Playback {
     } else {
       await this._beforePlay()
       this.playbackTree = createPlaybackTree([command], {
-        emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
+        emitControlFlowChange: this[EE].emitControlFlowChange.bind(this),
       })
       this.currentExecutingNode = this.playbackTree.startingCommandNode
       const callstack = new Callstack()
@@ -487,7 +487,7 @@ export default class Playback {
 
   async _playSingleCommand(command: CommandShape) {
     const commandNode = createPlaybackTree([command], {
-      emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
+      emitControlFlowChange: this[EE].emitControlFlowChange.bind(this),
     }).startingCommandNode
     const callstackIndex = undefined
     this[EE].emitCommandStateChange({
@@ -556,7 +556,7 @@ export default class Playback {
     }
 
     const tree = createPlaybackTree(test.commands, {
-      emitControlFlowEvent: this[EE].emitControlFlowChange.bind(this),
+      emitControlFlowChange: this[EE].emitControlFlowChange.bind(this),
     })
     const nextPosition = this.currentExecutingNode?.next as CommandNode
     const caller: Caller = {

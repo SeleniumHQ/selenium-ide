@@ -11,5 +11,6 @@ export default class BaseController {
   async onProjectLoaded() {}
   async onProjectUnloaded() {}
   isController = true
+  priority: number = 0
   session: Session
 }

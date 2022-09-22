@@ -42,8 +42,8 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
       .split(path.sep)
       .slice(0, -1)
       .join(path.sep)
-    const plugins = await loadPlugins(require, shortenedProjectPath, project)
-    const customCommands = await getCustomCommands(plugins)
+    const plugins = await loadPlugins(shortenedProjectPath, project.plugins)
+    const customCommands = getCustomCommands(plugins)
     const driver = new WebDriverExecutor({
       capabilities:
         configuration.capabilities as unknown as WebDriverExecutorConstructorArgs['capabilities'],
@@ -75,9 +75,9 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
           variables: new Variables(),
         })
         const onComplete = (failure: any) => {
-          logger.info('Completing with failure', failure)
           playback.cleanup()
           if (failure) {
+            logger.warn('Completed with failure', failure)
             return reject(failure)
           } else {
             return resolve(null)
@@ -87,7 +87,7 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
         EE.addListener(
           PlaybackEvents.PLAYBACK_STATE_CHANGED,
           ({ state }: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
-            logger.info(`Playing state changed ${state}`)
+            logger.debug(`Playing state changed ${state}`)
             switch (state) {
               case 'aborted':
               case 'errored':

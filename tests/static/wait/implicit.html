@@ -1,0 +1,11 @@
+<script type="text/javascript">
+  function create() {
+    var elem = document.createElement("div");
+    elem.id = "t";
+    elem.innerText = "selenium";
+    setTimeout(() => {
+      document.body.appendChild(elem);
+    }, 1000);
+  }
+</script>
+<button id="b" onclick="create()">show element with delay</button>

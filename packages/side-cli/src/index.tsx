@@ -29,28 +29,32 @@ import path from 'path'
 import React from 'react'
 import PlaybackComponent from './components/playback'
 
-let projectPath = process.argv[2]
-if (projectPath.startsWith('.')) {
-  projectPath = path.join(process.cwd(), projectPath)
+const main = async () => {
+  let projectPath = process.argv[2]
+  if (projectPath.startsWith('.')) {
+    projectPath = path.join(process.cwd(), projectPath)
+  }
+
+  const project: ProjectShape = JSON.parse(
+    fs.readFileSync(projectPath).toString()
+  )
+
+  const plugins = await loadPlugins(projectPath, project.plugins)
+  const customCommands = getCustomCommands(plugins)
+  const executor = new WebDriverExecutor({
+    customCommands,
+  })
+
+  const playback = new Playback({
+    baseUrl: project.url,
+    getTestByName: (name: string) =>
+      project.tests.find((t) => t.name === name) as TestShape,
+    logger: console,
+    executor,
+    variables: new Variables(),
+  })
+
+  render(<PlaybackComponent project={project} playback={playback} />)
 }
 
-const project: ProjectShape = JSON.parse(
-  fs.readFileSync(projectPath).toString()
-)
-
-const plugins = loadPlugins(require, projectPath, project)
-const customCommands = getCustomCommands(plugins)
-const executor = new WebDriverExecutor({
-  customCommands,
-})
-
-const playback = new Playback({
-  baseUrl: project.url,
-  getTestByName: (name: string) =>
-    project.tests.find((t) => t.name === name) as TestShape,
-  logger: console,
-  executor,
-  variables: new Variables(),
-})
-
-render(<PlaybackComponent project={project} playback={playback} />)
+main()

@@ -90,6 +90,10 @@ export interface WebDriverExecutorCondEvalResult {
   value: boolean
 }
 
+export interface BeforePlayHookInput {
+  driver: WebDriverExecutor
+}
+
 export interface CommandHookInput {
   command: CommandShape
 }
@@ -102,20 +106,25 @@ export interface StoreWindowHandleHookInput {
 export interface WindowAppearedHookInput {
   command: CommandShape
   windowHandleName: CommandShape['windowHandleName']
-  windowHandle: string
+  windowHandle?: string | Error
 }
 
 export interface WindowSwitchedHookInput {
-  windowHandle: string
+  windowHandle?: string | Error
 }
 
 export interface WebDriverExecutorHooks {
-  onBeforePlay?: (input: { driver: WebDriverExecutor }) => void
+  onBeforePlay?: (input: BeforePlayHookInput) => void
   onAfterCommand?: (input: CommandHookInput) => void
   onBeforeCommand?: (input: CommandHookInput) => void
   onStoreWindowHandle?: (input: StoreWindowHandleHookInput) => void
   onWindowAppeared?: (input: WindowAppearedHookInput) => void
   onWindowSwitched?: (input: WindowSwitchedHookInput) => void
+}
+
+export interface ElementEditableScriptResult {
+  enabled: boolean
+  readonly: boolean
 }
 
 export interface ScriptShape {
@@ -220,17 +229,19 @@ export default class WebDriverExecutor {
 
     const upperCase = command.charAt(0).toUpperCase() + command.slice(1)
     const func = 'do' + upperCase
-    // @ts-expect-error
+    // @ts-expect-error The functions can be overridden by custom commands and stuff
     if (!this[func]) {
       throw new Error(`Unknown command ${command}`)
     }
     return func
   }
 
-  async executeHook(hook: keyof WebDriverExecutorHooks, ...args: any[]) {
+  async executeHook<T extends keyof WebDriverExecutorHooks>(
+    hook: T,
+    ...args: Parameters<NonNullable<WebDriverExecutorHooks[T]>>
+  ) {
     const fn = this.hooks[hook]
     if (!fn) return
-    // @ts-expect-error
     await fn.apply(this, args)
   }
 
@@ -1216,12 +1227,12 @@ export default class WebDriverExecutor {
       throw err
     }
   }
-
   async isElementEditable(element: WebElementShape) {
-    const { enabled, readonly } = await this.driver.executeScript(
-      'return { enabled: !arguments[0].disabled, readonly: arguments[0].readOnly };',
-      element
-    )
+    const { enabled, readonly } =
+      await this.driver.executeScript<ElementEditableScriptResult>(
+        'return { enabled: !arguments[0].disabled, readonly: arguments[0].readOnly };',
+        element
+      )
     return enabled && !readonly
   }
 

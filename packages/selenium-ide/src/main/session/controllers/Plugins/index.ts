@@ -27,10 +27,11 @@ export default class PluginsController extends BaseController {
   async onProjectLoaded() {
     const projectPath = this.session.projects.filepath as string
     const pluginPaths = await this.list()
-    const plugins = loadPlugins(
-      __non_webpack_require__,
+    console.log('Plugin paths', pluginPaths)
+    const plugins = await loadPlugins(
       projectPath,
-      await this.session.projects.getActive()
+      pluginPaths,
+      __non_webpack_require__
     )
     plugins.forEach((plugin, index) => {
       const pluginPath = pluginPaths[index]
@@ -62,4 +63,6 @@ export default class PluginsController extends BaseController {
       ipcMain.off(key, handler)
     })
   }
+  // This needs to build before commands
+  priority = 3
 }

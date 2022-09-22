@@ -1,7 +1,7 @@
 {
   "id": "5ae78ac5-a1c2-441b-9c01-5aa9f15f7b21",
   "version": "3.0",
-  "name": "New Project",
+  "name": "Simple Parent",
   "url": "http://www.google.com",
   "urls": [
     "http://www.google.com"
@@ -38,7 +38,7 @@
           "id": "ac59c71a-4b22-4788-a928-3b89776697f7",
           "command": "run",
           "target": "open page",
-          "value": ""
+          "value": "/"
         },
         {
           "command": "assertElementPresent",

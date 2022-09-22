@@ -15,7 +15,7 @@
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "yarn lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
-    "test:side-runner": "./node_modules/@seleniumhq/side-runner/dist/bin.js --timeout 200000 ./tests/examples/wait-for.side",
+    "test:side-runner": "./node_modules/@seleniumhq/side-runner/dist/bin.js ./tests/examples/*.side",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "run-p watch:ts watch:webpack",
     "watch:webpack": "lerna run --parallel --stream --scope @seleniumhq/selenium-ide --loglevel verbose watch",
@@ -70,6 +70,6 @@
     "stylelint-config-standard": "^25.0.0",
     "stylelint-prettier": "^2.0.0",
     "ts-jest": "^27.1.3",
-    "typescript": "^4.6.2"
+    "typescript": "^4.8.3"
   }
 }

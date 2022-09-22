@@ -1,0 +1,27 @@
+<script type="text/javascript">
+  var n = 0;
+  function createNode() {
+    n++;
+    var elem = document.createElement("button");
+    elem.id = n;
+    elem.style = "display: block;";
+    elem.innerText = n;
+    document.body.appendChild(elem);
+  }
+</script>
+<body>
+
+
+<script type="text/javascript">
+  (function() {
+    for (var i = 0; i < 100; i++) {
+      createNode();
+    }
+  })();
+  window.addEventListener('scroll', function(e) {
+    if (window.scrollY + document.body.clientHeight > document.body.offsetHeight) {
+      createNode();
+    }
+  });
+</script>
+</body>
