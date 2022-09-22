@@ -134,14 +134,17 @@ export class CommandNode {
     execute: () => Promise<unknown>,
     timeout: number
   ): Promise<unknown> {
+    const timeLimit = timeout - Date.now()
+    const expirationTimer = setTimeout(() => {
+      throw new Error('Operation timed out!')
+    }, timeLimit)
     try {
-      const timeLimit = timeout - Date.now()
-      setTimeout(() => {
-        throw new Error('Operation timed out!')
-      }, timeLimit)
-      return await execute()
+      const result = await execute()
+      clearTimeout(expirationTimer)
+      return result
     } catch (e) {
       this.handleTransientError(e, timeout)
+      clearTimeout(expirationTimer)
       return this.retryCommand(execute, timeout)
     }
   }
@@ -182,13 +185,13 @@ export class CommandNode {
     const notRetrying = Date.now() > timeout
     if (isNewErrorMessage) {
       this.transientError = thisTransientError
-      console.debug(
+      console.warn(
         'Unexpected error occured during command:',
         thisCommand,
         notRetrying ? '' : 'retrying...'
       )
       if (thisErrorMessage) {
-        console.debug(thisErrorMessage)
+        console.error(thisErrorMessage)
       }
     }
 
