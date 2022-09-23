@@ -79,7 +79,6 @@ export default class DriverController extends BaseController {
         setWindowSize: async (_executor, width, height) => {
           const window = this.session.windows.getLastPlaybackWindow()
           const pbWinCount = this.session.windows.playbackWindows.length
-          console.log(pbWinCount, window);
           const b = await window.getBounds()
           const calcNewX = b.x + Math.floor(b.width / 2) - Math.floor(width / 2)
           const calcNewY =

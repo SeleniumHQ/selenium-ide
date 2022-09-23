@@ -35,13 +35,11 @@ export default class PlaybackController extends BaseController {
   }) => {
     const { driver } = executor
     const { windows } = this.session
-    if (this.playRange[0] === 0) {
-      await windows.initializePlaybackWindow()
-    }
     const playbackWindow = await windows.getPlaybackWindow()
 
     // Figure out playback window from document.title
     const handles = await driver.getAllWindowHandles()
+    let success = false
     for (let i = 0, ii = handles.length; i !== ii; i++) {
       try {
         await driver.switchTo().window(handles[i])
@@ -51,11 +49,16 @@ export default class PlaybackController extends BaseController {
           title === playbackWindow.getTitle() &&
           url === playbackWindow.webContents.getURL()
         ) {
+          success = true
           break
         }
       } catch (e) {
         console.warn('Failed to switch to window', e)
       }
+    }
+    if (!success) {
+      await windows.initializePlaybackWindow()
+      await this.onBeforePlay({ driver: executor })
     }
   }
 

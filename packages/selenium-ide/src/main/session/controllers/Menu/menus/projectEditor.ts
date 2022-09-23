@@ -22,10 +22,16 @@ export const projectEditorCommands: MenuComponent = (session) => async () =>
     },
     {
       accelerator: 'CommandOrControl+R',
-      label: 'Load Recent',
+      label: 'Recent Projects',
       click: async () => {
         await session.projects.showRecents()
       },
+      submenu: (await session.projects.getRecent()).map((project) => ({
+        click: async () => {
+          await session.api.projects.load(project)
+        },
+        label: project,
+      })),
     },
     { type: 'separator' },
     {

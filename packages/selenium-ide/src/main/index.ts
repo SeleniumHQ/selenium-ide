@@ -8,7 +8,7 @@ import installReactDevtools from './install-react-devtools'
 import { join } from 'path'
 
 // Configure log file
-const logFile = new Date().toISOString() + '.main.log'
+const logFile = Date.now() + '.main.log'
 log.transports.file.resolvePath = () => join(app.getPath('logs'), logFile)
 Object.assign(console, log.functions);
 
