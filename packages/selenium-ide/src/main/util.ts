@@ -1,3 +1,4 @@
+import { app } from 'electron'
 import { debuglog, inspect } from 'util'
 
 export const COLOR_BLACK = '\x1b[30m'
@@ -10,9 +11,12 @@ export const COLOR_CYAN = '\x1b[36m'
 export const COLOR_WHITE = '\x1b[37m'
 
 export const vdebuglog = (namespace: string, color: string) => {
-  const log = debuglog(namespace)
+  const isBin = app.isPackaged
+  const prefix = isBin ? `${namespace}: ` : color
+  const log = isBin ? console.log : debuglog(namespace)
+  const suffix = isBin ? '' : '\x1b[0m'
   return (...args: any[]) => {
     const str = args.map((v) => inspect(v)).join(' ')
-    log(`${color}${str}\x1b[0m`)
+    log(`${prefix}${str}${suffix}`)
   }
 }
