@@ -108,7 +108,7 @@
     "@seleniumhq/side-model": "^4.0.0-alpha.1",
     "@seleniumhq/side-plugin-example": "^4.0.0-alpha.1",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.5",
-    "electron-chromedriver": "18.3.4",
+    "electron-chromedriver": "^18.0.0",
     "electron-log": "^4.4.8",
     "electron-store": "^8.1.0",
     "electron-unhandled": "^4.0.1",
