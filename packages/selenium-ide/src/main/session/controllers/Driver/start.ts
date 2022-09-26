@@ -1,5 +1,6 @@
 import { resolveDriverName } from '@seleniumhq/get-driver'
 import { ChildProcess, spawn } from 'child_process'
+import { app } from 'electron'
 import * as fs from 'fs-extra'
 import { BrowserInfo, Session } from 'main/types'
 import * as path from 'path'
@@ -18,6 +19,8 @@ export interface DriverStartFailure {
 
 export const WebdriverDebugLog = vdebuglog('webdriver', COLOR_MAGENTA)
 export const WebdriverDebugLogErr = vdebuglog('webdriver-error', COLOR_YELLOW)
+
+export const port = app.isPackaged ? 9516 : 9515
 
 /**
  * This module is just an async function that does the following:
@@ -57,9 +60,9 @@ export type StartDriver = (
   session: Session
 ) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
 const startDriver: StartDriver = () => (info) =>
-  new Promise((resolve, reject) => {
+  new Promise((resolve) => {
     let initialized = false
-    const args = ['--verbose']
+    const args = ['--verbose', `--port=${port}`]
     const driverPath = getDriver(info)
     if (fs.existsSync(driverPath)) {
       const driver = spawn(driverPath.replace(/\s/g, '\ '), args, {
@@ -85,9 +88,12 @@ const startDriver: StartDriver = () => (info) =>
       })
       driver.on('close', (code: number) => {
         if (code) {
-          WebdriverDebugLogErr(`driver has exited with code${code}`)
+          WebdriverDebugLogErr(`driver has exited with code ${code}`)
           if (!initialized) {
-            reject(code)
+            resolve({
+              success: false,
+              error: 'Process has exited before starting with code ' + code,
+            })
           }
         }
       })

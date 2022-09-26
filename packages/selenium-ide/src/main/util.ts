@@ -11,7 +11,7 @@ export const COLOR_CYAN = '\x1b[36m'
 export const COLOR_WHITE = '\x1b[37m'
 
 export const vdebuglog = (namespace: string, color: string) => {
-  const isBin = app.isPackaged
+  const isBin = true || app.isPackaged
   const prefix = isBin ? `${namespace}: ` : color
   const log = isBin ? console.log : debuglog(namespace)
   const suffix = isBin ? '' : '\x1b[0m'

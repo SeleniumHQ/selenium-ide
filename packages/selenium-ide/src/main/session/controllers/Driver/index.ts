@@ -3,7 +3,7 @@ import { WebDriverExecutor } from '@seleniumhq/side-runtime'
 import { ChildProcess } from 'child_process'
 import { BrowserInfo, Session } from 'main/types'
 import downloadDriver from './download'
-import startDriver, { WebdriverDebugLog } from './start'
+import startDriver, { port, WebdriverDebugLog } from './start'
 import BaseController from '../Base'
 
 // Escape hatch to avoid dealing with rootDir complexities in TS
@@ -59,7 +59,7 @@ export default class DriverController extends BaseController {
       },
     },
     // The "9515" is the port opened by chrome driver.
-    server = 'http://localhost:9515',
+    server = 'http://localhost:' + port,
   }: DriverOptions): Promise<WebDriverExecutor> {
     const driver: WebDriverExecutor = new WebDriverExecutor({
       capabilities: {
@@ -136,6 +136,7 @@ export default class DriverController extends BaseController {
       this.driverProcess = results.driver
       return null
     }
+    console.error('Failed to start chromedriver process', results.error)
     return results.error
   }
 

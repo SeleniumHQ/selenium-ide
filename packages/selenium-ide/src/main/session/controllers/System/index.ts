@@ -11,8 +11,10 @@ export default class SystemController extends BaseController {
   }
   async startup() {
     if (this.isDown) {
-      // await this.session.windows.open('chromedriver')
-      await this.session.driver.startProcess()
+      const startupError = await this.session.driver.startProcess()
+      if (startupError) {
+        await this.crash(`Unable to startup due to chromedriver error: ${startupError}`);
+      }
       await this.session.projects.select(firstTime)
       this.isDown = false
       firstTime = false
