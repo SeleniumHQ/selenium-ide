@@ -16,6 +16,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
         run: yarn install --frozen-lockfile
+      - name: Install chromedriver for windows
+        run: npm_config_platform=win32 yarn run install
+        working-directory: packages/selenium-ide/node_modules/electron-chromedriver
       - name: Build all JS
         run: yarn build
       - name: Publish non IDE packages to npm
