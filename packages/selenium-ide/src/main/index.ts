@@ -10,7 +10,7 @@ import { join } from 'path'
 // Configure log file
 const logFile = Date.now() + '.main.log'
 log.transports.file.resolvePath = () => join(app.getPath('logs'), logFile)
-Object.assign(console, log.functions);
+Object.assign(console, log.functions)
 
 // Enable debugging - required for electron-chromedriver
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
@@ -60,8 +60,9 @@ app.on('activate', async () => {
 
 app.on('window-all-closed', async () => {
   allWindowsClosed = true
-  await session.system.shutdown()
-  if (process.platform !== 'darwin') {
+  if (process.platform === 'darwin') {
+    await session.system.shutdown()
+  } else {
     await session.system.quit()
   }
 })

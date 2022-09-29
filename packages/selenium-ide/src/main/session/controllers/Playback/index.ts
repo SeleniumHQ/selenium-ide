@@ -37,23 +37,25 @@ export default class PlaybackController extends BaseController {
     const { windows } = this.session
     const playbackWindow = await windows.getPlaybackWindow()
 
-    // Figure out playback window from document.title
-    const handles = await driver.getAllWindowHandles()
     let success = false
-    for (let i = 0, ii = handles.length; i !== ii; i++) {
-      try {
-        await driver.switchTo().window(handles[i])
-        const title = await driver.getTitle()
-        const url = await driver.getCurrentUrl()
-        if (
-          title === playbackWindow.getTitle() &&
-          url === playbackWindow.webContents.getURL()
-        ) {
-          success = true
-          break
+    if (playbackWindow) {
+      // Figure out playback window from document.title and url match
+      const handles = await driver.getAllWindowHandles()
+      for (let i = 0, ii = handles.length; i !== ii; i++) {
+        try {
+          await driver.switchTo().window(handles[i])
+          const title = await driver.getTitle()
+          const url = await driver.getCurrentUrl()
+          if (
+            title === playbackWindow.getTitle() &&
+            url === playbackWindow.webContents.getURL()
+          ) {
+            success = true
+            break
+          }
+        } catch (e) {
+          console.warn('Failed to switch to window', e)
         }
-      } catch (e) {
-        console.warn('Failed to switch to window', e)
       }
     }
     if (!success) {
