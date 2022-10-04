@@ -9,10 +9,9 @@
     "export"
   ],
   "license": "Apache-2.0",
-  "private": false,
   "scripts": {
     "build": "babel -d dist src --ignore=__test__",
-    "watch": "yarn build -w"
+    "watch": "pnpm run build"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -55,11 +55,11 @@ export default class Recorder {
     this.setWindowHandle = this.setWindowHandle.bind(this)
     // @ts-expect-error
     this.window.addEventListener('message', this.setWindowHandle)
-    window.sideAPI.recorder.onFrameRecalculate.addListener(
+    this.window.sideAPI.recorder.onFrameRecalculate.addListener(
       this.getFrameLocation
     )
-    window.addEventListener('beforeunload', () => {
-      window.sideAPI.recorder.onFrameRecalculate.removeListener(
+    this.window.addEventListener('beforeunload', () => {
+      this.window.sideAPI.recorder.onFrameRecalculate.removeListener(
         this.getFrameLocation
       )
     })

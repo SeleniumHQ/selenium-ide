@@ -15,20 +15,20 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: pnpm run install --frozen-lockfile
       - name: Install chromedriver for windows
-        run: npm_config_platform=win32 yarn run install
+        run: npm_config_platform=win32 pnpm run install
         working-directory: packages/selenium-ide/node_modules/electron-chromedriver
       - name: Build all JS
-        run: yarn build
+        run: pnpm run build
       - name: Publish non IDE packages to npm
-        run: npx lerna publish --canary --yes --no-verify-access from-package
+        run: pnpm -r publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install electron-builder dependencies
-        run: yarn global add dmg-license
+        run: npm install -g dmg-license
       - name: Build selenium-ide binaries
-        run: yarn build:electron
+        run: pnpm run build:electron
       - name: Set env from current release
         run: >
           echo "SIDE_RELEASE_VERSION=$(node -pe "require('./package.json').version")" >> $GITHUB_ENV

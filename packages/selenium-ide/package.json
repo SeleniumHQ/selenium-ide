@@ -89,12 +89,8 @@
       }
     ]
   },
-  "workspaces": {
-    "nohoist": [
-      "electron",
-      "**/electron-chromedriver",
-      "**/electron-builder"
-    ]
+  "installConfig": {
+    "hoistingLimits": "workspaces"
   },
   "dependencies": {
     "@emotion/react": "^11.8.1",
@@ -123,11 +119,12 @@
   },
   "devDependencies": {
     "@medv/finder": "^1.1.1",
+    "@seleniumhq/browser-info": "^4.0.0-alpha.1",
     "@types/copy-webpack-plugin": "8.0.1",
     "@types/electron": "1.6.10",
     "@types/electron-devtools-installer": "^2.2.2",
     "@types/fs-extra": "^8.0.0",
-    "@types/lodash": "^4.14.170",
+    "@types/lodash": "^4.14.186",
     "@types/react": "^17.0.14",
     "@types/react-dom": "^17.0.9",
     "@types/ua-parser-js": "^0.7.36",

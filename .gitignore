@@ -6,7 +6,6 @@ build
 .idea
 selenium-ide.pem
 selenium-ide.crx
-yarn-error.log
 dist/
 .web-extension-id
 *.log

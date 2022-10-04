@@ -1,0 +1,64 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@seleniumhq/side-model': ^4.0.0-alpha.0
+  '@types/xml-escape': 1.1.0
+  '@types/xml-js': 1.0.0
+  unescape: ^1.0.1
+  xml-escape: ^1.1.0
+  xml-js: ^1.5.2
+
+dependencies:
+  '@seleniumhq/side-model': link:../side-model
+  unescape: 1.0.1
+  xml-escape: 1.1.0
+  xml-js: 1.6.11
+
+devDependencies:
+  '@types/xml-escape': 1.1.0
+  '@types/xml-js': 1.0.0
+
+packages:
+
+  /@types/xml-escape/1.1.0:
+    resolution: {integrity: sha512-N8/W8PkPrzkxPls5QMTA8TQrKgD456BarGG2XTJK3Ax2suCAyqUthbpfBccgpGTBhT7hNuGUSuJd4XlwSXlmuA==}
+    dev: true
+
+  /@types/xml-js/1.0.0:
+    resolution: {integrity: sha512-tRJYQN/uAD8Br9K+pqqzJNd/htIxQaFy6ppfNEWbwsAoWRK3oAxzROCGA39GHT+E3BHLyuBnSB7XKsnJ0s4w2g==}
+    deprecated: This is a stub types definition for xml-js (https://github.com/nashwaan/xml-js). xml-js provides its own type definitions, so you don't need @types/xml-js installed!
+    dependencies:
+      xml-js: 1.6.11
+    dev: true
+
+  /extend-shallow/2.0.1:
+    resolution: {integrity: sha512-zCnTtlxNoAiDc3gqY2aYAWFx7XWWiasuF2K8Me5WbN8otHKTUKBwjPtNpRs/rbUZm7KxWAaNj7P1a/p52GbVug==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      is-extendable: 0.1.1
+    dev: false
+
+  /is-extendable/0.1.1:
+    resolution: {integrity: sha512-5BMULNob1vgFX6EjQw5izWDxrecWK9AM72rugNr0TFldMOi0fj6Jk+zeKIt0xGj4cEfQIJth4w3OKWOJ4f+AFw==}
+    engines: {node: '>=0.10.0'}
+    dev: false
+
+  /sax/1.2.4:
+    resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
+
+  /unescape/1.0.1:
+    resolution: {integrity: sha512-O0+af1Gs50lyH1nUu3ZyYS1cRh01Q/kUKatTOkSs7jukXE6/NebucDVxyiDsA9AQ4JC1V1jUH9EO8JX2nMDgGQ==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      extend-shallow: 2.0.1
+    dev: false
+
+  /xml-escape/1.1.0:
+    resolution: {integrity: sha512-B/T4sDK8Z6aUh/qNr7mjKAwwncIljFuUP+DO/D5hloYFj+90O88z8Wf7oSucZTHxBAsC1/CTP4rtx/x1Uf72Mg==}
+    dev: false
+
+  /xml-js/1.6.11:
+    resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
+    hasBin: true
+    dependencies:
+      sax: 1.2.4

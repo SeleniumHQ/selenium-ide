@@ -25,15 +25,15 @@ To build manually, you must have the below prerequisites installed and follow th
 
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 - [NodeJS v16 or later](https://nodejs.org/en/download/)
-- [Yarn](https://yarnpkg.com/en/docs/install)
+- [Pnpm](https://pnpm.io/installation)
 
 #### Building
 
 1. `git clone https://github.com/SeleniumHQ/selenium-ide` - Clone the IDE repo
 2. `cd selenium-ide` - Navigate into the IDE folder
-3. `yarn` - Install dependencies
-4. `yarn build` - Build the app
-5. `yarn start` - Run the app
+3. `pnpm -r i` - Install dependencies
+4. `pnpm run build` - Build the app
+5. `pnpm run start` - Run the app
 
 ## What now?
 
