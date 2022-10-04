@@ -35,7 +35,7 @@ const getDriver = ({ browser, version }: BrowserInfo) =>
     ? path.resolve(
         path.join(
           __dirname,
-          '..',
+          '..','..','..',
           'node_modules',
           'electron-chromedriver',
           'bin',
@@ -45,7 +45,7 @@ const getDriver = ({ browser, version }: BrowserInfo) =>
     : path.resolve(
         path.join(
           __dirname,
-          '..',
+          '..','..','..',
           'files',
           resolveDriverName({
             browser,
