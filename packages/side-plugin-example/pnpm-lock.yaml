@@ -1,0 +1,7 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@seleniumhq/side-runtime': ^4.0.0-alpha.1
+
+devDependencies:
+  '@seleniumhq/side-runtime': link:../side-runtime

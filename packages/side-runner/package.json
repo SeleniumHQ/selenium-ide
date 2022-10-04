@@ -21,7 +21,6 @@
     "line"
   ],
   "license": "Apache-2.0",
-  "private": false,
   "dependencies": {
     "@seleniumhq/side-model": "^4.0.0-alpha.1",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.5",

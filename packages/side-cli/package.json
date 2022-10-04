@@ -7,15 +7,11 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "scripts": {
-    "build": "babel --root-mode upward -d dist src --extensions \".js,.jsx,.ts,.tsx\" --source-maps true",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
-    "start": "node dist/index.js",
-    "watch": "yarn build -w"
+    "start": "node dist/index.js"
   },
   "main": "dist/index.js",
-  "bin": {
-    "side-cli": "dist/index.js"
-  },
+  "bin": "dist/index.js",
   "files": [
     "dist"
   ],
@@ -27,7 +23,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "devDependencies": {
-    "@babel/preset-react": "^7.0.0"
+    "@types/react": "^17.0.14"
   },
   "dependencies": {
     "@seleniumhq/side-model": "^4.0.0-alpha.0",
