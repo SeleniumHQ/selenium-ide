@@ -14,10 +14,12 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
+      - name: Install pnpm
+        run: npm i -g pnpm
       - name: Install dependencies
-        run: pnpm run install --frozen-lockfile
+        run: pnpm -r i
       - name: Install chromedriver for windows
-        run: npm_config_platform=win32 pnpm run install
+        run: npm_config_platform=win32 npm i
         working-directory: packages/selenium-ide/node_modules/electron-chromedriver
       - name: Build all JS
         run: pnpm run build
