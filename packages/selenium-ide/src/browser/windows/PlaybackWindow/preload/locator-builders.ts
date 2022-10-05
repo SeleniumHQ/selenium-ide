@@ -384,6 +384,7 @@ LocatorBuilders.add('xpath:img', function (this: LocatorBuilders, _e) {
 LocatorBuilders.add('xpath:attributes', function (this: LocatorBuilders, e) {
   const PREFERRED_ATTRIBUTES = [
     'id',
+    'textContent', //  it is not properly an "attribute"
     'name',
     'value',
     'type',
@@ -403,19 +404,22 @@ LocatorBuilders.add('xpath:attributes', function (this: LocatorBuilders, e) {
         locator += ' and '
       }
       let attName = attNames[i]
-      locator += '@' + attName + '=' + this.attributeValue(attributes[attName])
+      locator += (attName == 'textContent' ? 'text()' : '@' + attName) + '=' + this.attributeValue(attributes[attName])
     }
     locator += ']'
     return this.preciseXPath(locator, e)
   }
 
-  if (e.attributes) {
+  if (e.attributes || e.textContent) {
     let atts = e.attributes
     let attsMap: Record<string, string> = {}
     for (i = 0; i < atts.length; i++) {
       let att = atts[i]
       attsMap[att.name] = att.value
     }
+    if (e.textContent) {
+      attsMap['textContent'] = e.textContent
+    }  
     let names = []
     // try preferred attributes
     for (i = 0; i < PREFERRED_ATTRIBUTES.length; i++) {
