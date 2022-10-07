@@ -21,7 +21,6 @@ const AvailableSuiteTestList: FC<AvailableSuiteTestListProps> = ({
       borderColor: 'primary.main',
       display: 'inline-block',
       marginBottom: `${bottomOffset}px`,
-      overflowY: 'scroll',
       verticalAlign: 'top',
       width: '50%',
     }}

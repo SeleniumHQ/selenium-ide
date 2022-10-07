@@ -19,7 +19,6 @@ const ReorderableList: FC<ReorderableListProps> = ({
       sx={{
         borderColor: 'primary.main',
         marginBottom: `${bottomOffset}px`,
-        overflowY: 'scroll',
         verticalAlign: 'top',
         ...sx,
       }}
