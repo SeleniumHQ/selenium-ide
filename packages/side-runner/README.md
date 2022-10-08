@@ -8,9 +8,9 @@ Node.js is required to use the Selenium side-runner.
 The project guarantees support for the [active LTS major version](https://github.com/nodejs/Release) (e.g. [10](https://nodejs.org/en/download/) & [12](https://nodejs.org/en/download/current/)).  
 __NOTE: The minimum supported version of Node is now 10.15.0 LTS__
 
-```yarn global add @seleniumhq/side-runner```  
+```yarn global add selenium-side-runner```  
 or  
-```npm install -g @seleniumhq/side-runner```  
+```npm install -g selenium-side-runner```  
 
 ## Usage
 
