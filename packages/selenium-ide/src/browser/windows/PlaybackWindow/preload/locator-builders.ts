@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { parse_locator } from './utils'
+import { parse_locator, isVisible } from './utils'
 import finder from '@medv/finder'
 
 const findElement = require('./third-party/find-element')
@@ -58,6 +58,18 @@ export default class LocatorBuilders {
   buildAll(el: HTMLElement): [string, string][] {
     let locator
     let locators: [string, string][] = []
+
+    let root = document.body
+    let loopEl: HTMLElement | null = el
+    while (loopEl && loopEl != root) {
+      if (isVisible(loopEl)) {
+        el = loopEl
+        break
+      } else {
+        loopEl = loopEl.parentElement
+      }
+    }
+    
     for (let i = 0; i < LocatorBuilders.order.length; i++) {
       let finderName = LocatorBuilders.order[i]
       try {
