@@ -4,6 +4,7 @@
     "inlineSourceMap": true,
     "inlineSources": true,
   },
+  "exclude": ["node_modules", "packages/*/node_modules"],
   "include": [],
   "references": [
     {
