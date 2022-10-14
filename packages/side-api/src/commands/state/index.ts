@@ -3,6 +3,7 @@ import type { Shape as Get } from './get'
 import type { Shape as GetUserPrefs } from './getUserPrefs'
 import type { Shape as OnMutate } from './onMutate'
 import type { Shape as OpenTestEditor } from './openTestEditor'
+import type { Shape as Set } from './set'
 import type { Shape as SetActiveCommand } from './setActiveCommand'
 import type { Shape as SetActiveSuite } from './setActiveSuite'
 import type { Shape as SetActiveTest } from './setActiveTest'
@@ -22,6 +23,7 @@ import * as get from './get'
 import * as getUserPrefs from './getUserPrefs'
 import * as onMutate from './onMutate'
 import * as openTestEditor from './openTestEditor'
+import * as set from './set'
 import * as setActiveCommand from './setActiveCommand'
 import * as setActiveSuite from './setActiveSuite'
 import * as setActiveTest from './setActiveTest'
@@ -42,6 +44,7 @@ export const commands = {
   getUserPrefs,
   onMutate,
   openTestEditor,
+  set,
   setActiveCommand,
   setActiveSuite,
   setActiveTest,
@@ -66,6 +69,7 @@ export type Shape = {
   getUserPrefs: GetUserPrefs
   onMutate: OnMutate
   openTestEditor: OpenTestEditor
+  set: Set
   setActiveCommand: SetActiveCommand
   setActiveSuite: SetActiveSuite
   setActiveTest: SetActiveTest

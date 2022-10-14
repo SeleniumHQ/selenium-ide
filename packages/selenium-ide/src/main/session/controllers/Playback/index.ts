@@ -167,15 +167,21 @@ export default class PlaybackController extends BaseController {
     }
   }
 
-  handleCommandStateChanged = (
+  handleCommandStateChanged = async (
     e: PlaybackEventShapes['COMMAND_STATE_CHANGED']
   ) => {
     this.session.api.playback.onStepUpdate.dispatchEvent(e)
+    const cmd = e.command
+    const niceString = [cmd.command, cmd.target, cmd.value]
+      .filter((v) => !!v)
+      .join('|')
+    console.debug(`${e.state} ${niceString}`)
   }
 
   handlePlaybackStateChanged = (
     e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']
   ) => {
+    console.debug(`Playing state changed ${e.state}`)
     switch (e.state) {
       case 'aborted':
       case 'errored':

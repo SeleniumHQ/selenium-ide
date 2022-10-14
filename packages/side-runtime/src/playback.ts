@@ -228,6 +228,8 @@ export default class Playback {
       const callstack = new Callstack()
       callstack.call({
         callee: {
+          id: '1',
+          name: `Single command ${command.command} ${command.target} ${command.value}`,
           commands: [command],
         },
       })
@@ -383,6 +385,7 @@ export default class Playback {
       this[EE].emitCommandStateChange({
         id: command.id,
         callstackIndex,
+        command,
         state: CommandStates.EXECUTING,
         message: undefined,
       })
@@ -437,6 +440,7 @@ export default class Playback {
           this[EE].emitCommandStateChange({
             id: command.id,
             callstackIndex,
+            command,
             state: CommandStates.FAILED,
             message: err.message,
           })
@@ -448,6 +452,7 @@ export default class Playback {
           this[EE].emitCommandStateChange({
             id: command.id,
             callstackIndex,
+            command,
             state: CommandStates.FAILED,
             message: err.message,
           })
@@ -463,6 +468,7 @@ export default class Playback {
           this[EE].emitCommandStateChange({
             id: command.id,
             callstackIndex,
+            command,
             state: CommandStates.ERRORED,
             message: (err as Error).message,
           })
@@ -475,6 +481,7 @@ export default class Playback {
       this[EE].emitCommandStateChange({
         id: command.id,
         callstackIndex,
+        command,
         state: result.skipped ? CommandStates.SKIPPED : CommandStates.PASSED,
         message: undefined,
       })
@@ -493,6 +500,7 @@ export default class Playback {
     this[EE].emitCommandStateChange({
       id: command.id,
       callstackIndex,
+      command,
       state: CommandStates.EXECUTING,
       message: undefined,
     })
@@ -505,6 +513,7 @@ export default class Playback {
         this[EE].emitCommandStateChange({
           id: command.id,
           callstackIndex,
+          command,
           state: CommandStates.FAILED,
           message: err.message,
         })
@@ -512,6 +521,7 @@ export default class Playback {
         this[EE].emitCommandStateChange({
           id: command.id,
           callstackIndex,
+          command,
           state: CommandStates.ERRORED,
           message: (err as Error).message,
         })
@@ -521,6 +531,7 @@ export default class Playback {
     this[EE].emitCommandStateChange({
       id: command.id,
       callstackIndex,
+      command,
       state: result.skipped ? CommandStates.SKIPPED : CommandStates.PASSED,
       message: undefined,
     })
@@ -587,6 +598,7 @@ export default class Playback {
       this[EE].emitCommandStateChange({
         id,
         callstackIndex,
+        command: this[state].lastSentCommandState.command,
         state: CommandStates.ERRORED,
         message: 'Playback stopped',
       })
@@ -714,6 +726,7 @@ export interface PlaybackEventShapes {
   COMMAND_STATE_CHANGED: {
     id: string
     callstackIndex?: number
+    command: CommandShape
     state: typeof CommandStates[keyof typeof CommandStates]
     message?: string
   }
@@ -722,7 +735,7 @@ export interface PlaybackEventShapes {
   }
   CALL_STACK_CHANGED: {
     change: typeof CallstackChange[keyof typeof CallstackChange]
-    callee: Pick<TestShape, 'commands'>
+    callee: TestShape
     caller: Caller
   }
   CONTROL_FLOW_CHANGED: {

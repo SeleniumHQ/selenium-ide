@@ -10,6 +10,7 @@ import { CommandsStateShape } from './command'
  */
 
 export interface EditorStateShape {
+  configSettingsGroup: ConfigSettingsGroup
   copiedCommands: Omit<CommandShape, 'id'>[]
   selectedCommandIndexes: number[]
   selectedTestIndexes: number[]
@@ -17,6 +18,7 @@ export interface EditorStateShape {
 }
 
 export const defaultEditorState: EditorStateShape = {
+  configSettingsGroup: 'project',
   copiedCommands: [],
   selectedCommandIndexes: [],
   selectedTestIndexes: [],
@@ -31,6 +33,7 @@ export const defaultRecorderState: RecorderStateShape = {
   activeFrame: 'root',
 }
 
+export type ConfigSettingsGroup = 'project' | 'system'
 export type VerboseBoolean = 'Yes' | 'No'
 export type InsertCommandPref = 'Before' | 'After'
 export type ThemePref = 'Dark' | 'Light' | 'System'

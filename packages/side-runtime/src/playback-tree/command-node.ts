@@ -84,24 +84,22 @@ export class CommandNode {
     return Boolean(this.command.skip || this.command.command.startsWith('//'))
   }
 
-  execute(commandExecutor: WebDriverExecutor, args?: CommandExecutorOptions) {
+  async execute(
+    commandExecutor: WebDriverExecutor,
+    args?: CommandExecutorOptions
+  ) {
     if (this._isRetryLimit()) {
-      return Promise.reject(
-        new Error(
-          'Max retry limit exceeded. To override it, specify a new limit in the value input field.'
-        )
+      throw new Error(
+        'Max retry limit exceeded. To override it, specify a new limit in the value input field.'
       )
     }
     if (this.shouldSkip()) {
-      return Promise.resolve(this._executionResult({ skipped: true }))
+      return this._executionResult({ skipped: true })
     }
-    return commandExecutor.beforeCommand(this.command).then(() => {
-      return this._executeCommand(commandExecutor, args).then((result: any) => {
-        return commandExecutor.afterCommand(this.command).then(() => {
-          return this._executionResult(result)
-        })
-      })
-    })
+    await commandExecutor.beforeCommand(this.command)
+    const result = await this._executeCommand(commandExecutor, args)
+    await commandExecutor.afterCommand(this.command)
+    return this._executionResult(result)
   }
 
   async _executeCommand(
@@ -109,11 +107,11 @@ export class CommandNode {
     { executorOverride }: CommandExecutorOptions = {}
   ) {
     if (executorOverride) {
-      return executorOverride(this.command.target, this.command.value)
+      return await executorOverride(this.command.target, this.command.value)
     } else if (this.isControlFlow()) {
-      return Promise.resolve(this._evaluate(commandExecutor))
+      return this._evaluate(commandExecutor)
     } else if (this.isTerminal()) {
-      return Promise.resolve()
+      return
     } else {
       const customCommand = commandExecutor.customCommands[this.command.command]
       if (customCommand) {
@@ -156,9 +154,9 @@ export class CommandNode {
     const { command } = this
     const { target, value } = command
     return await this.retryCommand(
-      async () =>
+      () =>
         // @ts-expect-error webdriver is too kludged by here
-        await commandExecutor[commandExecutor.name(this.command.command)](
+        commandExecutor[commandExecutor.name(this.command.command)](
           target,
           value,
           command

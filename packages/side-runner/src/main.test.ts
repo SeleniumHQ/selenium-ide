@@ -17,7 +17,6 @@
 
 import each from 'jest-each'
 import fs from 'fs'
-import util from 'util'
 import glob from 'glob'
 import { createLogger, format, transports } from 'winston'
 import { Configuration, Project } from './types'
@@ -28,6 +27,18 @@ import { SuiteShape, TestShape } from '@seleniumhq/side-model'
 const metadata = require('../package.json')
 
 process.title = metadata.name
+
+// Capture and show unhandled exceptions
+process.on('unhandledRejection', function handleWarning(reason) {
+  console.log('[PROCESS] Unhandled Promise Rejection')
+  console.log('- - - - - - - - - - - - - - - - - - -')
+  console.log(reason)
+  console.log('- -')
+})
+
+process.on('uncaughtException', (error) => {
+  console.error('Unhandled Error', error)
+})
 
 const configuration: Configuration = JSON.parse(
   process.env.SE_CONFIGURATION as string
@@ -45,8 +56,6 @@ const logger = createLogger({
     }),
   ],
 })
-
-logger.debug(util.inspect(configuration))
 
 const projectTitle = 'Running project $name'
 const suiteTitle = 'Running suite $name'

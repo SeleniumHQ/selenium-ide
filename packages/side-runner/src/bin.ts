@@ -176,7 +176,7 @@ configuration.baseUrl = options.baseUrl
   ? options.baseUrl
   : configuration.baseUrl
 
-options.debug && console.debug(util.inspect(configuration))
+options.debug && console.debug('Configuration:', util.inspect(configuration))
 
 const jestExecutable = isWindows ? 'jest.cmd' : 'jest'
 spawn(

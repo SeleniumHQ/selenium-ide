@@ -9,7 +9,7 @@ import AppBar from './components/AppBar'
 import Drawer from './components/Drawer'
 import Main from './components/Main'
 import renderWhenReady from 'browser/helpers/renderWhenReady'
-import { PROJECT_TAB, TAB, TESTS_TAB } from './enums/tab'
+import { TAB, TESTS_TAB } from './enums/tab'
 
 const ProjectEditor = () => {
   const session = subscribeToSession()
@@ -18,8 +18,7 @@ const ProjectEditor = () => {
   } = session
 
   const [tab, setTab] = React.useState<TAB>(TESTS_TAB)
-  const [_openDrawer, setOpenDrawer] = React.useState(true)
-  const openDrawer = _openDrawer && tab !== PROJECT_TAB
+  const [openDrawer, setOpenDrawer] = React.useState(true)
 
   if (id == loadingID) {
     return <div id="loading" />

@@ -25,7 +25,7 @@ import {
   WebDriverExecutor,
 } from '@seleniumhq/side-runtime'
 import { WebDriverExecutorConstructorArgs } from '@seleniumhq/side-runtime/dist/webdriver'
-import { CommandShape, SuiteShape, TestShape } from '@seleniumhq/side-model'
+import { SuiteShape, TestShape } from '@seleniumhq/side-model'
 import * as path from 'path'
 import Satisfies from './versioner'
 import { Configuration, Project } from './types'
@@ -106,8 +106,11 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
         )
         EE.addListener(
           PlaybackEvents.COMMAND_STATE_CHANGED,
-          ({ id, state }: PlaybackEventShapes['COMMAND_STATE_CHANGED']) => {
-            const cmd = test.commands.find((c) => c.id === id) as CommandShape
+          ({
+            command,
+            state,
+          }: PlaybackEventShapes['COMMAND_STATE_CHANGED']) => {
+            const cmd = command
             const niceString = [cmd.command, cmd.target, cmd.value]
               .filter((v) => !!v)
               .join('|')

@@ -28,7 +28,7 @@ export interface Caller {
 }
 
 export interface CallShape {
-  callee: Partial<TestShape>
+  callee: TestShape
   caller?: Caller
 }
 
