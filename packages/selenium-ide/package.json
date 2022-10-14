@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "4.0.0-alpha.12",
+  "version": "4.0.0-alpha.13",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -100,7 +100,7 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
     "@seleniumhq/get-driver": "^4.0.0-alpha.1",
-    "@seleniumhq/side-api": "^4.0.0-alpha.2",
+    "@seleniumhq/side-api": "^4.0.0-alpha.3",
     "@seleniumhq/side-model": "^4.0.0-alpha.1",
     "@seleniumhq/side-plugin-example": "^4.0.0-alpha.1",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.5",
