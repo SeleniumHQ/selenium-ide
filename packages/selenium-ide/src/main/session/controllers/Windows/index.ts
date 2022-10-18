@@ -173,8 +173,15 @@ export default class WindowsController extends BaseController {
     window.on('closed', () => this.removePlaybackWIndow(window))
   }
 
-  removePlaybackWIndow(window: Electron.BrowserWindow) {
+  async removePlaybackWIndow(window: Electron.BrowserWindow) {
     this.playbackWindows.splice(this.playbackWindows.indexOf(window), 1)
+    if (this.playbackWindows.length == 0) {
+      if (this.session.state.state.status == 'recording') {
+        await this.session.api.recorder.stop()
+      } else {
+        await this.session.api.playback.stop()
+      }
+    }
   }
 
   async onProjectLoaded() {
