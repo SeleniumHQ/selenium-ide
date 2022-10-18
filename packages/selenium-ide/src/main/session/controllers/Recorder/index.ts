@@ -104,12 +104,18 @@ export default class RecorderController extends BaseController {
   }
 
   async start(): Promise<string | null> {
-    const playbackWindow = await this.session.windows.getLastPlaybackWindow()
-    const playbackURL = playbackWindow.webContents.getURL()
-    if (
-      playbackURL.startsWith('file://') &&
-      playbackURL.endsWith('/playback-window.html')
-    ) {
+    var playbackWindow = await this.session.windows.getLastPlaybackWindow()
+    var inited = false
+    if (playbackWindow) {
+      const playbackURL = playbackWindow.webContents.getURL()
+      inited = !(playbackURL.startsWith('file://') && playbackURL.endsWith('/playback-window.html'))
+    } else {
+      await this.session.windows.initializePlaybackWindow()
+      playbackWindow = await this.session.windows.getLastPlaybackWindow()
+      inited = false
+    } 
+    
+    if (!inited) {
       // Needs to open a URL, if on an open command, just use that
       // Otherwise add an open command to the record commands
       const state = await this.session.state.get()
