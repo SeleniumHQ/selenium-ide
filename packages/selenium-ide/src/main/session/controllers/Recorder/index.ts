@@ -104,8 +104,8 @@ export default class RecorderController extends BaseController {
   }
 
   async start(): Promise<string | null> {
-    var playbackWindow = await this.session.windows.getLastPlaybackWindow()
-    var inited = false
+    let playbackWindow = await this.session.windows.getLastPlaybackWindow()
+    let inited = false
     if (playbackWindow) {
       const playbackURL = playbackWindow.webContents.getURL()
       inited = !(playbackURL.startsWith('file://') && playbackURL.endsWith('/playback-window.html'))
