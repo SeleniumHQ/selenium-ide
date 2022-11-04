@@ -16,7 +16,7 @@
     "watch": "tsc --watch"
   },
   "devDependencies": {
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.1"
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.7"
   },
   "repository": {
     "type": "git",

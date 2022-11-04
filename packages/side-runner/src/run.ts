@@ -43,6 +43,14 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
       .slice(0, -1)
       .join(path.sep)
     const plugins = await loadPlugins(shortenedProjectPath, project.plugins)
+    await Promise.all(
+      plugins.map(async (plugin) => {
+        const onBeforePlay = plugin.hooks.onBeforePlayAll
+        if (onBeforePlay) {
+          await onBeforePlay()
+        }
+      })
+    )
     const customCommands = getCustomCommands(plugins)
     const driver = new WebDriverExecutor({
       capabilities:
