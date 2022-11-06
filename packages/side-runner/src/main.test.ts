@@ -23,7 +23,7 @@ import { createLogger, format, transports } from 'winston'
 import { Configuration, Project } from './types'
 import buildRegister from './register'
 import buildRunners from './run'
-import { SuiteShape, TestShape } from '@seleniumhq/side-model'
+import { ProjectShape, SuiteShape, TestShape } from '@seleniumhq/side-model'
 import { loadPlugins, PluginShape } from '@seleniumhq/side-runtime'
 
 const metadata = require('../package.json')
@@ -76,7 +76,26 @@ const projects: Project[] = [
     project.path = p
     return project
   })
-  .filter((p) => Boolean(p))
+  .filter((p: ProjectShape) => {
+    const projectIsFound = Boolean(p)
+    if (projectIsFound) {
+      const hasSuites = p.suites.filter(
+        (suite) =>
+          suite.tests.length &&
+          new RegExp(configuration.filter).test(suite.name)
+      ).length
+      if (hasSuites) {
+        return true
+      }
+      const hasTests = p.tests.filter((test) =>
+        new RegExp(configuration.filter).test(test.name)
+      ).length
+      if (hasTests) {
+        return true
+      }
+    }
+    return false
+  })
 
 if (!projects.length) {
   throw new Error(
