@@ -59,6 +59,7 @@ export type OnCommandRecordedResult =
 
 export interface PluginHooks extends WebDriverExecutorHooks {
   onBeforePlayAll?: () => Promise<void>
+  onAfterPlayAll?: () => Promise<void>
   onMessage?: (...args: any[]) => void
 }
 

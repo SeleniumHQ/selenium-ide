@@ -24,7 +24,7 @@ import { Configuration, Project } from './types'
 import buildRegister from './register'
 import buildRunners from './run'
 import { SuiteShape, TestShape } from '@seleniumhq/side-model'
-import { loadPlugins } from '@seleniumhq/side-runtime'
+import { loadPlugins, PluginShape } from '@seleniumhq/side-runtime'
 
 const metadata = require('../package.json')
 
@@ -91,18 +91,29 @@ const factoryParams = {
 }
 const register = buildRegister(factoryParams)
 const runners = buildRunners(factoryParams)
+let plugins: PluginShape[] = []
 each(projects).describe(projectTitle, (project: Project) => {
   beforeAll(async () => {
     const shortenedProjectPath = project.path
       .split(path.sep)
       .slice(0, -1)
       .join(path.sep)
-    const plugins = await loadPlugins(shortenedProjectPath, project.plugins)
+    plugins = await loadPlugins(shortenedProjectPath, project.plugins)
     await Promise.all(
       plugins.map(async (plugin) => {
-        const onBeforePlay = plugin.hooks.onBeforePlayAll
-        if (onBeforePlay) {
-          await onBeforePlay()
+        const hook = plugin.hooks.onBeforePlayAll
+        if (hook) {
+          await hook()
+        }
+      })
+    )
+  })
+  afterAll(async () => {
+    await Promise.all(
+      plugins.map(async (plugin) => {
+        const hook = plugin.hooks.onAfterPlayAll
+        if (hook) {
+          await hook()
         }
       })
     )
