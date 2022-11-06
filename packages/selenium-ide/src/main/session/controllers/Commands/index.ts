@@ -19,7 +19,7 @@ export default class CommandsController extends BaseController {
     this.customCommands = this.session.plugins.plugins.reduce(
       (commands, plugin) => ({
         ...commands,
-        ...plugin.commands,
+        ...plugin.commands || {},
       }),
       {}
     )

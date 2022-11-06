@@ -225,8 +225,7 @@ export default {
   },
   echo: {
     name: 'echo',
-    description: `Prints the specified message into the third table cell in 
-        your Selenese tables. Useful for debugging.`,
+    description: `Prints the specified message. Useful for debugging.`,
     target: ArgTypes.message,
   },
   editContent: {

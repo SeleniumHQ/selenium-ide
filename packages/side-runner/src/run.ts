@@ -67,7 +67,7 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
       // eslint-disable-next-line no-async-promise-executor
       return new Promise(async (resolve, reject) => {
         const playback = new Playback({
-          baseUrl: project.url,
+          baseUrl: configuration.baseUrl || project.url,
           executor: driver,
           getTestByName: (name: string) =>
             project.tests.find((t) => t.name === name) as TestShape,
