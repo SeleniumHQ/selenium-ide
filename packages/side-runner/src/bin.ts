@@ -44,8 +44,8 @@ program
   .version(metadata.version)
   .option('--base-url [url]', 'Override the base URL that was set in the IDE')
   .option('-c, --capabilities [list]', 'Webdriver capabilities')
+  .option('-j, --jest-options [list]', 'Options to configure Jest')
   .option('-s, --server [url]', 'Webdriver remote server')
-  .option('-p, --params [list]', 'General parameters')
   .option(
     '-f, --filter [string]',
     'Run suites matching name, takes a regex without slashes, eg (^(hello|goodbye).*$)'
@@ -101,7 +101,6 @@ const configuration: Configuration = {
   filter: '.*',
   force: options.force,
   maxWorkers: options.maxWorkers,
-  params: {},
   // Convert all project paths into absolute paths
   projects: program.args.map((arg) => {
     if (path.isAbsolute(arg)) return arg
@@ -134,14 +133,6 @@ if (options.capabilities) {
     configuration.capabilities = Capabilities.parseString(options.capabilities)
   } catch (e) {
     options.debug && console.debug('Failed to parse inline capabilities')
-  }
-}
-
-if (options.params) {
-  try {
-    configuration.params = Capabilities.parseString(options.params)
-  } catch (e) {
-    options.debug && console.debug('Failed to parse additional params')
   }
 }
 
@@ -178,24 +169,31 @@ configuration.baseUrl = options.baseUrl
 
 options.debug && console.debug('Configuration:', util.inspect(configuration))
 
+// All the stuff that goes into a big wrapped jest command
 const jestExecutable = isWindows ? 'jest.cmd' : 'jest'
-spawn(
-  path.join(__dirname, '..', 'node_modules', '.bin', jestExecutable),
-  [
-    '--config=' + path.join(__dirname, '..', 'jest.config.js'),
-    '--maxConcurrency=' + configuration.maxWorkers,
-    '--runTestsByPath',
-    path.join(__dirname, 'main.test.js'),
-  ],
-  {
-    env: {
-      ...process.env,
-      SE_CONFIGURATION: JSON.stringify(configuration),
-    },
-    shell: true,
-    stdio: 'inherit',
-  }
-).on('exit', (code) => {
+const jestCommand = path.join(
+  __dirname,
+  '..',
+  'node_modules',
+  '.bin',
+  jestExecutable
+)
+const jestArgs = [
+  '--config=' + path.join(__dirname, '..', 'jest.config.js'),
+  '--maxConcurrency=' + configuration.maxWorkers,
+]
+  .concat(options.jestOptions ? options.jestOptions.split(' ') : [])
+  .concat(['--runTestsByPath', path.join(__dirname, 'main.test.js')])
+
+const jestEnv = {
+  ...process.env,
+  SE_CONFIGURATION: JSON.stringify(configuration),
+}
+spawn(jestCommand, jestArgs, {
+  env: jestEnv,
+  shell: true,
+  stdio: 'inherit',
+}).on('exit', (code) => {
   // This is my bin, my process
   // eslint-disable-next-line no-process-exit
   process.exit(code as number)

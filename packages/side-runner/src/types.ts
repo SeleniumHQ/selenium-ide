@@ -49,10 +49,10 @@ export interface SideRunnerCLIConfig {
   filter: string
   // Forcibly run the project, regardless of project's version
   force: boolean
+  // Options to configure Jest
+  jestOptions: string
   // Maximum amount of workers that will run your tests, defaults to number of cores
   maxWorkers: number
-  // General parameters
-  params: string
   // Proxy options to pass, for use with manual, pac and socks proxies
   proxyOptions?: string
   // Type of proxy to use (one of: direct, manual, pac, socks, system)
@@ -74,7 +74,6 @@ export type Configuration = Required<
 > &
   Pick<SideRunnerCLIConfig, 'debug' | 'force' | 'proxyType'> & {
     capabilities: Record<string, JSON>
-    params: Record<string, JSON>
     projects: string[]
     proxyOptions: ProxyInputOptions
     runId: string
