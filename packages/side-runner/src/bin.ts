@@ -17,6 +17,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import merge from 'lodash/fp/merge'
 import os from 'os'
 import path from 'path'
 import crypto from 'crypto'
@@ -131,7 +132,10 @@ configuration.server = options.server ? options.server : configuration.server
 
 if (options.capabilities) {
   try {
-    configuration.capabilities = Capabilities.parseString(options.capabilities)
+    configuration.capabilities = merge(
+      configuration.capabilities,
+      Capabilities.parseString(options.capabilities)
+    )
   } catch (e) {
     options.debug && console.debug('Failed to parse inline capabilities')
   }
