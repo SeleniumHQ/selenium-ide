@@ -1175,7 +1175,7 @@ export default class WebDriverExecutor {
 
   async doEcho(string: string) {
     if (this.logger) {
-      this.logger.log(`echo: ${string}`)
+      this.logger.info(`echo: ${string}`)
     }
   }
 

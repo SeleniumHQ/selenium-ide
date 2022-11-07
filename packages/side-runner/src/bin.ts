@@ -44,7 +44,11 @@ program
   .version(metadata.version)
   .option('--base-url [url]', 'Override the base URL that was set in the IDE')
   .option('-c, --capabilities [list]', 'Webdriver capabilities')
-  .option('-j, --jest-options [list]', 'Options to configure Jest')
+  .option(
+    '-j, --jest-options [list]',
+    'Options to configure Jest, wrap in extra quotes to allow shell to process',
+    '""'
+  )
   .option('-s, --server [url]', 'Webdriver remote server')
   .option(
     '-f, --filter [string]',
@@ -98,7 +102,7 @@ const configuration: Configuration = {
     browserName: 'chrome',
   },
   debug: options.debug,
-  filter: '.*',
+  filter: options.filter || '.*',
   force: options.force,
   maxWorkers: options.maxWorkers,
   // Convert all project paths into absolute paths
@@ -123,9 +127,6 @@ try {
   options.debug && console.debug('Could not load ' + configFilePath)
 }
 
-if (options.filter) {
-  configuration.filter = options.filter
-}
 configuration.server = options.server ? options.server : configuration.server
 
 if (options.capabilities) {
@@ -182,13 +183,15 @@ const jestArgs = [
   '--config=' + path.join(__dirname, '..', 'jest.config.js'),
   '--maxConcurrency=' + configuration.maxWorkers,
 ]
-  .concat(options.jestOptions ? options.jestOptions.split(' ') : [])
+  .concat(options.jestOptions.slice(1, -1).split(' '))
   .concat(['--runTestsByPath', path.join(__dirname, 'main.test.js')])
 
 const jestEnv = {
   ...process.env,
   SE_CONFIGURATION: JSON.stringify(configuration),
 }
+
+options.debug && console.debug('Jest command:', jestCommand, jestArgs, jestEnv)
 spawn(jestCommand, jestArgs, {
   env: jestEnv,
   shell: true,
