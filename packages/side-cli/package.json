@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-cli",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.1",
   "private": true,
   "description": "Selenium IDE cli",
   "author": "Tomer <tomer@corevo.io>",

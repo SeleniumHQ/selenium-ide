@@ -18,6 +18,7 @@
 import { ProjectShape, TestShape } from '@seleniumhq/side-model'
 import {
   getCustomCommands,
+  correctPluginPaths,
   loadPlugins,
   Playback,
   Variables,
@@ -39,7 +40,9 @@ const main = async () => {
     fs.readFileSync(projectPath).toString()
   )
 
-  const plugins = await loadPlugins(projectPath, project.plugins)
+  const plugins = await loadPlugins(
+    correctPluginPaths(projectPath, project.plugins)
+  )
   const customCommands = getCustomCommands(plugins)
   const executor = new WebDriverExecutor({
     customCommands,
