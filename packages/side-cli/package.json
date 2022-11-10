@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-cli",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "private": true,
   "description": "Selenium IDE cli",
   "author": "Tomer <tomer@corevo.io>",
@@ -26,8 +26,8 @@
     "@types/react": "^17.0.14"
   },
   "dependencies": {
-    "@seleniumhq/side-model": "^4.0.0-alpha.0",
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.0",
+    "@seleniumhq/side-model": "^4.0.0-alpha.1",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.11",
     "ink": "^3.2.0",
     "ink-select-input": "^4.2.1",
     "ink-spinner": "^4.0.3",
