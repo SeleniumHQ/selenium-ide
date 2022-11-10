@@ -1,7 +1,6 @@
-import { loadPlugins, PluginShape } from '@seleniumhq/side-runtime'
+import { correctPluginPaths, loadPlugins, PluginShape } from '@seleniumhq/side-runtime'
 import { ipcMain } from 'electron'
 import storage from 'main/store'
-import { sep } from 'path'
 import BaseController from '../Base'
 
 export type PluginMessageHandler = (
@@ -16,14 +15,14 @@ export default class PluginsController extends BaseController {
   pluginHooks: PluginHooksState[] = []
   async list() {
     const systemPlugins = storage.get<'plugins'>('plugins')
-    const project = await this.session.projects.getActive()
-    return systemPlugins.concat(project.plugins)
+    const projectPath = this.session.projects.filepath as string
+    const activeProject = await this.session.projects.getActive()
+    return systemPlugins
+      .concat(correctPluginPaths(projectPath, activeProject.plugins))
   }
   async onProjectLoaded() {
-    const projectPath = this.session.projects.filepath as string
     const pluginPaths = await this.list()
     const plugins = await loadPlugins(
-      projectPath.split(sep).slice(0, -1).join(sep),
       pluginPaths,
       __non_webpack_require__
     )

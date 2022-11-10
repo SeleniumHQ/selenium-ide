@@ -16,6 +16,7 @@
 // under the License.
 
 import {
+  correctPluginPaths,
   getCustomCommands,
   loadPlugins,
   Playback,
@@ -26,7 +27,6 @@ import {
 } from '@seleniumhq/side-runtime'
 import { WebDriverExecutorConstructorArgs } from '@seleniumhq/side-runtime/dist/webdriver'
 import { SuiteShape, TestShape } from '@seleniumhq/side-model'
-import * as path from 'path'
 import Satisfies from './versioner'
 import { Configuration, Project } from './types'
 
@@ -38,11 +38,8 @@ export interface HoistedThings {
 const buildRunners = ({ configuration, logger }: HoistedThings) => {
   const runTest = async (project: Project, test: TestShape) => {
     logger.info(`Running test ${test.name}`)
-    const shortenedProjectPath = project.path
-      .split(path.sep)
-      .slice(0, -1)
-      .join(path.sep)
-    const plugins = await loadPlugins(shortenedProjectPath, project.plugins)
+    const pluginPaths = correctPluginPaths(project.path, project.plugins)
+    const plugins = await loadPlugins(pluginPaths)
     const customCommands = getCustomCommands(plugins)
     const driver = new WebDriverExecutor({
       capabilities:

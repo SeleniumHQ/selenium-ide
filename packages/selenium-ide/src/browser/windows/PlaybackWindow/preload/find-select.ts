@@ -40,7 +40,6 @@ function processSelectionCommand(
   selecting: RequestSelectElementHandlerParams[0],
   field: RequestSelectElementHandlerParams[1]
 ): void {
-  console.log('Did we get here somehow?', selecting, field)
   if (selecting) {
     startSelection(field)
   } else {

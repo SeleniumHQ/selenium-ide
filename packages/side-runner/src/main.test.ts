@@ -18,13 +18,16 @@
 import each from 'jest-each'
 import fs from 'fs'
 import glob from 'glob'
-import path from 'path'
 import { createLogger, format, transports } from 'winston'
 import { Configuration, Project } from './types'
 import buildRegister from './register'
 import buildRunners from './run'
 import { ProjectShape, SuiteShape, TestShape } from '@seleniumhq/side-model'
-import { loadPlugins } from '@seleniumhq/side-runtime'
+import {
+  correctPluginPaths,
+  loadPlugins,
+  PluginHooks,
+} from '@seleniumhq/side-runtime'
 
 const metadata = require('../package.json')
 
@@ -111,36 +114,20 @@ const factoryParams = {
 const register = buildRegister(factoryParams)
 const runners = buildRunners(factoryParams)
 each(projects).describe(projectTitle, (project: Project) => {
-  beforeAll(async () => {
-    const shortenedProjectPath = project.path
-      .split(path.sep)
-      .slice(0, -1)
-      .join(path.sep)
-    const plugins = await loadPlugins(shortenedProjectPath, project.plugins)
+  const pluginPaths = correctPluginPaths(project.path, project.plugins)
+  const runHook = (hookName: keyof PluginHooks) => async () => {
+    const plugins = await loadPlugins(pluginPaths)
     await Promise.all(
       plugins.map(async (plugin) => {
-        const hook = plugin.hooks.onBeforePlayAll
+        const hook = plugin.hooks[hookName]
         if (hook) {
-          await hook()
+          await hook({ ...factoryParams, project })
         }
       })
     )
-  })
-  afterAll(async () => {
-    const shortenedProjectPath = project.path
-      .split(path.sep)
-      .slice(0, -1)
-      .join(path.sep)
-    const plugins = await loadPlugins(shortenedProjectPath, project.plugins)
-    await Promise.all(
-      plugins.map(async (plugin) => {
-        const hook = plugin.hooks.onAfterPlayAll
-        if (hook) {
-          await hook()
-        }
-      })
-    )
-  })
+  }
+  beforeAll(runHook('onBeforePlayAll'))
+  afterAll(runHook('onAfterPlayAll'))
   const suites = project.suites.filter(
     (suite) =>
       suite.tests.length && new RegExp(configuration.filter).test(suite.name)

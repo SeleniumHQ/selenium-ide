@@ -1,20 +1,26 @@
 import path from 'path'
 import { CustomCommandShape, PluginShape } from './types'
 
-export const loadPlugins = async (
+export const correctPluginPaths = (
   projectPath: string,
-  plugins: string[],
+  plugins: string[]
+): string[] => {
+  const projectDir = projectPath.split(path.sep).slice(0, -1).join(path.sep)
+  return plugins.map((pluginPath) =>
+    pluginPath.startsWith('.') ? path.join(projectDir, pluginPath) : pluginPath
+  )
+}
+
+export const loadPlugins = async (
+  pluginPaths: string[],
   importer?: (fileOrModule: string) => any
 ): Promise<PluginShape[]> =>
   Promise.all(
-    plugins.map(async (pluginPath) => {
-      const correctedPluginPath = pluginPath.startsWith('.')
-        ? path.join(projectPath, pluginPath)
-        : pluginPath
-      console.debug('Loading plugin from path...', correctedPluginPath)
+    pluginPaths.map(async (pluginPath) => {
+      console.debug('Loading plugin from path...', pluginPath)
       let pluginFile = importer
-        ? await importer(correctedPluginPath)
-        : await import(correctedPluginPath)
+        ? await importer(pluginPath)
+        : await import(pluginPath)
       const plugin: PluginShape = pluginFile.default
         ? pluginFile.default
         : pluginFile
