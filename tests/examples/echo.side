@@ -1,0 +1,49 @@
+{
+  "id": "8e43685a-112a-455b-a6b2-748a19071100",
+  "version": "2.0",
+  "name": "Echo",
+  "url": "https://www.google.com",
+  "tests": [
+    {
+      "id": "58cc1d1f-7920-47ee-a0eb-336a3ebdf069",
+      "name": "Plugin Commands",
+      "commands": [
+        {
+          "id": "161321ce-3c63-4283-989e-d20117a97eb8",
+          "comment": "",
+          "command": "open",
+          "target": "/webhp",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "command": "executeScript",
+          "target": "return 1234",
+          "value": "number",
+          "id": "b2238e84-b49e-4a60-8fe5-f7add3302875"
+        },
+        {
+          "command": "echo",
+          "target": "This is a test string ${number}",
+          "value": "",
+          "id": "9e61266a-9cb0-49b6-b5bf-a362bd181b58"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "87b889f7-70eb-4a6c-a97b-297c27cbad73",
+      "name": "checks",
+      "parallel": false,
+      "timeout": 3000,
+      "tests": [
+        "58cc1d1f-7920-47ee-a0eb-336a3ebdf069"
+      ]
+    }
+  ],
+  "urls": [
+    "https://www.google.com/"
+  ],
+  "plugins": []
+}

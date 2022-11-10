@@ -246,6 +246,7 @@ importers:
       '@types/webpack-env': ^1.16.0
       copy-webpack-plugin: ^10.2.4
       css-loader: ^6.1.0
+      dnd-core: 16.0.1
       electron: ^18.3.14
       electron-builder: ^23.5.1
       electron-chromedriver: ^18.0.0
@@ -287,6 +288,7 @@ importers:
       '@seleniumhq/side-model': link:../side-model
       '@seleniumhq/side-plugin-example': link:../side-plugin-example
       '@seleniumhq/side-runtime': link:../side-runtime
+      dnd-core: 16.0.1
       electron-chromedriver: 18.0.0
       electron-log: 4.4.8
       electron-store: 8.1.0
@@ -459,13 +461,13 @@ importers:
       '@seleniumhq/side-model': ^4.0.0-alpha.1
       '@seleniumhq/side-testkit': ^4.0.0-alpha.1
       '@seleniumhq/webdriver-testkit': ^4.0.0-alpha.1
-      '@types/selenium-webdriver': ^4.1.5
-      selenium-webdriver: ^4.4.0
+      '@types/selenium-webdriver': ^4.1.9
+      selenium-webdriver: ^4.6.0
     dependencies:
       '@seleniumhq/side-commons': link:../side-commons
       '@seleniumhq/side-model': link:../side-model
-      '@types/selenium-webdriver': 4.1.5
-      selenium-webdriver: 4.5.0
+      '@types/selenium-webdriver': 4.1.9
+      selenium-webdriver: 4.6.0
     devDependencies:
       '@seleniumhq/side-testkit': link:../side-testkit
       '@seleniumhq/webdriver-testkit': link:../webdriver-testkit
@@ -484,17 +486,17 @@ importers:
       '@seleniumhq/browser-info': ^4.0.0-alpha.1
       '@seleniumhq/get-driver': ^4.0.0-alpha.1
       '@types/fs-extra': ^8.0.1
-      '@types/selenium-webdriver': ^4.1.5
+      '@types/selenium-webdriver': ^4.1.9
       fs-extra: ^8.1.0
-      selenium-webdriver: ^4.4.0
+      selenium-webdriver: ^4.6.0
     dependencies:
       '@seleniumhq/browser-info': link:../browser-info
       '@seleniumhq/get-driver': link:../get-driver
       fs-extra: 8.1.0
     devDependencies:
       '@types/fs-extra': 8.1.2
-      '@types/selenium-webdriver': 4.1.5
-      selenium-webdriver: 4.5.0
+      '@types/selenium-webdriver': 4.1.9
+      selenium-webdriver: 4.6.0
 
 packages:
 
@@ -2544,8 +2546,16 @@ packages:
     resolution: {integrity: sha512-kLy0PJDDwvwwTXxqTFNAAllPHD73AycE9ypWeln/IguoGBEbvFcPDbCV03G52bEcC5E+YgupBE0VzHGdC8SIXg==}
     dev: false
 
+  /@react-dnd/asap/5.0.2:
+    resolution: {integrity: sha512-WLyfoHvxhs0V9U+GTsGilGgf2QsPl6ZZ44fnv0/b8T3nQyvzxidxsg/ZltbWssbsRDlYW8UKSQMTGotuTotZ6A==}
+    dev: false
+
   /@react-dnd/invariant/3.0.1:
     resolution: {integrity: sha512-blqduwV86oiKw2Gr44wbe3pj3Z/OsXirc7ybCv9F/pLAR+Aih8F3rjeJzK0ANgtYKv5lCpkGVoZAeKitKDaD/g==}
+    dev: false
+
+  /@react-dnd/invariant/4.0.2:
+    resolution: {integrity: sha512-xKCTqAK/FFauOM9Ta2pswIyT3D8AQlfrYdOi/toTPEhqCuAs1v5tcJ3Y08Izh1cJ5Jchwy9SeAXmMg6zrKs2iw==}
     dev: false
 
   /@react-dnd/shallowequal/3.0.1:
@@ -2895,8 +2905,8 @@ packages:
   /@types/scheduler/0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
-  /@types/selenium-webdriver/4.1.5:
-    resolution: {integrity: sha512-Lfu97JK5b2jAxCUHH8uMjmhUiQZCGDyVzSAskFFZuWcprtcwjMkEPZE/SiIM5hOGQJVs982BAF26a3kmw8iiJw==}
+  /@types/selenium-webdriver/4.1.9:
+    resolution: {integrity: sha512-QNCYI3Rgjf3bZ2GZwXnUpOJUPR8p7+c9Um9MEKggLaUaF8UfjitH5aPCV1PF0DHVEiPYsXayGVS6+67DO3VILw==}
     dependencies:
       '@types/ws': 8.5.3
 
@@ -4611,6 +4621,14 @@ packages:
     dependencies:
       '@react-dnd/asap': 4.0.1
       '@react-dnd/invariant': 3.0.1
+      redux: 4.2.0
+    dev: false
+
+  /dnd-core/16.0.1:
+    resolution: {integrity: sha512-HK294sl7tbw6F6IeuK16YSBUoorvHpY8RHO+9yFfaJyCDVb6n7PRcezrOEOa2SBCqiYpemh5Jx20ZcjKdFAVng==}
+    dependencies:
+      '@react-dnd/asap': 5.0.2
+      '@react-dnd/invariant': 4.0.2
       redux: 4.2.0
     dev: false
 
@@ -8526,8 +8544,8 @@ packages:
       compute-scroll-into-view: 1.0.17
     dev: true
 
-  /selenium-webdriver/4.5.0:
-    resolution: {integrity: sha512-9mSFii+lRwcnT2KUAB1kqvx6+mMiiQHH60Y0VUtr3kxxi3oZ3CV3B8e2nuJ7T4SPb+Q6VA0swswe7rYpez07Bg==}
+  /selenium-webdriver/4.6.0:
+    resolution: {integrity: sha512-HIH/+J+V7l/lbSRSOwyLcpjezg9CV4DLo1pBhP9aphuMlf/PJXEDwC/A/Ht2bFc1AqQppFBGvClYcuMzyO6tRw==}
     engines: {node: '>= 14.20.0'}
     dependencies:
       jszip: 3.10.1

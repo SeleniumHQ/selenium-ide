@@ -17,6 +17,12 @@
           "value": ""
         },
         {
+          "command": "echo",
+          "target": "This is a test string",
+          "value": "",
+          "id": "9e61266a-9cb0-49b6-b5bf-a362bd181b58"
+        },
+        {
           "command": "customClick",
           "target": "css=.lnXdpd",
           "value": "",
@@ -136,6 +142,6 @@
     "https://www.google.com/"
   ],
   "plugins": [
-    "@seleniumhq/side-plugin-example"
+    "../../packages/side-plugin-example/dist/index.js"
   ]
 }

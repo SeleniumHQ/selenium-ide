@@ -74,8 +74,9 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
           logger,
           variables: new Variables(),
         })
-        const onComplete = (failure: any) => {
-          playback.cleanup()
+        const onComplete = async (failure: any) => {
+          await playback.cleanup()
+          await driver.cleanup()
           if (failure) {
             logger.warn('Completed with failure', failure)
             return reject(failure)
@@ -123,7 +124,7 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
           })
         } catch (e) {
           console.error(e)
-          playback.cleanup()
+          await playback.cleanup()
           return reject(e)
         }
       })

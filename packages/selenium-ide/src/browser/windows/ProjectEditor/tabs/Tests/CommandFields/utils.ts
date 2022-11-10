@@ -17,7 +17,7 @@ export const updateACField =
 export const updateField =
   (name: string) => (testID: string, commandID: string) => (e: any) => {
     window.sideAPI.tests.updateStep(testID, commandID, {
-      [name]: e.target.value,
+      [name]: e?.target?.value ?? "",
     })
   }
 
