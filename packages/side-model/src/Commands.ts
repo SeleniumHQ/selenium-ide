@@ -620,6 +620,12 @@ export default {
     target: ArgTypes.locator,
     value: ArgTypes.waitTime,
   },
+  waitForText: {
+    name: 'wait for text',
+    description: 'Wait until the text of an element is present',
+    target: ArgTypes.locator,
+    value: ArgTypes.text,
+  },
   while: {
     name: 'while',
     description: `Create a loop that executes the proceeding commands 

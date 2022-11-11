@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-code-export",
-  "version": "4.0.0-alpha.1",
+  "version": "4.0.0-alpha.2",
   "description": "Utils for code export from Selenium IDE",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
@@ -16,7 +16,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@seleniumhq/side-model": "^4.0.0-alpha.1",
+    "@seleniumhq/side-model": "^4.0.0-alpha.2",
     "ua-parser-js": "0.7.28"
   },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"

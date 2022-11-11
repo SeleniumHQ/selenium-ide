@@ -231,10 +231,10 @@ importers:
       '@mui/material': ^5.5.0
       '@seleniumhq/browser-info': ^4.0.0-alpha.1
       '@seleniumhq/get-driver': ^4.0.0-alpha.1
-      '@seleniumhq/side-api': ^4.0.0-alpha.6
-      '@seleniumhq/side-model': ^4.0.0-alpha.1
+      '@seleniumhq/side-api': ^4.0.0-alpha.7
+      '@seleniumhq/side-model': ^4.0.0-alpha.2
       '@seleniumhq/side-plugin-example': ^4.0.0-alpha.1
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.11
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.12
       '@types/copy-webpack-plugin': 8.0.1
       '@types/electron': 1.6.10
       '@types/electron-devtools-installer': ^2.2.2
@@ -337,8 +337,8 @@ importers:
     specifiers:
       '@seleniumhq/browser-info': ^4.0.0-alpha.1
       '@seleniumhq/get-driver': ^4.0.0-alpha.2
-      '@seleniumhq/side-model': ^4.0.0-alpha.1
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.11
+      '@seleniumhq/side-model': ^4.0.0-alpha.2
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.12
       '@types/electron': 1.6.10
       '@types/lodash': ^4.14.186
       lodash: ^4.17.21
@@ -373,7 +373,7 @@ importers:
 
   packages/side-code-export:
     specifiers:
-      '@seleniumhq/side-model': ^4.0.0-alpha.1
+      '@seleniumhq/side-model': ^4.0.0-alpha.2
       ua-parser-js: 0.7.28
     dependencies:
       '@seleniumhq/side-model': link:../side-model
@@ -404,14 +404,14 @@ importers:
 
   packages/side-plugin-example:
     specifiers:
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.11
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.12
     devDependencies:
       '@seleniumhq/side-runtime': link:../side-runtime
 
   packages/side-runner:
     specifiers:
-      '@seleniumhq/side-model': ^4.0.0-alpha.1
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.11
+      '@seleniumhq/side-model': ^4.0.0-alpha.2
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.12
       '@types/glob': 7.2.0
       '@types/jest': ^27.4.1
       '@types/js-beautify': 1.13.3
@@ -458,7 +458,7 @@ importers:
   packages/side-runtime:
     specifiers:
       '@seleniumhq/side-commons': ^4.0.0-alpha.1
-      '@seleniumhq/side-model': ^4.0.0-alpha.1
+      '@seleniumhq/side-model': ^4.0.0-alpha.2
       '@seleniumhq/side-testkit': ^4.0.0-alpha.1
       '@seleniumhq/webdriver-testkit': ^4.0.0-alpha.1
       '@types/selenium-webdriver': ^4.1.9

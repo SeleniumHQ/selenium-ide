@@ -766,6 +766,10 @@ export default class WebDriverExecutor {
     }
   }
 
+  async doWaitForText(locator: string, text: string) {
+    await this.waitForText(locator, text)
+  }
+
   // script commands
 
   async doRunScript(script: ScriptShape) {
@@ -1256,6 +1260,17 @@ export default class WebDriverExecutor {
     const elapsed = Date.now() - startTime
     await this.wait(until.elementIsVisible(element), timeout - elapsed)
     return element
+  }
+
+  async waitForText(locator: string, text: string) {
+    const startTime = Date.now()
+    const timeout = this.implicitWait
+    const element = (await this.wait<WebElementShape>(
+      until.elementLocated(parseLocator(locator)),
+      timeout
+    )) as WebElementShape
+    const elapsed = Date.now() - startTime
+    await this.wait(until.elementTextIs(element, text), timeout - elapsed)
   }
 
   async wait<T extends any>(
