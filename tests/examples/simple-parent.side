@@ -35,14 +35,26 @@
       "name": "outer",
       "commands": [
         {
+          "command": "store",
+          "target": "open page",
+          "value": "runCMD",
+          "id": "58e73596-cfaa-45a6-9d34-d49dee8f27f5"
+        },
+        {
           "id": "ac59c71a-4b22-4788-a928-3b89776697f7",
           "command": "run",
-          "target": "open page",
+          "target": "${runCMD}",
           "value": ""
         },
         {
           "command": "assertElementPresent",
           "target": "css=.lnXdpd",
+          "value": "",
+          "id": "c3a7876e-3202-4cf2-8cbb-f2561d14fca3"
+        },
+        {
+          "command": "waitForElementNotPresent",
+          "target": "css=.dne",
           "value": "",
           "id": "d341e173-b4f8-4645-b25d-1b58f55ef371"
         }

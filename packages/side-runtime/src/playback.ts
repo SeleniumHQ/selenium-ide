@@ -24,6 +24,7 @@ import Variables from './variables'
 import { WebDriverExecutor } from '.'
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import { CommandNode, CommandType } from './playback-tree/command-node'
+import { interpolateString } from './preprocessors'
 
 const EE = 'event-emitter'
 const state = 'state'
@@ -561,7 +562,9 @@ export default class Playback {
     if (!this.getTestByName) {
       throw new Error("'run' command is not supported")
     }
-    const test = await this.getTestByName(testName)
+    const test = await this.getTestByName(
+      interpolateString(testName, this.variables)
+    )
     if (!test) {
       throw new Error(`Can't run unknown test: ${testName}`)
     }
