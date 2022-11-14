@@ -132,7 +132,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
       select={updateStepSelection}
       secondaryAction={
         <IconButton
-          color={isBreakpoint ? 'primary' : 'default'}
+          color={isBreakpoint ? 'warning' : 'default'}
           onClick={toggleBreakpoint}
         >
           <PauseIcon />
