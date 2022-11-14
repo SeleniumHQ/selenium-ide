@@ -128,6 +128,10 @@ export class CommandNode {
     }
   }
 
+  async pauseTimeout(timeout?: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, timeout))
+  }
+
   async retryCommand(
     execute: () => Promise<unknown>,
     timeout: number
@@ -143,6 +147,7 @@ export class CommandNode {
     } catch (e) {
       this.handleTransientError(e, timeout)
       clearTimeout(expirationTimer)
+      await this.pauseTimeout()
       return this.retryCommand(execute, timeout)
     }
   }

@@ -1308,16 +1308,15 @@ export default class WebDriverExecutor {
         }, timeout)
         const clearTimer = () => timer && clearTimeout(timer)
 
-        condition.then(
-          function (value: T) {
+        condition
+          .then((value: T) => {
             clearTimer()
             resolve(value)
-          },
-          function (error: Error) {
+          })
+          .catch((error: Error) => {
             clearTimer()
             reject(error)
-          }
-        )
+          })
       })
     }
 
