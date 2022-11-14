@@ -15,7 +15,7 @@
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "pnpm run lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
-    "test:side-runner": "node ./packages/side-runner/dist/bin.js -c \"browserName=chrome\" -d -t 15000 ./tests/examples/echo.side",
+    "test:side-runner": "node ./packages/side-runner/dist/bin.js -c \"browserName=chrome\" -dD -t 15000 ./tests/examples/echo.side",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "run-p watch:ts watch:webpack",
     "watch:webpack": "pnpm run --stream --filter @seleniumhq/selenium-ide watch",

@@ -17,7 +17,7 @@
 
 import { JSON } from './types'
 
-export function parseString(input: string): Record<string, JSON> {
+export function parseString(input = ''): Record<string, JSON> {
   const capabilities = {}
 
   matchStringPairs(input).forEach(({ key, value }) => {

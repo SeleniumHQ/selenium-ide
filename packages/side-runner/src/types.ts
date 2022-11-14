@@ -45,6 +45,8 @@ export interface SideRunnerCLIConfig {
   configFile: string
   // Print debug logs
   debug: boolean
+  // Print debug startup logs
+  debugStartup: boolean
   // Run suites matching name
   filter: string
   // Forcibly run the project, regardless of project's version
@@ -72,7 +74,10 @@ export type Configuration = Required<
     'baseUrl' | 'filter' | 'maxWorkers' | 'server' | 'timeout'
   >
 > &
-  Pick<SideRunnerCLIConfig, 'debug' | 'force' | 'proxyType'> & {
+  Pick<
+    SideRunnerCLIConfig,
+    'debugStartup' | 'debug' | 'force' | 'proxyType'
+  > & {
     capabilities: Record<string, JSON>
     projects: string[]
     proxyOptions: ProxyInputOptions

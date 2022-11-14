@@ -26,7 +26,7 @@ import { Command } from 'commander'
 import Capabilities from './capabilities'
 import Config from './config'
 import ParseProxy from './proxy'
-import { Configuration, ProxyInputOptions, SideRunnerAPI } from './types'
+import { Configuration, SideRunnerAPI } from './types'
 import { spawn } from 'child_process'
 
 const isWindows = os.platform() === 'win32'
@@ -58,8 +58,7 @@ program
   .option(
     '-w, --max-workers [number]',
     `Maximum amount of workers that will run your tests, defaults to number of cores`,
-    (str) => parseInt(str),
-    os.cpus().length
+    (str) => parseInt(str)
   )
   .option(
     '-t, --timeout [number]',
@@ -80,7 +79,7 @@ program
     'Use specified YAML file for configuration. (default: .side.yml)'
   )
   .option(
-    '-o, --output-directory [directory]',
+    '-o, --output-directory [it directory]',
     'Write test results to files, format is defined by --output-format'
   )
   .option(
@@ -88,6 +87,7 @@ program
     "Forcibly run the project, regardless of project's version"
   )
   .option('-d, --debug', 'Print debug logs')
+  .option('-D, --debug-startup', 'Print debug startup logs')
 
 program.parse()
 
@@ -97,25 +97,24 @@ if (!program.args.length) {
   process.exit(1)
 }
 const options = program.opts()
-const configuration: Configuration = {
+let configuration: Configuration = {
   baseUrl: '',
   capabilities: {
     browserName: 'chrome',
   },
   debug: options.debug,
+  debugStartup: options.debugStartup,
   filter: options.filter || '.*',
   force: options.force,
-  maxWorkers: options.maxWorkers,
+  maxWorkers: os.cpus().length,
   // Convert all project paths into absolute paths
-  projects: program.args.map((arg) => {
-    if (path.isAbsolute(arg)) return arg
-    return path.join(process.cwd(), arg)
-  }),
+  projects: [],
   proxyOptions: {},
+  proxyType: undefined,
   runId: crypto.randomBytes(16).toString('hex'),
   path: path.join(__dirname, '../../'),
   server: '',
-  timeout: options.timeout,
+  timeout: DEFAULT_TIMEOUT,
 }
 
 const confPath = options.configFile || '.side.yml'
@@ -123,56 +122,42 @@ const configFilePath = path.isAbsolute(confPath)
   ? confPath
   : path.join(process.cwd(), confPath)
 try {
-  Object.assign(configuration, Config.load(configFilePath))
+  const configFileSettings = Config.load(configFilePath)
+  configuration = merge(configuration, configFileSettings)
 } catch (e) {
-  options.debug && console.debug('Could not load ' + configFilePath)
-}
-
-configuration.server = options.server ? options.server : configuration.server
-
-if (options.capabilities) {
-  try {
-    configuration.capabilities = merge(
-      configuration.capabilities,
-      Capabilities.parseString(options.capabilities)
-    )
-  } catch (e) {
-    options.debug && console.debug('Failed to parse inline capabilities')
+  const err = e as any
+  if (options.configFile || err.code !== 'ENOENT') {
+    console.warn(err)
+    throw new Error('Could not load ' + configFilePath)
   }
 }
 
-if (options.proxyType) {
-  try {
-    let opts
-    if (options.proxyType === 'manual' || options.proxyType === 'socks') {
-      opts = Capabilities.parseString(options.proxyOptions as string)
-    }
-    const proxy = ParseProxy(options.proxyType, opts as ProxyInputOptions)
-    Object.assign(configuration.capabilities, proxy)
-  } catch (e) {
-    console.error((e as Error).message)
-    // eslint-disable-next-line no-process-exit
-    process.exit(1)
-  }
-} else if (configuration.proxyType) {
-  try {
-    const proxy = ParseProxy(
-      configuration.proxyType,
-      configuration.proxyOptions
-    )
-    Object.assign(configuration.capabilities, proxy)
-  } catch (e) {
-    console.error((e as Error).message)
-    // eslint-disable-next-line no-process-exit
-    process.exit(1)
-  }
+configuration = merge(configuration, {
+  baseUrl: options.baseUrl,
+  capabilities: Capabilities.parseString(options.capabilities),
+  debug: options.debug,
+  maxWorkers: options.maxWorkers,
+  // Convert all project paths into absolute paths
+  projects: program.args.map((arg) => {
+    if (path.isAbsolute(arg)) return arg
+    return path.join(process.cwd(), arg)
+  }),
+  proxyType: options.proxyType,
+  proxyOptions:
+    options.proxyType === 'manual' || options.proxyType === 'socks'
+      ? Capabilities.parseString(options.proxyOptions)
+      : options.proxyOptions,
+  server: options.server,
+  timeout: options.timeout,
+})
+
+if (configuration.proxyType) {
+  const proxy = ParseProxy(configuration.proxyType, configuration.proxyOptions)
+  configuration.capabilities.proxy = proxy
 }
 
-configuration.baseUrl = options.baseUrl
-  ? options.baseUrl
-  : configuration.baseUrl
-
-options.debug && console.debug('Configuration:', util.inspect(configuration))
+configuration.debugStartup &&
+  console.debug('Configuration:', util.inspect(configuration))
 
 // All the stuff that goes into a big wrapped jest command
 const jestExecutable = isWindows ? 'jest.cmd' : 'jest'
@@ -195,7 +180,8 @@ const jestEnv = {
   SE_CONFIGURATION: JSON.stringify(configuration),
 }
 
-options.debug && console.debug('Jest command:', jestCommand, jestArgs, jestEnv)
+configuration.debugStartup &&
+  console.debug('Jest command:', jestCommand, jestArgs, jestEnv)
 spawn(jestCommand, jestArgs, {
   env: jestEnv,
   shell: true,
