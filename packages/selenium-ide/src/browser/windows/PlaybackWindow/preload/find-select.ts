@@ -25,9 +25,15 @@ const init = () => {
   window.sideAPI.recorder.onRequestSelectElement.addListener(
     processSelectionCommand
   )
+  window.sideAPI.recorder.onHighlightElement.addListener(
+    processHighlightCommand
+  )
   window.addEventListener('beforeunload', () => {
     window.sideAPI.recorder.onRequestSelectElement.removeListener(
       processSelectionCommand
+    )
+    window.sideAPI.recorder.onHighlightElement.removeListener(
+      processHighlightCommand
     )
   })
 }
@@ -88,6 +94,12 @@ function processMessage(event: MessageEvent<any>) {
   }
 }
 
+async function processHighlightCommand(locator: string): Promise<void> {
+  const element = await locatorBuilders.findElement(locator)
+  console.log('Highlighting element', element)
+  await highlight(element)
+}
+
 function highlight(element: HTMLElement): Promise<void> {
   return new Promise((res) => {
     const highlightElement = document.createElement('div')
@@ -103,12 +115,17 @@ function highlight(element: HTMLElement): Promise<void> {
     highlightElement.style.zIndex = '100'
     highlightElement.style.display = 'block'
     highlightElement.style.pointerEvents = 'none'
+    highlightElement.style.outline = '2px solid #a7f'
+    highlightElement.style.opacity = '1'
+    highlightElement.style.transition = 'opacity 3s'
     scrollIntoViewIfNeeded(highlightElement, { block: 'center' })
-    highlightElement.className = 'active-selenium-highlight'
+    setTimeout(() => {
+      highlightElement.style.opacity = '0'
+    }, 500)
     setTimeout(() => {
       document.body.removeChild(highlightElement)
       res()
-    }, 500)
+    }, 3500)
   })
 }
 

@@ -2,6 +2,7 @@ import { CommandShape } from '@seleniumhq/side-model'
 import { getActiveCommand } from '@seleniumhq/side-api/dist/helpers/getActiveData'
 import { LocatorFields } from '@seleniumhq/side-api'
 import { randomInt, randomUUID } from 'crypto'
+import { Session } from 'main/types'
 import { relative } from 'path'
 import BaseController from '../Base'
 
@@ -51,6 +52,16 @@ export interface RecordNewCommandInput {
 }
 
 export default class RecorderController extends BaseController {
+  constructor(session: Session) {
+    super(session)
+  }
+  async requestHighlightElement(fieldName: LocatorFields) {
+    const activeCommand = getActiveCommand(await this.session.state.get())
+    this.session.api.recorder.onHighlightElement.dispatchEvent(
+      activeCommand[fieldName] as string
+    )
+  }
+
   async recordNewCommand(
     cmd: RecordNewCommandInput
   ): Promise<CommandShape[] | null> {
@@ -108,13 +119,16 @@ export default class RecorderController extends BaseController {
     let inited = false
     if (playbackWindow) {
       const playbackURL = playbackWindow.webContents.getURL()
-      inited = !(playbackURL.startsWith('file://') && playbackURL.endsWith('/playback-window.html'))
+      inited = !(
+        playbackURL.startsWith('file://') &&
+        playbackURL.endsWith('/playback-window.html')
+      )
     } else {
       await this.session.windows.initializePlaybackWindow()
       playbackWindow = await this.session.windows.getLastPlaybackWindow()
       inited = false
-    } 
-    
+    }
+
     if (!inited) {
       // Needs to open a URL, if on an open command, just use that
       // Otherwise add an open command to the record commands
