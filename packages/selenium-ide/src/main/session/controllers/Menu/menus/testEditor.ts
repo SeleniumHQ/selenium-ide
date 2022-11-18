@@ -86,6 +86,30 @@ export const commandList: MenuComponent = (session) => async () => {
       label: pluralize('Delete Command', selectedCommandCount),
       visible: false,
     },
+    {
+      accelerator: 'CommandOrControl+Shift+A',
+      click: async () => {
+        await session.api.tests.addSteps(
+          sessionData.state.activeTestID,
+          Math.max(0, getActiveCommandIndex(sessionData)),
+          [{ command: 'click', target: '', value: '' }],
+        )
+      },
+      enabled: true,
+      label: 'Append Command',
+    },
+    {
+      accelerator: 'CommandOrControl+Shift+I',
+      click: async () => {
+        await session.api.tests.addSteps(
+          sessionData.state.activeTestID,
+          Math.max(0, getActiveCommandIndex(sessionData) - 1),
+          [{ command: 'click', target: '', value: '' }],
+        )
+      },
+      enabled: true,
+      label: 'Insert Command',
+    },
   ]
 }
 
