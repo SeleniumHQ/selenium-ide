@@ -41,7 +41,12 @@ const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => {
             }}
             onRemove={
               tests.length > 1
-                ? () => window.sideAPI.tests.delete(activeTest)
+                ? () => {
+                    const doDelete = window.confirm('Delete this test?')
+                    if (doDelete) {
+                      window.sideAPI.tests.delete(activeTest)
+                    }
+                  }
                 : undefined
             }
             sx={{
