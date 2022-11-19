@@ -24,14 +24,14 @@ import render from './render'
 import * as parsers from './parsers'
 
 export default {
-  emit: { ...emit },
+  emit,
   prettify,
   register: {
     preprocessors: registerPreprocessors,
     emitter: registerCommandEmitter,
   },
   hook: Hook,
-  find: { ...find },
+  find,
   render,
   parsers,
 }
