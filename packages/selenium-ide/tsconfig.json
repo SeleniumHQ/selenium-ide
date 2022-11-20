@@ -17,6 +17,27 @@
       "path": "../browser-info"
     },
     {
+      "path": "../code-export-csharp-commons"
+    },
+    {
+      "path": "../code-export-csharp-nunit"
+    },
+    {
+      "path": "../code-export-csharp-xunit"
+    },
+    {
+      "path": "../code-export-java-junit"
+    },
+    {
+      "path": "../code-export-javascript-mocha"
+    },
+    {
+      "path": "../code-export-python-pytest"
+    },
+    {
+      "path": "../code-export-ruby-rspec"
+    },
+    {
       "path": "../get-driver"
     },
     {

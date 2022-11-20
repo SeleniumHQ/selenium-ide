@@ -93,109 +93,58 @@ importers:
 
   packages/code-export-csharp-commons:
     specifiers:
-      '@babel/cli': ^7.4.4
-      '@babel/core': ^7.17.8
-      '@babel/plugin-proposal-object-rest-spread': ^7.4.4
-      '@babel/preset-env': ^7.4.5
+      '@seleniumhq/side-code-export': ^4.0.0-alpha.2
+      '@seleniumhq/side-model': ^4.0.0-alpha.2
+    dependencies:
+      '@seleniumhq/side-code-export': link:../side-code-export
     devDependencies:
-      '@babel/cli': 7.19.3_@babel+core@7.19.3
-      '@babel/core': 7.19.3
-      '@babel/plugin-proposal-object-rest-spread': 7.18.9_@babel+core@7.19.3
-      '@babel/preset-env': 7.19.3_@babel+core@7.19.3
+      '@seleniumhq/side-model': link:../side-model
 
   packages/code-export-csharp-nunit:
     specifiers:
-      '@babel/cli': ^7.4.4
-      '@babel/core': ^7.17.8
-      '@babel/plugin-proposal-object-rest-spread': ^7.4.4
-      '@babel/preset-env': ^7.4.5
-      '@seleniumhq/code-export-csharp-commons': ^3.17.4
-      '@seleniumhq/side-code-export': ^4.0.0-alpha.1
+      '@seleniumhq/code-export-csharp-commons': ^4.0.0-alpha.0
+      '@seleniumhq/side-code-export': ^4.0.0-alpha.2
     dependencies:
       '@seleniumhq/code-export-csharp-commons': link:../code-export-csharp-commons
       '@seleniumhq/side-code-export': link:../side-code-export
-    devDependencies:
-      '@babel/cli': 7.19.3_@babel+core@7.19.3
-      '@babel/core': 7.19.3
-      '@babel/plugin-proposal-object-rest-spread': 7.18.9_@babel+core@7.19.3
-      '@babel/preset-env': 7.19.3_@babel+core@7.19.3
 
   packages/code-export-csharp-xunit:
     specifiers:
-      '@babel/cli': ^7.4.4
-      '@babel/core': ^7.17.8
-      '@babel/plugin-proposal-object-rest-spread': ^7.4.4
-      '@babel/preset-env': ^7.4.5
-      '@seleniumhq/code-export-csharp-commons': ^3.17.4
+      '@seleniumhq/code-export-csharp-commons': ^4.0.0-alpha.0
       '@seleniumhq/side-code-export': ^4.0.0-alpha.1
+      '@seleniumhq/side-model': ^4.0.0-alpha.2
     dependencies:
       '@seleniumhq/code-export-csharp-commons': link:../code-export-csharp-commons
       '@seleniumhq/side-code-export': link:../side-code-export
     devDependencies:
-      '@babel/cli': 7.19.3_@babel+core@7.19.3
-      '@babel/core': 7.19.3
-      '@babel/plugin-proposal-object-rest-spread': 7.18.9_@babel+core@7.19.3
-      '@babel/preset-env': 7.19.3_@babel+core@7.19.3
+      '@seleniumhq/side-model': link:../side-model
 
   packages/code-export-java-junit:
     specifiers:
-      '@babel/cli': ^7.4.4
-      '@babel/core': ^7.17.8
-      '@babel/plugin-proposal-object-rest-spread': ^7.4.4
-      '@babel/preset-env': ^7.4.5
-      '@seleniumhq/side-code-export': ^4.0.0-alpha.1
+      '@seleniumhq/side-code-export': ^4.0.0-alpha.2
+      '@seleniumhq/side-model': ^4.0.0-alpha.2
     dependencies:
       '@seleniumhq/side-code-export': link:../side-code-export
     devDependencies:
-      '@babel/cli': 7.19.3_@babel+core@7.19.3
-      '@babel/core': 7.19.3
-      '@babel/plugin-proposal-object-rest-spread': 7.18.9_@babel+core@7.19.3
-      '@babel/preset-env': 7.19.3_@babel+core@7.19.3
+      '@seleniumhq/side-model': link:../side-model
 
   packages/code-export-javascript-mocha:
     specifiers:
-      '@babel/cli': ^7.4.4
-      '@babel/core': ^7.17.8
-      '@babel/plugin-proposal-object-rest-spread': ^7.4.4
-      '@babel/preset-env': ^7.4.5
-      '@seleniumhq/side-code-export': ^4.0.0-alpha.1
+      '@seleniumhq/side-code-export': ^4.0.0-alpha.2
     dependencies:
       '@seleniumhq/side-code-export': link:../side-code-export
-    devDependencies:
-      '@babel/cli': 7.19.3_@babel+core@7.19.3
-      '@babel/core': 7.19.3
-      '@babel/plugin-proposal-object-rest-spread': 7.18.9_@babel+core@7.19.3
-      '@babel/preset-env': 7.19.3_@babel+core@7.19.3
 
   packages/code-export-python-pytest:
     specifiers:
-      '@babel/cli': ^7.4.4
-      '@babel/core': ^7.17.8
-      '@babel/plugin-proposal-object-rest-spread': ^7.4.4
-      '@babel/preset-env': ^7.4.5
-      '@seleniumhq/side-code-export': ^4.0.0-alpha.1
+      '@seleniumhq/side-code-export': ^4.0.0-alpha.2
     dependencies:
       '@seleniumhq/side-code-export': link:../side-code-export
-    devDependencies:
-      '@babel/cli': 7.19.3_@babel+core@7.19.3
-      '@babel/core': 7.19.3
-      '@babel/plugin-proposal-object-rest-spread': 7.18.9_@babel+core@7.19.3
-      '@babel/preset-env': 7.19.3_@babel+core@7.19.3
 
   packages/code-export-ruby-rspec:
     specifiers:
-      '@babel/cli': ^7.4.4
-      '@babel/core': ^7.17.8
-      '@babel/plugin-proposal-object-rest-spread': ^7.4.4
-      '@babel/preset-env': ^7.4.5
-      '@seleniumhq/side-code-export': ^4.0.0-alpha.1
+      '@seleniumhq/side-code-export': ^4.0.0-alpha.2
     dependencies:
       '@seleniumhq/side-code-export': link:../side-code-export
-    devDependencies:
-      '@babel/cli': 7.19.3_@babel+core@7.19.3
-      '@babel/core': 7.19.3
-      '@babel/plugin-proposal-object-rest-spread': 7.18.9_@babel+core@7.19.3
-      '@babel/preset-env': 7.19.3_@babel+core@7.19.3
 
   packages/get-driver:
     specifiers:
@@ -230,8 +179,16 @@ importers:
       '@mui/lab': ^5.0.0-alpha.72
       '@mui/material': ^5.5.0
       '@seleniumhq/browser-info': ^4.0.0-alpha.1
+      '@seleniumhq/code-export-csharp-commons': ^4.0.0-alpha.0
+      '@seleniumhq/code-export-csharp-nunit': ^4.0.0-alpha.0
+      '@seleniumhq/code-export-csharp-xunit': ^4.0.0-alpha.0
+      '@seleniumhq/code-export-java-junit': ^4.0.0-alpha.0
+      '@seleniumhq/code-export-javascript-mocha': ^4.0.0-alpha.0
+      '@seleniumhq/code-export-python-pytest': ^4.0.0-alpha.0
+      '@seleniumhq/code-export-ruby-rspec': ^4.0.0-alpha.0
       '@seleniumhq/get-driver': ^4.0.0-alpha.1
       '@seleniumhq/side-api': ^4.0.0-alpha.11
+      '@seleniumhq/side-code-export': ^4.0.0-alpha.0
       '@seleniumhq/side-model': ^4.0.0-alpha.2
       '@seleniumhq/side-plugin-example': ^4.0.0-alpha.1
       '@seleniumhq/side-runtime': ^4.0.0-alpha.14
@@ -283,8 +240,16 @@ importers:
       '@mui/icons-material': 5.10.9_ycoqgxtt3233dukn35w4z3lqbu
       '@mui/lab': 5.0.0-alpha.103_t4m2a2wcwvoefa5bgvkawu3hsy
       '@mui/material': 5.10.9_c6qugj3z5tv63b4vyg6k5kxs7y
+      '@seleniumhq/code-export-csharp-commons': link:../code-export-csharp-commons
+      '@seleniumhq/code-export-csharp-nunit': link:../code-export-csharp-nunit
+      '@seleniumhq/code-export-csharp-xunit': link:../code-export-csharp-xunit
+      '@seleniumhq/code-export-java-junit': link:../code-export-java-junit
+      '@seleniumhq/code-export-javascript-mocha': link:../code-export-javascript-mocha
+      '@seleniumhq/code-export-python-pytest': link:../code-export-python-pytest
+      '@seleniumhq/code-export-ruby-rspec': link:../code-export-ruby-rspec
       '@seleniumhq/get-driver': link:../get-driver
       '@seleniumhq/side-api': link:../side-api
+      '@seleniumhq/side-code-export': link:../side-code-export
       '@seleniumhq/side-model': link:../side-model
       '@seleniumhq/side-plugin-example': link:../side-plugin-example
       '@seleniumhq/side-runtime': link:../side-runtime

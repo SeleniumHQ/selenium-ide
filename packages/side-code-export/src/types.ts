@@ -24,7 +24,6 @@ export interface ExportCommandFormat {
   emitters: Record<string, PrebuildEmitter>
   variableLookup: VariableLookup
   variableSetter: (name: string, value: any) => string
-  canEmit: (name: string) => boolean
   emit: (command: CommandShape) => string
   register: (command: CommandShape) => void
   extras: LanguageExportExtras
@@ -72,7 +71,6 @@ export type LanguageExportEmitterEmit = (
 ) => Promise<ExportFlexCommandShape> | ExportFlexCommandShape
 
 export type LanguageExportEmitter = {
-  canEmit: (name: string | number) => boolean
   emit: LanguageExportEmitterEmit
   extras: ExportCommandFormat['extras']
   emitters: Record<string, PrebuildEmitter>

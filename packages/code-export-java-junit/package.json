@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export-java-junit",
-  "version": "3.17.4",
+  "version": "4.0.0-alpha.0",
   "description": "Export Selenium IDE project contents to Java JUnit",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
@@ -10,18 +10,16 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
-    "build": "babel -d dist src --ignore=__test__",
-    "watch": "pnpm run build"
+    "build": "tsc",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
+    "watch": "tsc --watch"
   },
   "main": "dist/index.js",
-  "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.17.8",
-    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
-    "@babel/preset-env": "^7.4.5"
-  },
   "dependencies": {
-    "@seleniumhq/side-code-export": "^4.0.0-alpha.1"
+    "@seleniumhq/side-code-export": "^4.0.0-alpha.2"
+  },
+  "devDependencies": {
+    "@seleniumhq/side-model": "^4.0.0-alpha.2"
   },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"
 }

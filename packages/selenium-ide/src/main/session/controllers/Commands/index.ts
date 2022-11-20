@@ -1,5 +1,5 @@
 import Commands from '@seleniumhq/side-model/dist/Commands'
-import { PluginShape } from '@seleniumhq/side-runtime'
+import { CustomCommandShape, PluginShape } from '@seleniumhq/side-runtime'
 import BaseController from '../Base'
 
 const serializeCustomCommands = (commands: PluginShape['commands'] = {}) =>
@@ -19,9 +19,9 @@ export default class CommandsController extends BaseController {
     this.customCommands = this.session.plugins.plugins.reduce(
       (commands, plugin) => ({
         ...commands,
-        ...plugin.commands || {},
+        ...(plugin.commands || {}),
       }),
-      {}
+      {} as Record<string, CustomCommandShape>
     )
     this.session.state.state.commands = {
       ...Commands,

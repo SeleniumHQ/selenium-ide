@@ -16,7 +16,7 @@
 // under the License.
 
 import { codeExport as exporter } from '@seleniumhq/side-code-export'
-import { ProcessedCommandEmitter } from '@seleniumhq/side-code-export/dist/code-export/emit'
+import { ExportFlexCommandShape, ProcessedCommandEmitter } from '@seleniumhq/side-code-export/dist/code-export/emit'
 import { ScriptShape } from '@seleniumhq/side-code-export/src/code-export/preprocessor'
 import { CommandShape } from '@seleniumhq/side-model'
 import location from './location'
@@ -137,10 +137,6 @@ function emit(command: CommandShape) {
   })
 }
 
-function canEmit(commandName: string | number) {
-  return !!emitters[commandName]
-}
-
 function variableLookup(varName: string) {
   return `vars["${varName}"].ToString()`
 }
@@ -184,7 +180,7 @@ function emitWaitForWindow() {
 
 async function emitNewWindowHandling(
   command: CommandShape,
-  emittedCommand: any
+  emittedCommand: ExportFlexCommandShape
 ) {
   return Promise.resolve(
     `vars["WindowHandles"] = driver.WindowHandles;\n${await emittedCommand}\nvars["${
@@ -277,7 +273,7 @@ function emitControlFlowElse() {
   })
 }
 
-function emitControlFlowElseIf(script: any) {
+function emitControlFlowElseIf(script: ScriptShape) {
   return Promise.resolve({
     commands: [
       {
@@ -1088,7 +1084,6 @@ export default {
   emitters,
   variableLookup,
   variableSetter,
-  canEmit,
   emit,
   register,
   extras: { emitWaitForWindow, emitNewWindowHandling },

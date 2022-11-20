@@ -15,75 +15,83 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import {
+  codeExport as exporter,
+  generateHooks,
+  LanguageEmitter,
+  LanguageEmitterOpts,
+} from '@seleniumhq/side-code-export'
 import emitter from './command'
 import location from './location'
-import { generateHooks } from './hook'
+import hooks from './hook'
 
 // Define language options
 export const displayName = 'Java JUnit'
 
-export let opts = {}
-opts.emitter = emitter
-opts.hooks = generateHooks()
-opts.fileExtension = '.java'
-opts.commandPrefixPadding = '  '
-opts.terminatingKeyword = '}'
-opts.commentPrefix = '//'
-opts.generateMethodDeclaration = generateMethodDeclaration
+export const opts: LanguageEmitterOpts = {
+  emitter: emitter,
+  hooks: generateHooks(hooks),
+  fileExtension: '.java',
+  commandPrefixPadding: '  ',
+  terminatingKeyword: '}',
+  commentPrefix: '//',
+  generateFilename: (name) => {
+    return `${exporter.parsers.capitalize(
+      exporter.parsers.sanitizeName(name)
+    )}Test${opts.fileExtension}`
+  },
+  generateMethodDeclaration: (name) => {
+    return `public void ${exporter.parsers.sanitizeName(name)}() {`
+  },
+  // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
+  generateSuiteDeclaration: (name) => {
+    return `public class ${exporter.parsers.capitalize(
+      exporter.parsers.sanitizeName(name)
+    )}Test {`
+  },
+  generateTestDeclaration: (name) => {
+    return `@Test\npublic void ${exporter.parsers.uncapitalize(
+      exporter.parsers.sanitizeName(name)
+    )}() {`
+  },
+}
 
-// Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
-function generateTestDeclaration(name) {
-  return `@Test\npublic void ${exporter.parsers.uncapitalize(
-    exporter.parsers.sanitizeName(name)
-  )}() {`
-}
-function generateMethodDeclaration(name) {
-  return `public void ${exporter.parsers.sanitizeName(name)}() {`
-}
-function generateSuiteDeclaration(name) {
-  return `public class ${exporter.parsers.capitalize(
-    exporter.parsers.sanitizeName(name)
-  )}Test {`
-}
-function generateFilename(name) {
-  return `${exporter.parsers.capitalize(
-    exporter.parsers.sanitizeName(name)
-  )}Test${opts.fileExtension}`
-}
+const language: LanguageEmitter = {
+  emit: {
+    // Emit an individual test, wrapped in a suite (using the test name as the suite name)
+    test: async function emitTest({
+      baseUrl,
+      test,
+      tests,
+      project,
+      enableOriginTracing,
+      beforeEachOptions,
+      enableDescriptionAsComment,
+    }) => {
+      global.baseUrl = baseUrl
+      const testDeclaration = opts.generateTestDeclaration(test.name)
+      const result = await exporter.emit.test(test, tests, {
+        ...opts,
+        testDeclaration,
+        enableOriginTracing,
+        enableDescriptionAsComment,
+        project,
+      })
+      const suiteName = test.name
+      const suiteDeclaration = opts.generateSuiteDeclaration(suiteName)
+      const _suite = await exporter.emit.suite(result, tests, {
+        ...opts,
+        suiteDeclaration,
+        suiteName,
+        project,
+        beforeEachOptions,
+      })
+      return {
+        filename: generateFilename(test.name),
+        body: exporter.emit.orderedSuite(_suite),
+      }
+    }
 
-// Emit an individual test, wrapped in a suite (using the test name as the suite name)
-export async function emitTest({
-  baseUrl,
-  test,
-  tests,
-  project,
-  enableOriginTracing,
-  beforeEachOptions,
-  enableDescriptionAsComment,
-}) {
-  global.baseUrl = baseUrl
-  const testDeclaration = generateTestDeclaration(test.name)
-  const result = await exporter.emit.test(test, tests, {
-    ...opts,
-    testDeclaration,
-    enableOriginTracing,
-    enableDescriptionAsComment,
-    project,
-  })
-  const suiteName = test.name
-  const suiteDeclaration = generateSuiteDeclaration(suiteName)
-  const _suite = await exporter.emit.suite(result, tests, {
-    ...opts,
-    suiteDeclaration,
-    suiteName,
-    project,
-    beforeEachOptions,
-  })
-  return {
-    filename: generateFilename(test.name),
-    body: exporter.emit.orderedSuite(_suite),
-  }
 }
 
 // Emit a suite with all of its tests

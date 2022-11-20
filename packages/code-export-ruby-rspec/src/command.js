@@ -133,10 +133,6 @@ function emit(command) {
   })
 }
 
-function canEmit(commandName) {
-  return !!emitters[commandName]
-}
-
 function variableLookup(varName) {
   return `@vars['${varName}']`
 }
@@ -957,7 +953,6 @@ async function emitWaitForElementNotVisible(locator, timeout) {
 }
 
 export default {
-  canEmit,
   emit,
   register,
   extras: { emitWaitForWindow },

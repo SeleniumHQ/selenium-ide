@@ -1,8 +1,5 @@
-// @ts-expect-error These packages are untyped
 import CSharpCommon from '@seleniumhq/code-export-csharp-commons';
-// @ts-expect-error These packages are untyped
 import CSharpNUnit from '@seleniumhq/code-export-csharp-nunit';
-// @ts-expect-error These packages are untyped
 import CSharpXUnit from '@seleniumhq/code-export-csharp-xunit';
 // @ts-expect-error These packages are untyped
 import JavaJunit from '@seleniumhq/code-export-java-junit';
