@@ -15,31 +15,25 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
 import { Command, location } from '@seleniumhq/code-export-csharp-commons'
+import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import { CommandShape } from '@seleniumhq/side-model'
+
 const emitters = { ...Command.emitters }
 
 exporter.register.preprocessors(emitters)
 
-function register(command, emitter) {
-  exporter.register.emitter({ command, emitter, emitters })
-}
-
-function emit(command) {
+function emit(command: CommandShape) {
   return exporter.emit.command(command, emitters[command.command], {
     variableLookup: Command.variableLookup,
     emitNewWindowHandling: Command.extras.emitNewWindowHandling,
   })
 }
 
-function canEmit(commandName) {
-  return !!emitters[commandName]
-}
-
 emitters.assert = emitAssert
 emitters.verify = emitAssert
 
-function emitAssert(varName, value) {
+function emitAssert(varName: string, value: string) {
   return Promise.resolve(
     `Assert.Equal(vars["${varName}"].ToString(), "${value}");`
   )
@@ -49,7 +43,7 @@ emitters.assertAlert = emitAssertAlert
 emitters.assertConfirmation = emitAssertAlert
 emitters.assertPrompt = emitAssertAlert
 
-function emitAssertAlert(AlertText) {
+function emitAssertAlert(AlertText: string) {
   return Promise.resolve(
     `Assert.Equal(driver.SwitchTo().Alert().Text, "${AlertText}");`
   )
@@ -58,7 +52,7 @@ function emitAssertAlert(AlertText) {
 emitters.assertChecked = emitVerifyChecked
 emitters.verifyChecked = emitVerifyChecked
 
-async function emitVerifyChecked(locator) {
+async function emitVerifyChecked(locator: string) {
   return Promise.resolve(
     `Assert.True(driver.FindElement(${await location.emit(locator)}).Selected);`
   )
@@ -67,7 +61,7 @@ async function emitVerifyChecked(locator) {
 emitters.assertEditable = emitVerifyEditable
 emitters.verifyEditable = emitVerifyEditable
 
-async function emitVerifyEditable(locator) {
+async function emitVerifyEditable(locator: string) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -90,7 +84,7 @@ async function emitVerifyEditable(locator) {
 emitters.assertElementPresent = emitVerifyElementPresent
 emitters.verifyElementPresent = emitVerifyElementPresent
 
-async function emitVerifyElementPresent(locator) {
+async function emitVerifyElementPresent(locator: string) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -108,7 +102,7 @@ async function emitVerifyElementPresent(locator) {
 emitters.assertElementNotPresent = emitVerifyElementNotPresent
 emitters.verifyElementNotPresent = emitVerifyElementNotPresent
 
-async function emitVerifyElementNotPresent(locator) {
+async function emitVerifyElementNotPresent(locator: string) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -126,7 +120,7 @@ async function emitVerifyElementNotPresent(locator) {
 emitters.assertNotChecked = emitVerifyNotChecked
 emitters.verifyNotChecked = emitVerifyNotChecked
 
-async function emitVerifyNotChecked(locator) {
+async function emitVerifyNotChecked(locator: string) {
   return Promise.resolve(
     `Assert.False(driver.FindElement(${await location.emit(
       locator
@@ -137,7 +131,7 @@ async function emitVerifyNotChecked(locator) {
 emitters.assertNotEditable = emitVerifyNotEditable
 emitters.verifyNotEdtiable = emitVerifyNotEditable
 
-async function emitVerifyNotEditable(locator) {
+async function emitVerifyNotEditable(locator: string) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -160,7 +154,7 @@ async function emitVerifyNotEditable(locator) {
 emitters.assertNotSelectedValue = emitVerifyNotSelectedValue
 emitters.verifyNotSelectedValue = emitVerifyNotSelectedValue
 
-async function emitVerifyNotSelectedValue(locator, expectedValue) {
+async function emitVerifyNotSelectedValue(locator: string, expectedValue: string) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -183,7 +177,7 @@ async function emitVerifyNotSelectedValue(locator, expectedValue) {
 emitters.assertNotText = emitVerifyNotText
 emitters.verifyNotText = emitVerifyNotText
 
-async function emitVerifyNotText(locator, text) {
+async function emitVerifyNotText(locator: string, text: string) {
   const result = `driver.FindElement(${await location.emit(locator)}).Text`
   return Promise.resolve(
     `Assert.NotEqual(${result}, "${exporter.emit.text(text)}");`
@@ -193,7 +187,7 @@ async function emitVerifyNotText(locator, text) {
 emitters.assertSelectedLabel = emitVerifySelectedLabel
 emitters.verifySelectedLabel = emitVerifySelectedLabel
 
-async function emitVerifySelectedLabel(locator, labelValue) {
+async function emitVerifySelectedLabel(locator: string, labelValue: string) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -227,7 +221,7 @@ emitters.assertSelectedValue = emitVerifyValue
 emitters.verifySelectedValue = emitVerifyValue
 emitters.assertValue = emitVerifyValue
 
-async function emitVerifyValue(locator, value) {
+async function emitVerifyValue(locator: string, value: string) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -245,7 +239,7 @@ async function emitVerifyValue(locator, value) {
 emitters.assertText = emitVerifyText
 emitters.verifyText = emitVerifyText
 
-async function emitVerifyText(locator, text) {
+async function emitVerifyText(locator: string, text: string) {
   return Promise.resolve(
     `Assert.Equal(driver.FindElement(${await location.emit(
       locator
@@ -256,13 +250,12 @@ async function emitVerifyText(locator, text) {
 emitters.assertTitle = emitVerifyTitle
 emitters.verifyTitle = emitVerifyTitle
 
-async function emitVerifyTitle(title) {
+async function emitVerifyTitle(title: string) {
   return Promise.resolve(`Assert.Equal(driver.Title, "${title}");`)
 }
 
 export default {
-  canEmit,
+  ...Command,
   emit,
-  register,
-  extras: { emitWaitForWindow: Command.extras.emitWaitForWindow },
+  emitters,
 }

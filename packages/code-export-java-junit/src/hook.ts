@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import { HookFunctionInputs } from "@seleniumhq/side-code-export"
 
 const emitters = {
   afterAll,
@@ -29,17 +29,7 @@ const emitters = {
   inEachEnd: empty,
 }
 
-function generate(hookName) {
-  return new exporter.hook(emitters[hookName]())
-}
-
-export function generateHooks() {
-  let result = {}
-  Object.keys(emitters).forEach(hookName => {
-    result[hookName] = generate(hookName)
-  })
-  return result
-}
+export default emitters
 
 function afterAll() {
   const params = {
@@ -90,7 +80,7 @@ function beforeAll() {
 }
 
 function beforeEach() {
-  const params = {
+  const params: HookFunctionInputs = {
     startingSyntax: ({ browserName, gridUrl } = {}) => ({
       commands: [
         { level: 0, statement: '@Before' },

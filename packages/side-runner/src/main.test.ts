@@ -119,7 +119,7 @@ each(projects).describe(projectTitle, (project: Project) => {
     const plugins = await loadPlugins(pluginPaths)
     await Promise.all(
       plugins.map(async (plugin) => {
-        const hook = plugin.hooks[hookName]
+        const hook = plugin.hooks?.[hookName]
         if (hook) {
           await hook({ ...factoryParams, project })
         }

@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/__mocks__", "**/__tests__"],
+  "references": [
+    {
+      "path": "../side-code-export"
+    },
+    {
+      "path": "../side-model"
+    }
+  ]
+}

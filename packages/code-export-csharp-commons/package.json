@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export-csharp-commons",
-  "version": "3.17.4",
+  "version": "4.0.0-alpha.0",
   "description": "Commons for exporting Selenium IDE project contents to C#",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
@@ -9,19 +9,17 @@
     "export"
   ],
   "license": "Apache-2.0",
-  "scripts": {
-    "build": "babel -d dist src --ignore=__test__",
-    "watch": "pnpm run build"
-  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "devDependencies": {
-    "@babel/cli": "^7.4.4",
-    "@babel/core": "^7.17.8",
-    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
-    "@babel/preset-env": "^7.4.5"
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
+    "watch": "tsc --watch"
   },
-  "peerDependencies": {
-    "@seleniumhq/side-code-export": "^4.0.0-alpha.0"
+  "dependencies": {
+    "@seleniumhq/side-code-export": "^4.0.0-alpha.2"
+  },
+  "devDependencies": {
+    "@seleniumhq/side-model": "^4.0.0-alpha.2"
   }
 }

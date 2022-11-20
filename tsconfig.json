@@ -17,6 +17,21 @@
       "path": "./packages/code-export-csharp-nunit"
     },
     {
+      "path": "./packages/code-export-csharp-xunit"
+    },
+    {
+      "path": "./packages/code-export-java-junit"
+    },
+    {
+      "path": "./packages/code-export-javascript-mocha"
+    },
+    {
+      "path": "./packages/code-export-python-pytest"
+    },
+    {
+      "path": "./packages/code-export-ruby-rspec"
+    },
+    {
       "path": "./packages/get-driver"
     },
     {
