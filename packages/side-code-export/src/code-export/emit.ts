@@ -93,6 +93,29 @@ export interface ProcessedCommandEmitter {
   valuePreprocessor?: Preprocessor
 }
 
+export function baseEmitFactory(
+  command: CommandShape,
+  emitter: ProcessedCommandEmitter,
+  { variableLookup, emitNewWindowHandling }: EmitCommandContext
+) {
+  return async function emit(
+    target?: any,
+    value?: any
+  ): Promise<ExportFlexCommandShape> {
+    validateCommand(command)
+    let _target = target
+    let _value = value
+    if (emitter.targetPreprocessor) {
+      _target = await emitter.targetPreprocessor(target, variableLookup)
+    }
+    if (emitter.valuePreprocessor) {
+      _value = await emitter.valuePreprocessor(value, variableLookup)
+    }
+    const result = await emitter(_target, _value)
+    return emitNewWindowHandling(command, result)
+  }
+}
+
 export async function emitCommand(
   command: CommandShape,
   emitter: ProcessedCommandEmitter,

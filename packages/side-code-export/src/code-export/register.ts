@@ -33,7 +33,9 @@ export function registerCommandEmitter({
   if (!emitters[command]) {
     emitters[command] = emitter
   } else {
-    throw new Error('Unable to overwrite an existing command emitter')
+    throw new Error(
+      'Unable to overwrite an existing command emitter: ' + command
+    )
   }
 }
 

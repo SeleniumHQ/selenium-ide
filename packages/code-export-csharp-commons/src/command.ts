@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import { codeExport as exporter, PrebuildEmitter } from '@seleniumhq/side-code-export'
 import { ExportFlexCommandShape, ProcessedCommandEmitter } from '@seleniumhq/side-code-export/dist/code-export/emit'
 import { ScriptShape } from '@seleniumhq/side-code-export/src/code-export/preprocessor'
 import { CommandShape } from '@seleniumhq/side-model'
@@ -126,7 +126,7 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
 
 exporter.register.preprocessors(emitters)
 
-function register(command: any, emitter: any) {
+function register(command: string, emitter: PrebuildEmitter) {
   exporter.register.emitter({ command, emitter, emitters })
 }
 
@@ -199,13 +199,13 @@ function emitAssert(varName: string, value: string) {
   )
 }
 
-function emitAssertAlert(alertText: any) {
+function emitAssertAlert(alertText: string) {
   return Promise.resolve(
     `Assert.That(driver.SwitchTo().Alert().Text, Is.EqualTo("${alertText}"));`
   )
 }
 
-function emitAnswerOnNextPrompt(textToSend: any) {
+function emitAnswerOnNextPrompt(textToSend: string) {
   const commands = [
     { level: 0, statement: '{' },
     { level: 1, statement: 'var Alert = driver.SwitchTo().Alert();' },
@@ -216,7 +216,7 @@ function emitAnswerOnNextPrompt(textToSend: any) {
   return Promise.resolve({ commands })
 }
 
-async function emitCheck(locator: any) {
+async function emitCheck(locator: string) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -241,7 +241,7 @@ function emitChooseOkOnNextConfirmation() {
   return Promise.resolve(`driver.SwitchTo().Alert().Accept();`)
 }
 
-async function emitClick(target: any) {
+async function emitClick(target: string) {
   return Promise.resolve(
     `driver.FindElement(${await location.emit(target)}).Click();`
   )

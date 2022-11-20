@@ -1,7 +1,5 @@
-import CSharpCommon from '@seleniumhq/code-export-csharp-commons';
 import CSharpNUnit from '@seleniumhq/code-export-csharp-nunit';
 import CSharpXUnit from '@seleniumhq/code-export-csharp-xunit';
-// @ts-expect-error These packages are untyped
 import JavaJunit from '@seleniumhq/code-export-java-junit';
 // @ts-expect-error These packages are untyped
 import JavascriptMocha from '@seleniumhq/code-export-javascript-mocha';
@@ -12,7 +10,6 @@ import RubyRSpec from '@seleniumhq/code-export-ruby-rspec';
 import BaseController from '../Base'
 
 const builtinFormats = [
-  CSharpCommon,
   CSharpNUnit,
   CSharpXUnit,
   JavaJunit,

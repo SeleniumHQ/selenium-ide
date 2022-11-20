@@ -135,14 +135,10 @@ function register(command: string, emitter: PrebuildEmitter) {
 }
 
 function emit(command: CommandShape) {
-  return exporter.emit.command(
-    command,
-    emitters[command.command] as PrebuildEmitter,
-    {
-      variableLookup,
-      emitNewWindowHandling,
-    }
-  )
+  return exporter.emit.command(command, emitters[command.command], {
+    variableLookup,
+    emitNewWindowHandling,
+  })
 }
 
 function variableLookup(varName: string) {
@@ -503,7 +499,8 @@ async function emitMouseUp(locator: string) {
 function emitOpen(target: string) {
   const url = /^(file|http|https):\/\//.test(target)
     ? `"${target}"`
-    : `"${global.baseUrl}${target}"`
+    : // @ts-expect-error globals yuck
+    `"${global.baseUrl}${target}"`
   return Promise.resolve(`driver.get(${url});`)
 }
 
@@ -839,7 +836,10 @@ async function emitVerifyNotEditable(locator: string) {
   return Promise.resolve({ commands })
 }
 
-async function emitVerifyNotSelectedValue(locator: string, expectedValue: string) {
+async function emitVerifyNotSelectedValue(
+  locator: string,
+  expectedValue: string
+) {
   const commands = [
     { level: 0, statement: '{' },
     {
@@ -1083,6 +1083,7 @@ async function emitWaitForElementNotVisible(locator: string, timeout: number) {
 
 export default {
   emit,
+  emitters,
   register,
-  extras: { emitWaitForWindow },
+  extras: { emitNewWindowHandling, emitWaitForWindow },
 }
