@@ -18,5 +18,8 @@
   "dependencies": {
     "@seleniumhq/side-code-export": "^4.0.0-alpha.2"
   },
+  "devDependencies": {
+    "@seleniumhq/side-model": "^4.0.0-alpha.2"
+  },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"
 }

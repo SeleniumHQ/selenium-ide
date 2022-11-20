@@ -24,7 +24,7 @@ const emitters = {
   index: emitIndex,
 }
 
-export function emit(location) {
+export function emit(location: string) {
   return exporter.emit.selection(location, emitters)
 }
 
@@ -32,18 +32,18 @@ export default {
   emit,
 }
 
-function emitId(id) {
+function emitId(id: string) {
   return Promise.resolve(`By.css("*[id='${id}']")`)
 }
 
-function emitValue(value) {
+function emitValue(value: string) {
   return Promise.resolve(`By.css("*[value='${value}']")`)
 }
 
-function emitLabel(label) {
+function emitLabel(label: string) {
   return Promise.resolve(`By.xpath("//option[. = '${label}']")`)
 }
 
-function emitIndex(index) {
+function emitIndex(index: string) {
   return Promise.resolve(`By.css("*:nth-child(${index})")`)
 }

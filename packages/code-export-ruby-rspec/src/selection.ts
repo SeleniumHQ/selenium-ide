@@ -19,42 +19,31 @@ import { codeExport as exporter } from '@seleniumhq/side-code-export'
 
 const emitters = {
   id: emitId,
-  name: emitName,
-  link: emitLink,
-  linkText: emitLink,
-  partialLinkText: emitPartialLinkText,
-  css: emitCss,
-  xpath: emitXpath,
+  value: emitValue,
+  label: emitLabel,
+  index: emitIndex,
 }
 
-export function emit(location) {
-  return exporter.emit.location(location, emitters)
+export function emit(location: string) {
+  return exporter.emit.selection(location, emitters)
 }
 
 export default {
   emit,
 }
 
-function emitId(selector) {
-  return Promise.resolve(`:id, '${selector}'`)
+function emitId(id: string) {
+  return Promise.resolve(`:css, "*[id='${id}']"`)
 }
 
-function emitName(selector) {
-  return Promise.resolve(`:name, '${selector}'`)
+function emitValue(value: string) {
+  return Promise.resolve(`:css, "*[value='${value}']"`)
 }
 
-function emitLink(selector) {
-  return Promise.resolve(`:link_text, '${selector}'`)
+function emitLabel(label: string) {
+  return Promise.resolve(`:xpath, "//option[. = '${label}']"`)
 }
 
-function emitPartialLinkText(selector) {
-  return Promise.resolve(`:partial_link_text, '${selector}'`)
-}
-
-function emitCss(selector) {
-  return Promise.resolve(`:css, '${selector}'`)
-}
-
-function emitXpath(selector) {
-  return Promise.resolve(`:xpath, '${selector}'`)
+function emitIndex(index: string) {
+  return Promise.resolve(`:css, '*:nth-child(${index})'`)
 }
