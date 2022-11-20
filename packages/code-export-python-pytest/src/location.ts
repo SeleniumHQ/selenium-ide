@@ -27,7 +27,7 @@ const emitters = {
   xpath: emitXpath,
 }
 
-export function emit(location) {
+export function emit(location: string) {
   return exporter.emit.location(location, emitters)
 }
 
@@ -35,26 +35,26 @@ export default {
   emit,
 }
 
-function emitId(selector) {
-  return Promise.resolve(`By.id("${selector}")`)
+function emitId(selector: string) {
+  return Promise.resolve(`By.ID, "${selector}"`)
 }
 
-function emitName(selector) {
-  return Promise.resolve(`By.name("${selector}")`)
+function emitName(selector: string) {
+  return Promise.resolve(`By.NAME, "${selector}"`)
 }
 
-function emitLink(selector) {
-  return Promise.resolve(`By.linkText("${selector}")`)
+function emitLink(selector: string) {
+  return Promise.resolve(`By.LINK_TEXT, "${selector}"`)
 }
 
-function emitPartialLinkText(selector) {
-  return Promise.resolve(`By.partialLinkText("${selector}")`)
+function emitPartialLinkText(selector: string) {
+  return Promise.resolve(`By.PARTIAL_LINK_TEXT, "${selector}"`)
 }
 
-function emitCss(selector) {
-  return Promise.resolve(`By.css("${selector}")`)
+function emitCss(selector: string) {
+  return Promise.resolve(`By.CSS_SELECTOR, "${selector}"`)
 }
 
-function emitXpath(selector) {
-  return Promise.resolve(`By.xpath("${selector}")`)
+function emitXpath(selector: string) {
+  return Promise.resolve(`By.XPATH, "${selector}"`)
 }

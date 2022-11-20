@@ -11,5 +11,8 @@
     {
       "path": "../side-code-export"
     },
+    {
+      "path": "../side-model"
+    }
   ]
 }

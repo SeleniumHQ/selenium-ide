@@ -12,7 +12,12 @@ export type LanguageExportExtras = {
   emitWaitForWindow: () => Promise<{
     name: string
     commands: ExportCommandShape[]
-    generateMethodDeclaration: (name: string) => string
+    generateMethodDeclaration: (name: string) =>
+      | string
+      | {
+          body: string
+          terminatingKeyword: string
+        }
   }>
   emitNewWindowHandling: (
     command: CommandShape,

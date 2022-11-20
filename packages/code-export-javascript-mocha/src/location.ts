@@ -19,34 +19,42 @@ import { codeExport as exporter } from '@seleniumhq/side-code-export'
 
 const emitters = {
   id: emitId,
-  value: emitValue,
-  label: emitLabel,
-  index: emitIndex,
+  name: emitName,
+  link: emitLink,
+  linkText: emitLink,
+  partialLinkText: emitPartialLinkText,
+  css: emitCss,
+  xpath: emitXpath,
 }
 
-export function emit(location) {
-  return exporter.emit.selection(location, emitters)
+export function emit(location: string) {
+  return exporter.emit.location(location, emitters)
 }
 
 export default {
   emit,
 }
 
-function emitId(id) {
-  return Promise.resolve(`By.CSS_SELECTOR, "*[id='${id}']"`)
+function emitId(selector: string) {
+  return Promise.resolve(`By.id("${selector}")`)
 }
 
-function emitValue(value) {
-  return Promise.resolve(`By.CSS_SELECTOR, "*[value='${value}']"`)
+function emitName(selector: string) {
+  return Promise.resolve(`By.name("${selector}")`)
 }
 
-function emitLabel(label) {
-  if (label.startsWith('self.vars[')) {
-    return Promise.resolve(`By.XPATH, "//option[. = '{}']".format(${label})`)
-  }
-  return Promise.resolve(`By.XPATH, "//option[. = '${label}']"`)
+function emitLink(selector: string) {
+  return Promise.resolve(`By.linkText("${selector}")`)
 }
 
-function emitIndex(index) {
-  return Promise.resolve(`By.CSS_SELECTOR, "*:nth-child(${index})"`)
+function emitPartialLinkText(selector: string) {
+  return Promise.resolve(`By.partialLinkText("${selector}")`)
+}
+
+function emitCss(selector: string) {
+  return Promise.resolve(`By.css("${selector}")`)
+}
+
+function emitXpath(selector: string) {
+  return Promise.resolve(`By.xpath("${selector}")`)
 }

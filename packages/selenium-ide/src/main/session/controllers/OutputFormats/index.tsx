@@ -1,11 +1,8 @@
 import CSharpNUnit from '@seleniumhq/code-export-csharp-nunit';
 import CSharpXUnit from '@seleniumhq/code-export-csharp-xunit';
 import JavaJunit from '@seleniumhq/code-export-java-junit';
-// @ts-expect-error These packages are untyped
 import JavascriptMocha from '@seleniumhq/code-export-javascript-mocha';
-// @ts-expect-error These packages are untyped
 import PythonPytest from '@seleniumhq/code-export-python-pytest';
-// @ts-expect-error These packages are untyped
 import RubyRSpec from '@seleniumhq/code-export-ruby-rspec';
 import BaseController from '../Base'
 

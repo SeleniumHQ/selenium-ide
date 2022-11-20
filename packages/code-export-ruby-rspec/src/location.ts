@@ -19,31 +19,42 @@ import { codeExport as exporter } from '@seleniumhq/side-code-export'
 
 const emitters = {
   id: emitId,
-  value: emitValue,
-  label: emitLabel,
-  index: emitIndex,
+  name: emitName,
+  link: emitLink,
+  linkText: emitLink,
+  partialLinkText: emitPartialLinkText,
+  css: emitCss,
+  xpath: emitXpath,
 }
 
-export function emit(location) {
-  return exporter.emit.selection(location, emitters)
+export function emit(location: string) {
+  return exporter.emit.location(location, emitters)
 }
 
 export default {
   emit,
 }
 
-function emitId(id) {
-  return Promise.resolve(`:css, "*[id='${id}']"`)
+function emitId(selector: string) {
+  return Promise.resolve(`:id, '${selector}'`)
 }
 
-function emitValue(value) {
-  return Promise.resolve(`:css, "*[value='${value}']"`)
+function emitName(selector: string) {
+  return Promise.resolve(`:name, '${selector}'`)
 }
 
-function emitLabel(label) {
-  return Promise.resolve(`:xpath, "//option[. = '${label}']"`)
+function emitLink(selector: string) {
+  return Promise.resolve(`:link_text, '${selector}'`)
 }
 
-function emitIndex(index) {
-  return Promise.resolve(`:css, '*:nth-child(${index})'`)
+function emitPartialLinkText(selector: string) {
+  return Promise.resolve(`:partial_link_text, '${selector}'`)
+}
+
+function emitCss(selector: string) {
+  return Promise.resolve(`:css, '${selector}'`)
+}
+
+function emitXpath(selector: string) {
+  return Promise.resolve(`:xpath, '${selector}'`)
 }
