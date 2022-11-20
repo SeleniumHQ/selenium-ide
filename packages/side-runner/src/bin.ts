@@ -80,7 +80,7 @@ program
   )
   .option(
     '-o, --output-directory [it directory]',
-    'Write test results to files, format is defined by --output-format'
+    'Write test results as json to file in specified directory. Name will be based on timestamp.'
   )
   .option(
     '-f, --force',
@@ -172,6 +172,18 @@ const jestArgs = [
   '--config=' + path.join(__dirname, '..', 'jest.config.js'),
   '--maxConcurrency=' + configuration.maxWorkers,
 ]
+  .concat(
+    options.outputDirectory
+      ? [
+          '--json',
+          '--outputFile=' +
+            path.join(
+              options.outputDirectory,
+              'results-' + new Date().toISOString() + '.json'
+            ),
+        ]
+      : []
+  )
   .concat(options.jestOptions.slice(1, -1).split(' '))
   .concat(['--runTestsByPath', path.join(__dirname, 'main.test.js')])
 

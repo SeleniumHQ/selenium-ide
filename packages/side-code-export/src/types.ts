@@ -74,7 +74,7 @@ export type LanguageExportEmitter = {
   emit: LanguageExportEmitterEmit
   extras: ExportCommandFormat['extras']
   emitters: Record<string, PrebuildEmitter>
-  register: (command: CommandShape, emitter: any) => void
+  register: (command: string, emitter: PrebuildEmitter) => void
 }
 
 export interface LanguageEmitterOpts {

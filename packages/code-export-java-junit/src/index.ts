@@ -29,7 +29,7 @@ import hooks from './hook'
 export const displayName = 'Java JUnit'
 
 export const opts: LanguageEmitterOpts = {
-  emitter: emitter,
+  emitter,
   hooks: generateHooks(hooks),
   fileExtension: '.java',
   commandPrefixPadding: '  ',
@@ -58,6 +58,39 @@ export const opts: LanguageEmitterOpts = {
 
 const language: LanguageEmitter = {
   emit: {
+    locator: location.emit,
+    command: emitter.emit,
+    suite: async function emitSuite({
+      baseUrl,
+      suite,
+      tests,
+      project,
+      enableOriginTracing,
+      beforeEachOptions,
+      enableDescriptionAsComment,
+    }) {
+      // @ts-expect-error globals yuck
+      global.baseUrl = baseUrl
+      const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
+        enableOriginTracing,
+        enableDescriptionAsComment,
+        generateTestDeclaration: opts.generateTestDeclaration,
+        project,
+      })
+      const suiteDeclaration = opts.generateSuiteDeclaration(suite.name)
+      const _suite = await exporter.emit.suite(result, tests, {
+        ...opts,
+        suiteDeclaration,
+        suite,
+        suiteName: suite.name,
+        project,
+        beforeEachOptions,
+      })
+      return {
+        filename: opts.generateFilename(suite.name),
+        body: exporter.emit.orderedSuite(_suite),
+      }
+    },
     // Emit an individual test, wrapped in a suite (using the test name as the suite name)
     test: async function emitTest({
       baseUrl,
@@ -67,7 +100,8 @@ const language: LanguageEmitter = {
       enableOriginTracing,
       beforeEachOptions,
       enableDescriptionAsComment,
-    }) => {
+    }) {
+      // @ts-expect-error globals yuck
       global.baseUrl = baseUrl
       const testDeclaration = opts.generateTestDeclaration(test.name)
       const result = await exporter.emit.test(test, tests, {
@@ -87,50 +121,10 @@ const language: LanguageEmitter = {
         beforeEachOptions,
       })
       return {
-        filename: generateFilename(test.name),
+        filename: opts.generateFilename(test.name),
         body: exporter.emit.orderedSuite(_suite),
       }
-    }
-
-}
-
-// Emit a suite with all of its tests
-export async function emitSuite({
-  baseUrl,
-  suite,
-  tests,
-  project,
-  enableOriginTracing,
-  beforeEachOptions,
-  enableDescriptionAsComment,
-}) {
-  global.baseUrl = baseUrl
-  const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
-    enableOriginTracing,
-    enableDescriptionAsComment,
-    generateTestDeclaration,
-    project,
-  })
-  const suiteDeclaration = generateSuiteDeclaration(suite.name)
-  const _suite = await exporter.emit.suite(result, tests, {
-    ...opts,
-    suiteDeclaration,
-    suite,
-    project,
-    beforeEachOptions,
-  })
-  return {
-    filename: generateFilename(suite.name),
-    body: exporter.emit.orderedSuite(_suite),
-  }
-}
-
-export default {
-  emit: {
-    test: emitTest,
-    suite: emitSuite,
-    locator: location.emit,
-    command: emitter.emit,
+    },
   },
   register: {
     command: emitter.register,
@@ -144,3 +138,7 @@ export default {
     inEachEnd: opts.hooks.inEachEnd.register,
   },
 }
+
+// Emit a suite with all of its tests
+
+export default language
