@@ -105,7 +105,7 @@
     "@seleniumhq/code-export-javascript-mocha": "^4.0.0-alpha.0",
     "@seleniumhq/code-export-python-pytest": "^4.0.0-alpha.0",
     "@seleniumhq/code-export-ruby-rspec": "^4.0.0-alpha.0",
-    "@seleniumhq/side-code-export": "^4.0.0-alpha.0",
+    "@seleniumhq/side-code-export": "^4.0.0-alpha.2",
     "@seleniumhq/get-driver": "^4.0.0-alpha.1",
     "@seleniumhq/side-api": "^4.0.0-alpha.11",
     "@seleniumhq/side-model": "^4.0.0-alpha.2",

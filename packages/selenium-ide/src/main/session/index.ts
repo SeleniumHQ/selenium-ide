@@ -15,6 +15,7 @@ import TestsController from './controllers/Tests'
 import WindowsController from './controllers/Windows'
 import Api from '../api'
 import { Session, Storage } from '../types'
+import OutputFormatsController from './controllers/OutputFormats'
 
 export default function createSession(
   app: App,
@@ -30,6 +31,7 @@ export default function createSession(
   partialSession.commands = new CommandsController(partialSession as Session)
   partialSession.driver = new DriverController(partialSession as Session)
   partialSession.menus = new MenuController(partialSession as Session)
+  partialSession.outputFormats = new OutputFormatsController(partialSession as Session)
   partialSession.playback = new PlaybackController(partialSession as Session)
   partialSession.plugins = new PluginsController(partialSession as Session)
   partialSession.projects = new ProjectsController(partialSession as Session)

@@ -55,46 +55,6 @@ export const projectEditorCommands: MenuComponent = (session) => async () =>
         await session.projects.save(filePath)
       },
     },
-    {
-      label: 'Export Project As...',
-      submenu: [
-        {
-          label: 'C# Commons',
-          click: async () => {
-          },
-        },
-        {
-          label: 'C# NUnit',
-          click: async () => {
-          },
-        },
-        {
-          label: 'C# XUnit',
-          click: async () => {
-          },
-        },
-        {
-          label: 'Java JUnit',
-          click: async () => {
-          },
-        },
-        {
-          label: 'Javascript Mocha',
-          click: async () => {
-          },
-        },
-        {
-          label: 'Python Pytest',
-          click: async () => {
-          },
-        },
-        {
-          label: 'Ruby RSpec',
-          click: async () => {
-          },
-        },
-      ],
-    },
   ]
 
 const projectEditorMenu = (session: Session) => async () => {

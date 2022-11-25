@@ -30,6 +30,8 @@ export const displayName = 'Java JUnit'
 
 export const opts: LanguageEmitterOpts = {
   emitter,
+  displayName,
+  name: 'java-junit',
   hooks: generateHooks(hooks),
   fileExtension: '.java',
   commandPrefixPadding: '  ',
@@ -126,6 +128,7 @@ const language: LanguageEmitter = {
       }
     },
   },
+  opts,
   register: {
     command: emitter.register,
     variable: opts.hooks.declareVariables.register,

@@ -27,6 +27,7 @@
   "devDependencies": {
     "@types/fs-extra": "^8.0.1",
     "@types/selenium-webdriver": "^4.1.9",
+    
     "selenium-webdriver": "^4.6.0"
   },
   "dependencies": {

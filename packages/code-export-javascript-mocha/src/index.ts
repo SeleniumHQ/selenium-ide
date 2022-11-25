@@ -30,6 +30,8 @@ export const displayName = 'JavaScript Mocha'
 
 export const opts: LanguageEmitterOpts = {
   emitter: emitter,
+  displayName,
+  name: 'javascript-mocha',
   hooks: generateHooks(hooks),
   fileExtension: '.spec.js',
   commandPrefixPadding: '  ',
@@ -127,6 +129,7 @@ const language: LanguageEmitter = {
       }
     },
   },
+  opts,
   register: {
     command: emitter.register,
     variable: opts.hooks.declareVariables.register,

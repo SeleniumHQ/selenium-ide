@@ -37,11 +37,12 @@ const CommandEditor: FC<CommandEditorProps> = ({
     selectedCommandIndexes.length !== 1 ||
     !commands[correctedCommand.command]
   ) {
+    console.log(selectedCommandIndexes)
     return (
       <Stack className="p-4" spacing={1}>
         <Typography className="centered py-4" variant="body2">
           {selectedCommandIndexes.length === 0
-            ? 'No command selected'
+            ? 'No commands selected'
             : `${selectedCommandIndexes.length} commands selected`}
         </Typography>
       </Stack>

@@ -4,7 +4,9 @@ export type MenuNames =
   | 'editBasics'
   | 'projectEditor'
   | 'testEditor'
+  | 'testManager'
   | 'projectView'
+  | 'suiteManager'
   | 'textField'
 /**
  * Opens one of our available menu types. Types are governed

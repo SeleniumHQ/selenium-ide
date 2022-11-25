@@ -1,7 +1,7 @@
 {
   "id": "31fcc435-c58e-4fc0-b96c-67db4cc7b1b3",
   "name": "check-examples",
-  "url": "http://nginx:80",
+  "url": "http://localhost:8080",
   "tests": [{
     "id": "6039c6d8-87e9-4fa1-b785-fdeb385b218d",
     "name": "check-examples",

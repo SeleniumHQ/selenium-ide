@@ -1,7 +1,7 @@
 {
   "id": "001ed38f-530e-4651-855f-988dc5400012",
   "name": "execute-script",
-  "url": "http://nginx:80/",
+  "url": "http://localhost:8080/",
   "tests": [{
     "id": "c065304c-a1d4-4a78-a8da-2e4c3e71adc5",
     "name": "execute script",

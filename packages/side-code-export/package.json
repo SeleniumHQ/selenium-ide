@@ -13,10 +13,14 @@
     "build": "babel -d dist src --ignore=__test__",
     "watch": "pnpm run build"
   },
+  "bin": {
+    "side-code-export": "dist/bin.js"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
     "@seleniumhq/side-model": "^4.0.0-alpha.2",
+    "commander": "^9.4.0",
     "ua-parser-js": "0.7.28"
   },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"

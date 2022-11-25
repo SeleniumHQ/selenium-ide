@@ -30,6 +30,8 @@ export const displayName = 'C# xUnit'
 
 export const opts: LanguageEmitterOpts = {
   emitter: emitter,
+  displayName,
+  name: 'csharp-xunit',
   hooks: generateHooks(hooks),
   fileExtension: '.cs',
   commandPrefixPadding: '  ',
@@ -117,6 +119,7 @@ const language: LanguageEmitter = {
     locator: location.emit,
     command: emitter.emit,
   },
+  opts,
   register: {
     command: emitter.register,
     variable: opts.hooks.declareVariables.register,
