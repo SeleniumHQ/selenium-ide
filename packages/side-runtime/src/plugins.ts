@@ -6,9 +6,19 @@ export const correctPluginPaths = (
   plugins: string[]
 ): string[] => {
   const projectDir = projectPath.split(path.sep).slice(0, -1).join(path.sep)
-  return plugins.map((pluginPath) =>
-    pluginPath.startsWith('.') ? path.join(projectDir, pluginPath) : pluginPath
-  )
+  return plugins
+    .filter((pluginPath) => {
+      if (typeof pluginPath !== 'string') {
+        console.warn('Skipping legacy style plugin ', pluginPath)
+        return false
+      }
+      return true
+    })
+    .map((pluginPath) => {
+      return pluginPath.startsWith('.')
+        ? path.join(projectDir, pluginPath)
+        : pluginPath
+    })
 }
 
 export const loadPlugins = async (

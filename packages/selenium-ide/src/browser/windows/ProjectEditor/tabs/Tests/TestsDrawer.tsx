@@ -64,6 +64,9 @@ const TestList: FC<TestListProps> = ({ activeTest, open, setOpen, tests }) => {
               id={id}
               key={id}
               name={name}
+              onContextMenu={() => {
+                window.sideAPI.menus.open('testManager', [id]);
+              }}
               rename={rename}
               selected={id === activeTest}
               setSelected={setSelected}

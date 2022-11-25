@@ -30,6 +30,8 @@ export const displayName = 'Ruby RSpec'
 
 export const opts: LanguageEmitterOpts = {
   emitter: emitter,
+  displayName,
+  name: 'ruby-rspec',
   hooks: generateHooks(hooks),
   fileExtension: '_spec.rb',
   commandPrefixPadding: '  ',
@@ -128,6 +130,7 @@ const language: LanguageEmitter = {
       }
     },
   },
+  opts,
   register: {
     command: emitter.register,
     variable: opts.hooks.declareVariables.register,

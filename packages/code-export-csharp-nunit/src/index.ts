@@ -29,7 +29,9 @@ import hooks from './hook'
 export const displayName = 'C# NUnit'
 
 export const opts: LanguageEmitterOpts = {
-  emitter: emitter,
+  displayName,
+  name: 'csharp-nunit',
+  emitter,
   hooks: generateHooks(hooks),
   fileExtension: '.cs',
   commandPrefixPadding: '  ',
@@ -121,6 +123,7 @@ const language: LanguageEmitter = {
     locator: location.emit,
     command: emitter.emit,
   },
+  opts,
   register: {
     command: emitter.register,
     variable: opts.hooks.declareVariables.register,
@@ -134,4 +137,4 @@ const language: LanguageEmitter = {
   },
 }
 
-export default language;
+export default language

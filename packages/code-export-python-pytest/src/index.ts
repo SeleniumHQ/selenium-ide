@@ -30,6 +30,8 @@ export const displayName = 'Python pytest'
 
 export const opts: LanguageEmitterOpts = {
   emitter: emitter,
+  displayName,
+  name: 'python-pytest',
   hooks: generateHooks(hooks),
   fileExtension: '.py',
   commandPrefixPadding: '  ',
@@ -128,6 +130,7 @@ const language: LanguageEmitter = {
       }
     },
   },
+  opts,
   register: {
     command: emitter.register,
     variable: opts.hooks.declareVariables.register,

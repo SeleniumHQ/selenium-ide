@@ -100,7 +100,8 @@ export const renderCommands: RenderCommands = (
       startingLevel: endingLevel,
     })
   }
-  commands.commands.forEach((command, index) => {
+  const commandBodies = commands?.commands ?? commands
+  commandBodies.forEach((command, index) => {
     if (command) {
       if (originTracing && originTracing[index]) {
         let rows = originTracing[index].split('\n')

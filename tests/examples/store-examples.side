@@ -1,7 +1,7 @@
 {
   "id": "b4675761-fdf4-4799-a7b0-989dd0f481f0",
   "name": "Store Examples Project",
-  "url": "http://nginx:80",
+  "url": "http://localhost:8080",
   "tests": [{
     "id": "1f270ca5-5a7c-4067-8f67-b4fc0dcea00b",
     "name": "attributes",

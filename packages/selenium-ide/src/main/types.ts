@@ -8,17 +8,18 @@ import CommandsController from './session/controllers/Commands'
 import DialogsController from './session/controllers/Dialogs'
 import DriverController from './session/controllers/Driver'
 import MenuController from './session/controllers/Menu'
+import OutputFormatsController from './session/controllers/OutputFormats'
 import PlaybackController from './session/controllers/Playback'
 import PluginsController from './session/controllers/Plugins'
 import ProjectsController from './session/controllers/Projects'
 import RecorderController from './session/controllers/Recorder'
 import StateController from './session/controllers/State'
 import SuitesController from './session/controllers/Suites'
+import SystemController from './session/controllers/System'
 import TestsController from './session/controllers/Tests'
 import WindowsController from './session/controllers/Windows'
 import { MainApi } from './api'
 import { StorageSchema } from './store'
-import SystemController from './session/controllers/System'
 
 export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
   browser: Browser
@@ -41,6 +42,7 @@ export interface Session {
   dialogs: DialogsController
   driver: DriverController
   menus: MenuController
+  outputFormats: OutputFormatsController
   playback: PlaybackController
   plugins: PluginsController
   projects: ProjectsController
@@ -60,7 +62,7 @@ export type SessionApiHandler = (
   session: Session
 ) => (...args: any[]) => any
 
-export type MenuComponent = (
+export type MenuComponent<Args extends any[] = any[]> = (
   session: Session
-) => () => Promise<Electron.MenuItemConstructorOptions[]>
+) => (...args: Args) => Promise<Electron.MenuItemConstructorOptions[]>
 

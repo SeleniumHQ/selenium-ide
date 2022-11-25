@@ -51,7 +51,12 @@ const SuiteList: FC<SuiteListProps> = ({
             }}
             onRemove={
               suites.length > 1
-                ? () => window.sideAPI.suites.delete(activeSuite)
+                ? () => {
+                  const doDelete = window.confirm('Delete this suite?')
+                  if (doDelete) {
+                    window.sideAPI.suites.delete(activeSuite)
+                  }
+                }
                 : undefined
             }
             sx={{
@@ -69,6 +74,9 @@ const SuiteList: FC<SuiteListProps> = ({
               id={id}
               key={id}
               name={name}
+              onContextMenu={() => {
+                window.sideAPI.menus.open('suiteManager', [id]);
+              }}
               rename={rename}
               selected={id === activeSuite}
               setSelected={setSelected}

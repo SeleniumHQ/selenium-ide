@@ -17,6 +17,7 @@
 
 export * from './code-export'
 export { default as codeExport } from './code-export'
+export * as fileWriter from './file-writer'
 export { default as stringEscape } from './string-escape'
 export * as project from './project'
 export * from './types'

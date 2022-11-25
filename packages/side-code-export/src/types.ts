@@ -85,6 +85,7 @@ export type LanguageExportEmitter = {
 export interface LanguageEmitterOpts {
   commentPrefix: string
   commandPrefixPadding: string
+  displayName: string
   emitter: LanguageExportEmitter
   fileExtension: string
   generateFilename: (name: string) => string
@@ -97,6 +98,7 @@ export interface LanguageEmitterOpts {
   generateSuiteDeclaration: (name: string) => string
   generateTestDeclaration: (name: string) => string
   hooks: LanguageHooks
+  name: string
   terminatingKeyword: string
 }
 
@@ -159,5 +161,6 @@ export type LanguageEmitterEmit = {
 
 export interface LanguageEmitter {
   emit: LanguageEmitterEmit
+  opts: LanguageEmitterOpts
   register: LanguageEmitterRegister
 }

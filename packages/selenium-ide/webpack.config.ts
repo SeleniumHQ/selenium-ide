@@ -44,7 +44,7 @@ const commonConfig: Pick<
       },
       {
         test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'url-loader',
+        type: 'asset/resource',
       },
     ],
   },
@@ -138,7 +138,7 @@ function getBrowserPlugin(filename: string) {
       <html>
         <head>
           <title>${title}</title>
-          <link rel="stylesheet" href="index.css">
+          <link rel="stylesheet" href="index.css" type="text/css">
           <script defer src="${filename}-bundle.js"></script>
         </head>
         <body>

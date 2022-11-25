@@ -49,11 +49,16 @@ export function findReusedTestMethods(test: TestShape, tests: TestShape[]) {
   let results: TestShape[] = []
   for (const command of test.commands) {
     if (command.command === 'run') {
-      const reusedTest = tests.find(
-        (test) => test.name === command.target
-      ) as TestShape
-      results.push(reusedTest)
-      results = results.concat(findReusedTestMethods(reusedTest, tests))
+      const reusedTest = tests.find((test) => test.name === command.target)
+      if (!reusedTest) {
+        console.log(
+          'Encountered a dynamic test declaration, including all tests as methods - will bloat code'
+        )
+        results = results.concat(tests)
+      } else {
+        results.push(test)
+        results = results.concat(findReusedTestMethods(reusedTest, tests))
+      }
     }
   }
   return deduplicateReusedTestMethods(results)

@@ -25,7 +25,7 @@ import { CACHE_PATH } from './cache'
 export async function createDriver({
   capabilities,
 }: {
-  capabilities: {} | Capabilities
+  capabilities: Record<string, unknown> | Capabilities
 }) {
   const { chromeService, firefoxService } = createServices()
   return await new Builder()

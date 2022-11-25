@@ -1,4 +1,4 @@
-import ListItem from '@mui/material/ListItem'
+import ListItem, { ListItemProps } from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import TextField from '@mui/material/TextField'
@@ -12,12 +12,13 @@ export interface TestListProps {
   setSelected: (id: string) => void
 }
 
-const RenamableListItem: FC<TestListProps> = ({
+const RenamableListItem: FC<ListItemProps & TestListProps> = ({
   id,
   name,
   rename,
   selected,
   setSelected,
+  ...props
 }) => {
   const [renaming, setRenaming] = React.useState(false)
   return (
@@ -26,6 +27,7 @@ const RenamableListItem: FC<TestListProps> = ({
       key={id}
       onClick={() => setSelected(id)}
       onDoubleClick={() => setRenaming(true)}
+      {...props}
     >
       {renaming ? (
         <TextField

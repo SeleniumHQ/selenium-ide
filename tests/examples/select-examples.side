@@ -1,7 +1,7 @@
 {
   "id": "1181f1d8-191a-4a2e-9d46-ded8000cd0b7",
   "name": "select-examples",
-  "url": "http://nginx:80",
+  "url": "http://localhost:8080",
   "tests": [{
     "id": "6acbf258-048b-4493-8478-accfc444fb3d",
     "name": "select-verify-labels",
