@@ -16,6 +16,7 @@ export default class SystemController extends BaseController {
         await this.crash(`Unable to startup due to chromedriver error: ${startupError}`);
       }
       await this.session.projects.select(firstTime)
+      await this.session.windows.open('logger')
       this.isDown = false
       firstTime = false
     }

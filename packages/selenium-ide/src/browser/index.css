@@ -36,6 +36,9 @@ body,
 .pos-abs {
   position: absolute;
 }
+.pos-fixed {
+  position: fixed;
+}
 
 /**
  * Opacity utils
@@ -161,6 +164,10 @@ body,
  */
 .pt-0 {
   padding-top: 0;
+}
+
+.p-1 {
+  padding: 0.125rem;
 }
 
 .py-3 {
