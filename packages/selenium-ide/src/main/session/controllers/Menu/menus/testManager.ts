@@ -12,7 +12,7 @@ export const testManagerCommands: MenuComponent<[string[]]> =
             testIDs.map((testID) => session.api.tests.delete(testID))
           )
         },
-        label: 'Delete Suite(s)',
+        label: 'Delete test(s)',
       },
       { type: 'separator' },
       ...outputFormats.map((formatName) => ({

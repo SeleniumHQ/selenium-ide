@@ -12,7 +12,7 @@ export const suiteManagerCommands: MenuComponent<[string[]]> =
             suiteIDs.map((suiteID) => session.api.suites.delete(suiteID))
           )
         },
-        label: 'Delete Suite(s)',
+        label: 'Delete suite(s)',
       },
       { type: 'separator' },
       ...outputFormats.map((formatName) => ({
