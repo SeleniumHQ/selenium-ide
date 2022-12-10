@@ -113,16 +113,26 @@ export class CommandNode {
     } else if (this.isTerminal()) {
       return
     } else {
-      const customCommand = commandExecutor.customCommands[this.command.command]
-      if (customCommand) {
-        return this.retryCommand(
-          async () =>
-            await customCommand.execute(this.command, commandExecutor),
-          Date.now() + commandExecutor.implicitWait
-        )
+      const { command } = this
+      const { target, value } = command
+      const commandName = command.command
+      const customCommand = commandExecutor.customCommands[commandName]
+      const existingCommandName = commandExecutor.name(commandName)
+      // @ts-expect-error webdriver is too kludged by here
+      if (!customCommand && !commandExecutor[existingCommandName]) {
+        throw new Error(`Missing expected command type ${commandName}`)
       }
-      return this._executeCoreCommand(
-        commandExecutor,
+      const executor = customCommand
+        ? () => customCommand.execute(command, commandExecutor)
+        : // @ts-expect-error webdriver is too kludged by here
+          () => commandExecutor[existingCommandName](target, value, commandName)
+      const ignoreRetry =
+        commandName === 'pause' || commandName.startsWith('wait')
+      if (ignoreRetry) {
+        return executor()
+      }
+      return this.retryCommand(
+        executor,
         Date.now() + commandExecutor.implicitWait
       )
     }
@@ -138,7 +148,9 @@ export class CommandNode {
   ): Promise<unknown> {
     const timeLimit = timeout - Date.now()
     const expirationTimer = setTimeout(() => {
-      throw new Error('Operation timed out!')
+      throw new Error(
+        `Operation timed out running command ${this.command.command}:${this.command.target}:${this.command.value}!`
+      )
     }, timeLimit)
     try {
       const result = await execute()
@@ -150,24 +162,6 @@ export class CommandNode {
       await this.pauseTimeout()
       return this.retryCommand(execute, timeout)
     }
-  }
-
-  async _executeCoreCommand(
-    commandExecutor: WebDriverExecutor,
-    timeout: number
-  ): Promise<unknown> {
-    const { command } = this
-    const { target, value } = command
-    return await this.retryCommand(
-      () =>
-        // @ts-expect-error webdriver is too kludged by here
-        commandExecutor[commandExecutor.name(this.command.command)](
-          target,
-          value,
-          command
-        ),
-      timeout
-    )
   }
 
   _executionResult(result: CommandExecutionResult = {}) {

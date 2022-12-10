@@ -1,4 +1,4 @@
-import { CommandShape } from '@seleniumhq/side-model'
+import { CommandShape, ProjectShape } from '@seleniumhq/side-model'
 import { CommandType } from '@seleniumhq/side-model/src/Commands'
 import { Fn } from '@seleniumhq/side-commons/src/types'
 import WebDriverExecutor, { WebDriverExecutorHooks } from './webdriver'
@@ -57,9 +57,14 @@ export type OnCommandRecordedResult =
   | onCommandRecordedDropResult
   | OnCommandRecordedUpdateResult
 
+export type PluginHookInput = {
+  logger: Console
+  project: ProjectShape
+} & Record<string, unknown>
+
 export interface PluginHooks extends WebDriverExecutorHooks {
-  onBeforePlayAll?: () => Promise<void>
-  onAfterPlayAll?: () => Promise<void>
+  onBeforePlayAll?: (input: PluginHookInput) => Promise<void>
+  onAfterPlayAll?: (input: PluginHookInput) => Promise<void>
   onMessage?: (...args: any[]) => void
 }
 

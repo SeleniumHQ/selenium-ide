@@ -114,12 +114,14 @@ export interface WindowSwitchedHookInput {
 }
 
 export interface WebDriverExecutorHooks {
-  onBeforePlay?: (input: BeforePlayHookInput) => void
-  onAfterCommand?: (input: CommandHookInput) => void
-  onBeforeCommand?: (input: CommandHookInput) => void
-  onStoreWindowHandle?: (input: StoreWindowHandleHookInput) => void
-  onWindowAppeared?: (input: WindowAppearedHookInput) => void
-  onWindowSwitched?: (input: WindowSwitchedHookInput) => void
+  onBeforePlay?: (input: BeforePlayHookInput) => Promise<void> | void
+  onAfterCommand?: (input: CommandHookInput) => Promise<void> | void
+  onBeforeCommand?: (input: CommandHookInput) => Promise<void> | void
+  onStoreWindowHandle?: (
+    input?: StoreWindowHandleHookInput
+  ) => Promise<void> | void
+  onWindowAppeared?: (input: WindowAppearedHookInput) => Promise<void> | void
+  onWindowSwitched?: (input: WindowSwitchedHookInput) => Promise<void> | void
 }
 
 export interface ElementEditableScriptResult {
@@ -240,7 +242,7 @@ export default class WebDriverExecutor {
     hook: T,
     ...args: Parameters<NonNullable<WebDriverExecutorHooks[T]>>
   ) {
-    const fn = this.hooks[hook]
+    const fn = this.hooks[hook] as WebDriverExecutorHooks[T]
     if (!fn) return
     await fn.apply(this, args)
   }
