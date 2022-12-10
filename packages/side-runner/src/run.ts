@@ -85,9 +85,7 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
         EE.addListener(
           PlaybackEvents.PLAYBACK_STATE_CHANGED,
           ({ state }: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
-            logger.debug(
-              `Playing state changed ${state} for test ${test.name}`
-            )
+            logger.debug(`Playing state changed ${state} for test ${test.name}`)
             switch (state) {
               case 'aborted':
               case 'errored':
