@@ -181,7 +181,8 @@ export default class PlaybackController extends BaseController {
   handlePlaybackStateChanged = (
     e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']
   ) => {
-    console.debug(`Playing state changed ${e.state}`)
+    const testName = this.session.tests.getByID(this.playingTest)?.name
+    console.debug(`Playing state changed ${e.state} for test ${testName}`)
     switch (e.state) {
       case 'aborted':
       case 'errored':

@@ -1,7 +1,7 @@
 import Paper from '@mui/material/Paper'
 import { getActiveCommand, getActiveTest } from '@seleniumhq/side-api/dist/helpers/getActiveData'
 import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
-import React, { useEffect } from 'react'
+import React from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import CommandTable from './TestCommandTable'
@@ -35,12 +35,6 @@ const TestsTab: React.FC<{
   const isTableWidth = useMediaQuery('only screen and (min-width: 600px)')
   const CommandsComponent = isTableWidth ? CommandTable : CommandList
   const bottomOffset = useHeightFromElement('command-editor')
-  useEffect(() => {
-    window.sideAPI.state.openTestEditor()
-    return () => {
-      window.sideAPI.state.closeTestEditor()
-    }
-  }, [])
 
   if (activeTestID === loadingID) {
     return <NoTestFound />

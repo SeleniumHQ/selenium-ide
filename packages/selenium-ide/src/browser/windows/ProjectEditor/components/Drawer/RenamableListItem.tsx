@@ -2,7 +2,9 @@ import ListItem, { ListItemProps } from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import TextField from '@mui/material/TextField'
+import { CommandState } from '@seleniumhq/side-runtime'
 import React, { FC } from 'react'
+import CommandOverlay from '../../tabs/Tests/TestCommandOverlay'
 
 export interface TestListProps {
   id: string
@@ -10,6 +12,7 @@ export interface TestListProps {
   rename: (id: string, name: string) => void
   selected: boolean
   setSelected: (id: string) => void
+  state?: CommandState
 }
 
 const RenamableListItem: FC<ListItemProps & TestListProps> = ({
@@ -18,6 +21,7 @@ const RenamableListItem: FC<ListItemProps & TestListProps> = ({
   rename,
   selected,
   setSelected,
+  state = null,
   ...props
 }) => {
   const [renaming, setRenaming] = React.useState(false)
@@ -48,6 +52,7 @@ const RenamableListItem: FC<ListItemProps & TestListProps> = ({
       ) : (
         <ListItemButton disableRipple selected={selected}>
           <ListItemText>{name}</ListItemText>
+          <CommandOverlay state={state} />
         </ListItemButton>
       )}
     </ListItem>

@@ -56,7 +56,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
       />
 
       <Tooltip
-        className="flex-fixed ml-4 my-auto"
+        className="flex-initial ml-4 my-auto"
         title={`${isDisabled ? 'En' : 'Dis'}able this command`}
         placement="top-end"
       >
@@ -69,7 +69,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
         </IconButton>
       </Tooltip>
       <Tooltip
-        className="flex-fixed mx-2 my-auto"
+        className="flex-initial mx-2 my-auto"
         title={commandData.description}
         placement="top-end"
       >

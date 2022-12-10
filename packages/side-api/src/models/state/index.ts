@@ -22,7 +22,7 @@ export const defaultEditorState: EditorStateShape = {
   copiedCommands: [],
   selectedCommandIndexes: [],
   selectedTestIndexes: [],
-  suiteMode: 'viewer',
+  suiteMode: 'editor',
 }
 
 export interface RecorderStateShape {

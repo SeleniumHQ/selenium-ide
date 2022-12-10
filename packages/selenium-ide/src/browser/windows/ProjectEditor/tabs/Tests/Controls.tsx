@@ -4,6 +4,7 @@ import PlayButton from '../../components/Controls/PlayButton'
 import RecordButton from '../../components/Controls/RecordButton'
 import StopButton from '../../components/Controls/StopButton'
 import PauseButton from '../../components/Controls/PauseButton'
+import PlayListButton from '../../components/Controls/PlayListButton'
 
 export interface TestControlsProps {
   state: StateShape
@@ -15,6 +16,7 @@ const TestControls: FC<TestControlsProps> = ({ state }) => {
       return (
         <>
           <PlayButton state={state} />
+          {!state.activeSuiteID ? null : <PlayListButton state={state} />}
           <RecordButton />
         </>
       )

@@ -11,8 +11,16 @@ export const mutator: Mutator<Shape> = (
   { params: [activeSuiteID] }
 ) => {
   const { suites } = session.project
-  const activeSuite =
-    suites.find((suite) => suite.id === activeSuiteID) || suites[0]
+  const activeSuite = suites.find((suite) => suite.id === activeSuiteID)
+  if (!activeSuite) {
+    return {
+      ...session,
+      state: {
+        ...session.state,
+        activeSuiteID,
+      },
+    }
+  }
   return setActiveTest(
     { ...session, state: { ...session.state, activeSuiteID } },
     {

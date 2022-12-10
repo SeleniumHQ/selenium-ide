@@ -1,8 +1,6 @@
-import type { Shape as CloseTestEditor } from './closeTestEditor'
 import type { Shape as Get } from './get'
 import type { Shape as GetUserPrefs } from './getUserPrefs'
 import type { Shape as OnMutate } from './onMutate'
-import type { Shape as OpenTestEditor } from './openTestEditor'
 import type { Shape as Set } from './set'
 import type { Shape as SetActiveCommand } from './setActiveCommand'
 import type { Shape as SetActiveSuite } from './setActiveSuite'
@@ -18,11 +16,9 @@ import type { Shape as ToggleUserPrefTheme } from './toggleUserPrefTheme'
 import type { Shape as UpdateStepSelection } from './updateStepSelection'
 import type { Shape as UpdateTestSelection } from './updateTestSelection'
 
-import * as closeTestEditor from './closeTestEditor'
 import * as get from './get'
 import * as getUserPrefs from './getUserPrefs'
 import * as onMutate from './onMutate'
-import * as openTestEditor from './openTestEditor'
 import * as set from './set'
 import * as setActiveCommand from './setActiveCommand'
 import * as setActiveSuite from './setActiveSuite'
@@ -39,11 +35,9 @@ import * as updateStepSelection from './updateStepSelection'
 import * as updateTestSelection from './updateTestSelection'
 
 export const commands = {
-  closeTestEditor,
   get,
   getUserPrefs,
   onMutate,
-  openTestEditor,
   set,
   setActiveCommand,
   setActiveSuite,
@@ -64,11 +58,9 @@ export const commands = {
  * Provides a wide range of functions for adjusting the current project state.
  */
 export type Shape = {
-  closeTestEditor: CloseTestEditor
   get: Get
   getUserPrefs: GetUserPrefs
   onMutate: OnMutate
-  openTestEditor: OpenTestEditor
   set: Set
   setActiveCommand: SetActiveCommand
   setActiveSuite: SetActiveSuite

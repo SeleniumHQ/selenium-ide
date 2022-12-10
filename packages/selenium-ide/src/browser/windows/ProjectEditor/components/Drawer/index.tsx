@@ -7,7 +7,8 @@ import SuitesDrawer from '../../tabs/Suites/SuitesDrawer'
 import TestsDrawer from '../../tabs/Tests/TestsDrawer'
 import ProjectDrawer from '../../tabs/Project/ProjectDrawer'
 
-interface SIDEDrawerProps extends Omit<DrawerWrapperProps, 'footerID' | 'header'> {
+interface SIDEDrawerProps
+  extends Omit<DrawerWrapperProps, 'footerID' | 'header'> {
   session: CoreSessionData
   tab: TAB
 }
@@ -15,15 +16,36 @@ interface SIDEDrawerProps extends Omit<DrawerWrapperProps, 'footerID' | 'header'
 const SIDEDrawer: React.FC<SIDEDrawerProps> = ({ session, tab, ...props }) => {
   const {
     project: { suites, tests },
-    state: { activeSuiteID, activeTestID, editor: { configSettingsGroup, suiteMode } },
+    state: {
+      activeSuiteID,
+      activeTestID,
+      editor: { configSettingsGroup, suiteMode },
+      playback: {
+        commands,
+        testResults,
+      }
+    },
   } = session
   return (
     <>
       <TabPanel index={TESTS_TAB} value={tab}>
-        <TestsDrawer activeTest={activeTestID} tests={tests} {...props} />
+        <TestsDrawer
+          activeTest={activeTestID}
+          activeSuite={activeSuiteID}
+          commandResults={commands}
+          suites={suites}
+          tests={tests}
+          testResults={testResults}
+          {...props}
+        />
       </TabPanel>
       <TabPanel index={SUITES_TAB} value={tab}>
-        <SuitesDrawer activeSuite={activeSuiteID} suiteMode={suiteMode} suites={suites} {...props} />
+        <SuitesDrawer
+          activeSuite={activeSuiteID}
+          suiteMode={suiteMode}
+          suites={suites}
+          {...props}
+        />
       </TabPanel>
       <TabPanel index={PROJECT_TAB} value={tab}>
         <ProjectDrawer configSettingsGroup={configSettingsGroup} {...props} />
