@@ -44,12 +44,6 @@
           "id": "58e73596-cfaa-45a6-9d34-d49dee8f27f5"
         },
         {
-          "command": "pause",
-          "target": "5000",
-          "value": "",
-          "id": "7abca8eb-6325-48ed-92d0-968d1659675e"
-        },
-        {
           "id": "ac59c71a-4b22-4788-a928-3b89776697f7",
           "command": "run",
           "target": "${runCMD}",
@@ -57,9 +51,27 @@
         },
         {
           "command": "assertElementPresent",
-          "target": "css=.lnXdpd",
+          "target": "id=hplogo",
           "value": "",
-          "id": "c3a7876e-3202-4cf2-8cbb-f2561d14fca3"
+          "id": "c3a7876e-3202-4cf2-8cbb-f2561d14fca3",
+          "fallbackTargets": [
+            [
+              "id=hplogo",
+              "id"
+            ],
+            [
+              "css=#hplogo",
+              "css:finder"
+            ],
+            [
+              "xpath=(//img[@alt='Seasonal Holidays 2022'])[1]",
+              "xpath:img"
+            ],
+            [
+              "xpath=(//img[@id='hplogo'])[1]",
+              "xpath:attributes"
+            ]
+          ]
         },
         {
           "command": "waitForElementNotPresent",

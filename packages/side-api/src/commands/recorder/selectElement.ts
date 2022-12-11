@@ -1,3 +1,4 @@
+import capitalize from 'lodash/fp/capitalize'
 import { mutator as updateStepMutator } from '../tests/updateStep'
 import { getActiveCommand } from '../../helpers/getActiveData'
 import { LocatorFields, Mutator } from '../../types'
@@ -17,7 +18,8 @@ export const mutator: Mutator<Shape> = (session, { params }) =>
       session.state.activeTestID,
       getActiveCommand(session).id,
       {
-        [params[0]]: params[1],
+        [params[0]]: params[1][0][0],
+        [`fallback${capitalize(params[0])}s`]: params[1],
       },
     ],
     result: undefined,

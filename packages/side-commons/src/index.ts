@@ -16,4 +16,5 @@
 // under the License.
 
 export * as events from './events'
+export * as string from './string'
 export * from './types'
