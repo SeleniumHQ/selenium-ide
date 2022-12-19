@@ -149,7 +149,7 @@ export class CommandNode {
     const timeLimit = timeout - Date.now()
     const expirationTimer = setTimeout(() => {
       throw new Error(
-        `Operation timed out running command ${this.command.command}:${this.command.target}:${this.command.value}!`
+        `Operation timed out running command ${this.command.command}:${this.command.target}:${this.command.value}`
       )
     }, timeLimit)
     try {
@@ -157,8 +157,8 @@ export class CommandNode {
       clearTimeout(expirationTimer)
       return result
     } catch (e) {
-      this.handleTransientError(e, timeout)
       clearTimeout(expirationTimer)
+      this.handleTransientError(e, timeout)
       await this.pauseTimeout()
       return this.retryCommand(execute, timeout)
     }
