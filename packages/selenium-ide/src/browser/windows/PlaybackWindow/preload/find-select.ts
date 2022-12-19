@@ -29,12 +29,16 @@ const init = () => {
     processHighlightCommand
   )
   window.addEventListener('beforeunload', () => {
-    window.sideAPI.recorder.onRequestSelectElement.removeListener(
-      processSelectionCommand
-    )
-    window.sideAPI.recorder.onHighlightElement.removeListener(
-      processHighlightCommand
-    )
+    try {
+      window.sideAPI.recorder.onRequestSelectElement.removeListener(
+        processSelectionCommand
+      )
+      window.sideAPI.recorder.onHighlightElement.removeListener(
+        processHighlightCommand
+      )
+    } catch (e) {
+      // ignore
+    }
   })
 }
 

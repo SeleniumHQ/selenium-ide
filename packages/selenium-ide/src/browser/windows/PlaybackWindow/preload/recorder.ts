@@ -59,9 +59,13 @@ export default class Recorder {
       this.getFrameLocation
     )
     this.window.addEventListener('beforeunload', () => {
-      this.window.sideAPI.recorder.onFrameRecalculate.removeListener(
-        this.getFrameLocation
-      )
+      try {
+        this.window.sideAPI.recorder.onFrameRecalculate.removeListener(
+          this.getFrameLocation
+        )
+      } catch (e) {
+        // ignore
+      }
     })
     // @ts-expect-error
     this.recordingState = {}
@@ -244,7 +248,9 @@ export default class Recorder {
     callback: MutationCallback,
     config: any
   ) {
-    const observer = new MutationObserver(callback.bind(this)) as ExpandedMutationObserver
+    const observer = new MutationObserver(
+      callback.bind(this)
+    ) as ExpandedMutationObserver
     observer.observerName = observerName
     observer.config = config
     this.mutationObservers[observerName] = observer
