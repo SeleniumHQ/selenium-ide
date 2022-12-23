@@ -16,7 +16,7 @@
 // under the License.
 import api from 'browser/api'
 import apiMutators from 'browser/api/mutator'
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, webFrame } from 'electron'
 import { identity } from 'lodash/fp'
 import path from 'path'
 import Recorder from './preload/recorder'
@@ -44,6 +44,13 @@ const pluginFromPath = (pluginPath: string) => {
  */
 window.addEventListener('DOMContentLoaded', async () => {
   contextBridge.exposeInMainWorld('sideAPI', true)
+  webFrame.executeJavaScript(`
+    Object.defineProperty(navigator, 'webdriver', {
+      get () {
+        return true
+      } 
+    })
+  `)
   window.sideAPI = {
     recorder: api.recorder,
     // @ts-expect-error
