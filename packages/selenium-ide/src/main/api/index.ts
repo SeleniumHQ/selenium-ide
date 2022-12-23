@@ -6,12 +6,14 @@ import RawHandler from './classes/RawHandler'
 
 export const overrides = {
   recorder: {
+    getWinHandleId: RawHandler<Session['recorder']['getWinHandleId']>(),
     getFrameLocation: RawHandler<Session['recorder']['getFrameLocation']>(),
   }
 } as const
 
 export type MainApi = Api & {
   recorder: {
+    getWinHandleId: Session['recorder']['getWinHandleId']
     getFrameLocation: Session['recorder']['getFrameLocation']
   }
 }

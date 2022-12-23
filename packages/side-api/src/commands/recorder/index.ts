@@ -7,8 +7,9 @@ import type { Shape as RequestHighlightElement } from './requestHighlightElement
 import type { Shape as OnRequestSelectElement } from './onRequestSelectElement'
 import type { Shape as RecordNewCommand } from './recordNewCommand'
 import type { Shape as RequestSelectElement } from './requestSelectElement'
-import type { Shape as SelectElement } from './selectElement'
+import type { Shape as GetWinHandleId } from './getWinHandleId'
 import type { Shape as SetWindowHandle } from './setWindowHandle'
+import type { Shape as SelectElement } from './selectElement'
 import type { Shape as Start } from './start'
 import type { Shape as Stop } from './stop'
 
@@ -23,6 +24,7 @@ import * as recordNewCommand from './recordNewCommand'
 import * as requestSelectElement from './requestSelectElement'
 import * as selectElement from './selectElement'
 import * as setWindowHandle from './setWindowHandle'
+import * as getWinHandleId from './getWinHandleId'
 import * as start from './start'
 import * as stop from './stop'
 
@@ -38,6 +40,7 @@ export const commands = {
   requestSelectElement,
   selectElement,
   setWindowHandle,
+  getWinHandleId,
   start,
   stop,
 }
@@ -58,6 +61,7 @@ export type Shape = {
   requestSelectElement: RequestSelectElement
   selectElement: SelectElement
   setWindowHandle: SetWindowHandle
+  getWinHandleId: GetWinHandleId
   start: Start
   stop: Stop
 }

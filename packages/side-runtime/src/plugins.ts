@@ -5,7 +5,7 @@ export const correctPluginPaths = (
   projectPath: string,
   plugins: string[]
 ): string[] => {
-  const projectDir = projectPath.split(path.sep).slice(0, -1).join(path.sep)
+  const projectDir = projectPath?.split(path.sep).slice(0, -1).join(path.sep)
   return plugins
     .filter((pluginPath) => {
       if (typeof pluginPath !== 'string') {
