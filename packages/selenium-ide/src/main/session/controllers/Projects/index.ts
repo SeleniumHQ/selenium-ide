@@ -156,7 +156,7 @@ export default class ProjectsController {
   }
 
   async update(
-    _updates: Partial<Pick<ProjectShape, 'name' | 'url'>>
+    _updates: Partial<Pick<ProjectShape, 'name' | 'url' | 'delay'>>
   ): Promise<boolean> {
     return true
   }

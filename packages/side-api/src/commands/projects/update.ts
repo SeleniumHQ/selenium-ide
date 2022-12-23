@@ -7,7 +7,7 @@ import { CoreSessionData, Mutator } from '../../types'
  * Edits project level config flags, like name or url.
  */
 export type Shape = (
-  updates: Partial<Pick<ProjectShape, 'name' | 'url'>>
+  updates: Partial<Pick<ProjectShape, 'name' | 'url' | 'delay'>>
 ) => Promise<boolean>
 
 export const mutator: Mutator<Shape> = (
