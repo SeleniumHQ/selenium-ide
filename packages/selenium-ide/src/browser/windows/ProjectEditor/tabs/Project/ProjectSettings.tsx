@@ -55,6 +55,23 @@ const ProjectSettings: FC<ProjectSettingsProps> = ({
           value={project.url}
         />
       </FormControl>
+      <FormControl>
+        <TextField
+          id="delay"
+          label="Step Delay (MILLISECONDS)"
+          helperText="Each step will pause by this setting"
+          name="delay"
+          type="number"
+          inputProps={{ min:0, step: 1000 }}
+          onChange={(e: any) => {
+            update({
+              delay: Math.max(parseInt(e.target.value || '0'), 0),
+            })
+          }}
+          size="small"
+          value={project.delay || 0}
+        />
+      </FormControl>
     </Stack>
     <List
       dense

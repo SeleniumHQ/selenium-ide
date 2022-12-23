@@ -105,6 +105,9 @@ export default class PlaybackController extends BaseController {
         getTestByName: (name: string) => this.session.tests.getByName(name),
         logger: console,
         variables: this.variables,
+        options: {
+          delay: this.session.projects.project.delay || 0
+        }
       })
       const EE = playback['event-emitter']
       EE.addListener(
