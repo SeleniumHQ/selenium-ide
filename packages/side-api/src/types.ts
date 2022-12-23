@@ -84,4 +84,5 @@ export interface RecordNewCommandInput {
   value: string | [string, string][]
   insertBeforeLastCommand?: boolean
   frameLocation?: string
+  winHandleId?: string
 }

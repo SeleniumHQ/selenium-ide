@@ -42,6 +42,7 @@ export interface NewCommandShape {
   value: string | [string, string][]
   insertBeforeLastCommand: boolean
   frameLocation: string
+  winHandleId: string
 }
 
 export interface onCommandRecordedDropResult {

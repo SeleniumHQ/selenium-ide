@@ -58,6 +58,7 @@ export default class Recorder {
     this.window.sideAPI.recorder.onFrameRecalculate.addListener(
       this.getFrameLocation
     )
+
     this.window.addEventListener('beforeunload', () => {
       try {
         this.window.sideAPI.recorder.onFrameRecalculate.removeListener(
@@ -74,6 +75,10 @@ export default class Recorder {
     // e.g., once on load
     this.getFrameLocation()
 
+    this.window.sideAPI.recorder.getWinHandleId().then((id) => {
+      this.winHandleId = id
+    })
+
     handlers.forEach((handler) => {
       this.addEventHandler(...handler)
     })
@@ -83,6 +88,7 @@ export default class Recorder {
     this.attach()
   }
 
+  winHandleId: string = ''
   plugins: PluginPreloadOutputShape[]
   window: Window
   eventListeners: Record<string, EventListener[]>
@@ -109,6 +115,7 @@ export default class Recorder {
       value,
       insertBeforeLastCommand,
       frameLocation: actualFrameLocation || this.frameLocation,
+      winHandleId: this.winHandleId
     }
     const plugins = this.plugins
     for (let i = 0, ii = plugins.length; i !== ii; i++) {

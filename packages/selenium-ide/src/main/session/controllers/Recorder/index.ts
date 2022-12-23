@@ -1,6 +1,6 @@
 import { CommandShape } from '@seleniumhq/side-model'
-import { getActiveCommand } from '@seleniumhq/side-api/dist/helpers/getActiveData'
-import { LocatorFields } from '@seleniumhq/side-api'
+import { getActiveCommand, getActiveTest, getActiveCommandIndex } from '@seleniumhq/side-api/dist/helpers/getActiveData'
+import { LocatorFields, CoreSessionData } from '@seleniumhq/side-api'
 import { randomInt, randomUUID } from 'crypto'
 import { relative } from 'path'
 import BaseController from '../Base'
@@ -43,12 +43,32 @@ const getFrameTraversalCommands = (
   }
 }
 
+const getLastActiveWindowHandleId = (session: CoreSessionData): string => {
+  const activeTest = getActiveTest(session)
+  const activeIndex = getActiveCommandIndex(session)
+
+  const commands = activeTest.commands
+  for (let i = activeIndex; i >= 0; i--) {
+    let item = commands[i]
+
+    if (item.command == 'selectWindow') {
+      let target = item.target as string
+      return target.substring('handle=${'.length, target.length - 1)
+    }
+    if (item.command == 'storeWindowHandle') {
+      return item.target as string
+    }
+  }
+
+  return 'root'
+}
 export interface RecordNewCommandInput {
   command: string
   target: string | [string, string][]
   value: string | [string, string][]
   insertBeforeLastCommand?: boolean
   frameLocation?: string
+  winHandleId?: string
 }
 
 export default class RecorderController extends BaseController {
@@ -60,6 +80,18 @@ export default class RecorderController extends BaseController {
     const session = await this.session.state.get()
     if (session.state.status !== 'recording') {
       return null
+    }
+    const commands = []
+    if (
+      getLastActiveWindowHandleId(session) != cmd.winHandleId 
+    ) {
+      const selectWindowCommand: CommandShape = {
+        id: randomUUID(),
+        command: 'selectWindow',
+        target: 'handle=${'+cmd.winHandleId+'}',
+        value: ''
+      }
+      commands.push(selectWindowCommand)
     }
     const mainCommand: CommandShape = {
       ...cmd,
@@ -76,10 +108,13 @@ export default class RecorderController extends BaseController {
       mainCommand.windowHandleName = `win${randomInt(1, 9999)}`
     }
     this.windowIDs = windows.map((window) => window.id);
-    return getFrameTraversalCommands(
+
+    commands.push(...getFrameTraversalCommands(
       session.state.recorder.activeFrame,
       cmd.frameLocation as string
-    ).concat(mainCommand)
+    ))
+    commands.push(mainCommand)
+    return commands
   }
 
   async requestHighlightElement(fieldName: LocatorFields) {
@@ -105,6 +140,27 @@ export default class RecorderController extends BaseController {
       activate,
       fieldName
     )
+
+  }
+
+  async getWinHandleId(): Promise<string> {
+    const session = await this.session.state.get()
+    const activeTest = getActiveTest(session)
+    const activeIndex = getActiveCommandIndex(session)
+
+    const commands = activeTest.commands
+    for (let i = activeIndex; i >= 0; i--) {
+      let item = commands[i]
+      if (item.opensWindow && item.windowHandleName) {
+        return item.windowHandleName
+      }
+
+      if (item.command == 'selectWindow') {
+        let target = item.target as string
+        return target.substring('handle=${'.length, target.length - 1)
+      }
+    }
+    return 'root'
   }
 
   async getFrameLocation(event: Electron.IpcMainEvent): Promise<string> {
@@ -145,9 +201,9 @@ export default class RecorderController extends BaseController {
         playbackWindow.webContents.loadURL(`${state.project.url}/`)
         return randomUUID()
       }
-      playbackWindow.webContents.loadURL(
-        `${state.project.url}${currentCommand.target}`
-      )
+      let url = new URL(currentCommand.target as string, state.project.url)
+      playbackWindow.webContents.loadURL(url.toString())
+      
     }
     playbackWindow.focus()
     return null
