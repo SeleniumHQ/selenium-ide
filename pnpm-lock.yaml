@@ -199,11 +199,11 @@ importers:
       '@seleniumhq/code-export-python-pytest': ^4.0.0-alpha.0
       '@seleniumhq/code-export-ruby-rspec': ^4.0.0-alpha.0
       '@seleniumhq/get-driver': ^4.0.0-alpha.1
-      '@seleniumhq/side-api': ^4.0.0-alpha.15
+      '@seleniumhq/side-api': ^4.0.0-alpha.16
       '@seleniumhq/side-code-export': ^4.0.0-alpha.2
       '@seleniumhq/side-model': ^4.0.0-alpha.2
       '@seleniumhq/side-plugin-example': ^4.0.0-alpha.1
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.15
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.16
       '@types/copy-webpack-plugin': 8.0.1
       '@types/electron': 1.6.10
       '@types/electron-devtools-installer': ^2.2.2
