@@ -61,7 +61,7 @@ const processStoreWindowHandle = (sesh: CoreSessionData) => {
         params: [activeIndex + 1, false, false, true],
         result: undefined,
       })
-    } else if (item.command == 'storeWindowHandle' && target == 'root') {
+    } else if (item.command === 'storeWindowHandle' && target === 'root') {
       return sesh
     }
   }
