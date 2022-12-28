@@ -389,7 +389,7 @@ importers:
   packages/side-runner:
     specifiers:
       '@seleniumhq/side-model': ^4.0.0-alpha.2
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.15
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.17
       '@types/glob': 7.2.0
       '@types/jest': ^27.4.1
       '@types/js-beautify': 1.13.3
