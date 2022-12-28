@@ -110,7 +110,7 @@
     "@seleniumhq/side-api": "^4.0.0-alpha.16",
     "@seleniumhq/side-model": "^4.0.0-alpha.2",
     "@seleniumhq/side-plugin-example": "^4.0.0-alpha.1",
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.16",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.17",
     "dnd-core": "16.0.1",
     "electron-chromedriver": "^18.0.0",
     "electron-log": "^4.4.8",

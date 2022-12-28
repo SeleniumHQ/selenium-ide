@@ -257,10 +257,7 @@ export default class WebDriverExecutor {
   async afterCommand(commandObject: CommandShape) {
     this.cancellable = undefined
     if (commandObject.opensWindow) {
-      const handle = await this.wait<string | undefined>(
-        this.waitForNewWindow(),
-        commandObject.windowTimeout
-      )
+      const handle = await this.waitForNewWindow(commandObject.windowTimeout)
       this.variables.set(commandObject.windowHandleName as string, handle)
 
       await this.executeHook('onWindowAppeared', {
@@ -273,11 +270,31 @@ export default class WebDriverExecutor {
     await this.executeHook('onAfterCommand', { command: commandObject })
   }
 
-  async waitForNewWindow() {
-    const currentHandles = await this.driver.getAllWindowHandles()
-    return currentHandles.find(
-      (handle) => !this[state].openedWindows.includes(handle)
-    )
+  async waitForNewWindow(timeout: number = 2000) {
+    const finder = new Promise<string | undefined>((resolve) => {
+      const start = Date.now()
+      const findHandle = async () => {
+        if (Date.now() - start > timeout) {
+          resolve(undefined)
+          return
+        }
+
+        const currentHandles = await this.driver.getAllWindowHandles()
+        const newHandle = currentHandles.find(
+          (handle) => !this[state].openedWindows.includes(handle)
+        )
+        if (newHandle) {
+          resolve(newHandle)
+          return
+        }
+        // cant find, wait next time.
+        setTimeout(findHandle, 200)
+      }
+
+      findHandle()
+    })
+
+    return this.wait(finder, timeout)
   }
 
   registerCommand(commandName: string, fn: Fn) {
