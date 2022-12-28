@@ -199,11 +199,11 @@ importers:
       '@seleniumhq/code-export-python-pytest': ^4.0.0-alpha.0
       '@seleniumhq/code-export-ruby-rspec': ^4.0.0-alpha.0
       '@seleniumhq/get-driver': ^4.0.0-alpha.1
-      '@seleniumhq/side-api': ^4.0.0-alpha.16
+      '@seleniumhq/side-api': ^4.0.0-alpha.17
       '@seleniumhq/side-code-export': ^4.0.0-alpha.2
       '@seleniumhq/side-model': ^4.0.0-alpha.2
       '@seleniumhq/side-plugin-example': ^4.0.0-alpha.1
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.17
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.18
       '@types/copy-webpack-plugin': 8.0.1
       '@types/electron': 1.6.10
       '@types/electron-devtools-installer': ^2.2.2
@@ -314,7 +314,7 @@ importers:
       '@seleniumhq/browser-info': ^4.0.0-alpha.1
       '@seleniumhq/get-driver': ^4.0.0-alpha.2
       '@seleniumhq/side-model': ^4.0.0-alpha.2
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.15
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.18
       '@types/electron': 1.6.10
       '@types/lodash': ^4.14.186
       lodash: ^4.17.21
@@ -382,14 +382,14 @@ importers:
 
   packages/side-plugin-example:
     specifiers:
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.15
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.18
     devDependencies:
       '@seleniumhq/side-runtime': link:../side-runtime
 
   packages/side-runner:
     specifiers:
       '@seleniumhq/side-model': ^4.0.0-alpha.2
-      '@seleniumhq/side-runtime': ^4.0.0-alpha.17
+      '@seleniumhq/side-runtime': ^4.0.0-alpha.18
       '@types/glob': 7.2.0
       '@types/jest': ^27.4.1
       '@types/js-beautify': 1.13.3

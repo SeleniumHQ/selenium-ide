@@ -233,6 +233,9 @@ export default class WebDriverExecutor {
     const func = 'do' + upperCase
     // @ts-expect-error The functions can be overridden by custom commands and stuff
     if (!this[func]) {
+      if (this.customCommands[command]) {
+        return command
+      }
       throw new Error(`Unknown command ${command}`)
     }
     return func
