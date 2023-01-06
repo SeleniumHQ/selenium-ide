@@ -477,7 +477,7 @@ async function emitMouseOut() {
       statement: `element = self.driver.find_element(By.CSS_SELECTOR, "body")`,
     },
     { level: 0, statement: 'actions = ActionChains(self.driver)' },
-    { level: 0, statement: 'actions.move_to_element(element, 0, 0).perform()' },
+    { level: 0, statement: 'actions.move_to_element(element).perform()' },
   ]
   return Promise.resolve({ commands })
 }
