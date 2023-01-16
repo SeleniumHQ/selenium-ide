@@ -57,6 +57,7 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
           )
         },
       },
+      implicitWait: configuration.timeout,
       server: configuration.server,
     })
     await playbackUntilComplete()

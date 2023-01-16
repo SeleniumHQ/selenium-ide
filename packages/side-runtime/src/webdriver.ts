@@ -247,7 +247,10 @@ export default class WebDriverExecutor {
   ) {
     const fn = this.hooks[hook] as WebDriverExecutorHooks[T]
     if (!fn) return
-    await fn.apply(this, args)
+    await fn.apply(
+      this,
+      args as Parameters<NonNullable<WebDriverExecutorHooks[T]>>
+    )
   }
 
   async beforeCommand(commandObject: CommandShape) {

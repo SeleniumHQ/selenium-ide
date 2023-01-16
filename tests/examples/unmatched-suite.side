@@ -1,0 +1,60 @@
+{
+"id": "0b92c09c-f225-4b25-8f4c-c57b15e9a79c",
+"version": "2.0",
+"name": "Simple",
+"url": "https://google.com/",
+"tests": [{
+"id": "b4f4ff9b-1356-444b-bd0c-fa8dd6fc4f2f",
+"name": "Test 2",
+"commands": [{
+"id": "c58a8c25-30c0-451f-a313-892fd74f9051",
+"comment": "",
+"command": "open",
+"target": "/",
+"targets": [],
+"value": ""
+}, {
+"id": "d15ae65e-886c-4f37-952b-ad9378a0c537",
+"comment": "",
+"command": "echo",
+"target": "Test 2",
+"targets": [],
+"value": ""
+}]
+}, {
+"id": "cf3264b4-51c5-4e69-8744-3e43c263d16c",
+"name": "Test 1",
+"commands": [{
+"id": "e5cdf636-eac7-4d0e-abf5-d7368ca67a7a",
+"comment": "",
+"command": "open",
+"target": "/",
+"targets": [],
+"value": ""
+}, {
+"id": "dfb2047d-f362-4341-9197-268d5b9a7338",
+"comment": "",
+"command": "echo",
+"target": "Test 1",
+"targets": [],
+"value": ""
+}]
+}],
+"suites": [{
+"id": "b252fa97-3a81-43f0-bc31-cecfd20aa525",
+"name": "2A - Suite 1",
+"persistSession": false,
+"parallel": false,
+"timeout": 300,
+"tests": ["cf3264b4-51c5-4e69-8744-3e43c263d16c"]
+}, {
+"id": "4849d60c-9c95-4779-aa42-6c014399fa6f",
+"name": "2B - Suite 2",
+"persistSession": false,
+"parallel": false,
+"timeout": 300,
+"tests": ["b4f4ff9b-1356-444b-bd0c-fa8dd6fc4f2f"]
+}],
+"urls": ["https://google.com/", "https://google.co.uk/"],
+"plugins": []
+}
