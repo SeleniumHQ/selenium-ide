@@ -107,6 +107,7 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
           PlaybackEvents.COMMAND_STATE_CHANGED,
           ({
             command,
+            message,
             state,
           }: PlaybackEventShapes['COMMAND_STATE_CHANGED']) => {
             const cmd = command
@@ -114,6 +115,9 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
               .filter((v) => !!v)
               .join('|')
             logger.debug(`${state} ${niceString}`)
+            if (message) {
+              logger.error(message)
+            }
           }
         )
         try {
