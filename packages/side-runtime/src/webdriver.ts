@@ -1733,6 +1733,24 @@ WebDriverExecutor.prototype.doEcho = composePreprocessors(
   WebDriverExecutor.prototype.doEcho
 )
 
+const waitCommands: (keyof WebDriverExecutor)[] = [
+  'doWaitForElementEditable',
+  'doWaitForElementNotEditable',
+  'doWaitForElementPresent',
+  'doWaitForElementNotPresent',
+  'doWaitForElementVisible',
+  'doWaitForElementNotVisible',
+  'doWaitForText',
+]
+
+waitCommands.forEach((cmd) => {
+  // @ts-expect-error - Whatever who cares
+  WebDriverExecutor.prototype[cmd] = composePreprocessors(
+    interpolateString,
+    WebDriverExecutor.prototype[cmd]
+  )
+})
+
 function createVerifyCommands(Executor: WebDriverExecutor) {
   // @ts-expect-error
   Object.getOwnPropertyNames(Executor.prototype)
