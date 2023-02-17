@@ -1304,11 +1304,15 @@ export default class WebDriverExecutor {
     message: string = '',
     pollTimeout: number = POLL_TIMEOUT
   ): Promise<T | Error> {
-    if (typeof timeout !== 'number' || timeout < 0) {
+    if (typeof timeout !== 'number' || timeout < 0 || isNaN(timeout)) {
       throw TypeError('timeout must be a number >= 0: ' + timeout)
     }
 
-    if (typeof pollTimeout !== 'number' || pollTimeout < 0) {
+    if (
+      typeof pollTimeout !== 'number' ||
+      pollTimeout < 0 ||
+      isNaN(pollTimeout)
+    ) {
       throw TypeError('pollTimeout must be a number >= 0: ' + pollTimeout)
     }
 
@@ -1746,6 +1750,7 @@ const waitCommands: (keyof WebDriverExecutor)[] = [
 waitCommands.forEach((cmd) => {
   // @ts-expect-error - Whatever who cares
   WebDriverExecutor.prototype[cmd] = composePreprocessors(
+    interpolateString,
     interpolateString,
     WebDriverExecutor.prototype[cmd]
   )
