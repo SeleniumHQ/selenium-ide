@@ -7,7 +7,19 @@ on:
 jobs:
   release:
     permissions:
+      actions: read
+      checks: read
       contents: write
+      deployments: read
+      id-token: read
+      issues: read
+      discussions: read
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      security-events: read
+      statuses: read
     runs-on: macos-11
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
