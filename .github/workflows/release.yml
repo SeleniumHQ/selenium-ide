@@ -6,6 +6,8 @@ on:
 
 jobs:
   release:
+    permissions:
+      contents: write
     runs-on: macos-11
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
