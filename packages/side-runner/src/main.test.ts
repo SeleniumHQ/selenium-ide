@@ -49,6 +49,9 @@ const configuration: Configuration = JSON.parse(
   process.env.SE_CONFIGURATION as string
 )
 
+if (configuration.retries > 0) {
+  jest.retryTimes(configuration.retries)
+}
 // Jest timeout should be really far back, otherwise it will impede people
 // When working right, we should close shop and detonate on our own much sooner
 jest.setTimeout(60 * 60 * 1000) // 60 minutes before we just cut it off

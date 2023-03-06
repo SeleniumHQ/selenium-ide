@@ -1,19 +1,15 @@
 import 'v8-compile-cache'
 import 'source-map-support/register'
 import { app } from 'electron'
-import log, { LogMessage } from 'electron-log'
+import { configureLogging, connectSessionLogging } from './log'
 import store from './store'
 import createSession from './session'
 import installReactDevtools from './install-react-devtools'
-import { join } from 'path'
-import { inspect } from 'util'
 
-// Configure log file
-const logFile = Date.now() + '.main.log'
-log.transports.file.resolvePath = () => join(app.getPath('logs'), logFile)
-Object.assign(console, log.functions)
+// Configure logging
+configureLogging();
 
-// Enable debugging - required for electron-chromedriver
+// Enable debugging - required for electron-chromedriv\
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
 // Capture and show unhandled exceptions
@@ -30,12 +26,7 @@ process.on('uncaughtException', (error) => {
 
 // Instantiate the session
 const session = createSession(app, store)
-
-// Wire up logging to the frontend
-const appTransport = (msg: LogMessage) =>
-  session.api.system.onLog.dispatchEvent(msg.level, inspect(msg.data))
-appTransport.level = 'debug' as const
-log.transports.app = appTransport
+connectSessionLogging(session)
 
 app.on('open-file', async (_e, path) => {
   await session.projects.load(path)

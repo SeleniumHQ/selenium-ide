@@ -17,6 +17,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import fs from 'fs'
 import merge from 'lodash/fp/merge'
 import os from 'os'
 import path from 'path'
@@ -51,6 +52,12 @@ program
     '""'
   )
   .option('-s, --server [url]', 'Webdriver remote server')
+  .option(
+    '-r, --retries [number]',
+    'Retry tests N times on failures, thin wrapper on jest.retryTimes',
+    (str) => parseInt(str),
+    0
+  )
   .option(
     '-f, --filter [string]',
     'Run suites matching name, takes a regex without slashes, eg (^(hello|goodbye).*$)'
@@ -111,6 +118,7 @@ let configuration: Configuration = {
   projects: [],
   proxyOptions: {},
   proxyType: undefined,
+  retries: options.retries,
   runId: crypto.randomBytes(16).toString('hex'),
   path: path.join(__dirname, '../../'),
   server: '',
@@ -154,6 +162,19 @@ configuration = merge(configuration, {
 if (configuration.proxyType) {
   const proxy = ParseProxy(configuration.proxyType, configuration.proxyOptions)
   configuration.capabilities.proxy = proxy
+}
+
+if (options.outputDirectory) {
+  if (!fs.existsSync(options.outputDirectory)) {
+    fs.mkdirSync(options.outputDirectory, { recursive: true })
+  }
+  const outputFile = path.join(
+    options.outputDirectory,
+    'results-' + new Date().toISOString() + '.json'
+  )
+  if (!fs.existsSync(outputFile)) {
+    fs.writeFileSync(outputFile, '')
+  }
 }
 
 configuration.debugStartup &&

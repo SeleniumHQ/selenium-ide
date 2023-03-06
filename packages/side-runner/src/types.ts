@@ -59,6 +59,8 @@ export interface SideRunnerCLIConfig {
   proxyOptions?: string
   // Type of proxy to use (one of: direct, manual, pac, socks, system)
   proxyType?: ProxyType
+  // Retries for failed tests
+  retries: number
   // Webdriver remote server
   server: string
   // The maximimum amount of time, in milliseconds, to spend attempting to locate
@@ -76,7 +78,7 @@ export type Configuration = Required<
 > &
   Pick<
     SideRunnerCLIConfig,
-    'debugStartup' | 'debug' | 'force' | 'proxyType'
+    'debugStartup' | 'debug' | 'force' | 'proxyType' | 'retries'
   > & {
     capabilities: Record<string, JSON>
     projects: string[]
