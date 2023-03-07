@@ -1224,7 +1224,7 @@ export default class WebDriverExecutor {
     script: ScriptShape
   ): Promise<WebDriverExecutorCondEvalResult> {
     const result = await this.driver.executeScript(
-      `return (${script.script})`,
+      interpolateScript(`return (${script.script})`, this.variables).script,
       ...script.argv
     )
     return {

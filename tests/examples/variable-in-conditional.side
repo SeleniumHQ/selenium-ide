@@ -1,0 +1,68 @@
+{
+  "id": "91bfd1d9-35aa-44cc-b877-68a857bfb0e7",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "7f7e294c-2285-433a-9a26-d249daafeb71",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "2e05c87f-fd47-43e1-bd89-7197f52e3cda"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "2e05c87f-fd47-43e1-bd89-7197f52e3cda",
+      "name": "If variable",
+      "commands": [
+        {
+          "id": "73e3061e-5904-4ee7-9923-a0bb014349dd",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "store",
+          "target": "1",
+          "value": "asdf",
+          "id": "bd52ea3d-b813-497c-8bd1-ea365127ce12"
+        },
+        {
+          "command": "if",
+          "target": "${asdf} == 1",
+          "value": "",
+          "id": "67c95cc0-68ce-4019-a2eb-8f32fd6c722c"
+        },
+        {
+          "command": "click",
+          "target": "css=#gbqfbb",
+          "value": "",
+          "id": "6541336a-a114-42da-9443-53e1ad0027a4",
+          "isBreakpoint": false
+        },
+        {
+          "command": "end",
+          "target": "",
+          "value": "",
+          "id": "52a7461f-a944-471b-bfbc-66cecfa001a8"
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}

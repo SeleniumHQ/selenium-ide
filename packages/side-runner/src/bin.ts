@@ -170,7 +170,7 @@ if (options.outputDirectory) {
   }
   const outputFile = path.join(
     options.outputDirectory,
-    'results-' + new Date().toISOString() + '.json'
+    'results-' + new Date().toISOString().replace(/:/g, '-') + '.json'
   )
   if (!fs.existsSync(outputFile)) {
     fs.writeFileSync(outputFile, '')
