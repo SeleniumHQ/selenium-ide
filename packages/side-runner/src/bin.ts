@@ -200,7 +200,7 @@ const jestArgs = [
           '--outputFile=' +
             path.join(
               options.outputDirectory,
-              'results-' + new Date().toISOString() + '.json'
+              'results-' + new Date().toISOString().replace(/:/g, '-') + '.json'
             ),
         ]
       : []
