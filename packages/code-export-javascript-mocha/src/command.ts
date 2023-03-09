@@ -848,7 +848,7 @@ async function emitVerifyNotSelectedValue(locator: string, expectedValue: string
     },
     {
       level: 1,
-      statement: `assert(value !== "${exporter.emit.text(expectedValue)}")`,
+      statement: `assert.equal(value, "${exporter.emit.text(expectedValue)}")`
     },
     { level: 0, statement: `}` },
   ]
@@ -864,7 +864,7 @@ async function emitVerifyNotText(locator: string, text: string) {
         locator
       )}).getText()`,
     },
-    { level: 1, statement: `assert(text !== "${exporter.emit.text(text)}")` },
+    { level: 1, statement: `assert.notEqual(text, "${exporter.emit.text(text)}")` },
     { level: 0, statement: `}` },
   ]
   return Promise.resolve({ commands })
@@ -889,7 +889,7 @@ async function emitVerifySelectedLabel(locator: string, labelValue: string) {
       statement:
         'const selectedText = await element.findElement(By.xpath(locator)).getText()',
     },
-    { level: 1, statement: `assert(selectedText == "${labelValue}")` },
+    { level: 1, statement: `assert.equals(selectedText, "${labelValue}")` },
     { level: 0, statement: `}` },
   ]
   return Promise.resolve({
@@ -901,9 +901,9 @@ async function emitVerifyText(locator: string, text: string) {
   const commands = [
     {
       level: 0,
-      statement: `assert(await driver.findElement(${await location.emit(
+      statement: `assert.equals(await driver.findElement(${await location.emit(
         locator
-      )}).getText() == "${exporter.emit.text(text)}")`,
+      )}).getText(), "${exporter.emit.text(text)}")`,
     },
   ]
   return Promise.resolve({ commands })
@@ -918,7 +918,7 @@ async function emitVerifyValue(locator: string, value: string) {
         locator
       )}).getAttribute("value")`,
     },
-    { level: 1, statement: `assert(value == "${value}")` },
+    { level: 1, statement: `assert.equals(value, "${value}")` },
     { level: 0, statement: `}` },
   ]
   return Promise.resolve({ commands })
