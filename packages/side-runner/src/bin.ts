@@ -164,14 +164,13 @@ if (configuration.proxyType) {
   configuration.capabilities.proxy = proxy
 }
 
+const outputFilename =
+  'results-' + new Date().toISOString().replace(/:/g, '-') + '.json'
 if (options.outputDirectory) {
   if (!fs.existsSync(options.outputDirectory)) {
     fs.mkdirSync(options.outputDirectory, { recursive: true })
   }
-  const outputFile = path.join(
-    options.outputDirectory,
-    'results-' + new Date().toISOString().replace(/:/g, '-') + '.json'
-  )
+  const outputFile = path.join(options.outputDirectory, outputFilename)
   if (!fs.existsSync(outputFile)) {
     fs.writeFileSync(outputFile, '')
   }
@@ -197,11 +196,7 @@ const jestArgs = [
     options.outputDirectory
       ? [
           '--json',
-          '--outputFile=' +
-            path.join(
-              options.outputDirectory,
-              'results-' + new Date().toISOString() + '.json'
-            ),
+          '--outputFile=' + path.join(options.outputDirectory, outputFilename),
         ]
       : []
   )
