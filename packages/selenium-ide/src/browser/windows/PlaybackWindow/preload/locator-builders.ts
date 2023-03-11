@@ -286,14 +286,14 @@ export default class LocatorBuilders {
 // e.g., 1st listed is top priority
 
 LocatorBuilders.add(
-  'css:data-attr',
+  'css:data-test-id',
   function (this: LocatorBuilders, e: HTMLElement) {
-    const dataAttributes = ['data-test', 'data-test-id']
+    const dataAttributes = ['data-test-id', 'data-test']
     for (let i = 0; i < dataAttributes.length; i++) {
       const attr = dataAttributes[i]
       const value = e.getAttribute(attr)
-      if (attr) {
-        return `css=*[${attr}="${value}"]`
+      if (value) {
+        return `css=[${attr}="${value}"]`
       }
     }
     return null
@@ -330,6 +330,29 @@ LocatorBuilders.add('name', function (this: LocatorBuilders, _e: HTMLElement) {
   }
   return null
 })
+
+const dataAttributeFromDatasetProperty = (attr: string) =>
+  `data-${attr.replace(
+    /[A-Z]/g,
+    (letter: string) => `-${letter.toLowerCase()}`
+  )}`
+
+LocatorBuilders.add(
+  'css:data-attr',
+  function (this: LocatorBuilders, e: HTMLElement) {
+    const dataKeys = Object.keys(e.dataset || {})
+    if (dataKeys.length) {
+      const attr = dataKeys[0]
+      const value = e.dataset[attr]
+      const htmlAttr = dataAttributeFromDatasetProperty(attr)
+      if (!value || value === 'true') {
+        return `css=[${htmlAttr}]`
+      }
+      return `css=[${htmlAttr}="${value}"]`
+    }
+    return null
+  }
+)
 
 LocatorBuilders.add(
   'css:finder',
