@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export-javascript-mocha",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.1",
   "description": "Export Selenium IDE project contents to JavaScript Mocha",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
