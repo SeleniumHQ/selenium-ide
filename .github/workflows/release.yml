@@ -28,7 +28,7 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install pnpm
-        run: npm i -g pnpm
+        run: npm i -g pnpm@7
       - name: Install dependencies
         run: pnpm -r i
       - name: Install chromedriver for windows
