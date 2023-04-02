@@ -37,7 +37,7 @@ jobs:
       - name: Build all JS
         run: pnpm run build
       - name: Publish non IDE packages to npm
-        run: pnpm -r publish --no-git-checks
+        run: pnpm -r publish --no-git-checks --filter=!packages/selenium-ide --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install electron-builder dependencies

@@ -33,11 +33,11 @@ export async function sh(
     stderr = ''
   const cp = spawn(command, args, options)
 
-  cp.stdout.on('data', data => {
+  cp.stdout.on('data', (data) => {
     stdout += data.toString()
   })
 
-  cp.stderr.on('data', data => {
+  cp.stderr.on('data', (data) => {
     stderr += data.toString()
   })
 
@@ -51,7 +51,7 @@ export async function sh(
     }
   })
 
-  cp.on('error', error => {
+  cp.on('error', (error) => {
     reject(makeError(error.message, 1, stdout, stderr))
   })
 

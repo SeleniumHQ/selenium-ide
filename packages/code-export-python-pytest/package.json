@@ -1,6 +1,7 @@
 {
   "name": "@seleniumhq/code-export-python-pytest",
   "version": "4.0.0-alpha.0",
+  "private": false,
   "description": "Export Selenium IDE project contents to Python pytest",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
   "keywords": [
