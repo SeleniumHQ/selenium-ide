@@ -22,7 +22,7 @@ import {
   PrebuildEmitter,
   ProcessedCommandEmitter,
   ScriptShape,
-} from '@seleniumhq/side-code-export'
+} from 'side-code-export'
 import location from './location'
 import selection from './selection'
 

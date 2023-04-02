@@ -53,9 +53,6 @@
       "path": "../side-model"
     },
     {
-      "path": "../side-plugin-example"
-    },
-    {
       "path": "../side-runtime"
     }
   ]

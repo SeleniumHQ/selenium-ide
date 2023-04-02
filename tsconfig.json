@@ -47,13 +47,13 @@
       "path": "./packages/side-commons"
     },
     {
+      "path": "./packages/side-example-suite"
+    },
+    {
       "path": "./packages/side-migrate"
     },
     {
       "path": "./packages/side-model"
-    },
-    {
-      "path": "./packages/side-plugin-example"
     },
     {
       "path": "./packages/side-runner"

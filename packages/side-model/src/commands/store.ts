@@ -25,7 +25,7 @@ export default new Command({
     text: ArgType.exact(text).isRequired(),
     variable: ArgType.exact(variable).isRequired(),
   },
-  validate: function({ text, variable }) {
+  validate: function ({ text, variable }) {
     return (
       this.args.text.validate(text) && this.args.variable.validate(variable)
     )

@@ -9,6 +9,12 @@
     "exclude": ["**/__mocks__", "**/__tests__"],
     "references": [
       {
+        "path": "../code-export-python-pytest"
+      },
+      {
+        "path": "../side-code-export"
+      },
+      {
         "path": "../side-runtime"
       }
     ]

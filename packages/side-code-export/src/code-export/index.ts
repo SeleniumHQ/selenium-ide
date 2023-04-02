@@ -23,6 +23,7 @@ import * as find from './find'
 import render from './render'
 import * as parsers from './parsers'
 
+export * from './defaults'
 export * from './emit'
 export * from './find'
 export * from './hook'

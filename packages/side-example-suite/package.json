@@ -1,8 +1,8 @@
 {
-  "name": "@seleniumhq/side-plugin-example",
-  "version": "4.0.0-alpha.11",
-  "private": false,
-  "description": "Selenium IDE example plugin",
+  "name": "@seleniumhq/side-example-suite",
+  "version": "4.0.0-alpha.1",
+  "private": true,
+  "description": "Selenium IDE example suite, with tests, plugin, and export format",
   "author": "Todd <tarsitodd@gmail.com>",
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
@@ -12,11 +12,16 @@
   ],
   "scripts": {
     "build": "tsc",
+    "build:code": "side-code-export ./dist/formats/custom-python.js ./projects/plugin.side ./tests",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
     "watch": "tsc --watch"
   },
+  "dependencies": {
+    "side-code-export": "^4.0.0-alpha.5",
+    "@seleniumhq/code-export-python-pytest": "4.0.0-alpha.2"
+  },
   "devDependencies": {
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.21"
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.22"
   },
   "repository": {
     "type": "git",

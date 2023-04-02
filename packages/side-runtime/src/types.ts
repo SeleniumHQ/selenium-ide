@@ -78,6 +78,12 @@ export interface FormatShape {
   }
 }
 
+/**
+ * A plugin is a javascript module that can be loaded into the Side Runner.
+ * It can be used to extend the functionality of the Side Runner by adding new
+ * commands, formats, or hooks.
+ */
+
 export interface PluginShape {
   commands?: Record<string, CustomCommandShape>
   formats?: FormatShape[]

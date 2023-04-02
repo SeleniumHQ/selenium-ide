@@ -20,7 +20,7 @@ import {
   ExportFlexCommandShape,
   ProcessedCommandEmitter,
   ScriptShape,
-} from '@seleniumhq/side-code-export'
+} from 'side-code-export'
 import { CommandShape } from '@seleniumhq/side-model'
 import location from './location'
 import selection from './selection'

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { HookFunctionInputs } from '@seleniumhq/side-code-export'
+import { HookFunctionInputs } from 'side-code-export'
 
 export const emitters = {
   afterAll: empty,

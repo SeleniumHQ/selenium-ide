@@ -138,74 +138,74 @@ importers:
 
   packages/code-export-csharp-commons:
     dependencies:
-      '@seleniumhq/side-code-export':
-        specifier: ^4.0.0-alpha.2
+      side-code-export:
+        specifier: ^4.0.0-alpha.5
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
 
   packages/code-export-csharp-nunit:
     dependencies:
       '@seleniumhq/code-export-csharp-commons':
-        specifier: ^4.0.0-alpha.0
+        specifier: ^4.0.0-alpha.1
         version: link:../code-export-csharp-commons
-      '@seleniumhq/side-code-export':
-        specifier: ^4.0.0-alpha.2
+      side-code-export:
+        specifier: ^4.0.0-alpha.5
         version: link:../side-code-export
 
   packages/code-export-csharp-xunit:
     dependencies:
       '@seleniumhq/code-export-csharp-commons':
-        specifier: ^4.0.0-alpha.0
-        version: link:../code-export-csharp-commons
-      '@seleniumhq/side-code-export':
         specifier: ^4.0.0-alpha.1
+        version: link:../code-export-csharp-commons
+      side-code-export:
+        specifier: ^4.0.0-alpha.5
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
 
   packages/code-export-java-junit:
     dependencies:
-      '@seleniumhq/side-code-export':
-        specifier: ^4.0.0-alpha.2
+      side-code-export:
+        specifier: ^4.0.0-alpha.5
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
 
   packages/code-export-javascript-mocha:
     dependencies:
-      '@seleniumhq/side-code-export':
-        specifier: ^4.0.0-alpha.2
+      side-code-export:
+        specifier: ^4.0.0-alpha.5
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
 
   packages/code-export-python-pytest:
     dependencies:
-      '@seleniumhq/side-code-export':
-        specifier: ^4.0.0-alpha.2
+      side-code-export:
+        specifier: ^4.0.0-alpha.5
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
 
   packages/code-export-ruby-rspec:
     dependencies:
-      '@seleniumhq/side-code-export':
-        specifier: ^4.0.0-alpha.2
+      side-code-export:
+        specifier: ^4.0.0-alpha.5
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
 
   packages/get-driver:
@@ -243,10 +243,10 @@ importers:
     dependencies:
       '@emotion/react':
         specifier: ^11.8.1
-        version: 11.10.4(@babel/core@7.19.3)(@types/react@17.0.50)(react@17.0.2)
+        version: 11.10.4(@types/react@17.0.50)(react@17.0.2)
       '@emotion/styled':
         specifier: ^11.8.1
-        version: 11.10.4(@babel/core@7.19.3)(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
+        version: 11.10.4(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
       '@fontsource/roboto':
         specifier: ^4.5.0
         version: 4.5.8
@@ -260,40 +260,34 @@ importers:
         specifier: ^5.5.0
         version: 5.10.9(@emotion/react@11.10.4)(@emotion/styled@11.10.4)(@types/react@17.0.50)(react-dom@17.0.2)(react@17.0.2)
       '@seleniumhq/code-export-csharp-nunit':
-        specifier: ^4.0.0-alpha.0
+        specifier: ^4.0.0-alpha.1
         version: link:../code-export-csharp-nunit
       '@seleniumhq/code-export-csharp-xunit':
-        specifier: ^4.0.0-alpha.0
+        specifier: ^4.0.0-alpha.1
         version: link:../code-export-csharp-xunit
       '@seleniumhq/code-export-java-junit':
-        specifier: ^4.0.0-alpha.0
+        specifier: ^4.0.0-alpha.1
         version: link:../code-export-java-junit
       '@seleniumhq/code-export-javascript-mocha':
-        specifier: ^4.0.0-alpha.0
+        specifier: ^4.0.0-alpha.2
         version: link:../code-export-javascript-mocha
       '@seleniumhq/code-export-python-pytest':
-        specifier: ^4.0.0-alpha.0
+        specifier: ^4.0.0-alpha.2
         version: link:../code-export-python-pytest
       '@seleniumhq/code-export-ruby-rspec':
-        specifier: ^4.0.0-alpha.0
+        specifier: ^4.0.0-alpha.1
         version: link:../code-export-ruby-rspec
       '@seleniumhq/get-driver':
         specifier: ^4.0.0-alpha.1
         version: link:../get-driver
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.20
-        version: link:../side-api
-      '@seleniumhq/side-code-export':
-        specifier: ^4.0.0-alpha.2
-        version: link:../side-code-export
-      '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
-        version: link:../side-model
-      '@seleniumhq/side-plugin-example':
-        specifier: ^4.0.0-alpha.1
-        version: link:../side-plugin-example
-      '@seleniumhq/side-runtime':
         specifier: ^4.0.0-alpha.21
+        version: link:../side-api
+      '@seleniumhq/side-model':
+        specifier: ^4.0.0-alpha.3
+        version: link:../side-model
+      '@seleniumhq/side-runtime':
+        specifier: ^4.0.0-alpha.22
         version: link:../side-runtime
       dnd-core:
         specifier: 16.0.1
@@ -321,13 +315,16 @@ importers:
         version: 17.0.2
       react-dnd:
         specifier: ^15.1.1
-        version: 15.1.2(@types/node@16.11.64)(@types/react@17.0.50)(react@17.0.2)
+        version: 15.1.2(@types/react@17.0.50)(react@17.0.2)
       react-dnd-html5-backend:
         specifier: ^15.1.2
         version: 15.1.3
       react-dom:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
+      side-code-export:
+        specifier: ^4.0.0-alpha.5
+        version: link:../side-code-export
       ua-parser-js:
         specifier: ^0.7.19
         version: 0.7.31
@@ -412,7 +409,7 @@ importers:
         version: 9.4.1(typescript@4.8.4)(webpack@5.74.0)
       ts-node:
         specifier: ^10.7.0
-        version: 10.9.1(@types/node@16.11.64)(typescript@4.8.4)
+        version: 10.9.1(typescript@4.8.4)
       typescript:
         specifier: ^4.5.4
         version: 4.8.4
@@ -435,10 +432,10 @@ importers:
         specifier: ^4.0.0-alpha.2
         version: link:../get-driver
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.21
+        specifier: ^4.0.0-alpha.22
         version: link:../side-runtime
       '@types/electron':
         specifier: 1.6.10
@@ -479,8 +476,11 @@ importers:
   packages/side-code-export:
     dependencies:
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
+      '@seleniumhq/side-runtime':
+        specifier: ^4.0.0-alpha.22
+        version: link:../side-runtime
       commander:
         specifier: ^9.4.0
         version: 9.4.1
@@ -489,6 +489,19 @@ importers:
         version: 0.7.28
 
   packages/side-commons: {}
+
+  packages/side-example-suite:
+    dependencies:
+      '@seleniumhq/code-export-python-pytest':
+        specifier: 4.0.0-alpha.2
+        version: link:../code-export-python-pytest
+      side-code-export:
+        specifier: ^4.0.0-alpha.5
+        version: link:../side-code-export
+    devDependencies:
+      '@seleniumhq/side-runtime':
+        specifier: ^4.0.0-alpha.22
+        version: link:../side-runtime
 
   packages/side-migrate:
     dependencies:
@@ -514,19 +527,13 @@ importers:
 
   packages/side-model: {}
 
-  packages/side-plugin-example:
-    devDependencies:
-      '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.21
-        version: link:../side-runtime
-
   packages/side-runner:
     dependencies:
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.21
+        specifier: ^4.0.0-alpha.22
         version: link:../side-runtime
       commander:
         specifier: ^9.4.0
@@ -593,7 +600,7 @@ importers:
         specifier: ^4.0.0-alpha.1
         version: link:../side-commons
       '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-model
       '@types/selenium-webdriver':
         specifier: ^4.1.9
@@ -1233,13 +1240,12 @@ packages:
       '@babel/core': 7.19.3
       '@babel/helper-plugin-utils': 7.19.0
 
-  /@babel/plugin-syntax-jsx@7.18.6(@babel/core@7.19.3):
+  /@babel/plugin-syntax-jsx@7.18.6:
     resolution: {integrity: sha512-6mmljtAedFGTWu2p/8WIORGwy+61PLgOMPOdazc7YoJ9ZCWUyFy3A6CpPkRKLKD1ToAesxX8KGEViAiLo9N+7Q==}
     engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:
-      '@babel/core': 7.19.3
       '@babel/helper-plugin-utils': 7.19.0
     dev: false
 
@@ -2011,14 +2017,13 @@ packages:
       - supports-color
     dev: true
 
-  /@emotion/babel-plugin@11.10.2(@babel/core@7.19.3):
+  /@emotion/babel-plugin@11.10.2:
     resolution: {integrity: sha512-xNQ57njWTFVfPAc3cjfuaPdsgLp5QOSuRsj9MA6ndEhH/AzuZM86qIQzt6rq+aGBwj3n5/TkLmU5lhAfdRmogA==}
     peerDependencies:
       '@babel/core': ^7.0.0
     dependencies:
-      '@babel/core': 7.19.3
       '@babel/helper-module-imports': 7.18.6
-      '@babel/plugin-syntax-jsx': 7.18.6(@babel/core@7.19.3)
+      '@babel/plugin-syntax-jsx': 7.18.6
       '@babel/runtime': 7.19.0
       '@emotion/hash': 0.9.0
       '@emotion/memoize': 0.8.0
@@ -2055,7 +2060,7 @@ packages:
     resolution: {integrity: sha512-G/YwXTkv7Den9mXDO7AhLWkE3q+I92B+VqAE+dYG4NGPaHZGvt3G8Q0p9vmE+sq7rTGphUbAvmQ9YpbfMQGGlA==}
     dev: false
 
-  /@emotion/react@11.10.4(@babel/core@7.19.3)(@types/react@17.0.50)(react@17.0.2):
+  /@emotion/react@11.10.4(@types/react@17.0.50)(react@17.0.2):
     resolution: {integrity: sha512-j0AkMpr6BL8gldJZ6XQsQ8DnS9TxEQu1R+OGmDZiWjBAJtCcbt0tS3I/YffoqHXxH6MjgI7KdMbYKw3MEiU9eA==}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -2067,9 +2072,8 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/core': 7.19.3
       '@babel/runtime': 7.19.0
-      '@emotion/babel-plugin': 11.10.2(@babel/core@7.19.3)
+      '@emotion/babel-plugin': 11.10.2
       '@emotion/cache': 11.10.3
       '@emotion/serialize': 1.1.0
       '@emotion/use-insertion-effect-with-fallbacks': 1.0.0(react@17.0.2)
@@ -2094,7 +2098,7 @@ packages:
     resolution: {integrity: sha512-OiTkRgpxescko+M51tZsMq7Puu/KP55wMT8BgpcXVG2hqXc0Vo0mfymJ/Uj24Hp0i083ji/o0aLddh08UEjq8w==}
     dev: false
 
-  /@emotion/styled@11.10.4(@babel/core@7.19.3)(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2):
+  /@emotion/styled@11.10.4(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2):
     resolution: {integrity: sha512-pRl4R8Ez3UXvOPfc2bzIoV8u9P97UedgHS4FPX594ntwEuAMA114wlaHvOK24HB48uqfXiGlYIZYCxVJ1R1ttQ==}
     peerDependencies:
       '@babel/core': ^7.0.0
@@ -2107,11 +2111,10 @@ packages:
       '@types/react':
         optional: true
     dependencies:
-      '@babel/core': 7.19.3
       '@babel/runtime': 7.19.0
-      '@emotion/babel-plugin': 11.10.2(@babel/core@7.19.3)
+      '@emotion/babel-plugin': 11.10.2
       '@emotion/is-prop-valid': 1.2.0
-      '@emotion/react': 11.10.4(@babel/core@7.19.3)(@types/react@17.0.50)(react@17.0.2)
+      '@emotion/react': 11.10.4(@types/react@17.0.50)(react@17.0.2)
       '@emotion/serialize': 1.1.0
       '@emotion/use-insertion-effect-with-fallbacks': 1.0.0(react@17.0.2)
       '@emotion/utils': 1.2.0
@@ -2513,8 +2516,8 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.19.0
-      '@emotion/react': 11.10.4(@babel/core@7.19.3)(@types/react@17.0.50)(react@17.0.2)
-      '@emotion/styled': 11.10.4(@babel/core@7.19.3)(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
+      '@emotion/react': 11.10.4(@types/react@17.0.50)(react@17.0.2)
+      '@emotion/styled': 11.10.4(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
       '@mui/base': 5.0.0-alpha.101(@types/react@17.0.50)(react-dom@17.0.2)(react@17.0.2)
       '@mui/material': 5.10.9(@emotion/react@11.10.4)(@emotion/styled@11.10.4)(@types/react@17.0.50)(react-dom@17.0.2)(react@17.0.2)
       '@mui/system': 5.10.9(@emotion/react@11.10.4)(@emotion/styled@11.10.4)(@types/react@17.0.50)(react@17.0.2)
@@ -2546,8 +2549,8 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.19.0
-      '@emotion/react': 11.10.4(@babel/core@7.19.3)(@types/react@17.0.50)(react@17.0.2)
-      '@emotion/styled': 11.10.4(@babel/core@7.19.3)(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
+      '@emotion/react': 11.10.4(@types/react@17.0.50)(react@17.0.2)
+      '@emotion/styled': 11.10.4(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
       '@mui/base': 5.0.0-alpha.101(@types/react@17.0.50)(react-dom@17.0.2)(react@17.0.2)
       '@mui/core-downloads-tracker': 5.10.9
       '@mui/system': 5.10.9(@emotion/react@11.10.4)(@emotion/styled@11.10.4)(@types/react@17.0.50)(react@17.0.2)
@@ -2596,8 +2599,8 @@ packages:
     dependencies:
       '@babel/runtime': 7.19.0
       '@emotion/cache': 11.10.3
-      '@emotion/react': 11.10.4(@babel/core@7.19.3)(@types/react@17.0.50)(react@17.0.2)
-      '@emotion/styled': 11.10.4(@babel/core@7.19.3)(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
+      '@emotion/react': 11.10.4(@types/react@17.0.50)(react@17.0.2)
+      '@emotion/styled': 11.10.4(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
       csstype: 3.1.1
       prop-types: 15.8.1
       react: 17.0.2
@@ -2620,8 +2623,8 @@ packages:
         optional: true
     dependencies:
       '@babel/runtime': 7.19.0
-      '@emotion/react': 11.10.4(@babel/core@7.19.3)(@types/react@17.0.50)(react@17.0.2)
-      '@emotion/styled': 11.10.4(@babel/core@7.19.3)(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
+      '@emotion/react': 11.10.4(@types/react@17.0.50)(react@17.0.2)
+      '@emotion/styled': 11.10.4(@emotion/react@11.10.4)(@types/react@17.0.50)(react@17.0.2)
       '@mui/private-theming': 5.10.9(@types/react@17.0.50)(react@17.0.2)
       '@mui/styled-engine': 5.10.8(@emotion/react@11.10.4)(@emotion/styled@11.10.4)(react@17.0.2)
       '@mui/types': 7.2.0(@types/react@17.0.50)
@@ -3492,10 +3495,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /ajv-formats@2.1.1(ajv@8.11.0):
+  /ajv-formats@2.1.1:
     resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
-    peerDependencies:
-      ajv: ^8.0.0
     peerDependenciesMeta:
       ajv:
         optional: true
@@ -4423,7 +4424,7 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       ajv: 8.11.0
-      ajv-formats: 2.1.1(ajv@8.11.0)
+      ajv-formats: 2.1.1
       atomically: 1.7.0
       debounce-fn: 4.0.0
       dot-prop: 6.0.1
@@ -8381,7 +8382,7 @@ packages:
       dnd-core: 15.1.2
     dev: false
 
-  /react-dnd@15.1.2(@types/node@16.11.64)(@types/react@17.0.50)(react@17.0.2):
+  /react-dnd@15.1.2(@types/react@17.0.50)(react@17.0.2):
     resolution: {integrity: sha512-EaSbMD9iFJDY/o48T3c8wn3uWU+2uxfFojhesZN3LhigJoAIvH2iOjxofSA9KbqhAKP6V9P853G6XG8JngKVtA==}
     peerDependencies:
       '@types/hoist-non-react-statics': '>= 3.3.1'
@@ -8398,7 +8399,6 @@ packages:
     dependencies:
       '@react-dnd/invariant': 3.0.1
       '@react-dnd/shallowequal': 3.0.1
-      '@types/node': 16.11.64
       '@types/react': 17.0.50
       dnd-core: 15.1.2
       fast-deep-equal: 3.1.3
@@ -8777,7 +8777,7 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       ajv: 8.11.0
-      ajv-formats: 2.1.1(ajv@8.11.0)
+      ajv-formats: 2.1.1
       ajv-keywords: 5.1.0(ajv@8.11.0)
     dev: true
 
@@ -9549,7 +9549,7 @@ packages:
       webpack: 5.74.0(webpack-cli@4.10.0)
     dev: true
 
-  /ts-node@10.9.1(@types/node@16.11.64)(typescript@4.8.4):
+  /ts-node@10.9.1(typescript@4.8.4):
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -9568,7 +9568,6 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
-      '@types/node': 16.11.64
       acorn: 8.8.0
       acorn-walk: 8.2.0
       arg: 4.1.3

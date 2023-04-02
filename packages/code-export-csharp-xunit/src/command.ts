@@ -16,7 +16,7 @@
 // under the License.
 
 import { Command, location } from '@seleniumhq/code-export-csharp-commons'
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import { codeExport as exporter } from 'side-code-export'
 import { CommandShape } from '@seleniumhq/side-model'
 
 const emitters = { ...Command.emitters }

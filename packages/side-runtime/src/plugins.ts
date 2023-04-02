@@ -1,4 +1,5 @@
 import path from 'path'
+import { Commands } from '@seleniumhq/side-model'
 import { CustomCommandShape, PluginShape } from './types'
 
 export const correctPluginPaths = (
@@ -34,7 +35,11 @@ export const loadPlugins = async (
       const plugin: PluginShape = pluginFile.default
         ? pluginFile.default
         : pluginFile
-      console.debug('Loaded plugin successfully?', Boolean(plugin))
+      if (plugin) {
+        Object.entries(plugin.commands || {}).forEach(([key, command]) => {
+          Commands[key] = command
+        })
+      }
       return plugin
     })
   )

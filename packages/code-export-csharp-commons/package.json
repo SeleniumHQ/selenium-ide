@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export-csharp-commons",
-  "version": "4.0.0-alpha.0",
+  "version": "4.0.0-alpha.1",
   "private": false,
   "description": "Commons for exporting Selenium IDE project contents to C#",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
@@ -18,9 +18,9 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "@seleniumhq/side-code-export": "^4.0.0-alpha.2"
+    "side-code-export": "^4.0.0-alpha.5"
   },
   "devDependencies": {
-    "@seleniumhq/side-model": "^4.0.0-alpha.2"
+    "@seleniumhq/side-model": "^4.0.0-alpha.3"
   }
 }

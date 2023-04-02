@@ -15,9 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter, PrebuildEmitter } from '@seleniumhq/side-code-export'
-import { ExportFlexCommandShape, ProcessedCommandEmitter } from '@seleniumhq/side-code-export/dist/code-export/emit'
-import { ScriptShape } from '@seleniumhq/side-code-export/src/code-export/preprocessor'
+import { codeExport as exporter, PrebuildEmitter } from 'side-code-export'
+import { ExportFlexCommandShape, ProcessedCommandEmitter } from 'side-code-export/dist/code-export/emit'
+import { ScriptShape } from 'side-code-export/src/code-export/preprocessor'
 import { CommandShape } from '@seleniumhq/side-model'
 import location from './location'
 import selection from './selection'

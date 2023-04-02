@@ -3,6 +3,16 @@ import { PluginPreloadShape } from '@seleniumhq/side-runtime'
 export let clickCount = 0
 export type SendMessage = (...args: any[]) => void
 
+/**
+ * This is the preload script for the plugin. It runs in the browser context
+ * and can be used to add event listeners, etc.
+ *
+ * NOTE: As this runs during the Electron preload phase, this is completely
+ * invisible to the consuming site. You can still do whatever you want to the
+ * DOM and such, but nothing outside can get in without using the existing hooks
+ * or the underlying electron APIs.
+ */
+
 const preloadPlugin: PluginPreloadShape = (sendMessage: SendMessage) => {
   document.addEventListener('click', () => {
     clickCount += 1

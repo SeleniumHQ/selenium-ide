@@ -4,7 +4,7 @@ import JavaJunit from '@seleniumhq/code-export-java-junit'
 import JavascriptMocha from '@seleniumhq/code-export-javascript-mocha'
 import PythonPytest from '@seleniumhq/code-export-python-pytest'
 import RubyRSpec from '@seleniumhq/code-export-ruby-rspec'
-import { fileWriter, LanguageEmitter } from '@seleniumhq/side-code-export'
+import { fileWriter, LanguageEmitter } from 'side-code-export'
 import BaseController from '../Base'
 
 const builtinFormats = [

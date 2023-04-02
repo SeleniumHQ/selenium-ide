@@ -15,8 +15,8 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
-import { LocationEmitters } from '@seleniumhq/side-code-export/src/code-export/emit'
+import { codeExport as exporter } from 'side-code-export'
+import { LocationEmitters } from 'side-code-export/src/code-export/emit'
 
 const emitters: LocationEmitters = {
   id: emitId,

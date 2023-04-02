@@ -11,5 +11,8 @@
     {
       "path": "../side-model"
     },
+    {
+      "path": "../side-runtime"
+    }
   ]
 }

@@ -18,9 +18,9 @@
 import {
   codeExport as exporter,
   generateHooks,
-  LanguageEmitter,
   LanguageEmitterOpts,
-} from '@seleniumhq/side-code-export'
+  languageFromOpts,
+} from 'side-code-export'
 import emitter from './command'
 import location from './location'
 import hooks from './hook'
@@ -60,88 +60,4 @@ export const opts: LanguageEmitterOpts = {
   },
 }
 
-const language: LanguageEmitter = {
-  emit: {
-    locator: location.emit,
-    command: emitter.emit,
-    suite: async function emitSuite({
-      baseUrl,
-      suite,
-      tests,
-      project,
-      enableOriginTracing,
-      beforeEachOptions,
-      enableDescriptionAsComment,
-    }) {
-      // @ts-expect-error globals yuck
-      global.baseUrl = baseUrl
-      const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
-        enableOriginTracing,
-        generateTestDeclaration: opts.generateTestDeclaration,
-        enableDescriptionAsComment,
-        project,
-      })
-      const suiteDeclaration = opts.generateSuiteDeclaration(suite.name)
-      const _suite = await exporter.emit.suite(result, tests, {
-        ...opts,
-        suiteDeclaration,
-        suite,
-        suiteName: suite.name,
-        project,
-        beforeEachOptions,
-      })
-      return {
-        filename: opts.generateFilename(suite.name),
-        body: exporter.emit.orderedSuite(_suite),
-      }
-    },
-    // Emit an individual test, wrapped in a suite (using the test name as the suite name)
-    test: async function emitTest({
-      baseUrl,
-      test,
-      tests,
-      project,
-      enableOriginTracing,
-      beforeEachOptions,
-      enableDescriptionAsComment,
-    }) {
-      // @ts-expect-error globals yuck
-      global.baseUrl = baseUrl
-      const testDeclaration = opts.generateTestDeclaration(test.name)
-      const result = await exporter.emit.test(test, tests, {
-        ...opts,
-        testDeclaration,
-        enableOriginTracing,
-        enableDescriptionAsComment,
-        project,
-      })
-      const suiteName = test.name
-      const suiteDeclaration = opts.generateSuiteDeclaration(suiteName)
-      const _suite = await exporter.emit.suite(result, tests, {
-        ...opts,
-        suiteDeclaration,
-        suiteName,
-        project,
-        beforeEachOptions,
-      })
-      return {
-        filename: opts.generateFilename(test.name),
-        body: exporter.emit.orderedSuite(_suite),
-      }
-    },
-  },
-  opts,
-  register: {
-    command: emitter.register,
-    variable: opts.hooks.declareVariables.register,
-    dependency: opts.hooks.declareDependencies.register,
-    beforeAll: opts.hooks.beforeAll.register,
-    beforeEach: opts.hooks.beforeEach.register,
-    afterEach: opts.hooks.afterEach.register,
-    afterAll: opts.hooks.afterAll.register,
-    inEachBegin: opts.hooks.inEachBegin.register,
-    inEachEnd: opts.hooks.inEachEnd.register,
-  },
-}
-
-export default language
+export default languageFromOpts(opts, location.emit)

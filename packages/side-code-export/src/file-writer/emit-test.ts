@@ -6,7 +6,6 @@ export async function emitTest(
   project: ProjectShape,
   testName: string
 ) {
-  console.log(format, project, testName)
   return format.emit.test({
     baseUrl: project.url,
     beforeEachOptions: {},

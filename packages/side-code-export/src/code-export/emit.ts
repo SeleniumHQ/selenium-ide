@@ -199,8 +199,20 @@ async function emitCommands(
   commands: CommandShape[],
   emitter: LanguageEmitterOpts['emitter']
 ) {
-  const _commands = commands.map((command) => emitter.emit(command))
-  const emittedCommands = await Promise.all(_commands)
+  const emittedCommands = await Promise.all(
+    commands.map((command) => {
+      try {
+        return emitter.emit(command)
+      } catch (e) {
+        throw new Error(
+          `Error while emitting command ${command.command}|${command.target}|${
+            command.value
+          }: ${(e as Error).message}`
+        )
+        //  throw e
+      }
+    })
+  )
   let result: ExportCommandShape[] = []
   emittedCommands.forEach((entry) => {
     if (typeof entry === 'string') {
@@ -460,8 +472,8 @@ async function emitTestsFromSuite(
   >
 ) {
   let result: Record<string, EmittedTest> = {}
-  for (const testName of suite.tests) {
-    const test = tests.find((test) => test.name === testName) as TestShape
+  for (const testID of suite.tests) {
+    const test = tests.find((test) => test.id === testID) as TestShape
     const testDeclaration = generateTestDeclaration(test.name)
     result[test.name] = await emitTest(test, tests, {
       ...languageOpts,

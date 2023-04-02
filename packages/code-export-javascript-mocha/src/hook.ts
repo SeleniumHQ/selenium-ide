@@ -14,7 +14,7 @@
 // KIND, either express or implied.  See the License for the specific language governing permissions and limitations
 // under the License.
 
-import { HookFunctionInputs } from "@seleniumhq/side-code-export"
+import { HookFunctionInputs } from "side-code-export"
 
 const emitters = {
   afterAll,

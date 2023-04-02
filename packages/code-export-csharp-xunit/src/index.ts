@@ -18,9 +18,9 @@
 import {
   codeExport as exporter,
   generateHooks,
-  LanguageEmitter,
   LanguageEmitterOpts,
-} from '@seleniumhq/side-code-export'
+  languageFromOpts,
+} from 'side-code-export'
 import emitter from './command'
 import hooks from './hook'
 import { location } from '@seleniumhq/code-export-csharp-commons'
@@ -56,121 +56,4 @@ export const opts: LanguageEmitterOpts = {
   },
 }
 
-const language: LanguageEmitter = {
-  emit: {
-    test: async function emitTest({
-      test,
-      tests,
-      project,
-      enableOriginTracing,
-      beforeEachOptions,
-      enableDescriptionAsComment,
-    }) {
-      const testDeclaration = opts.generateTestDeclaration(test.name)
-      const result = await exporter.emit.test(test, tests, {
-        ...opts,
-        testDeclaration,
-        enableOriginTracing,
-        enableDescriptionAsComment,
-        project,
-      })
-      const suiteName = test.name
-      const suiteDeclaration = opts.generateSuiteDeclaration(suiteName)
-      var _suite = await exporter.emit.suite(result, tests, {
-        ...opts,
-        suiteDeclaration,
-        suiteName,
-        project,
-        beforeEachOptions,
-      })
-      return {
-        filename: opts.generateFilename(test.name),
-        body: exporter.emit.orderedSuite(_suite),
-      }
-    },
-    suite: async function emitSuite({
-      suite,
-      tests,
-      project,
-      enableOriginTracing,
-      beforeEachOptions,
-      enableDescriptionAsComment,
-    }) {
-      const result = await exporter.emit.testsFromSuite(tests, suite, opts, {
-        enableOriginTracing,
-        enableDescriptionAsComment,
-        generateTestDeclaration: opts.generateTestDeclaration,
-        project,
-      })
-      const suiteDeclaration = opts.generateSuiteDeclaration(suite.name)
-      var _suite = await exporter.emit.suite(result, tests, {
-        ...opts,
-        suiteDeclaration,
-        suite,
-        suiteName: suite.name,
-        project,
-        beforeEachOptions,
-      })
-      return {
-        filename: opts.generateFilename(suite.name),
-        body: emitOrderedSuite(_suite, suite.name),
-      }
-    },
-    locator: location.emit,
-    command: emitter.emit,
-  },
-  opts,
-  register: {
-    command: emitter.register,
-    variable: opts.hooks.declareVariables.register,
-    dependency: opts.hooks.declareDependencies.register,
-    beforeAll: opts.hooks.beforeAll.register,
-    beforeEach: opts.hooks.beforeEach.register,
-    afterEach: opts.hooks.afterEach.register,
-    afterAll: opts.hooks.afterAll.register,
-    inEachBegin: opts.hooks.inEachBegin.register,
-    inEachEnd: opts.hooks.inEachEnd.register,
-  },
-}
-
-function generateNamespace(name: string) {
-  return `namespace ${exporter.parsers.capitalize(
-    exporter.parsers.sanitizeName(name)
-  )}\n{\n`
-}
-
-function emitOrderedSuite(emittedSuite: any, name: string) {
-  let result = ''
-  result += emittedSuite.headerComment
-  result += emittedSuite.dependencies
-  result += `${generateNamespace(name)}`
-  result += emittedSuite.suiteDeclaration
-  result += emittedSuite.variables
-  //result += emittedSuite.beforeAll
-  result += emittedSuite.beforeEach
-  result += emittedSuite.afterEach
-  //result += emittedSuite.afterAll
-  result += emittedSuite.methods
-  if (emittedSuite.tests.testDeclaration) {
-    const test = emittedSuite.tests
-    result += test.testDeclaration
-    result += test.inEachBegin
-    result += test.commands
-    result += test.inEachEnd
-    result += test.testEnd
-  } else {
-    for (const testName in emittedSuite.tests) {
-      const test = emittedSuite.tests[testName]
-      result += test.testDeclaration
-      result += test.inEachBegin
-      result += test.commands
-      result += test.inEachEnd
-      result += test.testEnd
-    }
-  }
-  result += emittedSuite.suiteEnd
-  result += '}' // terminate namespace
-  return result
-}
-
-export default language
+export default languageFromOpts(opts, location.emit)
