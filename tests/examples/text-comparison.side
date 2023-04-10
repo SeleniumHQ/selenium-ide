@@ -50,7 +50,7 @@
     "timeout": 300,
     "tests": ["1f270ca5-5a7c-4067-8f67-b4fc0dcea00b"]
   }],
-  "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
+  "urls": ["https://en.wikipedia.org/", "http://localhost:8080/"],
   "plugins": [],
   "version": "1.0"
 }

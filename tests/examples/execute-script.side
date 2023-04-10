@@ -75,7 +75,7 @@
     "timeout": 300,
     "tests": ["d4059a41-89a5-4266-9cd6-ce6cffe0a683", "c065304c-a1d4-4a78-a8da-2e4c3e71adc5"]
   }],
-  "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
+  "urls": ["https://en.wikipedia.org/", "http://localhost:8080/"],
   "plugins": [],
   "version": "1.0"
 }

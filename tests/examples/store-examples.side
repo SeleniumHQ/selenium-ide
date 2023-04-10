@@ -47,7 +47,7 @@
     }, {
       "id": "3ca83da5-71ac-44cd-91b4-0dff477a2969",
       "comment": "",
-      "command": "storeXpathCount",
+      "command": "storeElementCount",
       "target": "xpath=//span",
       "targets": [],
       "value": "span_count"
@@ -68,7 +68,7 @@
     }, {
       "id": "fe8b75e9-f193-4341-9cda-4ee743559acd",
       "comment": "",
-      "command": "storeXpathCount",
+      "command": "storeElementCount",
       "target": "xpath=//div[contains(@class, \"testclass\")]",
       "targets": [],
       "value": "div_count"
@@ -96,7 +96,7 @@
     "timeout": 300,
     "tests": ["1f270ca5-5a7c-4067-8f67-b4fc0dcea00b", "e68f3128-4bea-4a35-999f-31466d7b4340"]
   }],
-  "urls": ["https://en.wikipedia.org/", "http://localhost:5000/"],
+  "urls": ["https://en.wikipedia.org/", "http://localhost:8080/"],
   "plugins": [],
   "version": "1.0"
 }

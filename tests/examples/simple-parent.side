@@ -51,20 +51,20 @@
         },
         {
           "command": "assertElementPresent",
-          "target": "id=hplogo",
+          "target": "css=.lnXdpd",
           "value": "",
           "id": "c3a7876e-3202-4cf2-8cbb-f2561d14fca3",
           "fallbackTargets": [
             [
-              "id=hplogo",
-              "id"
+              "css=[data-iml=\"1681129024592\"]",
+              "css:data-attr"
             ],
             [
-              "css=#hplogo",
+              "css=.lnXdpd",
               "css:finder"
             ],
             [
-              "xpath=(//img[@alt='Seasonal Holidays 2022'])[1]",
+              "xpath=(//img[@alt='Google'])[1]",
               "xpath:img"
             ],
             [

@@ -2,7 +2,7 @@
   "id": "b4675761-fdf4-4799-a7b0-989dd0f481f0",
   "version": "1.1",
   "name": "nginx-examples",
-  "url": "http://nginx/",
+  "url": "http://localhost:8080/",
   "tests": [{
     "id": "d7a82bde-3223-4dd7-8aa1-7dc5c0589f35",
     "name": "input type text",
@@ -596,6 +596,6 @@
     "timeout": 300,
     "tests": ["c720eabf-0c0a-4f6e-8aa6-9daca298d726", "4631cfbd-700c-42ea-add5-12e5a33d845e", "0d50f757-df05-4129-ab8b-ff52084c704d"]
   }],
-  "urls": ["https://en.wikipedia.org/", "http://localhost:5000/", "http://nginx/", "http://localhost:8080/"],
+  "urls": ["https://en.wikipedia.org/", "http://localhost:8080/", "http://nginx/", "http://localhost:8080/"],
   "plugins": []
 }

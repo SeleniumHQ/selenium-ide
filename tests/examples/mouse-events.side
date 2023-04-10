@@ -122,6 +122,6 @@
     "timeout": 300,
     "tests": ["13f262bf-d342-4d03-9c5d-3d0b019ae854"]
   }],
-  "urls": ["http://localhost:5000/"],
+  "urls": ["http://localhost:8080/"],
   "plugins": []
 }
