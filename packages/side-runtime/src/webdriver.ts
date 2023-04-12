@@ -247,14 +247,13 @@ export default class WebDriverExecutor {
   ) {
     const fn = this.hooks[hook] as WebDriverExecutorHooks[T]
     if (!fn) return
-    await fn.apply(
-      this,
-      args as Parameters<NonNullable<WebDriverExecutorHooks[T]>>
-    )
+    // @ts-expect-error Apply here is handled wierd
+    await fn.apply(this, args as CommandHookInput)
   }
 
   async beforeCommand(commandObject: CommandShape) {
     if (commandObject.opensWindow) {
+      console.log('New line!')
       this[state].openedWindows = await this.driver.getAllWindowHandles()
     }
     await this.executeHook('onBeforeCommand', { command: commandObject })
