@@ -1,12 +1,12 @@
 {
   "id": "8e43685a-112a-455b-a6b2-748a19071100",
   "version": "2.0",
-  "name": "Plugin",
+  "name": "New Relic Synthetics Test",
   "url": "https://www.google.com",
   "tests": [
     {
       "id": "58cc1d1f-7920-47ee-a0eb-336a3ebdf069",
-      "name": "Plugin Commands",
+      "name": "NR Test Commands",
       "commands": [
         {
           "id": "161321ce-3c63-4283-989e-d20117a97eb8",
@@ -23,7 +23,7 @@
           "id": "9e61266a-9cb0-49b6-b5bf-a362bd181b58"
         },
         {
-          "command": "customClick",
+          "command": "click",
           "target": "css=.lnXdpd",
           "value": "",
           "insertBeforeLastCommand": false,
@@ -140,7 +140,5 @@
   "urls": [
     "https://www.google.com/"
   ],
-  "plugins": [
-    "../dist/plugins/custom-click/index.js"
-  ]
+  "plugins": []
 }

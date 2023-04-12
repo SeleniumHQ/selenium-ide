@@ -5,7 +5,7 @@ import {
   ProcessedCommandEmitter,
 } from 'side-code-export'
 import { CommandShape } from '@seleniumhq/side-model'
-import location from 'location'
+import location from './location'
 
 async function emitClick(target: string) {
   return Promise.resolve(
