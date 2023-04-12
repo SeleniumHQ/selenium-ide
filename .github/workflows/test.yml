@@ -1,0 +1,37 @@
+name: 'Release'
+
+on:
+  pull_request:
+    branches:
+      - trunk
+jobs:
+  test:
+    permissions:
+      actions: read
+      checks: read
+      contents: write
+      deployments: read
+      issues: read
+      discussions: read
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      security-events: read
+      statuses: read
+    runs-on: macos-11
+    if: github.repository == 'seleniumhq/selenium-ide'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install pnpm
+        run: npm i -g pnpm@7
+      - name: Install dependencies
+        run: pnpm -r i
+      - name: Build side-runner and selenium-ide
+        run: pnpm run build
+      - name: Test the side-runner
+        run: npm run test:side-runner:ci
