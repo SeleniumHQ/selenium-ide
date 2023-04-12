@@ -3,6 +3,11 @@
     "strictNullChecks": false,
     "inlineSourceMap": true,
     "inlineSources": true,
+    "esModuleInterop": true
+    // "paths": {
+    //   "@seleniumhq/side-model": ["./packages/side-model/src"],
+    //   "side-code-export": ["./packages/side-code-export/src"]
+    // }
   },
   "exclude": ["node_modules", "packages/*/node_modules"],
   "include": [],
@@ -24,6 +29,9 @@
     },
     {
       "path": "./packages/code-export-javascript-mocha"
+    },
+    {
+      "path": "./packages/code-export-js-newrelic-synthetics"
     },
     {
       "path": "./packages/code-export-python-pytest"

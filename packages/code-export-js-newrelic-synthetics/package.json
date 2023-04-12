@@ -1,0 +1,26 @@
+{
+  "name": "code-export-js-newrelic-synthetics",
+  "version": "4.0.0-alpha.2",
+  "private": false,
+  "description": "Export Selenium IDE project contents to JavaScript New Relic Synthetics",
+  "repository": "https://github.com/SeleniumHQ/selenium-ide",
+  "keywords": [
+    "selenium",
+    "ide",
+    "export"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc",
+    "build:code": "side-code-export ./dist/index.js ./projects/plugin.side ./tests",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
+    "watch": "tsc --watch"
+  },
+  "main": "dist/index.js",
+  "dependencies": {
+    "side-code-export": "^4.0.0-alpha.5"
+  },
+  "devDependencies": {
+    "@seleniumhq/side-model": "^4.0.0-alpha.3"
+  }
+}
