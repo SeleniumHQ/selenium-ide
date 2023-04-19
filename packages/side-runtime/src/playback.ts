@@ -388,7 +388,6 @@ export default class Playback {
         callstackIndex,
         command,
         state: CommandStates.EXECUTING,
-        message: undefined,
       })
 
       const steps = this[state].steps
@@ -444,6 +443,7 @@ export default class Playback {
             command,
             state: CommandStates.FAILED,
             message: err.message,
+            error: err as Error,
           })
           return await this._handleException(() => {
             this._setExitCondition(PlaybackStates.FAILED)
@@ -456,6 +456,7 @@ export default class Playback {
             command,
             state: CommandStates.FAILED,
             message: err.message,
+            error: err as Error,
           })
           return await this._handleException(async () => {
             this._setExitCondition(PlaybackStates.FAILED)
@@ -472,6 +473,7 @@ export default class Playback {
             command,
             state: CommandStates.ERRORED,
             message: (err as Error).message,
+            error: err as Error,
           })
           return await this._handleException(() => {
             this._setExitCondition(PlaybackStates.ERRORED)
@@ -517,6 +519,7 @@ export default class Playback {
           command,
           state: CommandStates.FAILED,
           message: err.message,
+          error: err as Error,
         })
       } else {
         this[EE].emitCommandStateChange({
@@ -525,6 +528,7 @@ export default class Playback {
           command,
           state: CommandStates.ERRORED,
           message: (err as Error).message,
+          error: err as Error,
         })
       }
       throw err
@@ -604,9 +608,9 @@ export default class Playback {
         command: this[state].lastSentCommandState.command,
         state: CommandStates.ERRORED,
         message: 'Playback stopped',
+        error: new Error('Playback stopped'),
       })
     }
-    this[state].lastSentCommandState = undefined
     const { playTo, steps, stepPromise } = this[state]
     if (stepPromise) {
       if (steps === 0) {
@@ -624,10 +628,11 @@ export default class Playback {
         )
       )
     }
-    this[state].callstack = undefined
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: this[state].exitCondition || PlaybackStates.FINISHED,
     })
+    this[state].lastSentCommandState = undefined
+    this[state].callstack = undefined
   }
 
   async _pause() {
@@ -732,6 +737,7 @@ export interface PlaybackEventShapes {
     command: CommandShape
     state: typeof CommandStates[keyof typeof CommandStates]
     message?: string
+    error?: Error
   }
   PLAYBACK_STATE_CHANGED: {
     state: typeof PlaybackStates[keyof typeof PlaybackStates]

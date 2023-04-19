@@ -151,12 +151,7 @@ each(projects).describe(projectTitle, (project: Project) => {
           ? testExecutor.test.concurrent
           : testExecutor.test
         testMethod(testTitle, async (test: TestShape) => {
-          try {
-            await runners.test(project, test)
-          } catch (e) {
-            const err = e as Error
-            expect(err.message).toBe(undefined)
-          }
+          await runners.test(project, test)
         })
       })
     } else {

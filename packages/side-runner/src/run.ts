@@ -76,7 +76,6 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
           await playback.cleanup()
           await driver.cleanup()
           if (failure) {
-            logger.warn('Completed with failure', failure)
             return reject(failure)
           } else {
             return resolve(null)
@@ -99,8 +98,15 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
                     state === 'finished' ? 'Success' : 'Failure'
                   }`
                 )
-                onComplete(state !== 'finished')
+                if (state !== 'finished') {
+                  return onComplete(
+                    playback['state'].lastSentCommandState?.error ||
+                      new Error('Unknown error')
+                  )
+                }
+                return onComplete(null)
             }
+            return
           }
         )
         EE.addListener(
@@ -125,7 +131,6 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
             startingCommandIndex: 0,
           })
         } catch (e) {
-          console.error(e)
           await playback.cleanup()
           return reject(e)
         }

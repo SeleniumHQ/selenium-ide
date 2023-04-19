@@ -1,6 +1,6 @@
 {
   "name": "selenium-side-runner",
-  "version": "4.0.0-alpha.45",
+  "version": "4.0.0-alpha.46",
   "private": false,
   "description": "Run Selenium IDE projects in cli",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
@@ -24,7 +24,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@seleniumhq/side-model": "^4.0.0-alpha.3",
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.22",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.23",
     "commander": "^9.4.0",
     "glob": "^7.2.0",
     "jest": "^27.5.1",
@@ -33,6 +33,7 @@
     "js-beautify": "^1.14.2",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
+    "resolve-bin": "^1.0.1",
     "rimraf": "^3.0.2",
     "semver": "^7.3.5",
     "winston": "^3.6.0"
@@ -43,6 +44,7 @@
     "@types/js-beautify": "1.13.3",
     "@types/js-yaml": "4.0.5",
     "@types/lodash": "^4.14.186",
+    "@types/resolve-bin": "0.4.1",
     "@types/rimraf": "3.0.2",
     "@types/semver": "7.3.9",
     "@types/winston": "2.4.4"
