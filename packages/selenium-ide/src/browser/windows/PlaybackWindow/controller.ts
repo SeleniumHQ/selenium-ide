@@ -5,7 +5,7 @@ const dimensions = {
   height: 600,
   width: 800,
 }
-export const window: WindowConfig['window'] = () => {
+export const window: WindowConfig['window'] = (session) => {
   const display = Electron.screen.getPrimaryDisplay()
   return {
     ...dimensions,
@@ -17,7 +17,7 @@ export const window: WindowConfig['window'] = () => {
       Math.floor(display.bounds.height / 2) -
       Math.floor(dimensions.height / 2) -
       50,
-    title: 'Playback Window',
+    title: 'Playback Window - ' + session.projects.project.name,
     webPreferences: {
       nodeIntegrationInSubFrames: true,
     }
