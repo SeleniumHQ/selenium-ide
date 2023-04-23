@@ -4,12 +4,8 @@
     {
       "name": "Run Selenium IDE",
       "outFiles": [
-        "${workspaceFolder}/**/*.js",
-        "!**/node_modules/**"
-      ],
-      "resolveSourceMapLocations": [
-        "${workspaceFolder}/**", //use source maps for files in workspace folder
-        "!**/node_modules/**" //but ignore everything in the node_modules folder
+        "${workspaceFolder}/build/*.js",
+        "node_modules/@voiceopshq/*/dist/*.js"
       ],
       "type": "node",
       "request": "launch",
@@ -18,34 +14,21 @@
       "runtimeArgs": [
         "--remote-debugging-port=8315" //open debugging port for renderer process
       ],
-      "windows": {
-        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+      "env": {
+        "ELECTRON_RUN_AS_NODE": "",
+        "NODE_DEBUG": "api,webdriver",
+        "NODE_OPTIONS": "--no-warnings",
+        "SIDE_DEBUG": "true"
       },
-      "environment": [
-        {
-          "name": "ELECTRON_RUN_AS_NODE",
-          "value": ""
-        },
-        {
-          "name": "NODE_DEBUG",
-          "value": "api,webdriver"
-        },
-        {
-          "name": "NODE_OPTIONS",
-          "value": "--no-warnings"
-        },
-        {
-          "name": "SIDE_DEBUG",
-          "value": "true"
-        }
-      ],
       "args": [
         "--trace-uncaught",
         "${workspaceFolder}/build/main-bundle.js"
       ],
       "outputCapture": "std",
-      "webRoot": "${workspaceFolder}/build",
       "sourceMaps": true,
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
+      },
     },
     {
       "name": "Electron: Renderer",

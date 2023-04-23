@@ -10,9 +10,6 @@ import { Session } from 'main/types'
 import storage from 'main/store'
 import { join } from 'path'
 import BaseController from '../Base'
-// import { Tune } from '@mui/icons-material'
-
-// import { StopOutlined } from '@mui/icons-material'
 
 const playbackWindowName = 'playback-window'
 const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
