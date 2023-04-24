@@ -14,8 +14,6 @@ export const languageFromOpts = (
       beforeEachOptions,
       enableDescriptionAsComment,
     }) {
-      // @ts-expect-error globals yuck
-      global.baseUrl = baseUrl
       const testDeclaration = opts.generateTestDeclaration(test.name)
       const result = await emit.test(test, tests, {
         ...opts,

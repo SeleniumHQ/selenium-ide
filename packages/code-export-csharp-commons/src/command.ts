@@ -15,9 +15,15 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { codeExport as exporter, PrebuildEmitter } from 'side-code-export'
-import { ExportFlexCommandShape, ProcessedCommandEmitter } from 'side-code-export/dist/code-export/emit'
-import { ScriptShape } from 'side-code-export/src/code-export/preprocessor'
+import {
+  codeExport as exporter,
+  PrebuildEmitter,
+  ExportFlexCommandShape,
+  ProcessedCommandEmitter,
+  EmitterContext,
+  ScriptShape,
+} from 'side-code-export'
+// eslint-disable-next-line node/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
 import location from './location'
 import selection from './selection'
@@ -130,10 +136,11 @@ function register(command: string, emitter: PrebuildEmitter) {
   exporter.register.emitter({ command, emitter, emitters })
 }
 
-function emit(command: CommandShape) {
+function emit(command: CommandShape, context: EmitterContext) {
   return exporter.emit.command(command, emitters[command.command], {
-    variableLookup,
+    context,
     emitNewWindowHandling,
+    variableLookup,
   })
 }
 
@@ -302,7 +309,10 @@ function emitControlFlowIf(script: any) {
   })
 }
 
-function emitControlFlowForEach(collectionVarName: string, iteratorVarName: string) {
+function emitControlFlowForEach(
+  collectionVarName: string,
+  iteratorVarName: string
+) {
   return Promise.resolve({
     commands: [
       {
@@ -500,12 +510,11 @@ async function emitMouseUp(locator: any) {
   return Promise.resolve({ commands })
 }
 
-function emitOpen(target: string) {
+function emitOpen(target: string, _value: string, context: EmitterContext) {
   const url = /^(file|http|https):\/\//.test(target)
-    ? `"${target}"`
-    : // @ts-expect-error globals yuck
-      `"${global.baseUrl}${target}"`
-  return Promise.resolve(`driver.Navigate().GoToUrl(${url});`)
+    ? target
+    : `${context.project.url}${target}`
+  return Promise.resolve(`driver.Navigate().GoToUrl("${url}");`)
 }
 
 async function emitPause(time: any) {
