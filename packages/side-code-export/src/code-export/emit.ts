@@ -80,6 +80,7 @@ function validateCommand(command: CommandShape) {
 export type ExportFlexCommandShape = ExportCommandShape | ExportCommandsShape
 
 export interface EmitCommandContext {
+  context: EmitterContext
   emitNewWindowHandling: (
     command: CommandShape,
     result: ExportFlexCommandShape
@@ -88,7 +89,11 @@ export interface EmitCommandContext {
 }
 
 export interface ProcessedCommandEmitter {
-  (target?: any, value?: any): Promise<ExportFlexCommandShape>
+  (
+    target: any | undefined,
+    value: any | undefined,
+    context: EmitterContext
+  ): Promise<ExportFlexCommandShape>
   targetPreprocessor?: Preprocessor
   valuePreprocessor?: Preprocessor
 }
@@ -99,8 +104,9 @@ export function baseEmitFactory(
   { variableLookup, emitNewWindowHandling }: EmitCommandContext
 ) {
   return async function emit(
-    target?: any,
-    value?: any
+    target: any | undefined,
+    value: any | undefined,
+    context: EmitterContext
   ): Promise<ExportFlexCommandShape> {
     validateCommand(command)
     let _target = target
@@ -111,7 +117,7 @@ export function baseEmitFactory(
     if (emitter.valuePreprocessor) {
       _value = await emitter.valuePreprocessor(value, variableLookup)
     }
-    const result = await emitter(_target, _value)
+    const result = await emitter(_target, _value, context)
     return emitNewWindowHandling(command, result)
   }
 }
@@ -119,7 +125,7 @@ export function baseEmitFactory(
 export async function emitCommand(
   command: CommandShape,
   emitter: ProcessedCommandEmitter,
-  { variableLookup, emitNewWindowHandling }: EmitCommandContext
+  { context, emitNewWindowHandling, variableLookup }: EmitCommandContext
 ) {
   validateCommand(command)
   if (emitter) {
@@ -136,7 +142,8 @@ export async function emitCommand(
         emitter.valuePreprocessor,
         variableLookup,
         { ignoreEscaping }
-      )
+      ),
+      context
     )
     if (command.opensWindow) {
       return await emitNewWindowHandling(command, result)
@@ -195,14 +202,12 @@ export function emitSelection(location: string, emitters: SelectionEmitters) {
   }
 }
 
-async function emitCommands(
-  commands: CommandShape[],
-  emitter: LanguageEmitterOpts['emitter']
-) {
+async function emitCommands(commands: CommandShape[], context: EmitterContext) {
+  const { emitter } = context
   const emittedCommands = await Promise.all(
     commands.map((command) => {
       try {
-        return emitter.emit(command)
+        return emitter.emit(command, context)
       } catch (e) {
         throw new Error(
           `Error while emitting command ${command.command}|${command.target}|${
@@ -228,14 +233,8 @@ async function emitCommands(
   return result
 }
 
-export interface EmitMethodContext
-  extends Pick<
-    EmitterContext,
-    | 'emitter'
-    | 'commandPrefixPadding'
-    | 'generateMethodDeclaration'
-    | 'terminatingKeyword'
-  > {
+export interface EmitMethodContext {
+  context: EmitterContext
   level: number
   render: any
   overrideCommandEmitting?: boolean
@@ -253,16 +252,13 @@ export interface NonOverrideMethodShape {
 
 async function emitMethod(
   method: MethodShape,
-  {
+  { context, level, render, overrideCommandEmitting = false }: EmitMethodContext
+) {
+  const {
     commandPrefixPadding,
     generateMethodDeclaration,
-    level,
     terminatingKeyword,
-    emitter,
-    render,
-    overrideCommandEmitting = false,
-  }: EmitMethodContext
-) {
+  } = context
   const methodDeclaration = generateMethodDeclaration(method.name)
   let _methodDeclaration = methodDeclaration
   let _terminatingKeyword = terminatingKeyword
@@ -278,7 +274,7 @@ async function emitMethod(
     })
   } else {
     result = render(
-      await emitCommands(method.commands as CommandShape[], emitter),
+      await emitCommands(method.commands as CommandShape[], context),
       {
         newLineCount: 0,
         startingLevel: level,
@@ -346,9 +342,11 @@ export interface EmittedTest {
 async function emitTest(
   test: TestShape,
   tests: TestShape[],
-  {
-    testLevel,
-    commandLevel,
+  context: EmitterContext
+): Promise<EmittedTest> {
+  const {
+    testLevel = 1,
+    commandLevel = 2,
     testDeclaration,
     terminatingKeyword,
     commandPrefixPadding,
@@ -359,12 +357,8 @@ async function emitTest(
     enableOriginTracing,
     enableDescriptionAsComment,
     project,
-  }: EmitterContext
-): Promise<EmittedTest> {
-  // preamble
+  } = context
   let result: Partial<EmittedTest> = {}
-  testLevel = testLevel || 1
-  commandLevel = commandLevel || 2
   const methods = findReusedTestMethods(test, tests)
   const render = (...args: PartialRenderParameters) =>
     doRender(commandPrefixPadding, ...args)
@@ -378,12 +372,9 @@ async function emitTest(
       ) {
         const method = await emitter.extras[emitter_name]()
         const result = await emitMethod(method, {
-          emitter,
-          commandPrefixPadding,
-          generateMethodDeclaration: method.generateMethodDeclaration,
+          context,
           level: testLevel,
           render,
-          terminatingKeyword,
           overrideCommandEmitting: true,
         })
         await registerMethod(method.name, result, {
@@ -397,12 +388,9 @@ async function emitTest(
   // handle reused test methods (e.g., commands that use the `run` command)
   for (const method of methods) {
     const result = await emitMethod(method, {
-      emitter,
-      commandPrefixPadding,
-      generateMethodDeclaration,
+      context,
       level: testLevel,
       render,
-      terminatingKeyword,
     })
     await registerMethod(method.name, result, {
       generateMethodDeclaration,
@@ -430,7 +418,7 @@ async function emitTest(
   ) as string
   result.commands = render(
     {
-      commands: await emitCommands(test.commands, emitter).catch((error) => {
+      commands: await emitCommands(test.commands, context).catch((error) => {
         // prefix test name on error
         throw new Error(`Test '${test.name}' has a problem: ${error.message}`)
       }),

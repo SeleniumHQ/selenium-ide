@@ -16,12 +16,14 @@
 // under the License.
 
 import {
+  EmitterContext,
   codeExport as exporter,
   ExportFlexCommandShape,
   PrebuildEmitter,
   ProcessedCommandEmitter,
   ScriptShape,
 } from 'side-code-export'
+// eslint-disable-next-line node/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
 import location from './location'
 import selection from './selection'
@@ -134,8 +136,9 @@ function register(command: string, emitter: PrebuildEmitter) {
   exporter.register.emitter({ command, emitter, emitters })
 }
 
-function emit(command: CommandShape) {
+function emit(command: CommandShape, context: EmitterContext) {
   return exporter.emit.command(command, emitters[command.command], {
+    context,
     variableLookup,
     emitNewWindowHandling,
   })
@@ -182,7 +185,10 @@ function emitWaitForWindow() {
   })
 }
 
-async function emitNewWindowHandling(command: CommandShape, emittedCommand: ExportFlexCommandShape) {
+async function emitNewWindowHandling(
+  command: CommandShape,
+  emittedCommand: ExportFlexCommandShape
+) {
   return Promise.resolve(
     `vars["windowHandles"] = await driver.getAllWindowHandles()\n${await emittedCommand}\nvars["${
       command.windowHandleName
@@ -309,7 +315,10 @@ function emitControlFlowIf(script: ScriptShape) {
   })
 }
 
-function emitControlFlowForEach(collectionVarName: string, iteratorVarName: string) {
+function emitControlFlowForEach(
+  collectionVarName: string,
+  iteratorVarName: string
+) {
   return Promise.resolve({
     commands: [
       {
@@ -519,12 +528,11 @@ async function emitMouseUp(locator: string) {
   return Promise.resolve({ commands })
 }
 
-function emitOpen(target: string) {
+function emitOpen(target: string, _value: unknown, context: EmitterContext) {
   const url = /^(file|http|https):\/\//.test(target)
-    ? `"${target}"`
-    : // @ts-expect-error globals yuck
-    `"${global.baseUrl}${target}"`
-  return Promise.resolve(`await driver.get(${url})`)
+    ? target
+    : `${context.project.url}${target}`
+  return Promise.resolve(`await driver.get("${url}")`)
 }
 
 async function emitPause(time: string) {
@@ -837,7 +845,10 @@ async function emitVerifyNotEditable(locator: string) {
   return Promise.resolve({ commands })
 }
 
-async function emitVerifyNotSelectedValue(locator: string, expectedValue: string) {
+async function emitVerifyNotSelectedValue(
+  locator: string,
+  expectedValue: string
+) {
   const commands = [
     { level: 0, statement: `{` },
     {
@@ -848,7 +859,7 @@ async function emitVerifyNotSelectedValue(locator: string, expectedValue: string
     },
     {
       level: 1,
-      statement: `assert.equal(value, "${exporter.emit.text(expectedValue)}")`
+      statement: `assert.equal(value, "${exporter.emit.text(expectedValue)}")`,
     },
     { level: 0, statement: `}` },
   ]
@@ -864,7 +875,10 @@ async function emitVerifyNotText(locator: string, text: string) {
         locator
       )}).getText()`,
     },
-    { level: 1, statement: `assert.notEqual(text, "${exporter.emit.text(text)}")` },
+    {
+      level: 1,
+      statement: `assert.notEqual(text, "${exporter.emit.text(text)}")`,
+    },
     { level: 0, statement: `}` },
   ]
   return Promise.resolve({ commands })

@@ -16,17 +16,19 @@
 // under the License.
 
 import { Command, location } from '@seleniumhq/code-export-csharp-commons'
-import { codeExport as exporter } from 'side-code-export'
+import { EmitterContext, codeExport as exporter } from 'side-code-export'
+// eslint-disable-next-line node/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
 
 const emitters = { ...Command.emitters }
 
 exporter.register.preprocessors(emitters)
 
-function emit(command: CommandShape) {
+function emit(command: CommandShape, context: EmitterContext) {
   return exporter.emit.command(command, emitters[command.command], {
-    variableLookup: Command.variableLookup,
+    context,
     emitNewWindowHandling: Command.extras.emitNewWindowHandling,
+    variableLookup: Command.variableLookup,
   })
 }
 
@@ -154,7 +156,10 @@ async function emitVerifyNotEditable(locator: string) {
 emitters.assertNotSelectedValue = emitVerifyNotSelectedValue
 emitters.verifyNotSelectedValue = emitVerifyNotSelectedValue
 
-async function emitVerifyNotSelectedValue(locator: string, expectedValue: string) {
+async function emitVerifyNotSelectedValue(
+  locator: string,
+  expectedValue: string
+) {
   const commands = [
     { level: 0, statement: '{' },
     {
