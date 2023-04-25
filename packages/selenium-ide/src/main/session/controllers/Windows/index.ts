@@ -211,6 +211,8 @@ export default class WindowsController extends BaseController {
       }
     }
 
+    projectWindow.setTitle('Project Editor - ' + this.session.projects.project.name)
+
     projectWindow.show()
 
     projectWindow.on('close', async (e) => {
