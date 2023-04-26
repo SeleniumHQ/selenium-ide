@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "start": "cd packages/selenium-ide && pnpm run start",
+    "start:test-site": "http-server -p 8080 ./tests/static",
     "build": "run-s build:ts build:ide",
     "build:electron": "pnpm run --stream --filter @seleniumhq/selenium-ide build:electron",
     "build:ide": "pnpm run --stream --filter @seleniumhq/selenium-ide build:webpack",
