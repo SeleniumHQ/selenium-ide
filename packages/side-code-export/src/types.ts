@@ -4,7 +4,11 @@ import {
   SuiteShape,
   TestShape,
 } from '@seleniumhq/side-model'
-import { ExportFlexCommandShape, VariableLookup } from './code-export'
+import {
+  EmitterContext,
+  ExportFlexCommandShape,
+  VariableLookup,
+} from './code-export'
 
 import Hook, { LanguageHooks } from './code-export/hook'
 
@@ -68,11 +72,13 @@ export interface EmitOptions {
 
 export type PrebuildEmitter = (
   target: string,
-  value: string
+  value: string,
+  context: EmitterContext
 ) => Promise<ExportFlexCommandShape>
 
 export type LanguageExportEmitterEmit = (
-  command: CommandShape
+  command: CommandShape,
+  context: EmitterContext
 ) => Promise<ExportFlexCommandShape> | ExportFlexCommandShape
 
 export type LanguageExportEmitter = {

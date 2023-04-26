@@ -4,7 +4,7 @@ This document covers development and usage of Selenium IDE plugins to support be
 
 ## Plugin Development
 
-Begin by copying an example plugin folder, e.g. the selenium-ide/packages/side-plugin-example/ to a new folder location, e.g. 'myPlugin' relative to your related SIDE file location. For example, if your .side file is located at /user/me/projects/myTests.side, you can have the below folder setup.
+Begin by copying an example plugin folder, e.g. the selenium-ide/packages/side-example-suite/src/plugins to a new folder location, e.g. 'myPlugin' relative to your related SIDE file location. For example, if your .side file is located at /user/me/projects/myTests.side, you can have the below folder setup.
 
 ```
 /user/me/projects/myTests.side

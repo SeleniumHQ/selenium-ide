@@ -2,7 +2,7 @@
   "id": "8e43685a-112a-455b-a6b2-748a19071100",
   "version": "2.0",
   "name": "Plugin",
-  "url": "https://www.google.com",
+  "url": "http://localhost:8080/",
   "tests": [
     {
       "id": "58cc1d1f-7920-47ee-a0eb-336a3ebdf069",
@@ -12,7 +12,7 @@
           "id": "161321ce-3c63-4283-989e-d20117a97eb8",
           "comment": "",
           "command": "open",
-          "target": "/webhp",
+          "target": "/mouse/down.html",
           "targets": [],
           "value": ""
         },
@@ -24,7 +24,7 @@
         },
         {
           "command": "customClick",
-          "target": "css=.lnXdpd",
+          "target": "id=a",
           "value": "",
           "insertBeforeLastCommand": false,
           "frameLocation": "root",
@@ -41,87 +41,12 @@
           ]
         },
         {
-          "id": "d6702ef2-8787-4252-9861-5aa28d65ab4e",
-          "comment": "",
-          "command": "type",
-          "target": "name=q",
-          "targets": [
-            [
-              "id=lst-ib",
-              "id"
-            ],
-            [
-              "name=q",
-              "name"
-            ],
-            [
-              "css=#lst-ib",
-              "css"
-            ],
-            [
-              "xpath=//input[@id='lst-ib']",
-              "xpath:attributes"
-            ],
-            [
-              "xpath=//div[@id='gs_lc0']/input",
-              "xpath:idRelative"
-            ],
-            [
-              "xpath=//div[2]/div/input",
-              "xpath:position"
-            ]
-          ],
-          "value": "selenium ide"
-        },
-        {
-          "id": "1b4d1d17-2e2e-4557-9cfa-260189c4b6a7",
-          "comment": "",
-          "command": "sendKeys",
-          "target": "name=q",
-          "targets": [
-            [
-              "id=lst-ib",
-              "id"
-            ],
-            [
-              "name=q",
-              "name"
-            ],
-            [
-              "css=#lst-ib",
-              "css"
-            ],
-            [
-              "xpath=//input[@id='lst-ib']",
-              "xpath:attributes"
-            ],
-            [
-              "xpath=//div[@id='gs_lc0']/input",
-              "xpath:idRelative"
-            ],
-            [
-              "xpath=//div[2]/div/input",
-              "xpath:position"
-            ]
-          ],
-          "value": "${KEY_ENTER}",
-          "isBreakpoint": false
-        },
-        {
-          "id": "5628fe89-f130-40cb-b52e-244a41cd6516",
-          "comment": "",
-          "command": "click",
-          "target": "css=.g a",
-          "targets": [],
-          "value": ""
-        },
-        {
           "id": "fa9bae47-4a7e-4e92-9e02-e6863c13aaf1",
           "comment": "",
-          "command": "assertTitle",
-          "target": "Selenium IDE · Open source record and playback test automation for the web",
+          "command": "waitForText",
+          "target": "id=a",
           "targets": [],
-          "value": ""
+          "value": "down"
         }
       ]
     }
@@ -142,6 +67,6 @@
     "https://www.google.com/"
   ],
   "plugins": [
-    "../../packages/side-example-suite/dist/plugins/custom-click/index.js"
+    "../../packages/side-example-suite/dist/plugins/custom-click"
   ]
 }
