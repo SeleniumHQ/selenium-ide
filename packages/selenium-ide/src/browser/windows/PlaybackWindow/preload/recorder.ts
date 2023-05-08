@@ -16,6 +16,7 @@
 // under the License.
 
 import { handlers, observers } from './record-handlers'
+import * as recordShortcuts from './record-shortcuts'
 import { attach, detach } from './prompt-injector'
 import {
   EventHandler,
@@ -203,6 +204,7 @@ export default class Recorder {
       }
       attachInputListeners(this.recordingState, this.window)
       attach(this.record.bind(this))
+      recordShortcuts.attach(this)
     }
   }
 
@@ -227,6 +229,7 @@ export default class Recorder {
     this.attached = false
     detachInputListeners(this.recordingState, this.window)
     detach()
+    recordShortcuts.detach()
   }
 
   // set frame id
