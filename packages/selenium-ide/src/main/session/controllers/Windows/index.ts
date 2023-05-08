@@ -1,8 +1,11 @@
+import { ipcMain } from 'electron'
+import Commands from '@seleniumhq/side-model/dist/Commands'
 import * as windowConfigs from 'browser/windows/controller'
 import { WindowConfig } from 'browser/types'
 import electron, {
   BrowserWindow,
   BrowserWindowConstructorOptions,
+  Menu,
 } from 'electron'
 import { existsSync, readFileSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
@@ -75,6 +78,52 @@ export default class WindowsController extends BaseController {
   playbackWindows: BrowserWindow[] = []
   windowLoaders: WindowLoaderMap = makeWindowLoaders(this.session)
   windows: { [key: string]: BrowserWindow } = {}
+
+  constructor (session: Session) {
+    super(session)
+    ipcMain.handle('show-shortcut-menu', async (event) => {
+      if (session.state.state.status != 'recording') {
+        return null
+      }
+      return new Promise((resolve) => {
+        let contextMenuParams: Electron.ContextMenuParams
+        let handled = false
+        const template = [
+          'verifyText',
+          'verifyChecked',
+          'verifyElementPresent',
+          'waitForElementVisible',
+        ].map((cmd) => {
+          return {
+            label: Commands[cmd].name,
+            click () {
+              handled = true
+              resolve({
+                cmd,
+                params: contextMenuParams
+              })
+            }
+          }
+        })
+        const menu = Menu.buildFromTemplate([{
+          label: 'Selenium IDE',
+          submenu: template
+        }])
+        menu.once('menu-will-close', () => {
+          // execute after menu click-function trigger
+          setTimeout(() => {
+            if (!handled) {
+              resolve(null)
+            }
+          })
+        })
+        event.sender.once('context-menu', (_event, params) => {
+          contextMenuParams = params
+        })
+        menu.popup()
+      })
+    })
+  }
 
   async broadcast(path: string, ...args: any) {
     Object.values(this.windows).forEach((window) => {
