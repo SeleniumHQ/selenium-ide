@@ -34,8 +34,8 @@ import {
 import {
   ExportCommandShape,
   ExportCommandsShape,
+  GenerateMethodDeclaration,
   LanguageEmitterOpts,
-  LanguageExportExtras,
 } from '../types'
 import { writeCommands } from './utils'
 import { LanguageHooks } from './hook'
@@ -243,9 +243,7 @@ export interface EmitMethodContext {
 
 export interface MethodShape {
   name: string
-  generateMethodDeclaration?: (
-    name: string
-  ) => string | LanguageExportExtras['emitWaitForWindow']
+  generateMethodDeclaration?: GenerateMethodDeclaration
   commands: ExportCommandShape[] | CommandShape[]
 }
 
