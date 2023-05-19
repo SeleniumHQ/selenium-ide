@@ -12,18 +12,11 @@ import {
 
 import Hook, { LanguageHooks } from './code-export/hook'
 
-export type GenerateMethodDeclaration = (name: string) =>
-  | string
-  | {
-      body: string
-      terminatingKeyword: string
-    }
-
 export type LanguageExportExtras = {
   emitWaitForWindow: () => Promise<{
     name: string
     commands: ExportCommandShape[]
-    generateMethodDeclaration: GenerateMethodDeclaration
+    generateMethodDeclaration: LanguageEmitterOpts['generateMethodDeclaration']
   }>
   emitNewWindowHandling: (
     command: CommandShape,
@@ -89,6 +82,13 @@ export type LanguageExportEmitter = {
   emitters: Record<string, PrebuildEmitter>
   register: (command: string, emitter: PrebuildEmitter) => void
 }
+
+export type GenerateMethodDeclaration = (name: string) =>
+  | string
+  | {
+      body: string
+      terminatingKeyword: string
+    }
 
 export interface LanguageEmitterOpts {
   commentPrefix: string
