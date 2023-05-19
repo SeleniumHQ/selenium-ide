@@ -35,6 +35,7 @@ import {
   ExportCommandShape,
   ExportCommandsShape,
   LanguageEmitterOpts,
+  LanguageExportExtras,
 } from '../types'
 import { writeCommands } from './utils'
 import { LanguageHooks } from './hook'
@@ -242,6 +243,9 @@ export interface EmitMethodContext {
 
 export interface MethodShape {
   name: string
+  generateMethodDeclaration?: (
+    name: string
+  ) => string | LanguageExportExtras['emitWaitForWindow']
   commands: ExportCommandShape[] | CommandShape[]
 }
 
@@ -259,7 +263,9 @@ async function emitMethod(
     generateMethodDeclaration,
     terminatingKeyword,
   } = context
-  const methodDeclaration = generateMethodDeclaration(method.name)
+  const methodDeclaration = method.generateMethodDeclaration
+    ? method.generateMethodDeclaration(method.name)
+    : generateMethodDeclaration(method.name)
   let _methodDeclaration = methodDeclaration
   let _terminatingKeyword = terminatingKeyword
   if (typeof methodDeclaration === 'object') {
