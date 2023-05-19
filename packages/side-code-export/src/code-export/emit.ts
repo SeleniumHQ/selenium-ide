@@ -34,7 +34,6 @@ import {
 import {
   ExportCommandShape,
   ExportCommandsShape,
-  GenerateMethodDeclaration,
   LanguageEmitterOpts,
 } from '../types'
 import { writeCommands } from './utils'
@@ -243,7 +242,7 @@ export interface EmitMethodContext {
 
 export interface MethodShape {
   name: string
-  generateMethodDeclaration?: GenerateMethodDeclaration
+  generateMethodDeclaration?: LanguageEmitterOpts['generateMethodDeclaration']
   commands: ExportCommandShape[] | CommandShape[]
 }
 
