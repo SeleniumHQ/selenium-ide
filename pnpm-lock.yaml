@@ -188,16 +188,6 @@ importers:
         specifier: ^4.0.0-alpha.3
         version: link:../side-model
 
-  packages/code-export-js-newrelic-synthetics:
-    dependencies:
-      side-code-export:
-        specifier: ^4.0.0-alpha.6
-        version: link:../side-code-export
-    devDependencies:
-      '@seleniumhq/side-model':
-        specifier: ^4.0.0-alpha.3
-        version: link:../side-model
-
   packages/code-export-python-pytest:
     dependencies:
       side-code-export:

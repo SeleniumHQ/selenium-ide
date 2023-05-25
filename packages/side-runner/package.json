@@ -14,7 +14,7 @@
     "selenium-side-runner": "dist/bin.js"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "keywords": [
     "selenium",
