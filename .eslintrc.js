@@ -12,7 +12,7 @@ module.exports = {
     'plugin:react/recommended',
     'prettier',
   ],
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaFeatures: {
       experimentalObjectRestSpread: true,

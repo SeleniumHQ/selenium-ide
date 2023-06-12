@@ -27,6 +27,8 @@ import {
 } from '@seleniumhq/side-runtime'
 import { WebDriverExecutorConstructorArgs } from '@seleniumhq/side-runtime/dist/webdriver'
 import { SuiteShape, TestShape } from '@seleniumhq/side-model'
+import fs from 'fs/promises'
+import path from 'path'
 import Satisfies from './versioner'
 import { Configuration, Project } from './types'
 
@@ -73,6 +75,26 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
           variables: new Variables(),
         })
         const onComplete = async (failure: any) => {
+          // I know this feature is over aggressive for a tool to be deprecated
+          // but I can't figure out whats going wrong at {{paid work}} and I
+          // need this so just please don't ask me to expand on it because I
+          // don't want to own screenshotting in tool tbh. That is perfect for
+          // plugins.
+          if (failure && configuration.screenshotFailureDirectory) {
+            try {
+              const crashScreen = await driver.driver.takeScreenshot()
+              await fs.writeFile(
+                path.join(
+                  configuration.screenshotFailureDirectory,
+                  `${test.name}_${Date.now()}.png`
+                ),
+                crashScreen,
+                'base64'
+              )
+            } catch (e) {
+              console.log('Failed to take screenshot', e)
+            }
+          }
           await playback.cleanup()
           await driver.cleanup()
           if (failure) {

@@ -85,8 +85,12 @@ program
     'Use specified YAML file for configuration. (default: .side.yml)'
   )
   .option(
-    '-o, --output-directory [it directory]',
+    '-o, --output-directory [directory]',
     'Write test results as json to file in specified directory. Name will be based on timestamp.'
+  )
+  .option(
+    '-z, --screenshot-failure-directory [directory]',
+    'Write screenshots of failed tests to file in specified directory. Name will be based on test + timestamp.'
   )
   .option(
     '-f, --force',
@@ -103,6 +107,7 @@ if (!program.args.length) {
   process.exit(1)
 }
 const options = program.opts()
+
 let configuration: Configuration = {
   baseUrl: '',
   capabilities: {
@@ -113,6 +118,7 @@ let configuration: Configuration = {
   filter: options.filter || '.*',
   force: options.force,
   maxWorkers: os.cpus().length,
+  screenshotFailureDirectory: options.screenshotFailureDirectory,
   // Convert all project paths into absolute paths
   projects: [],
   proxyOptions: {},
@@ -172,6 +178,12 @@ if (options.outputDirectory) {
   const outputFile = path.join(options.outputDirectory, outputFilename)
   if (!fs.existsSync(outputFile)) {
     fs.writeFileSync(outputFile, '')
+  }
+}
+
+if (options.screenshotFailureDirectory) {
+  if (!fs.existsSync(options.screenshotFailureDirectory)) {
+    fs.mkdirSync(options.screenshotFailureDirectory, { recursive: true })
   }
 }
 
