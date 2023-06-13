@@ -113,16 +113,18 @@ export interface WindowSwitchedHookInput {
   windowHandle?: string | Error
 }
 
+export type GeneralHook<T> = (input: T) => Promise<void> | void
+
 export interface WebDriverExecutorHooks {
-  onBeforePlay?: (input: BeforePlayHookInput) => Promise<void> | void
-  onAfterCommand?: (input: CommandHookInput) => Promise<void> | void
-  onBeforeCommand?: (input: CommandHookInput) => Promise<void> | void
-  onStoreWindowHandle?: (
-    input?: StoreWindowHandleHookInput
-  ) => Promise<void> | void
-  onWindowAppeared?: (input: WindowAppearedHookInput) => Promise<void> | void
-  onWindowSwitched?: (input: WindowSwitchedHookInput) => Promise<void> | void
+  onBeforePlay?: GeneralHook<BeforePlayHookInput>
+  onAfterCommand?: GeneralHook<CommandHookInput>
+  onBeforeCommand?: GeneralHook<CommandHookInput>
+  onStoreWindowHandle?: GeneralHook<StoreWindowHandleHookInput>
+  onWindowAppeared?: GeneralHook<WindowAppearedHookInput>
+  onWindowSwitched?: GeneralHook<WindowSwitchedHookInput>
 }
+
+export type HookKeys = keyof WebDriverExecutorHooks
 
 export interface ElementEditableScriptResult {
   enabled: boolean
@@ -241,16 +243,16 @@ export default class WebDriverExecutor {
     return func
   }
 
-  async executeHook<T extends keyof WebDriverExecutorHooks>(
+  async executeHook<T extends HookKeys>(
     hook: T,
     ...args: Parameters<NonNullable<WebDriverExecutorHooks[T]>>
   ) {
-    const fn = this.hooks[hook] as WebDriverExecutorHooks[T]
+    type HookContents = WebDriverExecutorHooks[T]
+    type HookParameters = Parameters<NonNullable<HookContents>>
+    const fn = this.hooks[hook] as HookContents
     if (!fn) return
-    await fn.apply(
-      this,
-      args as Parameters<NonNullable<WebDriverExecutorHooks[T]>>
-    )
+    // @ts-expect-error it's okay, this shape is fine
+    await fn.apply(this, args as HookParameters)
   }
 
   async beforeCommand(commandObject: CommandShape) {

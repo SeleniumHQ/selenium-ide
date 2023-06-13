@@ -85,4 +85,5 @@ export type Configuration = Required<
     proxyOptions: ProxyInputOptions
     runId: string
     path: string
+    screenshotFailureDirectory?: string
   }
