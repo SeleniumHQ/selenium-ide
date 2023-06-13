@@ -7,7 +7,8 @@ export const projectEditorCommands: MenuComponent = (session) => async () =>
       accelerator: 'CommandOrControl+N',
       label: 'New Project',
       click: async () => {
-        await session.projects.new()
+        await session.api.projects.new()
+
       },
     },
     { type: 'separator' },
