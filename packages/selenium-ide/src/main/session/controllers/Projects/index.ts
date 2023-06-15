@@ -116,7 +116,11 @@ export default class ProjectsController {
     return starterProject
   }
 
-  async load(filepath: string): Promise<CoreSessionData | null> {
+  async load(filepath: string): Promise<CoreSessionData | null > {
+    const fileExists = await fs.stat(filepath)
+    .then(() => true)
+    .catch(() => false);
+    if(fileExists){
     const loadedProject = await this.load_v3(filepath)
     if (loadedProject) {
       if (this.loaded) {
@@ -129,6 +133,11 @@ export default class ProjectsController {
       return await this.session.state.get()
     }
     return null
+  }else{
+    this.doShowWarning()
+     this.recentProjects.remove(filepath)
+     return null
+    }
   }
 
   async save(filepath: string): Promise<boolean> {
@@ -210,6 +219,16 @@ export default class ProjectsController {
             this.session.projects.filepath as string
           )
       }
+    }
+    return true
+  }
+
+  async doShowWarning(): Promise<boolean> {
+    if (await this.projectHasChanged()) {
+       await this.session.dialogs.showMessageBox(
+        'The Project your trying to load is not found , Please create new Project',
+        [ 'Ok']
+      )      
     }
     return true
   }

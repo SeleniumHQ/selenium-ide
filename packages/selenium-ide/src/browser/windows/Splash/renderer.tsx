@@ -55,7 +55,11 @@ const ProjectEditor = () => {
               <ListItem
                 disablePadding
                 key={index}
-                onClick={() => window.sideAPI.projects.load(filepath)}
+                onClick={() => {
+                   window.sideAPI.projects.load(filepath).then(()=>{
+                    window.sideAPI.projects.getRecent().then(setRecentProjects)
+                   })                 
+                }}
               >
                 <ListItemButton>
                   <ListItemText primary={filepath} />

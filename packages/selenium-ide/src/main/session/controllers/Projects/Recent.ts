@@ -15,12 +15,28 @@ const addToBeginning = (prevList: string[], entry: string) => {
   return list
 }
 
+const removeOne=(list: string[], entry: string)=>{
+  const entryIndex = list.indexOf(entry)
+  const entryIsIndexed = entryIndex !== -1
+  if (entryIsIndexed) {
+    list.splice(entryIndex, 1)
+  }
+  return list
+}
+
 export default class RecentProjectsController extends BaseController {
   add(filepath: string) {
     const entries = storage.get<'recentProjects'>('recentProjects', [])
     const newEntries = addToBeginning(entries, filepath)
     storage.set<'recentProjects'>('recentProjects', newEntries)
     this.session.app.addRecentDocument(filepath)
+  }
+  remove(filepath: string) {
+    const entries = storage.get<'recentProjects'>('recentProjects', [])
+    const newEntries = removeOne(entries, filepath)
+    storage.set<'recentProjects'>('recentProjects', newEntries)
+    this.session.app.clearRecentDocuments()
+    return newEntries
   }
   clear() {
     storage.set<'recentProjects'>('recentProjects', [])
