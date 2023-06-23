@@ -83,7 +83,8 @@ export interface EmitCommandContext {
   context: EmitterContext
   emitNewWindowHandling: (
     command: CommandShape,
-    result: ExportFlexCommandShape
+    result: ExportFlexCommandShape,
+    context: EmitterContext
   ) => Promise<ExportFlexCommandShape>
   variableLookup: VariableLookup
 }
@@ -118,7 +119,7 @@ export function baseEmitFactory(
       _value = await emitter.valuePreprocessor(value, variableLookup)
     }
     const result = await emitter(_target, _value, context)
-    return emitNewWindowHandling(command, result)
+    return emitNewWindowHandling(command, result, context)
   }
 }
 
@@ -146,7 +147,7 @@ export async function emitCommand(
       context
     )
     if (command.opensWindow) {
-      return await emitNewWindowHandling(command, result)
+      return await emitNewWindowHandling(command, result, context)
     }
     return result
   }

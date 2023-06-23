@@ -1,0 +1,181 @@
+{
+  "id": "1c7db077-f81d-45ca-96b6-26e8f94a8d9a",
+  "version": "2.0",
+  "name": "Selenium test for select and checkbox",
+  "url": "https://automationintesting.com",
+  "tests": [{
+    "id": "4339b1ed-9aa8-44f4-afc6-3dc175d0821c",
+    "name": "Selenium test page",
+    "commands": [{
+      "id": "b68481f8-6eb8-4493-ae07-783b6f566ffc",
+      "comment": "Open window",
+      "command": "open",
+      "target": "/selenium/testpage/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "12784d69-c5ef-4f5a-921f-e8aca3bf8e50",
+      "comment": "Set window size",
+      "command": "setWindowSize",
+      "target": "1680x940",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "27c7abda-b39e-437b-ab67-07e1edc4a1c1",
+      "comment": "Press first name",
+      "command": "click",
+      "target": "id=firstname",
+      "targets": [
+        ["id=firstname", "id"],
+        ["css=#firstname", "css:finder"],
+        ["xpath=//input[@id='firstname']", "xpath:attributes"],
+        ["xpath=//form[@id='contactus']/div/div/label/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "f107b808-4b30-4a1c-aa01-63a864764b2f",
+      "comment": "Type first name",
+      "command": "type",
+      "target": "id=firstname",
+      "targets": [
+        ["id=firstname", "id"],
+        ["css=#firstname", "css:finder"],
+        ["xpath=//input[@id='firstname']", "xpath:attributes"],
+        ["xpath=//form[@id='contactus']/div/div/label/input", "xpath:idRelative"],
+        ["xpath=//input", "xpath:position"]
+      ],
+      "value": "Bob"
+    }, {
+      "id": "a5f9e17c-ab5f-4698-9e8c-acad882bf328",
+      "comment": "Type surname",
+      "command": "type",
+      "target": "id=surname",
+      "targets": [
+        ["id=surname", "id"],
+        ["css=#surname", "css:finder"],
+        ["xpath=//input[@id='surname']", "xpath:attributes"],
+        ["xpath=//form[@id='contactus']/div[2]/div/label/input", "xpath:idRelative"],
+        ["xpath=//div[2]/div/label/input", "xpath:position"]
+      ],
+      "value": "Sapp"
+    }, {
+      "id": "f58a7a8e-316b-4255-a6c3-112cdccaaf0e",
+      "comment": "Click gender",
+      "command": "click",
+      "target": "id=gender",
+      "targets": [
+        ["id=gender", "id"],
+        ["css=#gender", "css:finder"],
+        ["xpath=//select[@id='gender']", "xpath:attributes"],
+        ["xpath=//form[@id='contactus']/div[3]/div/label/select", "xpath:idRelative"],
+        ["xpath=//select", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "d052f7af-d01f-4d84-8337-88f5e42ef8ea",
+      "comment": "Click select",
+      "command": "select",
+      "target": "id=gender",
+      "targets": [],
+      "value": "label=My Business!"
+    }, {
+      "id": "ef17f22a-8de2-4dcc-b6bb-ecbd6592f23c",
+      "comment": "Click id=blue",
+      "command": "click",
+      "target": "id=blue",
+      "targets": [
+        ["id=blue", "id"],
+        ["css=#blue", "css:finder"],
+        ["xpath=//input[@id='blue']", "xpath:attributes"],
+        ["xpath=//form[@id='contactus']/div[4]/div/input[2]", "xpath:idRelative"],
+        ["xpath=//input[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "db1428d8-4817-4955-93a1-36b097c48238",
+      "comment": "Click textarea",
+      "command": "click",
+      "target": "css=textarea",
+      "targets": [
+        ["css=textarea", "css:finder"],
+        ["xpath=//form[@id='contactus']/div[5]/div/label/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "b18923b2-7cdc-4d61-b335-443c2e6ba412",
+      "comment": "Type into textarea",
+      "command": "type",
+      "target": "css=textarea",
+      "targets": [
+        ["css=textarea", "css:finder"],
+        ["xpath=//form[@id='contactus']/div[5]/div/label/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "more stuff"
+    }, {
+      "id": "9651c3b0-3e91-4633-92f9-18046b2ed9ef",
+      "comment": "",
+      "command": "mouseDownAt",
+      "target": "id=continent",
+      "targets": [
+        ["id=continent", "id"],
+        ["css=#continent", "css:finder"],
+        ["xpath=//select[@id='continent']", "xpath:attributes"],
+        ["xpath=//form[@id='contactus']/div[6]/div/label/select", "xpath:idRelative"],
+        ["xpath=//div[6]/div/label/select", "xpath:position"]
+      ],
+      "value": "125.5,71.1015625"
+    }, {
+      "id": "b14d7cdb-1275-46c2-9bd5-5a6ab5bd9489",
+      "comment": "",
+      "command": "mouseMoveAt",
+      "target": "id=continent",
+      "targets": [
+        ["id=continent", "id"],
+        ["css=#continent", "css:finder"],
+        ["xpath=//select[@id='continent']", "xpath:attributes"],
+        ["xpath=//form[@id='contactus']/div[6]/div/label/select", "xpath:idRelative"],
+        ["xpath=//div[6]/div/label/select", "xpath:position"]
+      ],
+      "value": "125.5,71.1015625"
+    }, {
+      "id": "f2528673-37b6-4667-b46c-11acd68016a6",
+      "comment": "",
+      "command": "mouseUpAt",
+      "target": "id=continent",
+      "targets": [
+        ["id=continent", "id"],
+        ["css=#continent", "css:finder"],
+        ["xpath=//select[@id='continent']", "xpath:attributes"],
+        ["xpath=//form[@id='contactus']/div[6]/div/label/select", "xpath:idRelative"],
+        ["xpath=//div[6]/div/label/select", "xpath:position"]
+      ],
+      "value": "125.5,71.1015625"
+    }, {
+      "id": "0249c6bd-cf95-45cc-8867-27be6c4d6d64",
+      "comment": "Select from dropdown",
+      "command": "addSelection",
+      "target": "id=continent",
+      "targets": [
+        ["id=continent", "id"],
+        ["css=#continent", "css:finder"],
+        ["xpath=//select[@id='continent']", "xpath:attributes"],
+        ["xpath=//form[@id='contactus']/div[6]/div/label/select", "xpath:idRelative"],
+        ["xpath=//div[6]/div/label/select", "xpath:position"]
+      ],
+      "value": "label=Europe"
+    }]
+  }],
+  "suites": [{
+    "id": "1fe91f24-5b61-4078-9218-f186a864d4b5",
+    "name": "Form Select Checkbox",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["4339b1ed-9aa8-44f4-afc6-3dc175d0821c"]
+  }],
+  "urls": ["https://automationintesting.com/"],
+  "plugins": []
+}
