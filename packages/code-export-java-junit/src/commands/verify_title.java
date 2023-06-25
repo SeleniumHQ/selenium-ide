@@ -1,0 +1,1 @@
+assertThat(driver.getTitle(), is("${title}"));
