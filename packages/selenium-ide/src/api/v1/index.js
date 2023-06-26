@@ -27,7 +27,8 @@ import popupRouter from './popup'
 import UiState from '../../neo/stores/view/UiState'
 import WindowSession from '../../neo/IO/window-session'
 import ModalState from '../../neo/stores/view/ModalState'
-import { loadJSProject } from '../../neo/IO/filesystem'
+import { loadJSProject,  } from '../../neo/IO/filesystem'
+import { migrateTestCase, } from '../../neo/IO/legacy/migrate'
 import manager from '../../plugin/manager'
 
 const router = new Router()
@@ -217,6 +218,12 @@ router.post('/project', (req, res) => {
       res(true)
     }
     res(false)
+  })
+})
+
+router.get('/migrate', (req, res) => {
+  controlledOnly(req, res).then(() => {
+	res (migrateTestCase(req.contents))
   })
 })
 

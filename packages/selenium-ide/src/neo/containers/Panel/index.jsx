@@ -383,7 +383,7 @@ export default class Panel extends React.Component {
           <Modal
             project={this.state.project}
             createNewProject={this.createNewProject.bind(this)}
-          />
+           />
           <Tooltip />
         </SuiteDropzone>
       </div>

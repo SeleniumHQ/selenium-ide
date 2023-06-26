@@ -24,6 +24,8 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const autoprefixer = require('autoprefixer')
 
 const isProduction = process.env.NODE_ENV === 'production'
+//const isProduction = true
+console.log ('-->  production ' +  isProduction + '  <--');
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
