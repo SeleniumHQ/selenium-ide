@@ -55,6 +55,7 @@
     "fuse.js": "^3.3.0",
     "google-closure-library": "^20170521.0.0",
     "js-beautify": "^1.7.5",
+    "lodash": "^4.17.15",
     "mobx": "^5.9.0",
     "mobx-react": "^5.4.3",
     "modifier-keys": "^1.2.1",

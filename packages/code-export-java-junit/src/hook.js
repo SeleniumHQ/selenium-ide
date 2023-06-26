@@ -29,14 +29,14 @@ const emitters = {
   inEachEnd: empty,
 }
 
-function generate(hookName) {
-  return new exporter.hook(emitters[hookName]())
+function generate(hookName, exportObject) {
+  return new exporter.hook(emitters[hookName](exportObject))
 }
 
-export function generateHooks() {
+export function generateHooks(exportObject) {
   let result = {}
   Object.keys(emitters).forEach(hookName => {
-    result[hookName] = generate(hookName)
+    result[hookName] = generate(hookName, exportObject)
   })
   return result
 }
@@ -119,7 +119,7 @@ function beforeEach() {
   return params
 }
 
-function declareDependencies() {
+function declareDependencies(exportObject) {
   const params = {
     startingSyntax: {
       commands: [
@@ -174,6 +174,18 @@ function declareDependencies() {
       ],
     },
   }
+
+  if (
+    exportObject &&
+    exportObject.additionalOpts &&
+    exportObject.additionalOpts.package
+  ) {
+    params.startingSyntax.commands.unshift({
+      level: 0,
+      statement: `package ${exportObject.additionalOpts.package};`,
+    })
+  }
+
   return params
 }
 

@@ -38,6 +38,8 @@ export default class Suite {
   modified = false
   @observable
   isOpen = false
+  @observable
+  additionalOpts = {}
 
   constructor(id = uuidv4(), name = 'Untitled Suite') {
     this.id = id
@@ -170,6 +172,7 @@ export default class Suite {
       parallel: this.isParallel,
       timeout: this.timeout,
       tests: this._tests.map(t => t.id),
+      additionalOpts: this.additionalOpts,
     }
   }
 
@@ -183,6 +186,7 @@ export default class Suite {
     suite._tests.replace(
       jsRep.tests.map(testId => projectTests.find(({ id }) => id === testId))
     )
+    suite.additionalOpts = jsRep.additionalOpts || {}
 
     return suite
   }
