@@ -1,0 +1,1 @@
+vars[{{{varName}}}] = {{{value}}};

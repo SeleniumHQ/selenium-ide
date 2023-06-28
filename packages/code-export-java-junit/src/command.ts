@@ -23,52 +23,17 @@ import {
   ExportFlexCommandShape,
   PrebuildEmitter,
   ProcessedCommandEmitter,
-  ScriptShape,
+  ScriptShape
 } from 'side-code-export'
 import location from './location'
-import selection from './selection'
 
 export const emitters: Record<string, ProcessedCommandEmitter> = {
-  addSelection: emitSelect,
   answerOnNextPrompt: skip,
-  assert: emitAssert,
-  assertAlert: emitAssertAlert,
-  assertChecked: emitVerifyChecked,
-  assertConfirmation: emitAssertAlert,
-  assertEditable: emitVerifyEditable,
-  assertElementPresent: emitVerifyElementPresent,
-  assertElementNotPresent: emitVerifyElementNotPresent,
-  assertNotChecked: emitVerifyNotChecked,
-  assertNotEditable: emitVerifyNotEditable,
-  assertNotSelectedValue: emitVerifyNotSelectedValue,
-  assertNotText: emitVerifyNotText,
-  assertPrompt: emitAssertAlert,
-  assertSelectedLabel: emitVerifySelectedLabel,
-  assertSelectedValue: emitVerifySelectedValue,
-  assertValue: emitVerifyValue,
-  assertText: emitVerifyText,
-  assertTitle: emitVerifyTitle,
-  check: emitCheck,
   chooseCancelOnNextConfirmation: skip,
   chooseCancelOnNextPrompt: skip,
   chooseOkOnNextConfirmation: skip,
-  click: emitClick,
-  clickAt: emitClick,
-  close: emitClose,
   debugger: skip,
-  do: emitControlFlowDo,
-  doubleClick: emitDoubleClick,
-  doubleClickAt: emitDoubleClick,
-  dragAndDropToObject: emitDragAndDrop,
-  echo: emitEcho,
-  editContent: emitEditContent,
-  else: emitControlFlowElse,
-  elseIf: emitControlFlowElseIf,
-  end: emitControlFlowEnd,
-  executeScript: emitExecuteScript,
   executeAsyncScript: emitExecuteAsyncScript,
-  forEach: emitControlFlowForEach,
-  if: emitControlFlowIf,
   mouseDown: emitMouseDown,
   mouseDownAt: emitMouseDown,
   mouseMove: emitMouseMove,
@@ -79,55 +44,10 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   mouseUpAt: emitMouseUp,
   open: emitOpen,
   pause: emitPause,
-  removeSelection: emitSelect,
-  repeatIf: emitControlFlowRepeatIf,
   run: emitRun,
   runScript: emitRunScript,
-  select: emitSelect,
   selectFrame: emitSelectFrame,
   selectWindow: emitSelectWindow,
-  sendKeys: emitSendKeys,
-  setSpeed: emitSetSpeed,
-  setWindowSize: emitSetWindowSize,
-  store: emitStore,
-  storeAttribute: emitStoreAttribute,
-  //storeJson: emitStoreJson,
-  storeText: emitStoreText,
-  storeTitle: emitStoreTitle,
-  storeValue: emitStoreValue,
-  storeWindowHandle: emitStoreWindowHandle,
-  storeXpathCount: emitStoreXpathCount,
-  submit: emitSubmit,
-  times: emitControlFlowTimes,
-  type: emitType,
-  uncheck: emitUncheck,
-  verify: emitAssert,
-  verifyChecked: emitVerifyChecked,
-  verifyEditable: emitVerifyEditable,
-  verifyElementPresent: emitVerifyElementPresent,
-  verifyElementNotPresent: emitVerifyElementNotPresent,
-  verifyNotChecked: emitVerifyNotChecked,
-  verifyNotEditable: emitVerifyNotEditable,
-  verifyNotSelectedValue: emitVerifyNotSelectedValue,
-  verifyNotText: emitVerifyNotText,
-  verifySelectedLabel: emitVerifySelectedLabel,
-  verifySelectedValue: emitVerifySelectedValue,
-  verifyText: emitVerifyText,
-  verifyTitle: emitVerifyTitle,
-  verifyValue: emitVerifyValue,
-  waitForElementEditable: emitWaitForElementEditable,
-  waitForElementPresent: emitWaitForElementPresent,
-  waitForElementVisible: emitWaitForElementVisible,
-  waitForElementNotEditable: emitWaitForElementNotEditable,
-  waitForElementNotPresent: emitWaitForElementNotPresent,
-  waitForElementNotVisible: emitWaitForElementNotVisible,
-  waitForText: emitWaitForText,
-  webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
-  webdriverChooseCancelOnVisibleConfirmation:
-    emitChooseCancelOnNextConfirmation,
-  webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
-  webdriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
-  while: emitControlFlowWhile,
 }
 
 exporter.register.preprocessors(emitters)
@@ -189,36 +109,6 @@ async function emitNewWindowHandling(
       command.windowHandleName
     }", waitForWindow(${command.windowTimeout}));`
   )
-}
-
-async function emitEcho(message: string) {
-  const _message = message.startsWith('vars.get') ? message : `"${message}"`
-  return Promise.resolve(`System.out.println(${_message});`)
-}
-
-async function emitEditContent(locator: string, content: string) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
-        locator
-      )});`,
-    },
-    {
-      level: 1,
-      statement: `js.executeScript("if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '${content}'}", element);`,
-    },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
-async function emitExecuteScript(script: ScriptShape, varName: string) {
-  const result = `js.executeScript("${script.script}"${generateScriptArguments(
-    script
-  )})`
-  return Promise.resolve(variableSetter(varName, result))
 }
 
 async function emitExecuteAsyncScript(script: ScriptShape, varName: string) {
@@ -330,33 +220,6 @@ async function emitRunScript(script: ScriptShape) {
   )
 }
 
-async function emitSetWindowSize(size: string) {
-  const [width, height] = size.split('x')
-  return Promise.resolve(
-    `driver.manage().window().setSize(new Dimension(${width}, ${height}));`
-  )
-}
-
-async function emitSelect(selectElement: string, option: string) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `WebElement dropdown = driver.findElement(${await location.emit(
-        selectElement
-      )});`,
-    },
-    {
-      level: 1,
-      statement: `dropdown.findElement(${await selection.emit(
-        option
-      )}).click();`,
-    },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
 async function emitSelectFrame(frameLocation: string) {
   if (frameLocation === 'relative=top' || frameLocation === 'relative=parent') {
     return Promise.resolve('driver.switchTo().defaultContent();')
@@ -452,281 +315,6 @@ function generateSendKeysInput(value: string | string[]) {
       return `"${value}"`
     }
   }
-}
-
-async function emitSendKeys(target: string, value: string) {
-  return Promise.resolve(
-    `driver.findElement(${await location.emit(
-      target
-    )}).sendKeys(${generateSendKeysInput(value)});`
-  )
-}
-
-function emitSetSpeed() {
-  return Promise.resolve(
-    `System.out.println("\`set speed\` is a no-op in code export, use \`pause\` instead");`
-  )
-}
-
-async function emitStore(value: string, varName: string) {
-  return Promise.resolve(variableSetter(varName, `"${value}"`))
-}
-
-async function emitStoreAttribute(locator: string, varName: string) {
-  const attributePos = locator.lastIndexOf('@')
-  const elementLocator = locator.slice(0, attributePos)
-  const attributeName = locator.slice(attributePos + 1)
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
-        elementLocator
-      )});`,
-    },
-    {
-      level: 1,
-      statement: `String attribute = element.getAttribute("${attributeName}");`,
-    },
-    { level: 1, statement: `${variableSetter(varName, 'attribute')}` },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
-//async function emitStoreJson(_json, _varName) {
-//  // TODO
-//  return Promise.resolve('')
-//}
-
-async function emitStoreText(locator: string, varName: string) {
-  const result = `driver.findElement(${await location.emit(locator)}).getText()`
-  return Promise.resolve(variableSetter(varName, result))
-}
-
-async function emitStoreTitle(_: string, varName: string) {
-  return Promise.resolve(variableSetter(varName, 'driver.getTitle()'))
-}
-
-async function emitStoreValue(locator: string, varName: string) {
-  const result = `driver.findElement(${await location.emit(
-    locator
-  )}).getAttribute("value")`
-  return Promise.resolve(variableSetter(varName, result))
-}
-
-async function emitStoreWindowHandle(varName: string) {
-  return Promise.resolve(variableSetter(varName, 'driver.getWindowHandle()'))
-}
-
-async function emitStoreXpathCount(locator: string, varName: string) {
-  const result = `driver.findElements(${await location.emit(locator)}).size()`
-  return Promise.resolve(variableSetter(varName, result))
-}
-
-async function emitSubmit(_locator: string) {
-  return Promise.resolve(
-    `throw new Error("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.");`
-  )
-}
-
-async function emitType(target: string, value: string) {
-  return Promise.resolve(
-    `driver.findElement(${await location.emit(
-      target
-    )}).sendKeys(${generateSendKeysInput(value)});`
-  )
-}
-
-async function emitUncheck(locator: string) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
-        locator
-      )});`,
-    },
-    { level: 1, statement: 'if (element.isSelected()) {' },
-    { level: 2, statement: 'element.click();' },
-    { level: 1, statement: '}' },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
-async function emitVerifyChecked(locator: string) {
-  return Promise.resolve(
-    `assertTrue(driver.findElement(${await location.emit(
-      locator
-    )}).isSelected());`
-  )
-}
-
-async function emitVerifyEditable(locator: string) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
-        locator
-      )});`,
-    },
-    {
-      level: 1,
-      statement:
-        'Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;',
-    },
-    { level: 1, statement: 'assertTrue(isEditable);' },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
-async function emitVerifyElementPresent(locator: string) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `List<WebElement> elements = driver.findElements(${await location.emit(
-        locator
-      )});`,
-    },
-    { level: 1, statement: 'assert(elements.size() > 0);' },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
-async function emitVerifyElementNotPresent(locator: string) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `List<WebElement> elements = driver.findElements(${await location.emit(
-        locator
-      )});`,
-    },
-    { level: 1, statement: 'assert(elements.size() == 0);' },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
-async function emitVerifyNotChecked(locator: string) {
-  return Promise.resolve(
-    `assertFalse(driver.findElement(${await location.emit(
-      locator
-    )}).isSelected());`
-  )
-}
-
-async function emitVerifyNotEditable(locator: string) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
-        locator
-      )});`,
-    },
-    {
-      level: 1,
-      statement:
-        'Boolean isEditable = element.isEnabled() && element.getAttribute("readonly") == null;',
-    },
-    { level: 1, statement: 'assertFalse(isEditable);' },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
-async function emitVerifyNotSelectedValue(
-  locator: string,
-  expectedValue: string
-) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `String value = driver.findElement(${await location.emit(
-        locator
-      )}).getAttribute("value");`,
-    },
-    {
-      level: 1,
-      statement: `assertThat(value, is(not("${exporter.emit.text(
-        expectedValue
-      )}")));`,
-    },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
-async function emitVerifyNotText(locator: string, text: string) {
-  const result = `driver.findElement(${await location.emit(locator)}).getText()`
-  return Promise.resolve(
-    `assertThat(${result}, is(not("${exporter.emit.text(text)}")));`
-  )
-}
-
-async function emitVerifySelectedLabel(locator: string, labelValue: string) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `WebElement element = driver.findElement(${await location.emit(
-        locator
-      )});`,
-    },
-    { level: 1, statement: 'String value = element.getAttribute("value");' },
-    {
-      level: 1,
-      statement: `String locator = String.format("option[@value='%s']", value);`,
-    },
-    {
-      level: 1,
-      statement:
-        'String selectedText = element.findElement(By.xpath(locator)).getText();',
-    },
-    { level: 1, statement: `assertThat(selectedText, is("${labelValue}"));` },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({
-    commands,
-  })
-}
-
-async function emitVerifySelectedValue(locator: string, value: string) {
-  return emitVerifyValue(locator, value)
-}
-
-async function emitVerifyText(locator: string, text: string) {
-  return Promise.resolve(
-    `assertThat(driver.findElement(${await location.emit(
-      locator
-    )}).getText(), is("${exporter.emit.text(text)}"));`
-  )
-}
-
-async function emitVerifyValue(locator: string, value: string) {
-  const commands = [
-    { level: 0, statement: '{' },
-    {
-      level: 1,
-      statement: `String value = driver.findElement(${await location.emit(
-        locator
-      )}).getAttribute("value");`,
-    },
-    { level: 1, statement: `assertThat(value, is("${value}"));` },
-    { level: 0, statement: '}' },
-  ]
-  return Promise.resolve({ commands })
-}
-
-async function emitVerifyTitle(title: string) {
-  return Promise.resolve(`assertThat(driver.getTitle(), is("${title}"));`)
 }
 
 function skip() {

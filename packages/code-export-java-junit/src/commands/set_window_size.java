@@ -1,0 +1,1 @@
+driver.manage().window().setSize(new Dimension({{{size:size}}}));

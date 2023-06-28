@@ -1,2 +1,2 @@
-if ("${expression:script}") {
+if ("${boolean_exec:script}") {
 

@@ -1,1 +1,1 @@
-assertThat(driver.switchTo().alert().getText(), is("${alertText}"));
+assertThat(driver.switchTo().alert().getText(), is({{{alertText}}}));

@@ -1,1 +1,1 @@
-driver.findElement("${target}").click();
+driver.findElement({{{target}}}).click();

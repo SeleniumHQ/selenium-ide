@@ -1,1 +1,1 @@
-(Boolean) js.executeScript("${script.string}${args:script.args}");
+"${script.string}${args:script.args}"

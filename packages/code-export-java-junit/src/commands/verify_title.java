@@ -1,1 +1,1 @@
-assertThat(driver.getTitle(), is("${title}"));
+assertThat(driver.getTitle(), is({{{title}}}));

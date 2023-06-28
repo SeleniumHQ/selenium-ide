@@ -1,1 +1,1 @@
-assertEquals(vars.get("${varName}").toString(), "${value}");
+assertEquals(vars.get({{{varName}}}).toString(), {{{value}}});
