@@ -15,18 +15,24 @@ export const languageFromOpts = (
       enableDescriptionAsComment,
     }) {
       const testDeclaration = opts.generateTestDeclaration(test.name)
+      const testCompletion =
+        opts.generateTestCompletion?.(test.name) ?? opts.terminatingKeyword
       const result = await emit.test(test, tests, {
         ...opts,
         testDeclaration,
+        testCompletion,
         enableOriginTracing,
         enableDescriptionAsComment,
         project,
       })
       const suiteName = test.name
       const suiteDeclaration = opts.generateSuiteDeclaration(suiteName)
+      const suiteCompletion =
+        opts.generateSuiteCompletion?.(suiteName) ?? opts.terminatingKeyword
       var _suite = await emit.suite(result, tests, {
         ...opts,
         suiteDeclaration,
+        suiteCompletion,
         suiteName,
         project,
         beforeEachOptions,
@@ -47,13 +53,17 @@ export const languageFromOpts = (
       const result = await emit.testsFromSuite(tests, suite, opts, {
         enableOriginTracing,
         enableDescriptionAsComment,
+        generateTestCompletion: opts.generateTestCompletion,
         generateTestDeclaration: opts.generateTestDeclaration,
         project,
       })
       const suiteDeclaration = opts.generateSuiteDeclaration(suite.name)
+      const suiteCompletion =
+        opts.generateSuiteCompletion?.(suite.name) ?? opts.terminatingKeyword
       var _suite = await emit.suite(result, tests, {
         ...opts,
         suiteDeclaration,
+        suiteCompletion,
         suite,
         suiteName: suite.name,
         project,

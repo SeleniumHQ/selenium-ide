@@ -139,7 +139,7 @@ importers:
   packages/code-export-csharp-commons:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.6
+        specifier: ^4.0.0-alpha.8
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -152,7 +152,7 @@ importers:
         specifier: ^4.0.0-alpha.1
         version: link:../code-export-csharp-commons
       side-code-export:
-        specifier: ^4.0.0-alpha.6
+        specifier: ^4.0.0-alpha.8
         version: link:../side-code-export
 
   packages/code-export-csharp-xunit:
@@ -161,7 +161,7 @@ importers:
         specifier: ^4.0.0-alpha.1
         version: link:../code-export-csharp-commons
       side-code-export:
-        specifier: ^4.0.0-alpha.6
+        specifier: ^4.0.0-alpha.8
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -171,7 +171,7 @@ importers:
   packages/code-export-java-junit:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.6
+        specifier: ^4.0.0-alpha.8
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -181,7 +181,7 @@ importers:
   packages/code-export-javascript-mocha:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.6
+        specifier: ^4.0.0-alpha.8
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -191,7 +191,7 @@ importers:
   packages/code-export-python-pytest:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.6
+        specifier: ^4.0.0-alpha.8
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -201,7 +201,7 @@ importers:
   packages/code-export-ruby-rspec:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.6
+        specifier: ^4.0.0-alpha.8
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -323,7 +323,7 @@ importers:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       side-code-export:
-        specifier: ^4.0.0-alpha.6
+        specifier: ^4.0.0-alpha.8
         version: link:../side-code-export
       ua-parser-js:
         specifier: ^0.7.19
@@ -496,7 +496,7 @@ importers:
         specifier: 4.0.0-alpha.2
         version: link:../code-export-python-pytest
       side-code-export:
-        specifier: ^4.0.0-alpha.6
+        specifier: ^4.0.0-alpha.8
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-runtime':

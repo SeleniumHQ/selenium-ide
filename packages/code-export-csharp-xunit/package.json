@@ -19,7 +19,7 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@seleniumhq/code-export-csharp-commons": "^4.0.0-alpha.1",
-    "side-code-export": "^4.0.0-alpha.6"
+    "side-code-export": "^4.0.0-alpha.8"
   },
   "devDependencies": {
     "@seleniumhq/side-model": "^4.0.0-alpha.3"
