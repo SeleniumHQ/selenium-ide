@@ -20,7 +20,8 @@ export type LanguageExportExtras = {
   }>
   emitNewWindowHandling: (
     command: CommandShape,
-    emittedCommand: string
+    emittedCommand: string,
+    context: EmitterContext
   ) => Promise<ExportFlexCommandShape>
 }
 
