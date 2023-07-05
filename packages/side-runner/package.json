@@ -35,7 +35,7 @@
     "lodash": "^4.17.21",
     "resolve-bin": "^1.0.1",
     "rimraf": "^3.0.2",
-    "semver": "^7.3.5",
+    "semver": "^7.5.3",
     "winston": "^3.6.0"
   },
   "devDependencies": {
@@ -46,7 +46,7 @@
     "@types/lodash": "^4.14.186",
     "@types/resolve-bin": "0.4.1",
     "@types/rimraf": "3.0.2",
-    "@types/semver": "7.3.9",
+    "@types/semver": "^7.5.0",
     "@types/winston": "2.4.4"
   },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"
