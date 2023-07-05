@@ -21,11 +21,11 @@
     "@seleniumhq/get-driver": "^4.0.0-alpha.2",
     "@seleniumhq/side-model": "^4.0.0-alpha.3",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.23",
-    "@types/electron": "1.6.10",
     "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.186"
+    "@types/lodash": "^4.14.186",
+    "electron": "25.2.0"
   },
   "repository": {
     "type": "git",

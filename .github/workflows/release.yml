@@ -36,14 +36,22 @@ jobs:
         working-directory: packages/selenium-ide/node_modules/electron-chromedriver
       - name: Build all JS
         run: pnpm run build
-      - name: Publish non IDE packages to npm
-        run: pnpm -r publish --no-git-checks --filter=!packages/selenium-ide --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_ENV: "production"
       - name: Install electron-builder dependencies
         run: npm install -g dmg-license
       - name: Build selenium-ide binaries
         run: pnpm run build:electron
+      - name: Clear dependencies
+        run: npm -r clean:deps
+      - name: Install prod dependencies only
+        run: pnpm -r i
+        env:
+          NODE_ENV: "production"
+      - name: Publish non IDE packages to npm
+        run: pnpm -r publish --no-git-checks --filter=!packages/selenium-ide --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Set env from current release
         run: >
           echo "SIDE_RELEASE_VERSION=$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
