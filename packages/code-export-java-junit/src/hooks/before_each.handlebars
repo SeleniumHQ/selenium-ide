@@ -1,0 +1,13 @@
+@Before
+{{#if GRID_URL}}
+public void setUp() throws MalformedURLException {
+  driver = new RemoteWebDriver(new URL({{{string GRID_URL}}}), DesiredCapabilities.${
+    {{#if BROWSER_NAME}}{{{lower BROWSER_NAME}}}{{else}}chrome{{/if}}
+  }());`
+{{else}}
+public void setUp() {
+  driver = new {{#if BROWSER_NAME}}{{{title BROWSER_NAME}}}{{else}}Chrome{{/if}}Driver();
+{{/if}}
+  js = (JavascriptExecutor) driver;
+  vars = new HashMap<String, Object>();
+}

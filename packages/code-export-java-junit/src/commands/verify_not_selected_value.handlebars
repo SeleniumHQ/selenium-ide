@@ -1,0 +1,4 @@
+    {
+      String value = driver.findElement({{{locator target}}}).getAttribute("value");
+      assertThat(value, is(not({{{text:expectedValue}}})));
+    }

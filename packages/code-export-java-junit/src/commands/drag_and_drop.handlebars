@@ -1,0 +1,6 @@
+{
+  WebElement dragged = driver.findElement({{{locator target}}});
+  WebElement dropped = driver.findElement({{{locator value}}});
+  Actions builder = new Actions(driver);
+  builder.dragAndDrop(dragged, dropped).perform();
+}

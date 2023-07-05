@@ -1,0 +1,8 @@
+{
+  "displayName": "Java JUnit",
+  "name": "java-junit",
+  "fileExtension": ".java",
+  "commandPrefixPadding": "  ",
+  "terminatingKeyword": "}",
+  "commentPrefix": "//"
+}

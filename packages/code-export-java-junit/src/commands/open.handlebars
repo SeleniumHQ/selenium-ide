@@ -1,0 +1,5 @@
+{{#if match target '^(file|http|https)://'}}
+driver.get({{{string target}}});
+{{else}}
+driver.get({{{baseURL}}}{{{string target}}});
+{{/if}}

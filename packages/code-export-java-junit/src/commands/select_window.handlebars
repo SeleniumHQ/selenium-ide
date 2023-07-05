@@ -1,0 +1,16 @@
+{{#if (match target '^handle=')}}
+driver.switchTo().window({{{string (attribute target)}}});
+{{else if (match target 'relative=parent')}}
+driver.switchTo().window({{{string (attribute target)}}});
+{{else if (match target '^win_ser_')}}
+{
+  ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());
+  {{#if (eq target 'win_ser_local')}}
+  driver.switchTo().window(handles.get(0));
+  {{else}}
+  driver.switchTo().window(handles.get({{{number (substr target 8)}}}));
+  {{/if}}
+}
+{{else}}
+throw new Exception("Can only `select window` using handles");
+{{/if}}

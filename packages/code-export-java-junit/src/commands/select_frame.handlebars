@@ -1,0 +1,12 @@
+{{#if (eq frameLocation 'relative=top')}}
+driver.switchTo().defaultContent();
+{{else if (eq frameLocation 'relative=parent')}}
+driver.switchTo().defaultContent();
+{{else if (match frameLocation '^index')}}
+driver.switchTo().frame({{{num ( target)}}});
+{{else}}
+{
+  WebElement element = driver.findElement({{{locator target}}});
+  driver.switchTo().frame(element);
+}
+{{/if}}

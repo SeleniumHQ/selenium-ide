@@ -1,1 +1,0 @@
-"var callback = arguments[arguments.length - 1];({{{script.string}}}).then(callback).catch(callback);{{{args:script.args}}}"

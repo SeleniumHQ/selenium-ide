@@ -1,1 +1,0 @@
-assertThat(driver.findElement({{{locator}}}).getText(), is({{{text:text}}}));

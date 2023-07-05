@@ -1,1 +1,0 @@
-driver.findElement({{{target}}}).click();
