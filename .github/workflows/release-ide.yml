@@ -1,4 +1,4 @@
-name: 'Release'
+name: 'Release IDE to GitHub'
 
 on:
   push:

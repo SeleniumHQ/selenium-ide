@@ -17,7 +17,7 @@
 
 import each from 'jest-each'
 import fs from 'fs'
-import glob from 'glob'
+import { globSync } from 'glob'
 import { createLogger, format, transports } from 'winston'
 import { Configuration, Project } from './types'
 import buildRegister from './register'
@@ -71,7 +71,7 @@ const testTitle = 'Running test $name'
 
 const allMatchingProjects: Project[] = [
   ...configuration.projects.reduce((projects, project) => {
-    glob.sync(project).forEach((p) => {
+    globSync(project).forEach((p) => {
       projects.add(p)
     })
     return projects
