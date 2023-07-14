@@ -4,6 +4,7 @@ import JavaJunit from '@seleniumhq/code-export-java-junit'
 import JavascriptMocha from '@seleniumhq/code-export-javascript-mocha'
 import PythonPytest from '@seleniumhq/code-export-python-pytest'
 import RubyRSpec from '@seleniumhq/code-export-ruby-rspec'
+import kebabCase from 'lodash/fp/kebabCase'
 import { fileWriter, LanguageEmitter } from 'side-code-export'
 import BaseController from '../Base'
 
@@ -44,10 +45,12 @@ export default class OutputFormatsController extends BaseController {
       ) as LanguageEmitter)
     if (!format) throw new Error(`Format ${formatName} not found`)
     const project = await this.session.projects.getActive()
-    const outputPath = await this.session.dialogs.openSave()
+    const suiteName = project.suites.find((s) => s.id === suiteID)?.name!
+    const outputPath = await this.session.dialogs.openSave(
+      kebabCase(suiteName) + format.opts.fileExtension
+    )
     if (outputPath.canceled) return
     const filepath = outputPath.filePath as string
-    const suiteName = project.suites.find((s) => s.id === suiteID)?.name!
     const suiteCode = await fileWriter.emitSuite(format, project, suiteName)
 
     return fileWriter.writeFile(
@@ -64,10 +67,12 @@ export default class OutputFormatsController extends BaseController {
       ) as LanguageEmitter)
     if (!format) throw new Error(`Format ${formatName} not found`)
     const project = await this.session.projects.getActive()
-    const outputPath = await this.session.dialogs.openSave()
+    const testName = project.tests.find((t) => t.id === testID)!.name
+    const outputPath = await this.session.dialogs.openSave(
+      kebabCase(testName) + format.opts.fileExtension
+    )
     if (outputPath.canceled) return
     const filepath = outputPath.filePath as string
-    const testName = project.tests.find((t) => t.id === testID)!.name
     const testCode = await fileWriter.emitTest(format, project, testName)
 
     return fileWriter.writeFile(

@@ -9,11 +9,7 @@ export default class DialogsController extends BaseController {
   async open() {
     return await dialog.showOpenDialog({ properties: ['openFile'] })
   }
-  async showMessageBox(
-    message: string,
-    buttons: string[]
-  ): Promise<number>
-  {
+  async showMessageBox(message: string, buttons: string[]): Promise<number> {
     const { response } = await dialog.showMessageBox({ message, buttons })
     return response
   }
@@ -27,7 +23,9 @@ export default class DialogsController extends BaseController {
     const confirmed = response === 1
     return confirmed
   }
-  async openSave() {
-    return await dialog.showSaveDialog({})
+  async openSave(path?: string) {
+    return await dialog.showSaveDialog({
+      defaultPath: path,
+    })
   }
 }

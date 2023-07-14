@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export-python-pytest",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "private": false,
   "description": "Export Selenium IDE project contents to Python pytest",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
@@ -17,10 +17,10 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "side-code-export": "^4.0.0-alpha.8"
+    "side-code-export": "^4.0.0-alpha.9"
   },
   "devDependencies": {
-    "@seleniumhq/side-model": "^4.0.0-alpha.3"
+    "@seleniumhq/side-model": "^4.0.0-alpha.4"
   },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"
 }

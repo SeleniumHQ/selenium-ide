@@ -38,7 +38,10 @@ export function findCommandThatOpensWindow(
     if (command.command === 'run') {
       const nestedTests = findReusedTestMethods(test, tests)
       for (const nestedTest in nestedTests) {
-        return findCommandThatOpensWindow(nestedTests[nestedTest], nestedTests)
+        const cmd = findCommandThatOpensWindow(nestedTests[nestedTest], tests)
+        if (cmd) {
+          return cmd
+        }
       }
     }
   }
@@ -50,14 +53,14 @@ export function findReusedTestMethods(test: TestShape, tests: TestShape[]) {
   for (const command of test.commands) {
     if (command.command === 'run') {
       const reusedTest = tests.find((test) => test.name === command.target)
-      if (!reusedTest) {
+      if (reusedTest) {
+        results.push(reusedTest)
+        results = results.concat(findReusedTestMethods(reusedTest, tests))
+      } else {
         console.log(
           'Encountered a dynamic test declaration, including all tests as methods - will bloat code'
         )
         results = results.concat(tests)
-      } else {
-        results.push(test)
-        results = results.concat(findReusedTestMethods(reusedTest, tests))
       }
     }
   }
