@@ -111,7 +111,7 @@
     "@seleniumhq/side-model": "^4.0.0-alpha.3",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.23",
     "dnd-core": "16.0.1",
-    "electron-chromedriver": "^22.3.15",
+    "electron-chromedriver": "^25.3.0",
     "electron-log": "^4.4.8",
     "electron-store": "^8.1.0",
     "electron-unhandled": "^4.0.1",
