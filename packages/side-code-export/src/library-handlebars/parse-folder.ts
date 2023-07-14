@@ -12,27 +12,31 @@ const requiredDirectories = [
   'syntax',
 ]
 
-export const registerHandlebarFileTemplateAsHelper = async (
-  folderPath: string
-) => {
-  const filenames = await readdir(folderPath)
-  const paths = filenames.map((file) => `${folderPath}${sep}${file}`)
-  const files = await Promise.all(
-    paths.map((path) =>
-      path.endsWith('.handlebars') ? readFile(path) : import(path)
-    )
-  )
-  filenames.forEach((name, index) => {
-    const file = files[index]
-    const isHandlebarTemplate = name.endsWith('.handlebars')
-    if (!isHandlebarTemplate) {
-      handlebar.registerHelper(name, file.default)
-      return
-    }
-    const template = handlebar.compile(file.toString())
-    handlebar.registerHelper(file.name, template)
-  })
+export const helperFromTemplate = (template: string) => {
+  const compiled = handlebar.compile(template)
+  handlebar.registerHelper(template, compiled)
 }
+
+export const registerHandlebarFileTemplateAsHelper = async (path: string) => {
+  const name = path.split(sep).pop()?.split('.')[0]
+  const extension = path.split('.').pop()
+  switch (extension) {
+    case 'handlebars':
+      handlebar.registerHelper(
+        name!,
+        handlebar.compile(await readFile(path, 'utf8'))
+      )
+      break
+    case 'js':
+      handlebar.registerHelper(name!, (await import(path)).default)
+      break
+    default:
+      throw new Error(`Unsupported file extension: ${extension}`)
+  }
+}
+
+export const collectFilepaths = async (folderPath: string): Promise<string[]> =>
+  (await readdir(folderPath)).map((file) => `${folderPath}${sep}${file}`)
 
 export const parseFormat = async (folderPath: string) => {
   const tld = await readdir(folderPath)
@@ -44,5 +48,6 @@ export const parseFormat = async (folderPath: string) => {
       )
     }
   })
-  registerHandlebarFileTemplateAsHelper(`${folderPath}${sep}syntax`)
+  const syntaxHelpers = await collectFilepaths(`${folderPath}${sep}syntax`)
+  await Promise.all(syntaxHelpers.map(registerHandlebarFileTemplateAsHelper))
 }
