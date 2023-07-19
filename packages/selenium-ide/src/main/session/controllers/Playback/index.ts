@@ -47,7 +47,7 @@ export default class PlaybackController extends BaseController {
           const title = await driver.getTitle()
           const url = await driver.getCurrentUrl()
           if (
-            title === playbackWindow.getTitle() &&
+            playbackWindow.getTitle().startsWith(title) &&
             url === playbackWindow.webContents.getURL()
           ) {
             success = true
