@@ -17,10 +17,8 @@
 
 import webdriver, {
   Capabilities,
-  Condition as ConditionShape,
   WebDriver,
   WebElement as WebElementShape,
-  WebElementCondition as WebElementConditionShape,
 } from 'selenium-webdriver'
 import { absolutifyUrl } from './utils'
 import {
@@ -35,18 +33,8 @@ import { Fn } from '@seleniumhq/side-commons'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PluginShape } from './types'
 
-const {
-  By,
-  Condition,
-  until,
-  Key,
-  WebElement,
-  WebElementCondition,
-  WebElementPromise,
-} = webdriver
-const { TimeoutError } = webdriver.error
+const { By, Condition, until, Key, WebElementCondition } = webdriver
 
-const POLL_TIMEOUT = 50
 export type ExpandedCapabilities = Partial<Capabilities> & {
   browserName: string
   'goog:chromeOptions'?: Record<string, boolean | number | string | string[]>
@@ -302,7 +290,7 @@ export default class WebDriverExecutor {
       findHandle()
     })
 
-    return this.wait(finder, timeout)
+    return this.driver.wait(finder, timeout)
   }
 
   registerCommand(commandName: string, fn: Fn) {
@@ -749,7 +737,7 @@ export default class WebDriverExecutor {
 
   async doWaitForElementEditable(locator: string, timeout: string) {
     const element = await this.driver.findElement(parseLocator(locator))
-    await this.wait(
+    await this.driver.wait(
       this.isElementEditable(element),
       parseInt(timeout),
       'Timed out waiting for element to be editable'
@@ -758,16 +746,20 @@ export default class WebDriverExecutor {
 
   async doWaitForElementNotEditable(locator: string, timeout: string) {
     const element = await this.driver.findElement(parseLocator(locator))
-    await this.wait(
+    await this.driver.wait(
       this.isElementEditable(element),
       parseInt(timeout),
       'Timed out waiting for element to not be editable'
     )
   }
 
-  async doWaitForElementPresent(locator: string, timeout: string) {
-    await this.wait(
-      until.elementLocated(parseLocator(locator)),
+  async doWaitForElementPresent(
+    locator: string,
+    timeout: string,
+    commandObj: Partial<CommandShape> = {}
+  ) {
+    await this.driver.wait(
+      this.elementIsLocated(locator, commandObj.targetFallback),
       parseInt(timeout)
     )
   }
@@ -776,12 +768,20 @@ export default class WebDriverExecutor {
     const parsedLocator = parseLocator(locator)
     const elements = await this.driver.findElements(parsedLocator)
     if (elements.length !== 0) {
-      await this.wait(until.stalenessOf(elements[0]), parseInt(timeout))
+      await this.driver.wait(until.stalenessOf(elements[0]), parseInt(timeout))
     }
   }
 
-  async doWaitForElementVisible(locator: string, timeout: string) {
-    await this.waitForElementVisible(locator, parseInt(timeout))
+  async doWaitForElementVisible(
+    locator: string,
+    timeout: string,
+    commandObj: Partial<CommandShape> = {}
+  ) {
+    await this.waitForElementVisible(
+      locator,
+      parseInt(timeout),
+      commandObj.targetFallback
+    )
   }
 
   async doWaitForElementNotVisible(locator: string, timeout: string) {
@@ -789,12 +789,19 @@ export default class WebDriverExecutor {
     const elements = await this.driver.findElements(parsedLocator)
 
     if (elements.length > 0) {
-      await this.wait(until.elementIsNotVisible(elements[0]), parseInt(timeout))
+      await this.driver.wait(
+        until.elementIsNotVisible(elements[0]),
+        parseInt(timeout)
+      )
     }
   }
 
-  async doWaitForText(locator: string, text: string) {
-    await this.waitForText(locator, text)
+  async doWaitForText(
+    locator: string,
+    text: string,
+    commandObj: Partial<CommandShape> = {}
+  ) {
+    await this.waitForText(locator, text, commandObj.targetFallback)
   }
 
   // script commands
@@ -1234,30 +1241,43 @@ export default class WebDriverExecutor {
     }
   }
 
+  async elementIsLocated(
+    locator: string,
+    fallback: [string, string][] = []
+  ): Promise<WebElementShape | null> {
+    const elementLocator = parseLocator(locator)
+    try {
+      return await this.driver.findElement(elementLocator)
+    } catch (e) {
+      for (let i = 0; i < fallback.length; i++) {
+        try {
+          let loc = parseLocator(fallback[i][0])
+          return await this.driver.findElement(loc)
+        } catch (e) {
+          // try the next one
+        }
+      }
+    }
+    return null
+  }
+
   async waitForElement(
     locator: string,
     fallback: [string, string][] = []
   ): Promise<WebElementShape> {
-    const elementLocator = parseLocator(locator)
-    try {
-      return (await this.wait<WebElementShape>(
-        until.elementLocated(elementLocator),
-        this.implicitWait
-      )) as WebElementShape
-    } catch (err) {
-      if (fallback) {
-        for (let i = 0; i < fallback.length; i++) {
-          try {
-            let loc = parseLocator(fallback[i][0])
-            return await this.driver.findElement(loc)
-          } catch (e) {
-            // try the next one
-          }
-        }
+    const locatorCondition = new WebElementCondition(
+      'for element to be located',
+      async () => {
+        const el = await this.elementIsLocated(locator, fallback)
+        return el
       }
-      throw err
-    }
+    )
+    return await this.driver.wait<WebElementShape>(
+      locatorCondition,
+      this.implicitWait
+    )
   }
+
   async isElementEditable(element: WebElementShape) {
     const { enabled, readonly } =
       await this.driver.executeScript<ElementEditableScriptResult>(
@@ -1267,176 +1287,40 @@ export default class WebDriverExecutor {
     return enabled && !readonly
   }
 
-  async retryToAllowForIntermittency(locator: string, timeout: number) {
-    const startTime = Date.now()
-    const element = (await this.wait<WebElementShape>(
-      until.elementLocated(parseLocator(locator)),
-      timeout
-    )) as WebElementShape
-    const elapsed = Date.now() - startTime
-    await this.wait(until.elementIsVisible(element), timeout - elapsed)
-    return element
+  async waitForElementVisible(
+    locator: string,
+    timeout: number,
+    fallback: [string, string][] = []
+  ) {
+    const visibleCondition = new WebElementCondition(
+      'for element to be visible',
+      async () => {
+        const el = await this.elementIsLocated(locator, fallback)
+        if (!el) return null
+        if (!(await el.isDisplayed())) return null
+        return el
+      }
+    )
+    return await this.driver.wait<WebElementShape>(visibleCondition, timeout)
   }
 
-  async waitForElementVisible(locator: string, timeout: number) {
-    const startTime = Date.now()
-    const element = (await this.wait<WebElementShape>(
-      until.elementLocated(parseLocator(locator)),
-      timeout
-    )) as WebElementShape
-    const elapsed = Date.now() - startTime
-    await this.wait(until.elementIsVisible(element), timeout - elapsed)
-    return element
-  }
-
-  async waitForText(locator: string, text: string) {
-    const startTime = Date.now()
+  async waitForText(
+    locator: string,
+    text: string,
+    fallback: [string, string][] = []
+  ) {
     const timeout = this.implicitWait
-    const element = (await this.wait<WebElementShape>(
-      until.elementLocated(parseLocator(locator)),
-      timeout
-    )) as WebElementShape
-    const elapsed = Date.now() - startTime
-    await this.wait(until.elementTextIs(element, text), timeout - elapsed)
-  }
-
-  async wait<T extends any>(
-    condition: Promise<T> | ConditionShape<T> | WebElementConditionShape,
-    timeout: number = 0,
-    message: string = '',
-    pollTimeout: number = POLL_TIMEOUT
-  ): Promise<T | Error> {
-    if (typeof timeout !== 'number' || timeout < 0 || isNaN(timeout)) {
-      throw TypeError('timeout must be a number >= 0: ' + timeout)
-    }
-
-    if (
-      typeof pollTimeout !== 'number' ||
-      pollTimeout < 0 ||
-      isNaN(pollTimeout)
-    ) {
-      throw TypeError('pollTimeout must be a number >= 0: ' + pollTimeout)
-    }
-
-    if (isConditionPromiseLike(condition)) {
-      return new Promise((resolve, reject) => {
-        if (!timeout) {
-          resolve(condition)
-          return
-        }
-
-        let start = Date.now()
-        let timer: NodeJS.Timeout | null = setTimeout(function () {
-          timer = null
-          reject(
-            new TimeoutError(
-              (message ? `${message}\n` : '') +
-                'Timed out waiting for promise to resolve after ' +
-                (Date.now() - start) +
-                'ms'
-            )
-          )
-        }, timeout)
-        const clearTimer = () => timer && clearTimeout(timer)
-
-        condition
-          .then((value: T) => {
-            clearTimer()
-            resolve(value)
-          })
-          .catch((error: Error) => {
-            clearTimer()
-            reject(error)
-          })
-      })
-    }
-
-    // @ts-expect-error
-    let fn: Fn = condition
-    if (condition instanceof Condition) {
-      message = message || condition.description()
-      fn = condition.fn
-    }
-
-    if (typeof fn !== 'function') {
-      throw TypeError(
-        'Wait condition must be a promise-like object, function, or a ' +
-          'Condition object'
-      )
-    }
-
-    const { driver } = this
-    function evaluateCondition() {
-      return new Promise((resolve, reject) => {
-        try {
-          resolve(fn(driver))
-        } catch (ex) {
-          reject(ex)
-        }
-      })
-    }
-
-    let result = new Promise((resolve, reject) => {
-      const startTime = Date.now()
-      let cancelled = false
-      let resolveCancel: Fn
-      const cancelPromise = new Promise((res) => {
-        resolveCancel = res
-      })
-      this.cancellable = {
-        cancel: () => {
-          cancelled = true
-          return cancelPromise
-        },
+    const textCondition = new Condition(
+      'for text to be present in element',
+      async () => {
+        const el = await this.elementIsLocated(locator, fallback)
+        if (!el) return null
+        const elText = await el.getText()
+        return elText === text
       }
-      const pollCondition = async () => {
-        evaluateCondition().then((value) => {
-          const elapsed = Date.now() - startTime
-          if (cancelled) {
-            resolveCancel()
-            reject(new Error('Aborted by user'))
-            this.cancellable = undefined
-          } else if (value) {
-            resolve(value)
-            this.cancellable = undefined
-          } else if (timeout && elapsed >= timeout) {
-            reject(
-              new TimeoutError(
-                (message ? `${message}\n` : '') +
-                  `Wait timed out after ${elapsed}ms`
-              )
-            )
-            this.cancellable = undefined
-          } else {
-            setTimeout(pollCondition, pollTimeout)
-          }
-        }, reject)
-      }
-      pollCondition()
-    })
-
-    if (condition instanceof WebElementCondition) {
-      result = new WebElementPromise(
-        driver,
-        result.then(function (value) {
-          if (!(value instanceof WebElement)) {
-            throw TypeError(
-              'WebElementCondition did not resolve to a WebElement: ' +
-                Object.prototype.toString.call(value)
-            )
-          }
-          return value
-        })
-      )
-    }
-    return result as T
+    )
+    await this.driver.wait<boolean>(textCondition, timeout)
   }
-}
-
-function isConditionPromiseLike<T>(
-  condition: ConditionShape<T> | Promise<T> | WebElementConditionShape
-): condition is Promise<T> {
-  return condition && typeof (condition as Promise<T>).then === 'function'
 }
 
 WebDriverExecutor.prototype.doOpen = composePreprocessors(
