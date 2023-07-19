@@ -124,7 +124,7 @@ importers:
   packages/code-export-csharp-commons:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.9
+        specifier: ^4.0.0-alpha.10
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -137,7 +137,7 @@ importers:
         specifier: ^4.0.0-alpha.2
         version: link:../code-export-csharp-commons
       side-code-export:
-        specifier: ^4.0.0-alpha.9
+        specifier: ^4.0.0-alpha.10
         version: link:../side-code-export
 
   packages/code-export-csharp-xunit:
@@ -146,7 +146,7 @@ importers:
         specifier: ^4.0.0-alpha.2
         version: link:../code-export-csharp-commons
       side-code-export:
-        specifier: ^4.0.0-alpha.9
+        specifier: ^4.0.0-alpha.10
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -156,7 +156,7 @@ importers:
   packages/code-export-java-junit:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.9
+        specifier: ^4.0.0-alpha.10
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -166,7 +166,7 @@ importers:
   packages/code-export-javascript-mocha:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.9
+        specifier: ^4.0.0-alpha.10
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -176,7 +176,7 @@ importers:
   packages/code-export-python-pytest:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.9
+        specifier: ^4.0.0-alpha.10
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -186,7 +186,7 @@ importers:
   packages/code-export-ruby-rspec:
     dependencies:
       side-code-export:
-        specifier: ^4.0.0-alpha.9
+        specifier: ^4.0.0-alpha.10
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-model':
@@ -266,13 +266,13 @@ importers:
         specifier: ^4.0.0-alpha.1
         version: link:../get-driver
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.23
+        specifier: ^4.0.0-alpha.24
         version: link:../side-api
       '@seleniumhq/side-model':
         specifier: ^4.0.0-alpha.4
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.24
+        specifier: ^4.0.0-alpha.25
         version: link:../side-runtime
       dnd-core:
         specifier: 16.0.1
@@ -308,7 +308,7 @@ importers:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
       side-code-export:
-        specifier: ^4.0.0-alpha.9
+        specifier: ^4.0.0-alpha.10
         version: link:../side-code-export
       v8-compile-cache:
         specifier: ^2.3.0
@@ -408,7 +408,7 @@ importers:
         specifier: ^4.0.0-alpha.4
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.24
+        specifier: ^4.0.0-alpha.25
         version: link:../side-runtime
       lodash:
         specifier: ^4.17.21
@@ -452,7 +452,7 @@ importers:
         specifier: ^4.0.0-alpha.4
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.24
+        specifier: ^4.0.0-alpha.25
         version: link:../side-runtime
       commander:
         specifier: ^9.4.0
@@ -466,11 +466,11 @@ importers:
         specifier: 4.0.0-alpha.2
         version: 4.0.0-alpha.2
       side-code-export:
-        specifier: ^4.0.0-alpha.9
+        specifier: ^4.0.0-alpha.10
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.24
+        specifier: ^4.0.0-alpha.25
         version: link:../side-runtime
 
   packages/side-migrate:
@@ -503,7 +503,7 @@ importers:
         specifier: ^4.0.0-alpha.4
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.24
+        specifier: ^4.0.0-alpha.25
         version: link:../side-runtime
       commander:
         specifier: ^11.0.0
@@ -561,11 +561,11 @@ importers:
         specifier: ^4.0.0-alpha.4
         version: link:../side-model
       '@types/selenium-webdriver':
-        specifier: ^4.1.9
-        version: 4.1.9
+        specifier: ^4.1.15
+        version: 4.1.15
       selenium-webdriver:
-        specifier: ^4.6.0
-        version: 4.6.0
+        specifier: ^4.10.0
+        version: 4.10.0
     devDependencies:
       '@seleniumhq/side-testkit':
         specifier: ^4.0.0-alpha.1
@@ -600,11 +600,11 @@ importers:
         specifier: ^8.0.1
         version: 8.1.2
       '@types/selenium-webdriver':
-        specifier: ^4.1.9
-        version: 4.1.9
+        specifier: ^4.1.15
+        version: 4.1.15
       selenium-webdriver:
-        specifier: ^4.6.0
-        version: 4.6.0
+        specifier: ^4.10.0
+        version: 4.10.0
 
 packages:
 
@@ -3240,17 +3240,17 @@ packages:
     resolution: {integrity: sha512-Nruf1JuEvQP9W8i7ntlZ4GBROITIjIsqhkdDB44PK1F9GxYRUFm9/ZBGhtMXyzL6gih+JPgtcO/ljdq5yqz3WA==}
     dev: false
 
-  /@seleniumhq/side-model@4.0.0-alpha.3:
-    resolution: {integrity: sha512-fr7EDf+dJqBEcELtqjYHOnLkbOWBsh1dTw/Ivt4VjXcxCqFfEBdEVM9g3ABqROpmVxeknrImjVG0lEzAZOK0Ww==}
+  /@seleniumhq/side-model@4.0.0-alpha.4:
+    resolution: {integrity: sha512-+TLf8itRJHRI4dlTErDFtLeWpjDRz7M1VudMOX0iGyQ1PCEpmYuS2w3qfaeU7zRpUBhHyMlLrk+Ge5I6Fah65Q==}
     dev: false
 
   /@seleniumhq/side-runtime@4.0.0-alpha.23:
     resolution: {integrity: sha512-fzTaTeG/aTDNGqOKi9AgER9b0rtEO8GhCNL23M8ySmTnXrJ9UQ3bYObDv2xyC2UxRiGAq/KRkbmncq/uWYQRmQ==}
     dependencies:
       '@seleniumhq/side-commons': 4.0.0-alpha.1
-      '@seleniumhq/side-model': 4.0.0-alpha.3
-      '@types/selenium-webdriver': 4.1.9
-      selenium-webdriver: 4.6.0
+      '@seleniumhq/side-model': 4.0.0-alpha.4
+      '@types/selenium-webdriver': 4.1.15
+      selenium-webdriver: 4.10.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3600,8 +3600,8 @@ packages:
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
-  /@types/selenium-webdriver@4.1.9:
-    resolution: {integrity: sha512-QNCYI3Rgjf3bZ2GZwXnUpOJUPR8p7+c9Um9MEKggLaUaF8UfjitH5aPCV1PF0DHVEiPYsXayGVS6+67DO3VILw==}
+  /@types/selenium-webdriver@4.1.15:
+    resolution: {integrity: sha512-oQ15G3q3EZ0dS049SB/5zx2tQkIS2kmDQWC/TSfAHJYKvXLZoUiLaPXnfSwbLP8Q5lcJeu5oYjKVSEV0t3H6Bg==}
     dependencies:
       '@types/ws': 8.5.3
 
@@ -10003,13 +10003,13 @@ packages:
     resolution: {integrity: sha512-AckIIV90rPDcBcglUwXPF3kg0P0qmPsPXAj6BBEENQE1p5yA1xfmDJzfi1Tappj37Pv2mVbKpL3Z1T+Nn7k1Qw==}
     dev: true
 
-  /selenium-webdriver@4.6.0:
-    resolution: {integrity: sha512-HIH/+J+V7l/lbSRSOwyLcpjezg9CV4DLo1pBhP9aphuMlf/PJXEDwC/A/Ht2bFc1AqQppFBGvClYcuMzyO6tRw==}
+  /selenium-webdriver@4.10.0:
+    resolution: {integrity: sha512-hSQPw6jgc+ej/UEcdQPG/iBwwMeCEgZr9HByY/J8ToyXztEqXzU9aLsIyrlj1BywBcStO4JQK/zMUWWrV8+riA==}
     engines: {node: '>= 14.20.0'}
     dependencies:
       jszip: 3.10.1
       tmp: 0.2.1
-      ws: 8.9.0
+      ws: 8.13.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -10165,7 +10165,7 @@ packages:
     resolution: {integrity: sha512-16AJ5hrJG3lPKfKSuMyu+ff2UTdRdE8M/gimTVJi8kObj9K2gCiTsHjJy6Yr1ec0bZuTZyxvhpyjZT5UYZWOEg==}
     hasBin: true
     dependencies:
-      '@seleniumhq/side-model': 4.0.0-alpha.3
+      '@seleniumhq/side-model': 4.0.0-alpha.4
       '@seleniumhq/side-runtime': 4.0.0-alpha.23
       commander: 9.4.1
       ua-parser-js: 0.7.28
@@ -11441,12 +11441,12 @@ packages:
         optional: true
     dev: false
 
-  /ws@8.9.0:
-    resolution: {integrity: sha512-Ja7nszREasGaYUYCI2k4lCKIRTt+y7XuqVoHR44YpI49TtryyqbqvDMn5eqfW7e6HzTukDRIsXqzVHScqRcafg==}
+  /ws@8.13.0:
+    resolution: {integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
-      utf-8-validate: ^5.0.2
+      utf-8-validate: '>=5.0.2'
     peerDependenciesMeta:
       bufferutil:
         optional: true
