@@ -2,6 +2,7 @@ import { correctPluginPaths, loadPlugins, PluginShape } from '@seleniumhq/side-r
 import { ipcMain } from 'electron'
 import storage from 'main/store'
 import BaseController from '../Base'
+import path from 'path'
 
 export type PluginMessageHandler = (
   event: Electron.IpcMainEvent,
@@ -19,6 +20,15 @@ export default class PluginsController extends BaseController {
     const activeProject = await this.session.projects.getActive()
     return systemPlugins
       .concat(correctPluginPaths(projectPath, activeProject.plugins))
+  }
+
+  async listPreloadPaths() {
+    const list = await this.list();
+    return list.map((pluginPath) => {
+      const actualPluginPath = __non_webpack_require__.resolve(pluginPath)
+      const preloadPath = path.join(actualPluginPath, '..', 'preload', 'index.js')
+      return preloadPath
+    })
   }
 
   async onProjectLoaded() {
