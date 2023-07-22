@@ -35,11 +35,18 @@ export default class StateController extends BaseController {
   async onProjectLoaded() {
     // If this file has been saved, fetch state
     if (this.session.projects.filepath) {
-      this.state = {
+      const storageState: StateShape = storage.get(this.getStatePath());
+      const newState: StateShape = {
         ...defaultState,
-        ...storage.get(this.getStatePath()),
+        ...storageState,
         commands: this.state.commands,
-      }
+        editor: {
+          ...defaultState.editor,
+          ...storageState?.editor ?? {},
+          selectedCommandIndexes: [],
+        }
+      };
+      this.state = newState
     }
   }
 
