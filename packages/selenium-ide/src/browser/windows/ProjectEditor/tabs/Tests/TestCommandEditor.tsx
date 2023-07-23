@@ -61,7 +61,7 @@ const CommandEditor: FC<CommandEditorProps> = ({
         <CommandTextField
           command={correctedCommand}
           {...props}
-          fieldName="newWindowHandle"
+          fieldName="windowHandleName"
           note="Variable name to set to the new window handle"
         />
       )}

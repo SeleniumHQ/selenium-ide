@@ -16,7 +16,7 @@ export interface CommandArgFieldProps extends CommandEditorProps {
 }
 
 export interface CommandFieldProps extends CommandEditorProps {
-  fieldName: 'comment' | 'newWindowHandle' | LocatorFields
+  fieldName: 'comment' | 'windowHandleName' | LocatorFields
   note?: string
 }
 
