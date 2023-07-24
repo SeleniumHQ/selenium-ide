@@ -8,14 +8,14 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import React, { FC } from 'react'
 
-interface AppWrapperProps {
+interface AppWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string
 }
 
 const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
   const [themePref, setThemePref] = React.useState<ThemePref>('System')
   React.useEffect(() => {
-    if (!window?.sideAPI?.state) return;
+    if (!window?.sideAPI?.state) return
     window.sideAPI.state
       .getUserPrefs()
       .then((prefs) => setThemePref(prefs.themePref || 'System'))

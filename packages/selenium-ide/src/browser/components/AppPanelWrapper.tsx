@@ -3,7 +3,7 @@ import React, { FC } from 'react'
 import AppWrapper from './AppWrapper'
 import PanelNav from './PanelNav'
 
-interface AppPanelWrapperProps {
+interface AppPanelWrapperProps extends React.HTMLAttributes<HTMLDivElement> {
   horizontal?: boolean
 }
 

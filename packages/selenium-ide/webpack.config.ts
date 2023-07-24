@@ -3,6 +3,7 @@ import fs from 'fs'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import kebabCase from 'lodash/fp/kebabCase'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import path from 'path'
 import {
   Configuration,
@@ -10,19 +11,25 @@ import {
   WebpackPluginInstance,
 } from 'webpack'
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 const commonPlugins: WebpackPluginInstance[] = [
   new ForkTsCheckerWebpackPlugin(),
   new SourceMapDevToolPlugin({
     filename: '[file].map',
   }),
 ]
+if (isProduction) {
+  commonPlugins.push(new MiniCssExtractPlugin())
+}
+
 const commonConfig: Pick<
   Configuration,
   'devtool' | 'externals' | 'mode' | 'module' | 'resolve' | 'output'
 > = {
   devtool: 'source-map',
   externals: ['utf-8-validate', 'bufferutil'],
-  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  mode: isProduction ? 'production' : 'development',
   module: {
     rules: [
       {
@@ -40,7 +47,10 @@ const commonConfig: Pick<
       },
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: [
+          isProduction ? MiniCssExtractPlugin.loader : 'style-loader',
+          'css-loader',
+        ],
       },
       {
         test: /\.(png|woff|woff2|eot|ttf|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
@@ -53,6 +63,11 @@ const commonConfig: Pick<
       api: path.resolve(__dirname, 'src/api'),
       browser: path.resolve(__dirname, 'src/browser'),
       main: path.resolve(__dirname, 'src/main'),
+      '@mui/base': '@mui/base/modern',
+      '@mui/material': '@mui/material/modern',
+      '@mui/styled-engine': '@mui/styled-engine/modern',
+      '@mui/system': '@mui/system/modern',
+      '@mui/utils': '@mui/utils/modern',
     },
     extensions: ['.tsx', '.ts', '.js'],
   },
@@ -138,7 +153,13 @@ function getBrowserPlugin(filename: string) {
       <html>
         <head>
           <title>${title}</title>
+          <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
           <link rel="stylesheet" href="index.css" type="text/css">
+          ${
+            isProduction
+              ? `<link rel="stylesheet" href="${filename}.css" type="text/css">\n`
+              : ''
+          }
           <script defer src="${filename}-bundle.js"></script>
         </head>
         <body>

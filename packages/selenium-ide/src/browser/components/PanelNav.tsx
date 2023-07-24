@@ -1,7 +1,7 @@
 import React from 'react'
 import { Paper } from '@mui/material'
 
-interface PanelNavProps {
+interface PanelNavProps extends React.HTMLAttributes<HTMLDivElement> {
   horizontal?: boolean
 }
 
