@@ -38,9 +38,6 @@
       "path": "./packages/side-api"
     },
     {
-      "path": "./packages/side-cli"
-    },
-    {
       "path": "./packages/side-code-export"
     },
     {
