@@ -9,6 +9,7 @@ import type { Shape as Play } from './play'
 import type { Shape as PlaySuite } from './playSuite'
 import type { Shape as Resume } from './resume'
 import type { Shape as Stop } from './stop'
+import type { Shape as Auto } from './auto'
 
 import * as onAfter from './onAfter'
 import * as onAfterAll from './onAfterAll'
@@ -21,6 +22,7 @@ import * as play from './play'
 import * as playSuite from './playSuite'
 import * as resume from './resume'
 import * as stop from './stop'
+import * as auto from './auto'
 
 export const commands = {
   onAfter,
@@ -34,6 +36,7 @@ export const commands = {
   playSuite,
   resume,
   stop,
+  auto
 }
 
 /**
@@ -51,4 +54,5 @@ export type Shape = {
   playSuite: PlaySuite
   resume: Resume
   stop: Stop
+  auto: Auto
 }

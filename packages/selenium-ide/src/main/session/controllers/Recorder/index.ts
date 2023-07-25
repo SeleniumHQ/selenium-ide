@@ -46,11 +46,10 @@ const getFrameTraversalCommands = (
 const getLastActiveWindowHandleId = (session: CoreSessionData): string => {
   const activeTest = getActiveTest(session)
   const activeIndex = getActiveCommandIndex(session)
-
+  console.log(activeTest, activeIndex)
   const commands = activeTest.commands
   for (let i = activeIndex; i >= 0; i--) {
     let item = commands[i]
-
     if (item.command == 'selectWindow') {
       let target = item.target as string
       return target.substring('handle=${'.length, target.length - 1)

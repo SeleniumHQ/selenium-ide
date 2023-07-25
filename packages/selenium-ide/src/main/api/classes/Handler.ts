@@ -64,7 +64,9 @@ const Handler =
       apiDebugLog('Received API Request', path, args)
       const result = await doAPI(...(args as Parameters<HANDLER>))
       apiDebugLog('Resolved API Request', path, result)
-      event.senderFrame.send(`${path}.complete`, result)
+      if (event.senderFrame) {
+        event.senderFrame.send(`${path}.complete`, result)
+      }
     })
     return doAPI
   }

@@ -5,6 +5,8 @@ import RecordButton from '../../components/Controls/RecordButton'
 import StopButton from '../../components/Controls/StopButton'
 import PauseButton from '../../components/Controls/PauseButton'
 import PlayListButton from '../../components/Controls/PlayListButton'
+import TaskButton from '../../components/Controls/TaskButton'
+
 
 export interface TestControlsProps {
   state: StateShape
@@ -15,9 +17,12 @@ const TestControls: FC<TestControlsProps> = ({ state }) => {
     case 'idle':
       return (
         <>
-          <PlayButton state={state} />
+          <PlayButton state= {state} />
+        
           {!state.activeSuiteID ? null : <PlayListButton state={state} />}
           <RecordButton />
+          <TaskButton state= {state}/> 
+         
         </>
       )
     case 'paused':
@@ -26,6 +31,8 @@ const TestControls: FC<TestControlsProps> = ({ state }) => {
           <PlayButton state={state} />
           <RecordButton />
           <StopButton />
+          <TaskButton state= {state}/> 
+         
         </>
       )
     case 'playing':
@@ -40,7 +47,9 @@ const TestControls: FC<TestControlsProps> = ({ state }) => {
       return (
         <>
           <PlayButton state={state} />
+          <TaskButton state= {state}/> 
           <StopButton />
+          
         </>
       )
   }

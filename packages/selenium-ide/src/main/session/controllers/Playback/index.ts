@@ -169,6 +169,54 @@ export default class PlaybackController extends BaseController {
       })
     }
   }
+  async auto(testID: string, playRange = PlaybackController.defaultPlayRange) {
+    this.playingTest = testID
+    this.playRange = playRange
+    this.isPlaying = true
+    /**
+     * Create playback if none exists
+     */
+    if (!this.playback) {
+      const playback = new Playback({
+        baseUrl: this.session.projects.project.url,
+        executor: await this.session.driver.build({}),
+        getTestByName: (name: string) => this.session.tests.getByName(name),
+        logger: console,
+        variables: this.variables,
+        options: {
+          delay: this.session.projects.project.delay || 0
+        }
+      })
+      const EE = playback['event-emitter']
+      EE.addListener(
+        PlaybackEvents.PLAYBACK_STATE_CHANGED,
+        this.handlePlaybackStateChanged
+      )
+      EE.addListener(
+        PlaybackEvents.COMMAND_STATE_CHANGED,
+        this.handleCommandStateChanged
+      )
+      this.playback = playback
+    }
+    /**
+     * If not ending at end of test, use playTo command
+     * or playSingleCommand if just one command specified.
+     * Otherwise, use full play command.
+     */
+    if (playRange[1] !== -1) {
+      const test = this.session.tests.getByID(testID)
+      if (playRange[0] === playRange[1]) {
+        this.playback.playSingleCommand(test.commands[playRange[0]])
+      } else {
+        this.playback.playTo(test, playRange[1], playRange[0])
+      }
+    } else {
+      this.playback.play(this.session.tests.getByID(testID), {
+        startingCommandIndex: playRange[0],
+      })
+    }
+  }
+
 
   handleCommandStateChanged = async (
     e: PlaybackEventShapes['COMMAND_STATE_CHANGED']

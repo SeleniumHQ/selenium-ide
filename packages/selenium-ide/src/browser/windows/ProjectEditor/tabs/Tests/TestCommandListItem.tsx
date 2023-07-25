@@ -47,10 +47,13 @@ const updateIsBreakpoint = (
   })
 }
 
+export const defaultCommandState =
+  {} as unknown as PlaybackEventShapes['COMMAND_STATE_CHANGED']
+
 const CommandRow: React.FC<CommandRowProps> = ({
   activeTest,
-  commandState = {},
-  command: { command, id, isBreakpoint, target, value },
+  commandState = defaultCommandState,
+  command: { command, id, isBreakpoint, opensWindow, target, value },
   index,
   reorderPreview,
   resetPreview,
@@ -103,7 +106,9 @@ const CommandRow: React.FC<CommandRowProps> = ({
         disableTypography
         primary={
           <Box sx={commandTextFormat}>
-            {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
+            {camelToTitleCase(commandText)}&nbsp;
+            {opensWindow ? '(Opens window)' : ''}&nbsp;
+            {isDisabled ? '[Disabled]' : ''}
           </Box>
         }
         secondary={

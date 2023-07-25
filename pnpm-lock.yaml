@@ -266,7 +266,7 @@ importers:
         specifier: ^4.0.0-alpha.1
         version: link:../get-driver
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.24
+        specifier: ^4.0.0-alpha.25
         version: link:../side-api
       '@seleniumhq/side-model':
         specifier: ^4.0.0-alpha.4
@@ -3230,7 +3230,7 @@ packages:
   /@seleniumhq/code-export-python-pytest@4.0.0-alpha.2:
     resolution: {integrity: sha512-B9nT0R6fKfZRAQVJwZOMvW2WtZ6cqJgz792uGaA9dzUrzSaRndtG0oixiiKV0z1lab4UiAaekgeE4Xz6AGAOng==}
     dependencies:
-      side-code-export: 4.0.0-alpha.8
+      side-code-export: 4.0.0-alpha.10
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3244,8 +3244,8 @@ packages:
     resolution: {integrity: sha512-+TLf8itRJHRI4dlTErDFtLeWpjDRz7M1VudMOX0iGyQ1PCEpmYuS2w3qfaeU7zRpUBhHyMlLrk+Ge5I6Fah65Q==}
     dev: false
 
-  /@seleniumhq/side-runtime@4.0.0-alpha.23:
-    resolution: {integrity: sha512-fzTaTeG/aTDNGqOKi9AgER9b0rtEO8GhCNL23M8ySmTnXrJ9UQ3bYObDv2xyC2UxRiGAq/KRkbmncq/uWYQRmQ==}
+  /@seleniumhq/side-runtime@4.0.0-alpha.25:
+    resolution: {integrity: sha512-8nFSxRRRFsJNR+UAZtHinprP1EKT4yL4LH/E73kdkFKu2BRI1PE3x9+c6aQb3q16w5yfOWHyWmfiYVqEAVgq/g==}
     dependencies:
       '@seleniumhq/side-commons': 4.0.0-alpha.1
       '@seleniumhq/side-model': 4.0.0-alpha.4
@@ -10161,14 +10161,13 @@ packages:
       get-intrinsic: 1.1.3
       object-inspect: 1.12.2
 
-  /side-code-export@4.0.0-alpha.8:
-    resolution: {integrity: sha512-16AJ5hrJG3lPKfKSuMyu+ff2UTdRdE8M/gimTVJi8kObj9K2gCiTsHjJy6Yr1ec0bZuTZyxvhpyjZT5UYZWOEg==}
+  /side-code-export@4.0.0-alpha.10:
+    resolution: {integrity: sha512-oQHTvf0jwGnFieeV7FE5qAVHF5l3eBT+P+kaDXQpEF87oZkbIVFmAuZznmr/ZT+2drCF6JmL/gBX/bhCLXSZkg==}
     hasBin: true
     dependencies:
       '@seleniumhq/side-model': 4.0.0-alpha.4
-      '@seleniumhq/side-runtime': 4.0.0-alpha.23
+      '@seleniumhq/side-runtime': 4.0.0-alpha.25
       commander: 9.4.1
-      ua-parser-js: 0.7.28
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -10998,10 +10997,6 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
-
-  /ua-parser-js@0.7.28:
-    resolution: {integrity: sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==}
-    dev: false
 
   /unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}

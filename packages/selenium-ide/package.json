@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "4.0.0-alpha.41",
+  "version": "4.0.0-alpha.44",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -107,7 +107,7 @@
     "@seleniumhq/code-export-ruby-rspec": "^4.0.0-alpha.1",
     "side-code-export": "^4.0.0-alpha.10",
     "@seleniumhq/get-driver": "^4.0.0-alpha.1",
-    "@seleniumhq/side-api": "^4.0.0-alpha.24",
+    "@seleniumhq/side-api": "^4.0.0-alpha.25",
     "@seleniumhq/side-model": "^4.0.0-alpha.4",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.25",
     "dnd-core": "16.0.1",

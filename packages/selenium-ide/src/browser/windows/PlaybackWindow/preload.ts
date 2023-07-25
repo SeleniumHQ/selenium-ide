@@ -18,12 +18,9 @@ import api from 'browser/api'
 import apiMutators from 'browser/api/mutator'
 import { contextBridge, ipcRenderer, webFrame } from 'electron'
 import { identity } from 'lodash/fp'
-import path from 'path'
 import Recorder from './preload/recorder'
 
-const pluginFromPath = (pluginPath: string) => {
-  const actualPluginPath = __non_webpack_require__.resolve(pluginPath)
-  const preloadPath = path.join(actualPluginPath, '..', 'preload', 'index.js')
+const pluginFromPath = ([pluginPath, preloadPath]: [string, string]) => {
   try {
     const pluginPreload = __non_webpack_require__(preloadPath)
     const pluginHandler =
@@ -43,7 +40,6 @@ const pluginFromPath = (pluginPath: string) => {
  * Expose it in the main context
  */
 window.addEventListener('DOMContentLoaded', async () => {
-  contextBridge.exposeInMainWorld('sideAPI', true)
   webFrame.executeJavaScript(`
     Object.defineProperty(navigator, 'webdriver', {
       get () {
@@ -57,7 +53,11 @@ window.addEventListener('DOMContentLoaded', async () => {
     mutators: { recorder: apiMutators.recorder },
   }
   const pluginPaths = await api.plugins.list()
-  const plugins = pluginPaths.map(pluginFromPath).filter(identity)
+  const preloadPaths = await api.plugins.listPreloadPaths()
+  const richPlugins: [string, string][] = pluginPaths.map((p, i) => [p, preloadPaths[i]])
+  const plugins = richPlugins.map(pluginFromPath).filter(identity)
+
+  contextBridge.exposeInMainWorld('sideAPI', window.sideAPI)
   setTimeout(async () => {
     console.debug('Initializing the recorder')
     new Recorder(window, plugins)

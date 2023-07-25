@@ -57,10 +57,19 @@ const CommandEditor: FC<CommandEditorProps> = ({
       />
       <ArgField command={correctedCommand} {...props} fieldName="target" />
       <ArgField command={correctedCommand} {...props} fieldName="value" />
+      {command.opensWindow && (
+        <CommandTextField
+          command={correctedCommand}
+          {...props}
+          fieldName="windowHandleName"
+          note="Variable name to set to the new window handle"
+        />
+      )}
       <CommandTextField
         command={correctedCommand}
         {...props}
         fieldName="comment"
+        note=""
       />
     </Stack>
   )
