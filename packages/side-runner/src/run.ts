@@ -44,8 +44,9 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
     const plugins = await loadPlugins(pluginPaths)
     const customCommands = getCustomCommands(plugins)
     const driver = new WebDriverExecutor({
-      capabilities:
-        configuration.capabilities as unknown as WebDriverExecutorConstructorArgs['capabilities'],
+      capabilities: JSON.parse(
+        JSON.stringify(configuration.capabilities)
+      ) as unknown as WebDriverExecutorConstructorArgs['capabilities'],
       customCommands,
       hooks: {
         onBeforePlay: async () => {
