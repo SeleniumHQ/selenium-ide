@@ -17,7 +17,7 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "side-code-export": "^4.0.0-alpha.10"
+    "side-code-export": "^4.0.0-alpha.11"
   },
   "devDependencies": {
     "@seleniumhq/side-model": "^4.0.0-alpha.4"
