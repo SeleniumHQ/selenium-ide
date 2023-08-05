@@ -173,6 +173,24 @@ export default class WindowsController extends BaseController {
     return true
   }
 
+  async openCustom(
+    name: string,
+    filepath: string,
+    opts: BrowserWindowConstructorOptions = {}
+  ) {
+    const window = new BrowserWindow({
+      ...opts,
+      webPreferences: {
+        // This should be the default preload, which just adds the sideAPI to the window
+        preload: join(__dirname, `project-editor-preload-bundle.js`),
+        ...opts?.webPreferences ?? {},
+      },
+    })
+    this.windows[name] = window
+    await window.loadURL(`file://${filepath}`)
+    return true
+  }
+
   async openPlaybackWindow(opts: BrowserWindowConstructorOptions = {}) {
     const window = this.windowLoaders[playbackWindowName](opts)
     this.handlePlaybackWindow(window)

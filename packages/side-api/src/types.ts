@@ -2,6 +2,7 @@ import { ProjectShape } from '@seleniumhq/side-model'
 import { Chrome } from '@seleniumhq/browser-info'
 import { Browser } from '@seleniumhq/get-driver'
 import { StateShape } from './models/state'
+import { PluginRuntimeShape } from '@seleniumhq/side-runtime'
 
 export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
   browser: Browser
@@ -78,6 +79,33 @@ export type EventListenerParams<LISTENER extends BaseListener<any>> =
 
 export type LocatorFields = 'target' | 'value'
 
+export interface NewCommandShape {
+  command: string
+  target: string | [string, string][]
+  value: string | [string, string][]
+  insertBeforeLastCommand: boolean
+  frameLocation: string
+  winHandleId: string
+}
+
+export interface onCommandRecordedDropResult {
+  action: 'drop'
+}
+export interface OnCommandRecordedUpdateResult {
+  action: 'update'
+  command: NewCommandShape
+}
+
+export type OnCommandRecordedResult =
+  | void
+  | onCommandRecordedDropResult
+  | OnCommandRecordedUpdateResult
+
+export type PluginHookInput = {
+  logger: Console
+  project: ProjectShape
+} & Record<string, unknown>
+
 export interface RecordNewCommandInput {
   command: string
   target: string | [string, string][]
@@ -86,3 +114,30 @@ export interface RecordNewCommandInput {
   frameLocation?: string
   winHandleId?: string
 }
+
+export type PluginMenuConfigurator = (api: BaseApi) => void
+
+export interface PluginShape extends PluginRuntimeShape {
+  menus?: {
+    [key: string]: (
+      session: CoreSessionData
+    ) => (
+      ...args: any[]
+    ) => (Electron.MenuItemConstructorOptions | Electron.MenuItem)[]
+  }
+}
+
+export interface PluginPreloadOutputShape {
+  hooks: {
+    onCommandRecorded?: (
+      command: NewCommandShape,
+      event: Event | KeyboardEvent | MouseEvent | MutationRecord[] | undefined
+    ) => OnCommandRecordedResult
+  }
+}
+
+export type SendMessage = (...args: any[]) => void
+
+export type PluginPreloadShape = (
+  sendMessage: SendMessage
+) => PluginPreloadOutputShape

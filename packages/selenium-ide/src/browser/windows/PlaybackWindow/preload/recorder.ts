@@ -24,7 +24,7 @@ import {
   ExpandedMutationObserver,
 } from 'browser/types'
 import initFindSelect from './find-select'
-import { PluginPreloadOutputShape } from '@seleniumhq/side-runtime'
+import { PluginPreloadOutputShape } from '@seleniumhq/side-api'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null

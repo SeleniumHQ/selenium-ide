@@ -1,4 +1,5 @@
-import { correctPluginPaths, loadPlugins, PluginShape } from '@seleniumhq/side-runtime'
+import { PluginShape } from '@seleniumhq/side-api'
+import { correctPluginPaths, loadPlugins } from '@seleniumhq/side-runtime'
 import { ipcMain } from 'electron'
 import storage from 'main/store'
 import BaseController from '../Base'

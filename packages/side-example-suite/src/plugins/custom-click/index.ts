@@ -1,4 +1,4 @@
-import { PluginShape } from '@seleniumhq/side-runtime'
+import { PluginShape } from '@seleniumhq/side-api'
 
 /**
  * This is a demo plugin that takes the default click command, adds a new "customClick" command,

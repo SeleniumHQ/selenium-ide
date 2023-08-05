@@ -1,6 +1,6 @@
 import path from 'path'
 import { Commands } from '@seleniumhq/side-model'
-import { CustomCommandShape, PluginShape } from './types'
+import { CustomCommandShape, PluginRuntimeShape } from './types'
 
 export const correctPluginPaths = (
   projectPath: string,
@@ -25,14 +25,14 @@ export const correctPluginPaths = (
 export const loadPlugins = async (
   pluginPaths: string[],
   importer?: (fileOrModule: string) => any
-): Promise<PluginShape[]> =>
+): Promise<PluginRuntimeShape[]> =>
   Promise.all(
     pluginPaths.map(async (pluginPath) => {
       console.debug('Loading plugin from path...', pluginPath)
       let pluginFile = importer
         ? await importer(pluginPath)
         : await import(pluginPath)
-      const plugin: PluginShape = pluginFile.default
+      const plugin: PluginRuntimeShape = pluginFile.default
         ? pluginFile.default
         : pluginFile
       if (plugin) {
@@ -45,7 +45,7 @@ export const loadPlugins = async (
   )
 
 export const getCustomCommands = (
-  plugins: PluginShape[]
+  plugins: PluginRuntimeShape[]
 ): Record<string, CustomCommandShape> =>
   plugins.reduce(
     (commands, plugin) => ({
