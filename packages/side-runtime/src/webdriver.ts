@@ -31,7 +31,7 @@ import { AssertionError, VerificationError } from './errors'
 import Variables from './variables'
 import { Fn } from '@seleniumhq/side-commons'
 import { CommandShape } from '@seleniumhq/side-model'
-import { PluginShape } from './types'
+import { PluginRuntimeShape } from './types'
 
 const { By, Condition, until, Key, WebElementCondition } = webdriver
 
@@ -59,7 +59,7 @@ export interface WindowAPI {
 
 export interface WebDriverExecutorConstructorArgs {
   capabilities?: ExpandedCapabilities
-  customCommands?: PluginShape['commands']
+  customCommands?: PluginRuntimeShape['commands']
   disableCodeExportCompat?: boolean
   driver?: WebDriver
   hooks?: WebDriverExecutorHooks
@@ -160,7 +160,7 @@ export default class WebDriverExecutor {
   variables: Variables
   cancellable?: { cancel: () => void }
   capabilities?: ExpandedCapabilities
-  customCommands: Required<PluginShape>['commands']
+  customCommands: Required<PluginRuntimeShape>['commands']
   disableCodeExportCompat: boolean
   // @ts-expect-error
   driver: WebDriver

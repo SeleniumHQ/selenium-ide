@@ -1,6 +1,7 @@
 import Commands from '@seleniumhq/side-model/dist/Commands'
-import { CustomCommandShape, PluginShape } from '@seleniumhq/side-runtime'
+import { CustomCommandShape } from '@seleniumhq/side-runtime'
 import BaseController from '../Base'
+import { PluginShape } from '@seleniumhq/side-api'
 
 const serializeCustomCommands = (commands: PluginShape['commands'] = {}) =>
   Object.fromEntries(

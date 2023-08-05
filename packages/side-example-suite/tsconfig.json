@@ -15,6 +15,9 @@
         "path": "../side-code-export"
       },
       {
+        "path": "../side-api"
+      },
+      {
         "path": "../side-runtime"
       }
     ]

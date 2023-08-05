@@ -1,7 +1,6 @@
-import { PluginPreloadShape } from '@seleniumhq/side-runtime'
+import { PluginPreloadShape, SendMessage } from '@seleniumhq/side-api'
 
 export let clickCount = 0
-export type SendMessage = (...args: any[]) => void
 
 /**
  * This is the preload script for the plugin. It runs in the browser context
