@@ -16,6 +16,7 @@
 // under the License.
 
 import Hook from '../../../src/code-export/hook'
+import { ExportCommandsShape } from '../../../src/types'
 
 describe('Hooks', () => {
   it('should clear registered commands', () => {
@@ -28,7 +29,7 @@ describe('Hooks', () => {
   })
   it('should not error when no emitters registered', async () => {
     const hook = new Hook()
-    const result = await hook.emit()
+    const result = (await hook.emit({})) as ExportCommandsShape
     expect(result.commands).toEqual([])
   })
   it('should emit command object', () => {
@@ -37,8 +38,8 @@ describe('Hooks', () => {
       endingSyntax: 'blah99',
       registrationLevel: 1,
     })
-    hook.register(() => {
-      return Promise.resolve('blah2')
+    hook.register(async () => {
+      return await 'blah2'
     })
     hook.register(() => {
       return 'blah3'
@@ -81,10 +82,10 @@ describe('Hooks', () => {
       return 'blah'
     })
     hook.register(() => {
-      return 1234
+      return '1234'
     })
     expect(hook.isRegistered('blah')).resolves.toBeTruthy()
-    expect(hook.isRegistered(1234)).resolves.toBeTruthy()
+    expect(hook.isRegistered('1234')).resolves.toBeTruthy()
     expect(hook.isRegistered('halb')).resolves.toBeFalsy()
   })
 })

@@ -23,6 +23,7 @@ import { ControlFlowCommandNames } from '../../src/playback-tree/commands'
 
 function createCommand(command) {
   return {
+    id: 'a',
     command,
     target: '',
     value: '',
@@ -417,10 +418,12 @@ describe('Control Flow', () => {
       ]
       let tree = createPlaybackTree(input)
       expect(tree.startingCommandNode.command).toEqual(input[0])
-      expect(tree.startingCommandNode.next.command).toEqual(input[1])
-      expect(tree.startingCommandNode.next.next.command).toEqual(input[2])
-      expect(tree.startingCommandNode.next.next.right.command).toEqual(input[0])
-      expect(tree.startingCommandNode.next.next.left).toBeUndefined()
+      expect(tree.startingCommandNode.next!.command).toEqual(input[1])
+      expect(tree.startingCommandNode.next!.next!.command).toEqual(input[2])
+      expect(tree.startingCommandNode.next!.next!.right!.command).toEqual(
+        input[0]
+      )
+      expect(tree.startingCommandNode.next!.next!.left).toBeUndefined()
     })
     it('populated tree exists with correct values', () => {
       let input = [
@@ -440,39 +443,45 @@ describe('Control Flow', () => {
       ]
       let tree = createPlaybackTree(input)
       expect(tree.startingCommandNode.command).toEqual(input[0]) //                                                  if
-      expect(tree.startingCommandNode.right.command).toEqual(input[1]) //                                            if -> command
-      expect(tree.startingCommandNode.right.next.command).toEqual(input[12]) //                                      if -> end
-      expect(tree.startingCommandNode.left.command).toEqual(input[2]) //                                             if -> while -> else
-      expect(tree.startingCommandNode.left.next.right.command).toEqual(input[4]) //                                  while -> command
-      expect(tree.startingCommandNode.left.next.left.command).toEqual(input[5]) //                                   while -> end
-      expect(tree.startingCommandNode.left.next.left.next.command).toEqual(
+      expect(tree.startingCommandNode.right!.command).toEqual(input[1]) //                                            if -> command
+      expect(tree.startingCommandNode.right!.next!.command).toEqual(input[12]) //                                      if -> end
+      expect(tree.startingCommandNode.left!.command).toEqual(input[2]) //                                             if -> while -> else
+      expect(tree.startingCommandNode.left!.next!.right!.command).toEqual(
+        input[4]
+      ) //                                  while -> command
+      expect(tree.startingCommandNode.left!.next!.left!.command).toEqual(
+        input[5]
+      ) //                                   while -> end
+      expect(tree.startingCommandNode.left!.next!.left!.next!.command).toEqual(
         input[6]
       ) //                              do
       expect(
-        tree.startingCommandNode.left.next.left.next.next.next.right.command
+        tree.startingCommandNode!.left!.next!.left!.next!.next!.next!.right!
+          .command
       ).toEqual(input[9]) //              do -> while -> command
       expect(
-        tree.startingCommandNode.left.next.left.next.next.next.left.command
+        tree.startingCommandNode!.left!.next!.left!.next!.next!.next!.left!
+          .command
       ).toEqual(input[10]) //              do -> while -> end
       expect(
-        tree.startingCommandNode.left.next.left.next.next.next.left.next.right
-          .command
+        tree.startingCommandNode!.left!.next!.left!.next!.next!.next!.left!
+          .next!.right!.command
       ).toEqual(input[6]) //    repeatIf -> do
       expect(
-        tree.startingCommandNode.left.next.left.next.next.next.left.next.left
-          .command
+        tree.startingCommandNode!.left!.next!.left!.next!.next!.next!.left!
+          .next!.left!.command
       ).toEqual(input[12]) //    repeatIf -> end
       expect(
-        tree.startingCommandNode.left.next.left.next.next.next.left.next.left
-          .next
+        tree.startingCommandNode!.left!.next!.left!.next!.next!.next!.left!
+          .next!.left!.next
       ).toBeUndefined() //          end
       expect(
-        tree.startingCommandNode.left.next.left.next.next.next.left.next.left
-          .right
+        tree.startingCommandNode!.left!.next!.left!.next!.next!.next!.left!
+          .next!.left!.right
       ).toBeUndefined() //         end
       expect(
-        tree.startingCommandNode.left.next.left.next.next.next.left.next.left
-          .left
+        tree.startingCommandNode!.left!.next!.left!.next!.next!.next!.left!
+          .next!.left!.left
       ).toBeUndefined() //          end
     })
   })

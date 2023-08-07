@@ -112,7 +112,7 @@ export function scriptPreprocessor(script: string): ScriptShape {
 
 export function keysPreprocessor(
   str: string,
-  variableLookup: VariableLookup
+  variableLookup: VariableLookup = () => ''
 ): string[] {
   let keys = []
   let match = str.match(/\$\{\w+\}/g)

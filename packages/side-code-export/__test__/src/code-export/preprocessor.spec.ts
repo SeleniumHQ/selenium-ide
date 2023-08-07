@@ -22,7 +22,7 @@ import {
 } from '../../../src/code-export/preprocessor'
 
 describe('preprocessors', () => {
-  const variableLookup = varName => {
+  const variableLookup = (varName) => {
     return `vars.get("${varName}").toString()`
   }
 

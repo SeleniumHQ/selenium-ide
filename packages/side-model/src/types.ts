@@ -53,7 +53,7 @@ export interface TestShape {
 
 export interface ProjectShape {
   id: string
-  version: '2.0' | '3.0'
+  version: '1.0' | '1.1' | '2.0' | '3.0'
   name: string
   url: string
   urls: string[]

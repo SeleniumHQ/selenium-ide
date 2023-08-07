@@ -19,9 +19,11 @@ import { promisify } from 'util'
 import { createHeadlessChrome } from '@seleniumhq/webdriver-testkit'
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import Playback from '../../src/playback'
-import Variables from '../../src/Variables'
+import Variables from '../../src/variables'
 import WebDriverExecutor from '../../src/webdriver'
 import createRecorderSyncronizerForWebdriverExecutor from '../../src/recording-syncronizer-webdriver'
+import { AddressInfo } from 'net'
+import { WindowFnInput } from '../../src/recording-syncronizer'
 
 jest.setTimeout(30000)
 
@@ -29,11 +31,11 @@ describe('recording syncronizer webdriver', () => {
   const app = createStaticSite()
   let port, close, driver, executor, variables
   beforeAll(async () => {
-    await new Promise(res => {
+    await new Promise((res) => {
       const server = app.listen(() => {
-        port = server.address().port
+        port = (server.address() as AddressInfo).port
         close = promisify(server.close.bind(server))
-        res()
+        res(null)
       })
     })
   })
@@ -61,14 +63,17 @@ describe('recording syncronizer webdriver', () => {
 
   it('should syncronize the current window with the recorder through hooks', async () => {
     const test = {
-      id: 1,
+      id: '1',
+      name: 'test',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '/windows.html',
           value: '',
         },
         {
+          id: 'b',
           command: 'storeWindowHandle',
           target: 'current',
           value: '',
@@ -79,27 +84,30 @@ describe('recording syncronizer webdriver', () => {
     const {
       hooks: { onStoreWindowHandle, onWindowAppeared, onWindowSwitched },
     } = createRecorderSyncronizerForWebdriverExecutor({
-      sessionId: 'default',
       executor,
+      logger: console,
+      sessionId: 'default',
     })
     const playback = new Playback({
       executor,
       variables,
       baseUrl: `http://localhost:${port}/`,
-    })
+    } as unknown as any)
     // eslint-disable-next-line require-atomic-updates
     executor.hooks = {
-      onStoreWindowHandle: async (...args) => {
+      onStoreWindowHandle: async (input: WindowFnInput) => {
         await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
-        return onStoreWindowHandle(...args)
+        return onStoreWindowHandle(input)
       },
       onWindowAppeared,
-      onWindowSwitched: async (...args) => {
+      onWindowSwitched: async (input: WindowFnInput) => {
         await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
-        return onWindowSwitched(...args)
+        return onWindowSwitched(input)
       },
     }
-    await (await playback.play(test))()
+    await (
+      await playback.play(test)
+    )()
 
     const { handleCalls } = await getPageScriptCalls(executor.driver)
 
@@ -110,14 +118,17 @@ describe('recording syncronizer webdriver', () => {
 
   it('should syncronize a new window with the recorder through hooks', async () => {
     const test = {
-      id: 1,
+      id: '1',
+      name: 'test',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '/windows.html',
           value: '',
         },
         {
+          id: 'b',
           command: 'click',
           target: 'css=a',
           value: '',
@@ -126,6 +137,7 @@ describe('recording syncronizer webdriver', () => {
           windowTimeout: 200,
         },
         {
+          id: 'c',
           command: 'selectWindow',
           target: 'handle=${new}',
           value: '',
@@ -136,23 +148,26 @@ describe('recording syncronizer webdriver', () => {
     const {
       hooks: { onWindowAppeared, onWindowSwitched },
     } = createRecorderSyncronizerForWebdriverExecutor({
-      sessionId: 'default',
       executor,
+      logger: console,
+      sessionId: 'default',
     })
     const playback = new Playback({
       executor,
       variables,
       baseUrl: `http://localhost:${port}/`,
-    })
+    } as unknown as any)
     // eslint-disable-next-line require-atomic-updates
     executor.hooks = {
       onWindowAppeared,
-      onWindowSwitched: async (...args) => {
+      onWindowSwitched: async (input: WindowFnInput) => {
         await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
-        return onWindowSwitched(...args)
+        return onWindowSwitched(input)
       },
     }
-    await (await playback.play(test))()
+    await (
+      await playback.play(test)
+    )()
 
     const { handleCalls } = await getPageScriptCalls(executor.driver)
 
@@ -163,14 +178,17 @@ describe('recording syncronizer webdriver', () => {
 
   it('should syncronize a new window with the recorder manually', async () => {
     const test = {
-      id: 1,
+      id: '1',
+      name: 'test',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '/windows.html',
           value: '',
         },
         {
+          id: 'b',
           command: 'click',
           target: 'css=a',
           value: '',
@@ -185,23 +203,26 @@ describe('recording syncronizer webdriver', () => {
       hooks: { onWindowAppeared, onWindowSwitched },
       syncAllPendingWindows,
     } = createRecorderSyncronizerForWebdriverExecutor({
-      sessionId: 'default',
       executor,
+      logger: console,
+      sessionId: 'default',
     })
     const playback = new Playback({
+      baseUrl: `http://localhost:${port}/`,
       executor,
       variables,
-      baseUrl: `http://localhost:${port}/`,
-    })
+    } as unknown as any)
     // eslint-disable-next-line require-atomic-updates
     executor.hooks = {
       onWindowAppeared,
-      onWindowSwitched: async (...args) => {
+      onWindowSwitched: async (input: WindowFnInput) => {
         await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
-        return onWindowSwitched(...args)
+        return onWindowSwitched(input)
       },
     }
-    await (await playback.play(test))()
+    await (
+      await playback.play(test)
+    )()
 
     await executor.driver.switchTo().window(variables.get('new'))
     await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
@@ -220,9 +241,11 @@ describe('recording syncronizer webdriver', () => {
 
   it('should syncronize a new window with the recorder through hooks', async () => {
     const test = {
-      id: 1,
+      id: '1',
+      name: 'test',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '/windows.html',
           value: '',
@@ -233,23 +256,26 @@ describe('recording syncronizer webdriver', () => {
     const {
       hooks: { onWindowAppeared, onWindowSwitched },
     } = createRecorderSyncronizerForWebdriverExecutor({
-      sessionId: 'default',
       executor,
+      logger: console,
+      sessionId: 'default',
     })
     const playback = new Playback({
+      baseUrl: `http://localhost:${port}/`,
       executor,
       variables,
-      baseUrl: `http://localhost:${port}/`,
-    })
+    } as unknown as any)
     // eslint-disable-next-line require-atomic-updates
     executor.hooks = {
       onWindowAppeared,
-      onWindowSwitched: async (...args) => {
+      onWindowSwitched: async (input: WindowFnInput) => {
         await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
-        return onWindowSwitched(...args)
+        return onWindowSwitched(input)
       },
     }
-    await (await playback.play(test))()
+    await (
+      await playback.play(test)
+    )()
     await executor.driver.executeScript(PAGE_SCRIPT_MOCK_JS)
 
     const { contextCalls } = await getPageScriptCalls(executor.driver)

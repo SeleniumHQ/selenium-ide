@@ -61,8 +61,8 @@ export interface EmitOptions {
   isOptional?: boolean
   test?: TestShape
   suite?: SuiteShape
-  tests: TestShape[]
-  project: ProjectShape
+  tests?: TestShape[]
+  project?: ProjectShape
   startingSyntaxOptions?: any
 }
 

@@ -15,13 +15,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { ProjectShape } from '@seleniumhq/side-model'
 import UpgradeProject, { VERSIONS } from '../src/migrate'
 
 describe('project migrator', () => {
   it('should migrate a project to the latest version', () => {
-    const project = {
-      tests: [],
+    const project: ProjectShape = {
+      id: 'a',
+      name: 'Test Project',
+      plugins: [],
+      snapshot: {
+        dependencies: {},
+        jest: {
+          extraGlobals: [],
+        },
+        tests: [],
+      },
       suites: [],
+      tests: [],
+      url: 'https://www.seleniumhq.org/',
+      urls: [],
       version: '1.0',
     }
     expect(UpgradeProject(project).version).toBe(VERSIONS[VERSIONS.length - 1])

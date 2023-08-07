@@ -21,7 +21,7 @@ import {
   interpolateScript,
   interpolateString,
 } from '../src/preprocessors'
-import Variables from '../src/Variables'
+import Variables from '../src/variables'
 import FakeExecutor from './util/FakeExecutor'
 
 let variables
@@ -114,10 +114,7 @@ describe('preprocessor composition', () => {
 describe('array preprocessing', () => {
   it('should preprocess array of string using a single interpolator', () => {
     variables.set('a', 'a')
-    const arr = [
-      ['${a}a', 's'],
-      ['${a}b', 's'],
-    ]
+    const arr = ['${a}a', 's', '${a}b', 's']
     expect(preprocessArray(interpolateString)(arr, variables)).toEqual([
       ['aa', 's'],
       ['ab', 's'],

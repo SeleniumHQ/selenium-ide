@@ -43,17 +43,21 @@ export interface HookEmitterInput {
   project: ProjectShape
 }
 
-export type HookEmitter = (input: HookEmitterInput) => ExportFlexCommandShape
+export type HookEmitter = (
+  input: HookEmitterInput
+) => Promise<ExportFlexCommandShape> | ExportFlexCommandShape
 
 export default class Hook {
-  constructor({
-    startingSyntax = '',
-    endingSyntax = '',
-    registrationLevel = 0,
-  }: HookFunctionInputs) {
-    this.startingSyntax = startingSyntax
-    this.endingSyntax = endingSyntax
-    this.registrationLevel = registrationLevel
+  constructor(
+    input: HookFunctionInputs = {
+      startingSyntax: '',
+      endingSyntax: '',
+      registrationLevel: 0,
+    }
+  ) {
+    this.startingSyntax = input.startingSyntax || ''
+    this.endingSyntax = input.endingSyntax || ''
+    this.registrationLevel = input.registrationLevel || 0
     this.clearRegister = this.clearRegister.bind(this)
     this.emit = this.emit.bind(this)
     this.emitters = []
@@ -65,14 +69,19 @@ export default class Hook {
     this.emitters = []
   }
 
-  async emit({
-    isOptional = false,
-    test,
-    suite,
-    tests,
-    project,
-    startingSyntaxOptions,
-  }: EmitOptions): Promise<ExportFlexCommandShape> {
+  async emit(
+    opts: EmitOptions = {
+      isOptional: false,
+    }
+  ): Promise<ExportFlexCommandShape> {
+    const {
+      isOptional = false,
+      test,
+      suite,
+      tests,
+      project,
+      startingSyntaxOptions,
+    } = opts
     let commands: ExportCommandShape[] = []
     let registeredCommandLevel = 0
     if (this.startingSyntax) {
@@ -96,7 +105,9 @@ export default class Hook {
     const name = test ? test.name : suite ? suite.name : ''
     const emittedCommands = (
       await Promise.all(
-        this.emitters.map((emitter) => emitter({ name, tests, project }))
+        this.emitters.map((emitter) =>
+          emitter({ name, tests: tests!, project: project! })
+        )
       )
     ).filter((entry) => entry != undefined)
     if (isOptional && !emittedCommands.length) {

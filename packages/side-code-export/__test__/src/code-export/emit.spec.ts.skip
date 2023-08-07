@@ -20,6 +20,7 @@ import {
   emitLocation,
   emitSelection,
   emitOriginTracing,
+  SelectionEmitters,
 } from '../../../src/code-export/emit'
 import TestCase from '../../../../selenium-ide/src/neo/models/TestCase'
 import Command from '../../../../selenium-ide/src/neo/models/Command'
@@ -76,7 +77,7 @@ describe('Command emitter', () => {
 describe('Location emitter', () => {
   it('emits by sync emitter', () => {
     const emitters = {
-      id: selector => {
+      id: (selector) => {
         return `By.id("${selector}")`
       },
     }
@@ -84,7 +85,7 @@ describe('Location emitter', () => {
   })
   it('emits by async emitter', () => {
     const emitters = {
-      id: selector => {
+      id: (selector) => {
         return Promise.resolve(`By.id("${selector}")`)
       },
     }
@@ -103,20 +104,20 @@ describe('Location emitter', () => {
 describe('Selection emitter', () => {
   it('emits by sync emitter', () => {
     const emitters = {
-      id: id => {
+      id: (id) => {
         return `By.css(\`*[id="${id}"]\`)`
       },
-    }
+    } as unknown as SelectionEmitters
     expect(emitSelection('id=blah', emitters)).toEqual(
       `By.css(\`*[id="blah"]\`)`
     )
   })
   it('emits by async emitter', () => {
     const emitters = {
-      id: id => {
+      id: (id) => {
         return Promise.resolve(`By.css(\`*[id="${id}"]\`)`)
       },
-    }
+    } as unknown as SelectionEmitters
     expect(emitSelection('id=blah', emitters)).resolves.toBe(
       `By.css(\`*[id="blah"]\`)`
     )
@@ -138,25 +139,27 @@ describe('Trace emitter', () => {
     const test = new TestCase()
     test.createCommand(undefined, 'a', 'foo', 'bar')
     test.createCommand(undefined, 'b', 'baz', 'qux', 'a comment')
-    expect(emitOriginTracing(test, { commentPrefix: '//' }, true, false)).toEqual([
+    expect(
+      emitOriginTracing(test, { commentPrefix: '//' }, true, false)
+    ).toEqual([
       '// Test name: Untitled Test',
       '// Step # | name | target | value | comment',
       '// 1 | a | foo | bar | ',
       '// 2 | b | baz | qux | a comment',
     ])
-    expect(emitOriginTracing(test, { commentPrefix: '//' }, true, true)).toEqual([
+    expect(
+      emitOriginTracing(test, { commentPrefix: '//' }, true, true)
+    ).toEqual([
       '// Test name: Untitled Test',
       '// Step # | name | target | value',
       '// 1 | a | foo | bar',
       '// 2 | b | baz | qux\n// a comment',
     ])
-    expect(emitOriginTracing(test, { commentPrefix: '//' }, false, true)).toEqual([
-      '',
-      '// a comment',
-    ])
-    expect(emitOriginTracing(test, { commentPrefix: '//' }, false, false)).toEqual([
-      '',
-      '',
-    ])
+    expect(
+      emitOriginTracing(test, { commentPrefix: '//' }, false, true)
+    ).toEqual(['', '// a comment'])
+    expect(
+      emitOriginTracing(test, { commentPrefix: '//' }, false, false)
+    ).toEqual(['', ''])
   })
 })
