@@ -24,14 +24,15 @@ import {
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import { Commands } from '@seleniumhq/side-model'
 import { ControlFlowCommandNames } from '../src/playback-tree/commands'
-import Variables from '../src/Variables'
+import Variables from '../src/variables'
 import WebDriverExecutor from '../src/webdriver'
+import { AddressInfo } from 'net'
 
 jest.setTimeout(30000)
 
 describe('webdriver executor', () => {
   it('should implement all the Selenium commands', () => {
-    Object.keys(Commands).forEach(command => {
+    Object.keys(Commands).forEach((command) => {
       if (!ControlFlowCommandNames[command]) {
         expect(() => {
           if (
@@ -52,11 +53,11 @@ describe('webdriver executor', () => {
     const app = createStaticSite()
     let port, close, driver, executor, variables
     beforeAll(async () => {
-      await new Promise(res => {
+      await new Promise((res) => {
         const server = app.listen(() => {
-          port = server.address().port
+          port = (server.address()! as AddressInfo).port
           close = promisify(server.close.bind(server))
-          res()
+          res(null)
         })
       })
     })
@@ -82,7 +83,7 @@ describe('webdriver executor', () => {
     describe('plugins', () => {
       it('should be able to register a command', async () => {
         expect.assertions(3)
-        executor.registerCommand('commandName', async function(target, value) {
+        executor.registerCommand('commandName', async function (target, value) {
           expect(this).toBe(executor)
           expect(target).toBe('target')
           expect(value).toBe('value')
@@ -177,10 +178,7 @@ describe('webdriver executor', () => {
         await expect(executor.doAssertAlert('wat')).rejects.toThrow(
           "Actual alert text 'test' did not match 'wat'"
         )
-        await driver
-          .switchTo()
-          .alert()
-          .accept()
+        await driver.switchTo().alert().accept()
       })
     })
     describe('assert confirmation', () => {
@@ -193,10 +191,7 @@ describe('webdriver executor', () => {
         await expect(executor.doAssertConfirmation('wat')).rejects.toThrow(
           "Actual confirm text 'test' did not match 'wat'"
         )
-        await driver
-          .switchTo()
-          .alert()
-          .dismiss()
+        await driver.switchTo().alert().dismiss()
       })
     })
     describe('assert editable', () => {
@@ -229,10 +224,7 @@ describe('webdriver executor', () => {
         await expect(executor.doAssertPrompt('wat')).rejects.toThrow(
           "Actual prompt text 'test' did not match 'wat'"
         )
-        await driver
-          .switchTo()
-          .alert()
-          .dismiss()
+        await driver.switchTo().alert().dismiss()
       })
     })
     describe('click and click at', () => {
@@ -364,64 +356,40 @@ describe('webdriver executor', () => {
       it('should move out of an element through the top', async () => {
         await driver.get(`http://localhost:${port}/mouse/out.html?y=1`)
         const r = await driver.findElement(By.id('cont'))
-        await driver
-          .actions({ bridge: true })
-          .move({ origin: r })
-          .perform()
+        await driver.actions({ bridge: true }).move({ origin: r }).perform()
         await executor.doMouseOut('id=cont')
         expect(await r.getText()).toBe('out 250,-1')
       })
       it('should move out of an element through the right', async () => {
-        await driver
-          .manage()
-          .window()
-          .setRect({ height: 1000, width: 1000 })
+        await driver.manage().window().setRect({ height: 1000, width: 1000 })
         await driver.get(`http://localhost:${port}/mouse/out.html?x=0&y=0`)
         const r = await driver.findElement(By.id('cont'))
-        await driver
-          .actions({ bridge: true })
-          .move({ origin: r })
-          .perform()
+        await driver.actions({ bridge: true }).move({ origin: r }).perform()
         await executor.doMouseOut('id=cont')
         expect(await r.getText()).toBe('out 501,250')
       })
       it('should move out of an element through the bottom', async () => {
-        await driver
-          .manage()
-          .window()
-          .setRect({ height: 1000, width: 1000 })
+        await driver.manage().window().setRect({ height: 1000, width: 1000 })
         await driver.get(
           `http://localhost:${port}/mouse/out.html?x=0&y=0&w=1000`
         )
         const r = await driver.findElement(By.id('cont'))
-        await driver
-          .actions({ bridge: true })
-          .move({ origin: r })
-          .perform()
+        await driver.actions({ bridge: true }).move({ origin: r }).perform()
         await executor.doMouseOut('id=cont')
         expect(await r.getText()).toBe('out 500,501')
       })
       it('should move out of an element through the left', async () => {
-        await driver
-          .manage()
-          .window()
-          .setRect({ height: 400, width: 1000 })
+        await driver.manage().window().setRect({ height: 400, width: 1000 })
         await driver.get(
           `http://localhost:${port}/mouse/out.html?x=1&y=0&w=1000&h=400`
         )
         const r = await driver.findElement(By.id('cont'))
-        await driver
-          .actions({ bridge: true })
-          .move({ origin: r })
-          .perform()
+        await driver.actions({ bridge: true }).move({ origin: r }).perform()
         await executor.doMouseOut('id=cont')
         expect(await r.getText()).toMatch(/^out -1,/)
       })
       it('should throw if the element takes up the entire viewport', async () => {
-        await driver
-          .manage()
-          .window()
-          .setRect({ height: 400, width: 400 })
+        await driver.manage().window().setRect({ height: 400, width: 400 })
         await driver.get(
           `http://localhost:${port}/mouse/out.html?x=0&y=0&w=500&h=500`
         )

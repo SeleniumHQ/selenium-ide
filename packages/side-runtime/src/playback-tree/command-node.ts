@@ -29,7 +29,7 @@ export interface CommandExecutorOptions {
 }
 
 export interface CommandExecutionResult {
-  next?: Fn
+  next?: CommandNode
   skipped?: boolean
   value?: any
 }

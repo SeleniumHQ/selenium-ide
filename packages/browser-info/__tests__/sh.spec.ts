@@ -42,11 +42,8 @@ describe('sh', () => {
         'console.log(`out`);console.error(`err`);process.exit(1);',
       ])
     } catch (err) {
-      // @ts-expect-error
       expect(err.stdout).toBe('out\n')
-      // @ts-expect-error
       expect(err.stderr).toBe('err\n')
-      // @ts-expect-error
       expect(err.code).toBe(1)
     }
   })
@@ -55,7 +52,6 @@ describe('sh', () => {
     try {
       await sh('command-that-does-not-exist')
     } catch (err) {
-      // @ts-expect-error
       expect(err.code).toBe(1)
     }
   })

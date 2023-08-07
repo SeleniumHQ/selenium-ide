@@ -20,7 +20,7 @@ import { ExportFlexCommandShape } from './emit'
 import { renderCommands } from './render'
 
 export interface PrettifyOptions {
-  startingLevel: number
+  startingLevel?: number
   commandPrefixPadding: string
 }
 

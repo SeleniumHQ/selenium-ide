@@ -16,8 +16,12 @@
 // under the License.
 
 import { ControlFlowCommandNames } from '../../src/playback-tree/commands'
-import { CommandNode } from '../../src/playback-tree/command-node'
-import Variables from '../../src/Variables'
+import {
+  CommandExecutionResult,
+  CommandNode,
+} from '../../src/playback-tree/command-node'
+import Variables from '../../src/variables'
+import FakeExecutor from '../util/FakeExecutor'
 
 describe('Command Node', () => {
   let variables
@@ -25,15 +29,18 @@ describe('Command Node', () => {
     variables = new Variables()
   })
   it('control flow check returns correct result', () => {
-    let node = new CommandNode(undefined)
+    let node = new CommandNode(undefined as unknown as any)
+    // @ts-expect-error
     node.right = 'asdf'
     expect(node.isControlFlow()).toBeTruthy()
     node.left = undefined
+    // @ts-expect-error
     node.right = 'asdf'
     expect(node.isControlFlow()).toBeTruthy()
   })
   it('retry limit defaults to 1000', () => {
     const command = {
+      id: 'a',
       command: ControlFlowCommandNames.times,
       target: '',
       value: '',
@@ -46,9 +53,10 @@ describe('Command Node', () => {
   })
   it('retry limit can be overriden', () => {
     const command = {
+      id: 'a',
       command: ControlFlowCommandNames.repeatIf,
       target: '',
-      value: 5,
+      value: '5',
     }
     const node = new CommandNode(command)
     node.timesVisited = 5
@@ -61,6 +69,7 @@ describe('Command Node', () => {
       { a: 'a2', b: 'b2' },
     ])
     const command = {
+      id: 'a',
       command: ControlFlowCommandNames.forEach,
       target: collectionName,
       value: 'iteratorVar',
@@ -70,14 +79,14 @@ describe('Command Node', () => {
   })
   it('forEach errors without a valid variable', () => {
     const command = {
+      id: 'a',
       command: ControlFlowCommandNames.forEach,
       target: 'asdf',
       value: '',
     }
     const node = new CommandNode(command)
-    node.evaluateForEach(variables).then(result => {
-      expect(result.result).toEqual('Invalid variable provided.')
-    })
+    const result = node.evaluateForEach(variables)
+    expect(result).toEqual('Invalid variable provided.')
   })
   it('forEach stores iterated collection entry on a variable using the provided name', () => {
     const collectionName = 'asdf'
@@ -86,6 +95,7 @@ describe('Command Node', () => {
       { a: 'a2', b: 'b2' },
     ])
     const command = {
+      id: 'a',
       command: ControlFlowCommandNames.forEach,
       target: collectionName,
       value: 'iteratorVar',
@@ -98,6 +108,7 @@ describe('Command Node', () => {
     const collection = { name: 'asdf', value: [{ a: 'a' }, { b: 'b' }] }
     variables.set(collection.name, collection.value)
     const node = new CommandNode({
+      id: 'a',
       command: ControlFlowCommandNames.forEach,
       target: collection.name,
       value: 'iteratorVar',
@@ -108,31 +119,39 @@ describe('Command Node', () => {
   })
   it('execute resolves with an error message when too many retries attempted in a loop', () => {
     const command = {
+      id: 'a',
       command: ControlFlowCommandNames.while,
       target: '',
-      value: 2,
+      value: '2',
     }
+    const executor = new FakeExecutor()
     const node = new CommandNode(command)
     node.timesVisited = 3
-    return node.execute().catch(err => {
+    return node.execute(executor as unknown as any).catch((err) => {
       expect(err.message).toEqual(
         'Max retry limit exceeded. To override it, specify a new limit in the value input field.'
       )
     })
   })
-  it("evaluate resolves with an error message on 'times' when an invalid number is provided", () => {
+  it("evaluate resolves with an error message on 'times' when an invalid number is provided", async () => {
     const command = {
+      id: 'a',
       command: ControlFlowCommandNames.times,
       target: 'asdf',
       value: '',
     }
+    const executor = new FakeExecutor()
+    executor.init({ variables: new Variables() })
     const node = new CommandNode(command)
-    return node._evaluate({ variables: new Variables() }).catch(err => {
+    try {
+      await node._evaluate(executor as unknown as any)
+    } catch (err) {
       expect(err.message).toEqual('Invalid number provided as a target.')
-    })
+    }
   })
   it('timesVisited only incremenrts for control flow commands', () => {
     let command = {
+      id: 'a',
       command: ControlFlowCommandNames.times,
       target: '',
       value: '',
@@ -142,6 +161,7 @@ describe('Command Node', () => {
     node._incrementTimesVisited()
     expect(node.timesVisited).toBe(1)
     command = {
+      id: 'a',
       command: 'command',
       target: '',
       value: '',
@@ -153,30 +173,37 @@ describe('Command Node', () => {
   })
   it("evaluationResult returns the 'right' node on true", () => {
     const command = {
+      id: 'a',
       command: 'a',
       target: '',
       value: '',
     }
     const node = new CommandNode(command)
+    // @ts-expect-error
     node.right = 'b'
+    // @ts-expect-error
     node.left = 'c'
-    const result = node._evaluationResult({ result: 'success', value: true })
+    const result = node._evaluationResult({ value: true })
     expect(result.next).toEqual('b')
   })
   it("evaluationResult returns the 'left' node on false", () => {
     const command = {
+      id: 'a',
       command: 'a',
       target: '',
       value: '',
     }
     const node = new CommandNode(command)
+    // @ts-expect-error
     node.right = 'b'
+    // @ts-expect-error
     node.left = 'c'
-    const result = node._evaluationResult({ result: 'success', value: false })
+    const result = node._evaluationResult({ value: false })
     expect(result.next).toEqual('c')
   })
   it("executionResult returns the 'next' node on non-controlflow commands", () => {
     const command = {
+      id: 'a',
       command: 'open',
       target: '',
       value: '',
@@ -188,17 +215,18 @@ describe('Command Node', () => {
   })
   it("executionResult returns a 'next' node on control flow", () => {
     const command = {
+      id: 'a',
       command: ControlFlowCommandNames.if,
       target: '',
       value: '',
     }
     let nodeA = new CommandNode(command)
+    // @ts-expect-error
     nodeA.left = 'asdf'
     const nodeB = new CommandNode(command)
-    expect(
-      nodeA._executionResult({
-        next: nodeB,
-      }).next
-    ).toEqual(nodeB)
+    const result: CommandExecutionResult = {
+      next: nodeB,
+    }
+    expect(nodeA._executionResult(result).next).toEqual(nodeB)
   })
 })

@@ -20,6 +20,7 @@ import { deriveCommandLevels } from '../../src/playback-tree/command-leveler'
 
 function createCommand(command) {
   return {
+    id: 'a',
     command,
     target: '',
     value: '',

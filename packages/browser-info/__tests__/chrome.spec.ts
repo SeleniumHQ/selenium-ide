@@ -51,7 +51,6 @@ describe('chrome browser info', () => {
       try {
         await getBrowserInfo(ChromeChannel.stable)
       } catch (err) {
-        // @ts-expect-error
         expect(err.message).toBe('Unable to find Chrome installation')
       }
     })
@@ -154,7 +153,6 @@ describe('chrome browser info', () => {
       try {
         await getBrowserInfo(ChromeChannel.stable)
       } catch (err) {
-        // @ts-expect-error
         expect(err.message).toBe('Unable to find Chrome installation')
       }
     })
@@ -163,7 +161,6 @@ describe('chrome browser info', () => {
       try {
         await getBrowserInfo(ChromeChannel.canary)
       } catch (err) {
-        // @ts-expect-error
         expect(err.message).toBe('Unsupported channel canary')
       }
     })

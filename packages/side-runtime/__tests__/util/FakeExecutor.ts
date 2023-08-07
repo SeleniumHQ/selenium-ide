@@ -15,8 +15,19 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { CommandShape } from '@seleniumhq/side-model'
+import Variables from '../../src/variables'
+
 export default class FakeExecutor {
-  init({ _baseUrl, variables }) {
+  initialized: boolean
+  killed: boolean
+  variables: Variables
+
+  constructor(..._args: any[]) {
+    return this
+  }
+
+  init({ variables }: { variables: Variables }) {
     // this can be async
     this.variables = variables
     this.initialized = true
@@ -47,19 +58,28 @@ export default class FakeExecutor {
     this.killed = true
   }
 
-  async beforeCommand(_commandObject) {
+  async beforeCommand(_commandObject: CommandShape) {
     if (!this.initialized) throw new Error('executor is dead')
     if (this.killed) throw new Error('playback is dead')
   }
 
-  async afterCommand(_commandObject) {
+  async afterCommand(_commandObject: CommandShape) {
     if (!this.initialized) throw new Error('executor is dead')
     if (this.killed) throw new Error('playback is dead')
   }
 
+  async doAssert() {}
+  async doAssertText(_locator: string, _text: string) {}
   async doPause(timeout = 0) {
-    await new Promise(res => {
-      setTimeout(res, parseInt(timeout))
+    await new Promise((res) => {
+      setTimeout(res, Number(timeout))
     })
+  }
+  async doOpen(_url: string) {}
+  async doVerify() {}
+  async doVerifyText(_locator: string, _text: string) {}
+  async doFake(..._args: any[]) {}
+  async evaluateConditional() {
+    return false
   }
 }

@@ -20,6 +20,7 @@ import { ControlFlowCommandNames } from '../../src/playback-tree/commands'
 
 function createCommand(command) {
   return {
+    id: 'a',
     command,
     target: '',
     value: '',
@@ -62,7 +63,7 @@ describe('Control Flow', () => {
         expect(result).toBeTruthy()
       })
       test('while, end', () => {
-        let result = new validateControlFlowSyntax([
+        let result = validateControlFlowSyntax([
           createCommand(ControlFlowCommandNames.while),
           createCommand(ControlFlowCommandNames.end),
         ])
@@ -95,7 +96,7 @@ describe('Control Flow', () => {
     describe('Syntax Invalidation', () => {
       test('if', () => {
         let input = [createCommand(ControlFlowCommandNames.if)]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Incomplete block at if')
       })
@@ -105,7 +106,7 @@ describe('Control Flow', () => {
           createCommand(ControlFlowCommandNames.if),
           createCommand(ControlFlowCommandNames.end),
         ]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Incomplete block at if')
       })
@@ -116,7 +117,7 @@ describe('Control Flow', () => {
           createCommand(ControlFlowCommandNames.elseIf),
           createCommand(ControlFlowCommandNames.end),
         ]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Incorrect command order of else if / else')
       })
@@ -127,13 +128,13 @@ describe('Control Flow', () => {
           createCommand(ControlFlowCommandNames.else),
           createCommand(ControlFlowCommandNames.end),
         ]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Too many else commands used')
       })
       test('else', () => {
         let input = [createCommand(ControlFlowCommandNames.else)]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('An else used outside of an if block')
       })
@@ -142,19 +143,19 @@ describe('Control Flow', () => {
           createCommand(ControlFlowCommandNames.else),
           createCommand(ControlFlowCommandNames.else),
         ]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('An else used outside of an if block')
       })
       test('elseIf', () => {
         let input = [createCommand(ControlFlowCommandNames.elseIf)]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('An else if used outside of an if block')
       })
       test('while', () => {
         let input = [createCommand(ControlFlowCommandNames.while)]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Incomplete block at while')
       })
@@ -163,7 +164,7 @@ describe('Control Flow', () => {
           createCommand(ControlFlowCommandNames.if),
           createCommand(ControlFlowCommandNames.while),
         ]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Incomplete block at while')
       })
@@ -173,7 +174,7 @@ describe('Control Flow', () => {
           createCommand(ControlFlowCommandNames.while),
           createCommand(ControlFlowCommandNames.end),
         ]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Incomplete block at if')
       })
@@ -184,37 +185,37 @@ describe('Control Flow', () => {
           createCommand(ControlFlowCommandNames.else),
           createCommand(ControlFlowCommandNames.end),
         ]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('An else used outside of an if block')
       })
       test('times', () => {
         let input = [createCommand('times')]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Incomplete block at times')
       })
       test('forEach', () => {
         let input = [createCommand(ControlFlowCommandNames.forEach)]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow(`Incomplete block at ${ControlFlowCommandNames.forEach}`)
       })
       test('repeatIf', () => {
         let input = [createCommand(ControlFlowCommandNames.repeatIf)]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('A repeat if used without a do block')
       })
       test('do', () => {
         let input = [createCommand(ControlFlowCommandNames.do)]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Incomplete block at do')
       })
       test('end', () => {
         let input = [createCommand(ControlFlowCommandNames.end)]
-        expect(function() {
+        expect(function () {
           validateControlFlowSyntax(input)
         }).toThrow('Use of end without an opening keyword')
       })

@@ -15,14 +15,16 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import Callstack from '../src/callstack'
+import Callstack, { CallShape } from '../src/callstack'
 
 describe('Call stack', () => {
   it('should be able to call and unwind', () => {
     const callee = {
-      id: 2,
+      id: '2',
+      name: 'open',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '',
           value: '',
@@ -36,7 +38,7 @@ describe('Call stack', () => {
         position: undefined,
         tree: undefined,
       },
-    }
+    } as unknown as CallShape
 
     const cs = new Callstack()
     expect(cs.length).toBe(0)
@@ -51,7 +53,7 @@ describe('Call stack', () => {
   })
   it('should access the current executing procedure', () => {
     const cs = new Callstack()
-    const proc = {}
+    const proc = {} as unknown as CallShape
     cs.call(proc)
     expect(cs.top()).toBe(proc)
     expect(cs.length).toBe(1)

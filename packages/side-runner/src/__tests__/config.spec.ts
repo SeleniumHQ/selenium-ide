@@ -21,6 +21,6 @@ import Config from '../config'
 describe('configuration loader', () => {
   it('should load the config from a file', () => {
     const configuration = Config.load(path.join(__dirname, 'config_1.yml'))
-    expect(configuration.capabilities).toBeDefined()
+    expect((configuration as any).capabilities).toBeDefined()
   })
 })

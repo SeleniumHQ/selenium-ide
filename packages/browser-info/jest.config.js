@@ -1,9 +1,4 @@
 module.exports = {
-  globals: {
-    'ts-jest': {
-      tsConfig: 'tsconfig.base.json',
-    },
-  },
   testEnvironment: 'jsdom',
   testEnvironmentOptions: {
     url: 'http://localhost/index.html',

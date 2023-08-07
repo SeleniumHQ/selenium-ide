@@ -20,8 +20,10 @@ import { By } from 'selenium-webdriver'
 import { createHeadlessChrome } from '@seleniumhq/webdriver-testkit'
 import { createStaticSite } from '@seleniumhq/side-testkit'
 import Playback from '../../src/playback'
-import Variables from '../../src/Variables'
+import Variables from '../../src/variables'
 import WebDriverExecutor from '../../src/webdriver'
+import { TestShape } from '@seleniumhq/side-model'
+import { AddressInfo } from 'net'
 
 jest.setTimeout(30000)
 
@@ -29,11 +31,11 @@ describe('Playback using webdriver', () => {
   const app = createStaticSite()
   let port, close, driver, executor, variables
   beforeAll(async () => {
-    await new Promise(res => {
+    await new Promise((res) => {
       const server = app.listen(() => {
-        port = server.address().port
+        port = (server.address() as AddressInfo)!.port
         close = promisify(server.close.bind(server))
-        res()
+        res(null)
       })
     })
   })
@@ -60,19 +62,23 @@ describe('Playback using webdriver', () => {
   })
   it('should run a test using WebDriverExecutor', async () => {
     const test = {
-      id: 1,
+      id: '1',
+      name: 'test',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '/check.html',
           value: '',
         },
         {
+          id: 'b',
           command: 'uncheck',
           target: 'id=t',
           value: '',
         },
         {
+          id: 'c',
           command: 'check',
           target: 'id=f',
           value: '',
@@ -83,26 +89,32 @@ describe('Playback using webdriver', () => {
       executor,
       variables,
       baseUrl: `http://localhost:${port}/`,
-    })
-    await (await playback.play(test))()
+    } as unknown as any)
+    await (
+      await playback.play(test)
+    )()
     const element = await driver.findElement(By.id('f'))
     expect(await element.isSelected()).toBeTruthy()
   })
   it('should utilize before and after commands', async () => {
     const test = {
-      id: 1,
+      id: '1',
+      name: 'test',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '/check.html',
           value: '',
         },
         {
+          id: 'b',
           command: 'uncheck',
           target: 'id=t',
           value: '',
         },
         {
+          id: 'c',
           command: 'check',
           target: 'id=f',
           value: '',
@@ -113,12 +125,14 @@ describe('Playback using webdriver', () => {
       executor,
       variables,
       baseUrl: `http://localhost:${port}/`,
-    })
+    } as unknown as any)
     executor.hooks = {
       onAfterCommand: jest.fn(),
       onBeforeCommand: jest.fn(),
     }
-    await (await playback.play(test))()
+    await (
+      await playback.play(test)
+    )()
     expect(executor.hooks.onBeforeCommand).toHaveBeenCalledTimes(3)
     expect(executor.hooks.onAfterCommand).toHaveBeenCalledTimes(3)
     expect(executor.hooks.onBeforeCommand.mock.calls[0]).toEqual([
@@ -134,14 +148,17 @@ describe('Playback using webdriver', () => {
   })
   it('should inform of a new window', async () => {
     const test = {
-      id: 1,
+      id: '1',
+      name: 'test',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '/windows.html',
           value: '',
         },
         {
+          id: 'b',
           command: 'click',
           target: 'css=a',
           value: '',
@@ -155,11 +172,13 @@ describe('Playback using webdriver', () => {
       executor,
       variables,
       baseUrl: `http://localhost:${port}/`,
-    })
+    } as unknown as any)
     executor.hooks = {
       onWindowAppeared: jest.fn(),
     }
-    await (await playback.play(test))()
+    await (
+      await playback.play(test)
+    )()
     expect(executor.hooks.onWindowAppeared).toHaveBeenCalledTimes(1)
     expect(executor.hooks.onWindowAppeared.mock.calls[0]).toMatchObject([
       {
@@ -171,15 +190,18 @@ describe('Playback using webdriver', () => {
   })
   it('should wait for hook execution to complete', async () => {
     let didExecute = false
-    const test = {
-      id: 1,
+    const test: TestShape = {
+      id: '1',
+      name: 'test',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '/windows.html',
           value: '',
         },
         {
+          id: 'b',
           command: 'click',
           target: 'css=a',
           value: '',
@@ -193,30 +215,35 @@ describe('Playback using webdriver', () => {
       executor,
       variables,
       baseUrl: `http://localhost:${port}/`,
-    })
+    } as unknown as any)
     executor.hooks = {
       onWindowAppeared: () => {
-        return new Promise(res => {
+        return new Promise((res) => {
           setTimeout(() => {
             didExecute = true
-            res()
+            res(null)
           }, 10)
         })
       },
     }
-    await (await playback.play(test))()
+    await (
+      await playback.play(test)
+    )()
     expect(didExecute).toBeTruthy()
   })
   it('should perform locator fallback', async () => {
-    const test = {
-      id: 1,
+    const test: TestShape = {
+      id: '1',
+      name: 'test',
       commands: [
         {
+          id: 'a',
           command: 'open',
           target: '/check.html',
           value: '',
         },
         {
+          id: 'b',
           command: 'uncheck',
           target: 'id=nan',
           value: '',
@@ -232,8 +259,10 @@ describe('Playback using webdriver', () => {
       executor,
       variables,
       baseUrl: `http://localhost:${port}/`,
-    })
-    await (await playback.play(test))()
+    } as unknown as any)
+    await (
+      await playback.play(test)
+    )()
     const element = await driver.findElement(By.id('t'))
     expect(await element.isSelected()).toBeFalsy()
   })
