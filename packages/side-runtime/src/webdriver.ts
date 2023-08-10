@@ -1599,6 +1599,18 @@ WebDriverExecutor.prototype.doAssertEditable = composePreprocessors(
   WebDriverExecutor.prototype.doAssertEditable
 )
 
+WebDriverExecutor.prototype.doAssertElementPresent = composePreprocessors(
+  interpolateString,
+  null,
+  WebDriverExecutor.prototype.doAssertElementPresent
+)
+
+WebDriverExecutor.prototype.doAssertElementNotPresent = composePreprocessors(
+  interpolateString,
+  null,
+  WebDriverExecutor.prototype.doAssertElementNotPresent
+)
+
 WebDriverExecutor.prototype.doAssertNotEditable = composePreprocessors(
   interpolateString,
   null,
@@ -1616,6 +1628,19 @@ WebDriverExecutor.prototype.doAssertText = composePreprocessors(
   interpolateString,
   interpolateString,
   WebDriverExecutor.prototype.doAssertText
+)
+
+WebDriverExecutor.prototype.doAssertTitle = composePreprocessors(
+  interpolateString,
+  null,
+  WebDriverExecutor.prototype.doAssertTitle
+)
+
+WebDriverExecutor.prototype.doAssertValue = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doAssertValue
 )
 
 WebDriverExecutor.prototype.doEcho = composePreprocessors(
