@@ -22,6 +22,9 @@ export default class Variables {
   storedVars: Map<string, any>
 
   get(key: string) {
+    if (key.startsWith('env:')) {
+      return process.env[key.slice(4)]
+    }
     return this.storedVars.get(key)
   }
 

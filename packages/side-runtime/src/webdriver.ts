@@ -1624,6 +1624,13 @@ WebDriverExecutor.prototype.doAssertPrompt = composePreprocessors(
   WebDriverExecutor.prototype.doAssertPrompt
 )
 
+WebDriverExecutor.prototype.doAssertSelectedLabel = composePreprocessors(
+  interpolateString,
+  interpolateString,
+  { targetFallback: preprocessArray(interpolateString) },
+  WebDriverExecutor.prototype.doAssertSelectedLabel
+)
+
 WebDriverExecutor.prototype.doAssertText = composePreprocessors(
   interpolateString,
   interpolateString,

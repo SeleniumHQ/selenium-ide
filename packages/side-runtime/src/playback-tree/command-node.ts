@@ -18,7 +18,7 @@
 import { Fn } from '@seleniumhq/side-commons'
 import { CommandShape } from '@seleniumhq/side-model'
 import { WebDriverExecutor } from '..'
-import { interpolateScript } from '../preprocessors'
+import { interpolateScript, interpolateString } from '../preprocessors'
 import { CommandNodeOptions } from '../types'
 import Variables from '../variables'
 import { WebDriverExecutorCondEvalResult } from '../webdriver'
@@ -224,17 +224,20 @@ export class CommandNode {
   }
 
   _evaluate(commandExecutor: WebDriverExecutor) {
-    let expression = interpolateScript(
-      this.command.target as string,
-      commandExecutor.variables
-    )
     if (ControlFlowCommandChecks.isTimes(this.command)) {
-      const number = Math.floor(+expression)
+      const number = Math.floor(
+        +interpolateString(`${this.command.target}`, commandExecutor.variables)
+      )
       if (isNaN(number)) {
         return Promise.reject(new Error('Invalid number provided as a target.'))
       }
       return this._evaluationResult({ value: this.timesVisited < number })
-    } else if (ControlFlowCommandChecks.isForEach(this.command)) {
+    }
+    let expression = interpolateScript(
+      this.command.target as string,
+      commandExecutor.variables
+    )
+    if (ControlFlowCommandChecks.isForEach(this.command)) {
       const result = this.evaluateForEach(commandExecutor.variables)
       if (!result) {
         this.emitControlFlowChange({

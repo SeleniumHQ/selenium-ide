@@ -14,6 +14,7 @@
       "parallel": false,
       "persistSession": false,
       "tests": [
+        "a1f2325b-f579-445f-97a2-a24d45816e04",
         "2e05c87f-fd47-43e1-bd89-7197f52e3cda"
       ],
       "timeout": 30000
@@ -25,12 +26,6 @@
       "name": "If variable",
       "commands": [
         {
-          "id": "73e3061e-5904-4ee7-9923-a0bb014349dd",
-          "command": "open",
-          "target": "/",
-          "value": ""
-        },
-        {
           "command": "store",
           "target": "1",
           "value": "asdf",
@@ -38,22 +33,45 @@
         },
         {
           "command": "if",
-          "target": "${asdf} == 1",
+          "target": "${asdf} !== \"1\"",
           "value": "",
           "id": "67c95cc0-68ce-4019-a2eb-8f32fd6c722c"
         },
         {
-          "command": "click",
-          "target": "css=#gbqfbb",
-          "value": "",
-          "id": "6541336a-a114-42da-9443-53e1ad0027a4",
-          "isBreakpoint": false
+          "command": "assert",
+          "target": "asdf",
+          "value": "If clause succeeded without merit",
+          "id": "4cbdebb0-f650-4919-a489-1946359d976c"
         },
         {
           "command": "end",
           "target": "",
           "value": "",
           "id": "52a7461f-a944-471b-bfbc-66cecfa001a8"
+        }
+      ]
+    },
+    {
+      "id": "a1f2325b-f579-445f-97a2-a24d45816e04",
+      "name": "Times variable",
+      "commands": [
+        {
+          "command": "store",
+          "target": "1",
+          "value": "ONE",
+          "id": "8d34b903-0b7b-4d1e-b363-ca19bed870ce"
+        },
+        {
+          "id": "ca848518-2f34-4c92-b57c-4ce37c11e1cf",
+          "command": "times",
+          "target": "${ONE}",
+          "value": "3"
+        },
+        {
+          "command": "end",
+          "target": "",
+          "value": "",
+          "id": "bc6bffd6-0fec-4272-8aaa-7633ffb7266a"
         }
       ]
     }
