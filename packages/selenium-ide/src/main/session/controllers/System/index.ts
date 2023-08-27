@@ -1,5 +1,6 @@
 import { dialog } from 'electron'
 import BaseController from '../Base'
+import { isAutomated } from 'main/util'
 
 let firstTime = true
 export default class SystemController extends BaseController {
@@ -11,16 +12,22 @@ export default class SystemController extends BaseController {
   }
   async startup() {
     if (this.isDown) {
-      const startupError = await this.session.driver.startProcess()
-      if (startupError) {
-        await this.crash(`Unable to startup due to chromedriver error: ${startupError}`);
+      await this.session.windows.open('logger')
+      // If automated, assume we already have a chromedriver process running
+      if (!isAutomated) {
+        const startupError = await this.session.driver.startProcess()
+        if (startupError) {
+          await this.crash(
+            `Unable to startup due to chromedriver error: ${startupError}`
+          )
+        }
       }
       await this.session.projects.select(firstTime)
-      await this.session.windows.open('logger')
       this.isDown = false
       firstTime = false
     }
   }
+
   async shutdown() {
     if (!this.isDown) {
       if (!this.shuttingDown) {
@@ -34,6 +41,7 @@ export default class SystemController extends BaseController {
       }
     }
   }
+
   async crash(error: string) {
     await dialog.showMessageBox({
       message: error,
@@ -42,6 +50,7 @@ export default class SystemController extends BaseController {
     await this.shutdown()
     await this.quit()
   }
+
   async quit() {
     await this.shutdown()
     if (this.isDown) {
