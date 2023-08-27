@@ -36,9 +36,14 @@ main()
 
 async function main() {
   console.log('Starting webdriver backend')
-  await startWebdriverBackend({ driver: 'chrome' })
+  const {proc, success} = await startWebdriverBackend({ driver: 'chrome' })
+  if (!success) {
+    console.error('Failed to start webdriver backend')
+    console.error(proc.error)
+    return
+  }
   const sideFiles = args.filter((arg) => arg.endsWith('.side'))
-  for (const sideFile of sideFiles) {
+  for (const sideFile of [sideFiles[0]]) {
     console.log('Starting driver for sidefile', sideFile)
     const driver = await new webdriver.Builder()
       .usingServer(`http://localhost:${port}`)
@@ -48,8 +53,9 @@ async function main() {
           binary: electronBinaryPath,
           args: [
             'app=' + pathToSeleniumIDE,
-            `side-file=./../../${sideFile.replace('./', '')}`,
+            `side-file=${sideFile}`,
           ],
+          excludeSwitches: ['enable-logging'],
         },
       })
       .forBrowser('chrome') // note: use .forBrowser('electron') for selenium-webdriver <= 3.6.0
@@ -58,6 +64,7 @@ async function main() {
     await driver.quit()
     return
   }
+  proc.kill()
 }
 
 function startWebdriverBackend() {
@@ -66,31 +73,33 @@ function startWebdriverBackend() {
     let initialized = false
     const args = ['--verbose', `--port=${port}`]
     if (fs.existsSync(driverPath)) {
-      const driver = spawn(driverPath.replace(/\s/g, ' '), args, {
+      const proc = spawn(driverPath.replace(/\s/g, ' '), args, {
         env: {},
         shell: false,
       })
       process.on('exit', () => {
-        driver.kill()
+        if (!proc.killed) {
+          proc.kill()
+        }
       })
-      driver.stdout.on('data', (out) => {
+      proc.stdout.on('data', (out) => {
         const outStr = `${out}`
         WebdriverDebugLog(outStr)
         const fullyStarted = outStr.includes(successMessage)
         if (fullyStarted) {
           initialized = true
           WebdriverDebugLog('Driver has initialized!')
-          resolve({ success: true, driver: driver })
+          resolve({ success: true, proc: proc })
         }
       })
-      driver.stderr.on('data', (err) => {
+      proc.stderr.on('data', (err) => {
         const errStr = `${err}`
         WebdriverDebugLog(errStr)
         if (!initialized) {
           resolve({ success: false, error: errStr })
         }
       })
-      driver.on('close', (code) => {
+      proc.on('close', (code) => {
         if (code) {
           WebdriverDebugLog(`driver has exited with code ${code}`)
           if (!initialized) {
