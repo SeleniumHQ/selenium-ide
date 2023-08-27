@@ -4,6 +4,8 @@ import { Browser } from '@seleniumhq/get-driver'
 import { StateShape } from './models/state'
 import { PluginRuntimeShape } from '@seleniumhq/side-runtime'
 
+export * from '@seleniumhq/side-model/dist/types'
+
 export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
   browser: Browser
 }

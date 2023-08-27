@@ -8,6 +8,7 @@ import { Session } from 'main/types'
 import { randomUUID } from 'crypto'
 import RecentProjects from './Recent'
 import BaseController from '../Base'
+import { isAutomated } from 'main/util'
 
 export default class ProjectsController {
   constructor(session: Session) {
@@ -116,27 +117,29 @@ export default class ProjectsController {
     return starterProject
   }
 
-  async load(filepath: string): Promise<CoreSessionData | null > {
-    const fileExists = await fs.stat(filepath)
-    .then(() => true)
-    .catch(() => false);
-    if(fileExists){
-    const loadedProject = await this.load_v3(filepath)
-    if (loadedProject) {
-      if (this.loaded) {
-        const confirm = await this.onProjectUnloaded()
-        if (!confirm) {
-          return null
+  async load(filepath: string): Promise<CoreSessionData | null> {
+    const fileExists = await fs
+      .stat(filepath)
+      .then(() => true)
+      .catch(() => false)
+    console.log('fileExists', filepath, process.cwd(), __dirname);
+    if (fileExists) {
+      const loadedProject = await this.load_v3(filepath)
+      if (loadedProject) {
+        if (this.loaded) {
+          const confirm = await this.onProjectUnloaded()
+          if (!confirm) {
+            return null
+          }
         }
+        await this.onProjectLoaded(loadedProject, filepath)
+        return await this.session.state.get()
       }
-      await this.onProjectLoaded(loadedProject, filepath)
-      return await this.session.state.get()
-    }
-    return null
-  }else{
-    this.doShowWarning()
-     this.recentProjects.remove(filepath)
-     return null
+      return null
+    } else {
+      this.doShowWarning()
+      this.recentProjects.remove(filepath)
+      return null
     }
   }
 
@@ -146,19 +149,15 @@ export default class ProjectsController {
 
   async select(useArgs = false): Promise<void> {
     // When we're opened with a side file in the path
-    let argsFilepath = process.argv[1]
-    if (!this.session.app.isPackaged) {
-      const mainArgIndex = process.argv.findIndex((arg) =>
-        arg.endsWith('main-bundle.js')
-      )
-      if (mainArgIndex === -1) {
-        argsFilepath = ''
-      } else argsFilepath = process.argv[mainArgIndex + 1]
-    }
+    let argsFilepath = process.argv.find((arg) => arg.startsWith('--side-file=')) || ''
     if (this.filepath) {
       await this.load(this.filepath)
     } else if (useArgs && argsFilepath) {
-      await this.load(argsFilepath)
+      try {
+        await this.load(argsFilepath.replace('--side-file=', ''))
+      } catch (e) {
+        console.warn(`Unable to load file from args: ${argsFilepath}`)
+      }
     } else {
       await this.session.windows.open('splash')
     }
@@ -224,11 +223,11 @@ export default class ProjectsController {
   }
 
   async doShowWarning(): Promise<boolean> {
-    if (await this.projectHasChanged()) {
-       await this.session.dialogs.showMessageBox(
-        'The Project your trying to load is not found , Please create new Project',
-        [ 'Ok']
-      )      
+    if (!isAutomated && (await this.projectHasChanged())) {
+      await this.session.dialogs.showMessageBox(
+        "The project you're trying to load is not found , Please create a new project",
+        ['Ok']
+      )
     }
     return true
   }

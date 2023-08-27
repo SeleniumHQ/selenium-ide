@@ -10,6 +10,8 @@ export const COLOR_MAGENTA = '\x1b[35m'
 export const COLOR_CYAN = '\x1b[36m'
 export const COLOR_WHITE = '\x1b[37m'
 
+export const isAutomated = process.argv.includes('--enable-automation')
+
 export const vdebuglog = (namespace: string, color: string) => {
   const isBin = app.isPackaged
   const prefix = isBin ? `${namespace}: ` : color

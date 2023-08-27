@@ -13,11 +13,13 @@ import { Session } from 'main/types'
 import storage from 'main/store'
 import { join } from 'path'
 import BaseController from '../Base'
+import { isAutomated } from 'main/util'
 
 const playbackWindowName = 'playback-window'
 const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
 const playbackWindowOptions = {
   webPreferences: {
+    devTools: !isAutomated,
     nodeIntegration: false,
     nodeIntegrationInSubFrames: true,
     preload: join(__dirname, `playback-window-preload-bundle.js`),
@@ -53,6 +55,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
           const win = new BrowserWindow({
             ...windowConfig,
             webPreferences: {
+              devTools: !isAutomated,
               ...(windowConfig?.webPreferences ?? {}),
               preload: hasPreload ? preloadPath : undefined,
             },
