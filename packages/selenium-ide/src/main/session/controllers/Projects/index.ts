@@ -122,7 +122,6 @@ export default class ProjectsController {
       .stat(filepath)
       .then(() => true)
       .catch(() => false)
-    console.log('fileExists', filepath, process.cwd(), __dirname);
     if (fileExists) {
       const loadedProject = await this.load_v3(filepath)
       if (loadedProject) {
