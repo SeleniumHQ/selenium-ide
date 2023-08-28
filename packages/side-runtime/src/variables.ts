@@ -33,6 +33,9 @@ export default class Variables {
   }
 
   has(key: string) {
+    if (key.startsWith('env:')) {
+      return true
+    }
     return this.storedVars.has(key)
   }
 
