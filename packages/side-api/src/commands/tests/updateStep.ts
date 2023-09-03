@@ -3,7 +3,7 @@ import merge from 'lodash/fp/merge'
 import update from 'lodash/fp/update'
 import { getCommandIndex } from '../../helpers/getActiveData'
 import { hasID } from '../../helpers/hasID'
-import { CoreSessionData, Mutator } from '../../types'
+import { CoreSessionData, Mutator } from '../../types/base'
 
 /**
  * Update the shape of a command

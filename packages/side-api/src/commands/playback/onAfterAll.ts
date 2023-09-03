@@ -1,4 +1,4 @@
-import { BaseListener } from '../../types'
+import { BaseListener } from '../../types/base'
 
 /**
  * Runs after a suite completes

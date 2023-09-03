@@ -1,6 +1,6 @@
 import set from 'lodash/fp/set'
 import { EditorStateShape } from '../../models'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Toggles breakpoints in the active test

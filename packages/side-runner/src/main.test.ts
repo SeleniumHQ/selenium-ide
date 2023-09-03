@@ -123,7 +123,7 @@ const register = buildRegister(factoryParams)
 const runners = buildRunners(factoryParams)
 each(projects).describe(projectTitle, (project: Project) => {
   try {
-    const pluginPaths = correctPluginPaths(project.path, project.plugins)
+    const pluginPaths = correctPluginPaths(project.path, project?.plugins ?? [])
     const runHook = (hookName: keyof PluginHooks) => async () => {
       const plugins = await loadPlugins(pluginPaths)
       await Promise.all(

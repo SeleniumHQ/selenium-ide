@@ -1,5 +1,5 @@
 import merge from 'lodash/fp/merge'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 import { EditorStateShape, PlaybackStateShape } from '../../models/state'
 import { getCommandIndex } from '../../helpers/getActiveData'
 

@@ -20,7 +20,7 @@ import os from 'os'
 import { Chrome } from '@seleniumhq/browser-info'
 import { downloadDriver } from '@seleniumhq/get-driver'
 import { CACHE_PATH } from './cache'
-import { Arch } from '@seleniumhq/get-driver/src/types'
+import { Arch } from '@seleniumhq/get-driver/dist/types'
 
 export async function updateDrivers() {
   const downloadDirectory = CACHE_PATH

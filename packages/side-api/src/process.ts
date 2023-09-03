@@ -1,5 +1,5 @@
 import commands from './index'
-import { GenericApi, ApiEntry, ApiHandler, ApiNamespace } from './types'
+import { GenericApi, ApiEntry, ApiHandler, ApiNamespace } from './types/base'
 
 export const processApi = <FinalApi extends GenericApi>(
   handler: ApiHandler

@@ -1,5 +1,5 @@
 import { EditorStateShape } from '../../models/state'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Removes selected command indexes. Called when test editor closes.

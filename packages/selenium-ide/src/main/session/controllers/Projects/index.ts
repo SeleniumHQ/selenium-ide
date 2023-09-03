@@ -174,9 +174,9 @@ export default class ProjectsController {
     let project: ProjectShape
     try {
       project = JSON.parse(fileContents)
-      project.plugins = project.plugins.filter(
+      project.plugins = project?.plugins?.filter(
         (plugin) => typeof plugin === 'string'
-      )
+      ) ?? []
       return project
     } catch (e) {
       console.log((e as Error).message)

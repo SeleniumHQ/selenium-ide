@@ -1,5 +1,5 @@
 import { defaultPlaybackState } from '../../models'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Start a running test, using a range to optionally control start

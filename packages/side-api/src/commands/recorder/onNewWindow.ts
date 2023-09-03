@@ -1,5 +1,9 @@
 import { CommandShape } from '@seleniumhq/side-model'
-import { BaseListener, EventMutator, RecordNewCommandInput } from '../../types'
+import {
+  BaseListener,
+  EventMutator,
+  RecordNewCommandInput,
+} from '../../types/base'
 import { mutator as recordNewCommandMutator } from './recordNewCommand'
 import { mutator as updateStepTestsMutator } from '../tests/updateStep'
 import { getActiveCommand } from '../../helpers/getActiveData'

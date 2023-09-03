@@ -1,5 +1,5 @@
 import set from 'lodash/fp/set'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Pause a running test. Can be resumed.

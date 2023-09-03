@@ -24,7 +24,7 @@ import {
   ExpandedMutationObserver,
 } from 'browser/types'
 import initFindSelect from './find-select'
-import { PluginPreloadOutputShape } from '@seleniumhq/side-api'
+import { PluginPreloadOutputShape, RecordNewCommandInput } from '@seleniumhq/side-api'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null
@@ -110,7 +110,7 @@ export default class Recorder {
     insertBeforeLastCommand: boolean = false,
     actualFrameLocation?: string
   ) {
-    let newCommand = {
+    let newCommand: RecordNewCommandInput = {
       command,
       target,
       value,

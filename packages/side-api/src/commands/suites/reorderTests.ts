@@ -1,6 +1,6 @@
 import set from 'lodash/fp/set'
 import update from 'lodash/fp/update'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 import { hasID } from '../../helpers/hasID'
 import {
   recalculateSelectedIndexes,

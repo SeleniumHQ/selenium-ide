@@ -1,4 +1,4 @@
-import { BaseListener } from '../../types'
+import { BaseListener } from '../../types/base'
 
 /**
  * Called when the project editor asks the recorder to highlight an element

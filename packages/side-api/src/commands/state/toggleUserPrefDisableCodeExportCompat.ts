@@ -1,6 +1,6 @@
 import set from 'lodash/fp/set'
 import { VerboseBoolean } from '../../models/state'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Customizes command insert behavior to either follow or lead the current

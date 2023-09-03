@@ -1,4 +1,4 @@
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Sets the active test for the test editor

@@ -2,7 +2,7 @@ import { CommandShape, SuiteShape, TestShape } from '@seleniumhq/side-model'
 import { command as defaultCommand } from '../models/project/command'
 import { suite as defaultSuite } from '../models/project/suite'
 import { test as defaultTest } from '../models/project/test'
-import { CoreSessionData } from '../types'
+import { CoreSessionData } from '../types/base'
 import { hasID } from './hasID'
 
 export const getActiveSuite = (session: CoreSessionData): SuiteShape => {

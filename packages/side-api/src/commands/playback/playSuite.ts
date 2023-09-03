@@ -1,6 +1,6 @@
 import set from 'lodash/fp/set'
 import { defaultPlaybackState } from '../../models'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Start running a test suite. Results should be processed using

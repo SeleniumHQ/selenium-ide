@@ -1,6 +1,6 @@
 import { SuiteShape } from '@seleniumhq/side-model'
 import { hasID } from '../../helpers/hasID'
-import { CoreSessionData, Mutator } from '../../types'
+import { CoreSessionData, Mutator } from '../../types/base'
 import merge from 'lodash/fp/merge'
 import update from 'lodash/fp/update'
 

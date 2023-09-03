@@ -1,6 +1,6 @@
 import { CommandShape, ProjectShape } from '@seleniumhq/side-model'
 import { CommandType } from '@seleniumhq/side-model/src/Commands'
-import { Fn } from '@seleniumhq/side-commons/src/types'
+import { Fn } from '@seleniumhq/side-commons/dist/types'
 import WebDriverExecutor, { WebDriverExecutorHooks } from './webdriver'
 
 export { Capabilities } from 'selenium-webdriver'
