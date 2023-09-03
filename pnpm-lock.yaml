@@ -3167,8 +3167,8 @@ packages:
     resolution: {integrity: sha512-+TLf8itRJHRI4dlTErDFtLeWpjDRz7M1VudMOX0iGyQ1PCEpmYuS2w3qfaeU7zRpUBhHyMlLrk+Ge5I6Fah65Q==}
     dev: false
 
-  /@seleniumhq/side-runtime@4.0.0-alpha.28:
-    resolution: {integrity: sha512-Cqox5CKtsPsY3yAi6Wg0BxtC87C9+gFCROhPwatW6G/kzyuCfcSQzL7N+NqLVeqVXunYikL83fSHBrZEFl01YQ==}
+  /@seleniumhq/side-runtime@4.0.0-alpha.30:
+    resolution: {integrity: sha512-/1tBiPGoTCjSb10NwuiX1jtgMWPHn/LyTz3um79IasHK04+3xo+OoTC2dxD4OKdID7y5y0hcim52bd2v882oPw==}
     dependencies:
       '@seleniumhq/side-commons': 4.0.0-alpha.1
       '@seleniumhq/side-model': 4.0.0-alpha.4
@@ -10256,7 +10256,7 @@ packages:
     hasBin: true
     dependencies:
       '@seleniumhq/side-model': 4.0.0-alpha.4
-      '@seleniumhq/side-runtime': 4.0.0-alpha.28
+      '@seleniumhq/side-runtime': 4.0.0-alpha.30
       commander: 9.4.1
     transitivePeerDependencies:
       - bufferutil
