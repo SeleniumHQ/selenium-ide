@@ -1,4 +1,4 @@
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 import { mutator as setActiveTest } from './setActiveTest'
 
 /**

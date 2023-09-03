@@ -1,4 +1,4 @@
-import { BrowserInfo } from '../../types'
+import { BrowserInfo } from '../../types/base'
 
 /**
  * Select a browser to run. Currently only Electron is allowed.

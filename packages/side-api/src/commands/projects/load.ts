@@ -1,5 +1,5 @@
 import { loadingID } from '../../constants/loadingID'
-import { CoreSessionData, Mutator } from '../../types'
+import { CoreSessionData, Mutator } from '../../types/base'
 
 /**
  * Loads the project editor for a path

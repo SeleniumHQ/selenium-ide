@@ -1,4 +1,4 @@
-import { CoreSessionData } from '../../types'
+import { CoreSessionData } from '../../types/base'
 
 /**
  * Get current session data.

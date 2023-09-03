@@ -4,7 +4,7 @@ import {
   CoreSessionData,
   EventMutator,
   StateShape,
-} from '../../types'
+} from '../../types/base'
 import { badIndex } from '../../constants/badIndex'
 
 /**

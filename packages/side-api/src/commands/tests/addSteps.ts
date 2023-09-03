@@ -2,7 +2,7 @@ import { CommandShape, TestShape } from '@seleniumhq/side-model'
 import update from 'lodash/fp/update'
 import { mutator as updateStepSelection } from '../state/updateStepSelection'
 import { hasID } from '../../helpers/hasID'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Append steps at the chosen index in the selected test

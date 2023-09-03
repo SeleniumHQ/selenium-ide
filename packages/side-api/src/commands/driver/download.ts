@@ -1,4 +1,4 @@
-import { BrowserInfo } from '../../types'
+import { BrowserInfo } from '../../types/base'
 
 /**
  * Download a driver needed to instrument an available browser.

@@ -47,12 +47,13 @@ export default class SystemController extends BaseController {
       message: error,
       type: 'error',
     })
-    await this.shutdown()
     await this.quit()
+    throw new Error(error)
   }
 
   async quit() {
     await this.shutdown()
+    await this.session.windows.closeAll()
     if (this.isDown) {
       this.session.app.quit()
     }

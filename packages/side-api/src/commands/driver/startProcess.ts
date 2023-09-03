@@ -1,4 +1,4 @@
-import { BrowserInfo } from '../../types'
+import { BrowserInfo } from '../../types/base'
 
 /**
  * Start the driver process for the browser, eg Chromedriver etc..

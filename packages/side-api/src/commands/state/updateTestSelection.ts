@@ -1,5 +1,5 @@
 import update from 'lodash/fp/update'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 import { getActiveSuite } from '../../helpers/getActiveData'
 import { updateSelection } from '../../helpers/updateSelection'
 

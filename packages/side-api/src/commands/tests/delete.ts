@@ -1,6 +1,6 @@
 import update from 'lodash/fp/update'
 import { hasID, notHasID } from '../../helpers/hasID'
-import { CoreSessionData, Mutator } from '../../types'
+import { CoreSessionData, Mutator } from '../../types/base'
 
 /**
  * Delete the selected test

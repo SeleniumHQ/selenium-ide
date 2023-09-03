@@ -1,5 +1,5 @@
 import update from 'lodash/fp/update'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Update the path to a plugin on the current project

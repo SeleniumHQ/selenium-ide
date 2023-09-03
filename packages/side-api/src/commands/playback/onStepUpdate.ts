@@ -2,7 +2,7 @@ import { TestShape } from '@seleniumhq/side-model'
 import { PlaybackEventShapes } from '@seleniumhq/side-runtime'
 import merge from 'lodash/fp/merge'
 import { getActiveTest, getCommandIndex } from '../../helpers/getActiveData'
-import { BaseListener, EventMutator, StateShape } from '../../types'
+import { BaseListener, EventMutator, StateShape } from '../../types/base'
 import { EditorStateShape, PlaybackStateShape } from '../../models/state'
 
 /**

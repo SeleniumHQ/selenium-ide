@@ -13,6 +13,7 @@
     "clean:deps": "rimraf packages/*/node_modules node_modules",
     "clean": "rimraf packages/*/build packages/*/dist packages/*/node_modules packages/*/tsconfig.tsbuildinfo node_modules",
     "clean:nuke": "git clean -fdx",
+    "start": "cd packages/selenium-ide && npm start",
     "test": "jest",
     "test:e2e": "jest --testMatch \"**/packages/**/__tests__/**/*.e2e.js\"",
     "lint": "pnpm run lint:scripts",

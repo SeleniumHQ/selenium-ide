@@ -142,7 +142,7 @@ export default class DriverController extends BaseController {
 
   async stopProcess(): Promise<null | string> {
     if (this.driverProcess) {
-      const procKilled = this.driverProcess.kill(9)
+      const procKilled = await this.driverProcess.kill(9)
       WebdriverDebugLog('Killed driver?', procKilled)
     }
     return null

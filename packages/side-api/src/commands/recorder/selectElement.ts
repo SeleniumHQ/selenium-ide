@@ -1,7 +1,7 @@
 import capitalize from 'lodash/fp/capitalize'
 import { mutator as updateStepMutator } from '../tests/updateStep'
 import { getActiveCommand } from '../../helpers/getActiveData'
-import { LocatorFields, Mutator } from '../../types'
+import { LocatorFields, Mutator } from '../../types/base'
 
 /**
  * Tells the project editor what the requested select element was so the IDE

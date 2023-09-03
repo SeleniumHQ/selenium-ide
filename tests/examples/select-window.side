@@ -80,7 +80,7 @@
           "id": "2a912487-2f0d-4242-bf98-2020ef0194fb",
           "comment": "",
           "command": "assertTitle",
-          "target": "Elemental Selenium: Receive a Free, Weekly Tip on Using Selenium like a Pro",
+          "target": "Elemental Selenium | Elemental Selenium",
           "targets": [],
           "value": ""
         },
@@ -126,11 +126,5 @@
   "urls": [
     "http://the-internet.herokuapp.com/"
   ],
-  "plugins": [
-    {
-      "id": "nknickobkcecmkiiefhjmiaihliikohm",
-      "name": "Applitools",
-      "version": "1.0.0"
-    }
-  ]
+  "plugins": []
 }

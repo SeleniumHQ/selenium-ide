@@ -36,7 +36,7 @@ main()
 
 async function main() {
   console.log('Starting webdriver backend')
-  const {proc, success} = await startWebdriverBackend({ driver: 'chrome' })
+  const { proc, success } = await startWebdriverBackend({ driver: 'chrome' })
   if (!success) {
     console.error('Failed to start webdriver backend')
     console.error(proc.error)
@@ -51,10 +51,7 @@ async function main() {
         'goog:chromeOptions': {
           // Here is the path to your Electron binary.
           binary: electronBinaryPath,
-          args: [
-            'app=' + pathToSeleniumIDE,
-            `side-file=${sideFile}`,
-          ],
+          args: ['app=' + pathToSeleniumIDE, `side-file=${sideFile}`],
           excludeSwitches: ['enable-logging'],
         },
       })
@@ -76,11 +73,6 @@ function startWebdriverBackend() {
       const proc = spawn(driverPath.replace(/\s/g, ' '), args, {
         env: {},
         shell: false,
-      })
-      process.on('exit', () => {
-        if (!proc.killed) {
-          proc.kill()
-        }
       })
       proc.stdout.on('data', (out) => {
         const outStr = `${out}`

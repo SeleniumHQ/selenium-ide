@@ -1,5 +1,5 @@
 import { ProjectShape } from '@seleniumhq/side-model'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Creates a new project

@@ -1,6 +1,6 @@
 import { CommandShape } from '@seleniumhq/side-model'
 import { getActiveCommand, getActiveTest, getActiveCommandIndex } from '@seleniumhq/side-api/dist/helpers/getActiveData'
-import { LocatorFields, CoreSessionData } from '@seleniumhq/side-api'
+import { LocatorFields, CoreSessionData, RecordNewCommandInput } from '@seleniumhq/side-api'
 import { randomInt, randomUUID } from 'crypto'
 import { relative } from 'path'
 import BaseController from '../Base'
@@ -61,15 +61,6 @@ const getLastActiveWindowHandleId = (session: CoreSessionData): string => {
 
   return 'root'
 }
-export interface RecordNewCommandInput {
-  command: string
-  target: string | [string, string][]
-  value: string | [string, string][]
-  insertBeforeLastCommand?: boolean
-  frameLocation?: string
-  winHandleId?: string
-}
-
 export default class RecorderController extends BaseController {
   windowIDs: number[] = []
 

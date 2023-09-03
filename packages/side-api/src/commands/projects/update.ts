@@ -1,7 +1,7 @@
 import { ProjectShape } from '@seleniumhq/side-model'
 import merge from 'lodash/fp/merge'
 import update from 'lodash/fp/update'
-import { CoreSessionData, Mutator } from '../../types'
+import { CoreSessionData, Mutator } from '../../types/base'
 
 /**
  * Edits project level config flags, like name or url.

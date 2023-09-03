@@ -1,7 +1,7 @@
 import set from 'lodash/fp/set'
 import { mutator as addStepMutator } from '../tests/addSteps'
 import { getActiveCommandIndex } from '../../helpers/getActiveData'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Start recording interactions across playback windows

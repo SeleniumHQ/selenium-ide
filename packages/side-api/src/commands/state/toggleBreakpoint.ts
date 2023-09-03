@@ -1,5 +1,5 @@
 import update from 'lodash/fp/update'
-import { CoreSessionData, Mutator } from '../../types'
+import { CoreSessionData, Mutator } from '../../types/base'
 
 /**
  * Toggles breakpoints in the active test

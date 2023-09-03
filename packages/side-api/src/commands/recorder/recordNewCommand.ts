@@ -1,7 +1,14 @@
 import { CommandShape } from '@seleniumhq/side-model'
 import update from 'lodash/fp/update'
-import { getActiveTest, getActiveCommandIndex } from '../../helpers/getActiveData'
-import { CoreSessionData, Mutator, RecordNewCommandInput } from '../../types'
+import {
+  getActiveTest,
+  getActiveCommandIndex,
+} from '../../helpers/getActiveData'
+import {
+  CoreSessionData,
+  Mutator,
+  RecordNewCommandInput,
+} from '../../types/base'
 import { mutator as addStepsMutator } from '../tests/addSteps'
 import { mutator as updateStepSelection } from '../state/updateStepSelection'
 
@@ -50,11 +57,7 @@ const processStoreWindowHandle = (sesh: CoreSessionData) => {
         value: '',
       }
       sesh = addStepsMutator(sesh, {
-        params: [
-          sesh.state.activeTestID,
-          i - 1,
-          [],
-        ],
+        params: [sesh.state.activeTestID, i - 1, []],
         result: [storeWindowHandle],
       })
       return updateStepSelection(sesh, {

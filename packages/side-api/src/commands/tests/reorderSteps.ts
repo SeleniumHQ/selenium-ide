@@ -6,7 +6,7 @@ import {
   recalculateSelectedIndexes,
   reorderListRaw,
 } from '../../helpers/reorderList'
-import { CoreSessionData, Mutator } from '../../types'
+import { CoreSessionData, Mutator } from '../../types/base'
 
 /**
  * Reorder the selected steps in a test

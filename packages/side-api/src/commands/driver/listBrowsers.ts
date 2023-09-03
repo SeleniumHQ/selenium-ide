@@ -1,4 +1,4 @@
-import { BrowsersInfo } from '../../types'
+import { BrowsersInfo } from '../../types/base'
 
 /**
  * List available browsers to be driven.

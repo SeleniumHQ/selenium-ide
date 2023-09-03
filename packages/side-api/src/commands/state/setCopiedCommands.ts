@@ -1,6 +1,6 @@
 import omit from 'lodash/fp/omit'
 import set from 'lodash/fp/set'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 import { getActiveTest } from '../../helpers/getActiveData'
 import { CommandShape } from '@seleniumhq/side-model'
 

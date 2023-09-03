@@ -60,6 +60,9 @@ export default class PluginsController extends BaseController {
       ipcMain.on(key, handler)
       this.pluginHooks[index][key] = handler
     })
+    if (plugin.hooks?.onLoad) {
+      await plugin.hooks.onLoad(this.session.api)
+    }
   }
 
   async unload(plugin: PluginShape) {
@@ -69,6 +72,9 @@ export default class PluginsController extends BaseController {
     Object.entries(hooks).forEach(([key, handler]) => {
       ipcMain.off(key, handler)
     })
+    if (plugin.hooks?.onUnload) {
+      await plugin.hooks.onUnload(this.session.api)
+    }
   }
   // This needs to build before commands
   priority = 3

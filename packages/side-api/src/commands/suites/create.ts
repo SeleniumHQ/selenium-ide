@@ -1,6 +1,6 @@
 import { SuiteShape } from '@seleniumhq/side-model'
 import update from 'lodash/fp/update'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Creates a new suite

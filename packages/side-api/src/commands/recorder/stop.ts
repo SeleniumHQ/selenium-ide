@@ -1,5 +1,5 @@
 import set from 'lodash/fp/set'
-import { Mutator } from '../../types'
+import { Mutator } from '../../types/base'
 
 /**
  * Stop recording interactions across playback windows

@@ -1,4 +1,4 @@
-import { BaseListener, LocatorFields } from '../../types'
+import { BaseListener, LocatorFields } from '../../types/base'
 
 /**
  * Called when the project editor asks the recorder to select an element.

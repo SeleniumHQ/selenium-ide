@@ -2,7 +2,7 @@ import { TestShape } from '@seleniumhq/side-model'
 import set from 'lodash/fp/set'
 import update from 'lodash/fp/update'
 import { hasID } from '../../helpers/hasID'
-import { CoreSessionData, Mutator } from '../../types'
+import { CoreSessionData, Mutator } from '../../types/base'
 
 /**
  * Rename a test

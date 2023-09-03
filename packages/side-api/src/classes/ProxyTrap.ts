@@ -1,5 +1,5 @@
 import set from 'lodash/fp/set'
-import { ApiHandler } from '../types'
+import { ApiHandler } from '../types/base'
 
 type NotVagueShape = null | boolean | string | number
 type MaybeVagueShape = VagueShape | NotVagueShape
