@@ -19,16 +19,16 @@ jobs:
       repository-projects: read
       security-events: read
       statuses: read
-    runs-on: macos-11
+    runs-on: macos-13
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install pnpm
-        run: npm i -g pnpm@7
+        run: npm i -g pnpm@8
       - name: Install dependencies
         run: pnpm -r i
       - name: Build side-runner and selenium-ide
