@@ -903,7 +903,7 @@ async function emitVerifySelectedLabel(locator: string, labelValue: string) {
       statement:
         'const selectedText = await element.findElement(By.xpath(locator)).getText()',
     },
-    { level: 1, statement: `assert.equals(selectedText, "${labelValue}")` },
+    { level: 1, statement: `assert.equal(selectedText, "${labelValue}")` },
     { level: 0, statement: `}` },
   ]
   return Promise.resolve({
@@ -915,7 +915,7 @@ async function emitVerifyText(locator: string, text: string) {
   const commands = [
     {
       level: 0,
-      statement: `assert.equals(await driver.findElement(${await location.emit(
+      statement: `assert.equal(await driver.findElement(${await location.emit(
         locator
       )}).getText(), "${exporter.emit.text(text)}")`,
     },
@@ -932,7 +932,7 @@ async function emitVerifyValue(locator: string, value: string) {
         locator
       )}).getAttribute("value")`,
     },
-    { level: 1, statement: `assert.equals(value, "${value}")` },
+    { level: 1, statement: `assert.equal(value, "${value}")` },
     { level: 0, statement: `}` },
   ]
   return Promise.resolve({ commands })
