@@ -1,4 +1,6 @@
-# Selenium IDE &middot; [![Build Status](https://api.travis-ci.com/SeleniumHQ/selenium-ide.svg?branch=trunk)](https://travis-ci.com/SeleniumHQ/selenium-ide)
+`".$_-0/build_README_md.js
+# Selenium IDE 
+[![Build Status](https://api.travis-ci.com/SeleniumHQ/selenium-ide.svg?branch=trunk)](https://travis-ci.com/SeleniumHQ/selenium-ide)
 
 ![logo](https://www.seleniumhq.org/selenium-ide/img/selenium-ide128.png)
 
@@ -93,4 +95,4 @@ be shared across packages instead of just folders.
 - side-code-export: NodeJS transpiler for .side files. Used to export to other
 languages (csharp, java, javascript, python, ruby).
 
-- code-export-*: Code export format for various languages
+- code-export-*: Code export format for various languages"`
