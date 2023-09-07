@@ -1,4 +1,40 @@
-# Selenium IDE &middot; [![Build Status](https://api.travis-ci.com/SeleniumHQ/selenium-ide.svg?branch=trunk)](https://travis-ci.com/SeleniumHQ/selenium-ide)
+`"README.md
+```.$_-0/build_README_md.js
+const fs = require('fs')
+const path = require('path')
+
+module.exports = {
+  babelrcRoots: fs
+    .readdirSync(path.join(__dirname, 'packages'))
+    .map((dirname) => path.join(__dirname, 'packages', dirname))
+    .filter((dirpath) => {
+      const stats = fs.statSync(dirpath)
+      return stats.isDirectory()
+    }),
+  overrides: [
+    {
+      presets: ['@babel/preset-typescript'],
+      test: /\.tsx?$/,
+    },
+  ],
+  presets: [
+    [
+      '@babel/preset-env',
+      {
+        targets: {
+          node: '14',
+        },
+      },
+    ],
+  ],
+  plugins: [
+    '@babel/plugin-proposal-export-namespace-from',
+    '@babel/plugin-proposal-class-properties',
+  ],
+}
+```
+# Selenium IDE 
+[![Build Status](https://api.travis-ci.com/SeleniumHQ/selenium-ide.svg?branch=trunk)](https://travis-ci.com/SeleniumHQ/selenium-ide)
 
 ![logo](https://www.seleniumhq.org/selenium-ide/img/selenium-ide128.png)
 
@@ -93,4 +129,4 @@ be shared across packages instead of just folders.
 - side-code-export: NodeJS transpiler for .side files. Used to export to other
 languages (csharp, java, javascript, python, ruby).
 
-- code-export-*: Code export format for various languages
+- code-export-*: Code export format for various languages"`
