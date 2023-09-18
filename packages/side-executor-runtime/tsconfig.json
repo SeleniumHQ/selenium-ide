@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/__mocks__"],
+  "references": [
+    {
+      "path": "../side-commons"
+    },
+    {
+      "path": "../side-model"
+    },
+    {
+      "path": "../side-testkit"
+    },
+    {
+      "path": "../webdriver-testkit"
+    }
+  ],
+  "types": ["node", "jest"]
+}

@@ -71,7 +71,7 @@ export default class RecorderController extends BaseController {
     if (session.state.status !== 'recording') {
       return null
     }
-    const commands = []
+    const commands: CommandShape[] = []
     if (
       getLastActiveWindowHandleId(session) != cmd.winHandleId 
     ) {

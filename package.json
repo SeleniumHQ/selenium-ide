@@ -19,7 +19,7 @@
     "lint": "pnpm run lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
     "test:ide": "npm-run-bg -s 'http-server -p 8080 ./tests/static::Available on::8080' 'node ./packages/selenium-ide/scripts/ide-runner.js -t 15000 ./tests/examples/*.side'",
-    "test:side-runner": "npm-run-bg -s 'http-server -p 8080 ./tests/static::Available on::8080' 'node ./packages/side-runner/dist/bin.js -t 15000 ./tests/examples/*.side'",
+    "test:side-runner": "npm-run-bg -s 'http-server -p 8080 ./tests/static::Available on::8080' 'node ./packages/side-runner/dist/bin.js -c \"browserName=firefox\" -t 15000 ./tests/examples/*.side'",
     "test:side-runner:ci": "npm-run-bg -s 'http-server -p 8080 ./tests/static::Available on::8080' 'node ./packages/side-runner/dist/bin.js -c \"goog:chromeOptions.args=[headless,no-sandbox] browserName=chrome\" -t 15000 ./tests/examples/*.side'",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "run-p watch:ts watch:webpack",
