@@ -1,7 +1,7 @@
 import type { Api } from '@seleniumhq/side-api'
 import { processApi } from '@seleniumhq/side-api'
-import EventListener from './classes/EventListener'
-import Handler from './classes/Handler'
+import EventListener from './classes/DriverEventListener'
+import Handler from './classes/DriverHandler'
 
 const api: Api = processApi((path: string) => {
   const trailingSegment: string = path.split('.').pop() as string
