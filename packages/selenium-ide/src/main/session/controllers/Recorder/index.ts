@@ -130,7 +130,6 @@ export default class RecorderController extends BaseController {
       activate,
       fieldName
     )
-
   }
 
   async getWinHandleId(): Promise<string> {
