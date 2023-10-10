@@ -12,6 +12,8 @@ import type { Shape as SetWindowHandle } from './setWindowHandle'
 import type { Shape as SelectElement } from './selectElement'
 import type { Shape as Start } from './start'
 import type { Shape as Stop } from './stop'
+import type { Shape as GetLocatorOrder } from './getLocatorOrder'
+import type { Shape as OnLocatorOrderChanged } from './onLocatorOrderChanged'
 
 import * as getFrameLocation from './getFrameLocation'
 import * as onFrameDeleted from './onFrameDeleted'
@@ -27,6 +29,8 @@ import * as setWindowHandle from './setWindowHandle'
 import * as getWinHandleId from './getWinHandleId'
 import * as start from './start'
 import * as stop from './stop'
+import * as getLocatorOrder from './getLocatorOrder'
+import * as onLocatorOrderChanged from './onLocatorOrderChanged'
 
 export const commands = {
   getFrameLocation,
@@ -43,6 +47,8 @@ export const commands = {
   getWinHandleId,
   start,
   stop,
+  getLocatorOrder,
+  onLocatorOrderChanged,
 }
 
 /**
@@ -64,4 +70,6 @@ export type Shape = {
   getWinHandleId: GetWinHandleId
   start: Start
   stop: Stop
+  getLocatorOrder: GetLocatorOrder
+  onLocatorOrderChanged: OnLocatorOrderChanged
 }
