@@ -98,9 +98,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@fontsource/roboto": "^5.0.5",
-    "@mui/icons-material": "^5.14.1",
-    "@mui/material": "^5.14.1",
+    "@fontsource/roboto": "^5.0.8",
+    "@mui/icons-material": "^5.14.9",
+    "@mui/material": "^5.14.10",
     "@seleniumhq/code-export-csharp-nunit": "^4.0.0-alpha.1",
     "@seleniumhq/code-export-csharp-xunit": "^4.0.0-alpha.1",
     "@seleniumhq/code-export-java-junit": "^4.0.0-alpha.1",
