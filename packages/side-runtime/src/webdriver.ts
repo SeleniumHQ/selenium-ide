@@ -768,7 +768,17 @@ export default class WebDriverExecutor {
     const parsedLocator = parseLocator(locator)
     const elements = await this.driver.findElements(parsedLocator)
     if (elements.length !== 0) {
-      await this.driver.wait(until.stalenessOf(elements[0]), parseInt(timeout))
+      const noElementPresentCondition = new Condition(
+        'for element to not be present',
+        async () => {
+          const elements = await this.driver.findElements(parsedLocator)
+          return elements.length === 0
+        }
+      )
+      await this.driver.wait<boolean>(
+        noElementPresentCondition,
+        Number(timeout)
+      )
     }
   }
 

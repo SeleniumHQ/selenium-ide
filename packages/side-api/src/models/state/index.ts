@@ -80,12 +80,13 @@ export interface StateShape {
   breakpoints: string[]
   commands: CommandTypes
   editor: EditorStateShape
-  userPrefs: UserPrefs
+  locators: string[]
   logs: string[]
   logPath: string
   playback: PlaybackStateShape
   recorder: RecorderStateShape
   status: 'idle' | 'paused' | 'playing' | 'recording'
+  userPrefs: UserPrefs
 }
 
 export const state: StateShape = {
@@ -94,12 +95,27 @@ export const state: StateShape = {
   breakpoints: [],
   commands: {},
   editor: defaultEditorState,
-  userPrefs: defaultUserPrefs,
+  locators: [
+    'css:data-test-id',
+    'id',
+    'linkText',
+    'name',
+    'css:data-attr',
+    'css:finder',
+    'xpath:link',
+    'xpath:img',
+    'xpath:attributes',
+    'xpath:idRelative',
+    'xpath:href',
+    'xpath:position',
+    'xpath:innerText',
+  ],
   logs: [],
   logPath: '',
   playback: defaultPlaybackState,
   recorder: defaultRecorderState,
   status: 'idle',
+  userPrefs: defaultUserPrefs,
 }
 
 export * from './command'

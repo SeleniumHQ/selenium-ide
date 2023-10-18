@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-example-suite",
-  "version": "4.0.0-alpha.3",
+  "version": "4.0.0-alpha.4",
   "private": true,
   "description": "Selenium IDE example suite, with tests, plugin, and export format",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -21,7 +21,7 @@
     "@seleniumhq/code-export-python-pytest": "4.0.0-alpha.2"
   },
   "devDependencies": {
-    "@seleniumhq/side-api": "^4.0.0-alpha.29"
+    "@seleniumhq/side-api": "^4.0.0-alpha.32"
   },
   "repository": {
     "type": "git",

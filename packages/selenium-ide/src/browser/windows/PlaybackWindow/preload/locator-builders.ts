@@ -24,12 +24,25 @@ type LocatorFunction = (e: HTMLElement, ctx?: any) => string | null
 export default class LocatorBuilders {
   constructor(window: Window) {
     this.window = window
+    this.setLocatorsOrderFromState()
   }
+
+  listenForChanges() {
+    this.window.sideAPI.recorder.onLocatorOrderChanged.addListener(
+      LocatorBuilders.setPreferredOrder
+    )
+  }
+
   window: Window
   detach() {}
   static order: string[] = []
   static builderMap: Record<string, LocatorFunction> = {}
   static _preferredOrder: string[] = []
+
+  async setLocatorsOrderFromState() {
+    const orderedLocators = await this.window.sideAPI.recorder.getLocatorOrder()
+    LocatorBuilders.setPreferredOrder(orderedLocators)
+  }
 
   buildWith(name: string, e: HTMLElement, opt_contextNode?: any) {
     return LocatorBuilders.builderMap[name].call(this, e, opt_contextNode)
@@ -69,7 +82,7 @@ export default class LocatorBuilders {
         loopEl = loopEl.parentElement
       }
     }
-    
+
     for (let i = 0; i < LocatorBuilders.order.length; i++) {
       let finderName = LocatorBuilders.order[i]
       try {
@@ -557,3 +570,5 @@ LocatorBuilders.add('xpath:innerText', function (this: LocatorBuilders, el) {
     return null
   }
 })
+
+export const singleton = new LocatorBuilders(window)

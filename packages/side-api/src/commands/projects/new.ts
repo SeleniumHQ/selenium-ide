@@ -11,6 +11,10 @@ export const mutator: Mutator<Shape> = (session, { result }) => ({
   state: {
     ...session.state,
     activeTestID: result.tests[0].id,
+    editor: {
+      ...session.state.editor,
+      selectedCommandIndexes: [0],
+    },
   },
   project: result,
 })
