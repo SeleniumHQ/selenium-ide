@@ -25,6 +25,7 @@ import {
 } from 'browser/types'
 import initFindSelect from './find-select'
 import { PluginPreloadOutputShape, RecordNewCommandInput } from '@seleniumhq/side-api'
+import LocatorBuilders from './locator-builders'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null
@@ -73,6 +74,9 @@ export default class Recorder {
     this.recordingState = {}
     this.addRecorderTracingAttribute()
     initFindSelect()
+    this.window.sideAPI.recorder.onLocatorOrderChanged.addListener(
+      LocatorBuilders.setPreferredOrder
+    )
     // e.g., once on load
     this.getFrameLocation()
 

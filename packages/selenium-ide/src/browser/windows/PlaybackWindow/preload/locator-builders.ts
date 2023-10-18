@@ -24,10 +24,13 @@ type LocatorFunction = (e: HTMLElement, ctx?: any) => string | null
 export default class LocatorBuilders {
   constructor(window: Window) {
     this.window = window
-    window.sideAPI.recorder.onLocatorOrderChanged.addListener(
+    this.setLocatorsOrderFromState()
+  }
+
+  listenForChanges() {
+    this.window.sideAPI.recorder.onLocatorOrderChanged.addListener(
       LocatorBuilders.setPreferredOrder
     )
-    this.setLocatorsOrderFromState()
   }
 
   window: Window
@@ -567,3 +570,5 @@ LocatorBuilders.add('xpath:innerText', function (this: LocatorBuilders, el) {
     return null
   }
 })
+
+export const singleton = new LocatorBuilders(window)

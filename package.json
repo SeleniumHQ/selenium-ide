@@ -28,7 +28,7 @@
     "watch:ts": "tsc --build --verbose --watch"
   },
   "engines": {
-    "node": "16.x"
+    "node": ">=16"
   },
   "workspaces": [
     "packages/*"

@@ -3,7 +3,7 @@ import { ChildProcess, spawn } from 'child_process'
 import { app } from 'electron'
 import * as fs from 'fs-extra'
 import { BrowserInfo, Session } from 'main/types'
-import * as path from 'path'
+import * as path from 'node:path'
 import * as os from 'os'
 import { COLOR_MAGENTA, COLOR_YELLOW, vdebuglog } from 'main/util'
 

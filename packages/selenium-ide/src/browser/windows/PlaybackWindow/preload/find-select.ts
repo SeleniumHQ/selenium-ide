@@ -17,7 +17,7 @@
 
 import { EventListenerParams, LocatorFields } from '@seleniumhq/side-api'
 import scrollIntoViewIfNeeded from 'scroll-into-view-if-needed'
-import LocatorBuilders from './locator-builders'
+import {singleton as locatorBuilders} from './locator-builders'
 import TargetSelector from './target-selector'
 
 const init = () => {
@@ -58,7 +58,6 @@ function processSelectionCommand(
 }
 
 let targetSelector: TargetSelector | null = null
-const locatorBuilders = new LocatorBuilders(window)
 function startSelection(field: LocatorFields) {
   targetSelector = new TargetSelector(function (element, win) {
     if (element && win) {

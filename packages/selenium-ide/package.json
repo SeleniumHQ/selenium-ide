@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "4.0.0-alpha.49",
+  "version": "4.0.0-alpha.50",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -26,7 +26,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "engines": {
-    "node": "16.x"
+    "node": ">=16"
   },
   "build": {
     "appId": "org.seleniumhq.selenium-ide",
@@ -106,11 +106,11 @@
     "@seleniumhq/code-export-ruby-rspec": "^4.0.0-alpha.1",
     "side-code-export": "^4.0.0-alpha.11",
     "@seleniumhq/get-driver": "^4.0.0-alpha.1",
-    "@seleniumhq/side-api": "^4.0.0-alpha.31",
+    "@seleniumhq/side-api": "^4.0.0-alpha.32",
     "@seleniumhq/side-model": "^4.0.0-alpha.4",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.30",
     "dnd-core": "^16.0.1",
-    "electron-chromedriver": "^25.3.0",
+    "electron-chromedriver": "^26.4.0",
     "electron-log": "^4.4.8",
     "electron-store": "^8.1.0",
     "electron-unhandled": "^4.0.1",
@@ -126,7 +126,7 @@
     "@medv/finder": "^1.1.1",
     "@seleniumhq/browser-info": "^4.0.0-alpha.1",
     "@types/copy-webpack-plugin": "8.0.1",
-    "@types/electron-devtools-installer": "^2.2.2",
+    "@types/electron-devtools-installer": "^2.2.4",
     "@types/fs-extra": "^11.0.1",
     "@types/lodash": "^4.14.186",
     "@types/react": "^18.2.15",
@@ -134,8 +134,8 @@
     "@types/webpack-env": "^1.16.0",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.8.1",
-    "electron": "^25.2.0",
-    "electron-builder": "^24.4.0",
+    "electron": "^26.4.0",
+    "electron-builder": "^24.6.4",
     "electron-devtools-installer": "^3.2.0",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "html-webpack-plugin": "^5.5.3",
@@ -143,14 +143,14 @@
     "npm-run-all": "^4.1.5",
     "run-script-os": "^1.1.6",
     "scroll-into-view-if-needed": "^3.0.10",
-    "selenium-webdriver": "^4.11.1",
+    "selenium-webdriver": "^4.14.0",
     "source-map-loader": "^4.0.1",
     "source-map-support": "^0.5.21",
     "style-loader": "^3.3.3",
-    "ts-loader": "^9.4.4",
+    "ts-loader": "^9.5.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.1.6",
-    "webpack": "^5.88.1",
+    "typescript": "^5.2.2",
+    "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   }
 }

@@ -3,7 +3,7 @@ import { correctPluginPaths, loadPlugins } from '@seleniumhq/side-runtime'
 import { ipcMain } from 'electron'
 import storage from 'main/store'
 import BaseController from '../Base'
-import path from 'path'
+import path from 'node:path'
 
 export type PluginMessageHandler = (
   event: Electron.IpcMainEvent,
