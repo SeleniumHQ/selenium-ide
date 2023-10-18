@@ -11,7 +11,7 @@ import { existsSync, readFileSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
 import storage from 'main/store'
-import { join } from 'path'
+import { join } from 'node:path'
 import BaseController from '../Base'
 import { isAutomated } from 'main/util'
 

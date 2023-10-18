@@ -1,7 +1,7 @@
 import { app } from 'electron'
 import log, { LogMessage } from 'electron-log'
 import { existsSync, writeFileSync } from 'fs'
-import { join } from 'path'
+import { join } from 'node:path'
 import { inspect } from 'util'
 import { Session } from 'main/types'
 

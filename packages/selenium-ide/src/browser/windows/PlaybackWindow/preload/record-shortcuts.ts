@@ -1,8 +1,6 @@
 import { ipcRenderer } from 'electron'
 import Recorder from './recorder'
-import LocatorBuilders from './locator-builders'
-
-const locatorBuilders = new LocatorBuilders(window)
+import {singleton as locatorBuilders} from './locator-builders'
 
 let recorder: Recorder
 let eleTarget: HTMLElement | null

@@ -2,7 +2,7 @@ import { CommandShape } from '@seleniumhq/side-model'
 import { getActiveCommand, getActiveTest, getActiveCommandIndex } from '@seleniumhq/side-api/dist/helpers/getActiveData'
 import { LocatorFields, CoreSessionData, RecordNewCommandInput } from '@seleniumhq/side-api'
 import { randomInt, randomUUID } from 'crypto'
-import { relative } from 'path'
+import { relative } from 'node:path'
 import BaseController from '../Base'
 import { BrowserWindow } from 'electron'
 

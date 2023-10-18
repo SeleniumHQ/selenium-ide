@@ -16,7 +16,7 @@
 // under the License.
 
 import * as fs from 'fs-extra'
-import * as path from 'path'
+import * as path from 'node:path'
 import * as os from 'os'
 import { Arch, downloadDriver as doDownloadDriver } from '@seleniumhq/get-driver'
 import { BrowserInfo } from 'main/types'
