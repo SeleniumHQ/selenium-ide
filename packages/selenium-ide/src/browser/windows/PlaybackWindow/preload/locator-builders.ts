@@ -24,10 +24,10 @@ type LocatorFunction = (e: HTMLElement, ctx?: any) => string | null
 export default class LocatorBuilders {
   constructor(window: Window) {
     this.window = window
-    this.setLocatorsOrderFromState()
   }
 
   listenForChanges() {
+    this.setLocatorsOrderFromState()
     this.window.sideAPI.recorder.onLocatorOrderChanged.addListener(
       LocatorBuilders.setPreferredOrder
     )
