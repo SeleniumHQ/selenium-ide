@@ -1,0 +1,37 @@
+{
+  "name": "@seleniumhq/side-executor-runtime",
+  "version": "4.0.0-alpha.1",
+  "private": false,
+  "description": "Selenium IDE playback and execution",
+  "author": "Tomer <tomer@corevo.io>",
+  "homepage": "http://github.com/SeleniumHQ/selenium-ide",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
+    "watch": "tsc --watch"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
+  },
+  "devDependencies": {
+    "@seleniumhq/side-testkit": "^4.0.0-alpha.1",
+    "@seleniumhq/webdriver-testkit": "^4.0.0-alpha.1"
+  },
+  "dependencies": {
+    "@seleniumhq/side-commons": "^4.0.0-alpha.1",
+    "@seleniumhq/side-model": "^4.0.0-alpha.4",
+    "@types/selenium-webdriver": "^4.1.15",
+    "selenium-webdriver": "^4.11.1"
+  },
+  "gitHead": "507c7c802f34196e6ee4800bf5c0b36553d41369"
+}
