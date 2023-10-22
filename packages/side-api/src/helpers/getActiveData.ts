@@ -38,8 +38,13 @@ export const getActiveCommand = (
   return activeTest.commands[activeCommandIndex] || defaultCommand
 }
 
-export const getActiveCommandIndex = (session: CoreSessionData): number =>
-  session.state.editor.selectedCommandIndexes.slice(-1)[0]
+export const getActiveCommandIndex = (session: CoreSessionData): number => {
+  const commands = getActiveTest(session).commands
+  if (!commands.length) {
+    return -1
+  }
+  return session.state.editor.selectedCommandIndexes.slice(-1)[0]
+}
 
 export const getCommandIndex = (
   session: CoreSessionData,
