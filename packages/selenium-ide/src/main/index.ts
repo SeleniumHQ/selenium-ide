@@ -59,6 +59,10 @@ app.on('activate', async () => {
   }
 })
 
+app.on('before-quit', async () => {
+  await session.system.beforeQuit()
+})
+
 app.on('window-all-closed', async () => {
   allWindowsClosed = true
   if (process.platform === 'darwin') {

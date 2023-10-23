@@ -51,9 +51,13 @@ export default class SystemController extends BaseController {
     throw new Error(error)
   }
 
-  async quit() {
+  async beforeQuit() {
     await this.shutdown()
     await this.session.windows.closeAll()
+  }
+
+  async quit() {
+    this.beforeQuit()
     if (this.isDown) {
       this.session.app.quit()
     }
