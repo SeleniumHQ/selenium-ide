@@ -5,6 +5,7 @@ import { projectEditorCommands } from './projectEditor'
 import { testEditorCommands } from './testEditor'
 import { projectViewCommands } from './projectView'
 import { platform } from 'os'
+import helpMenu from './help'
 
 const applicationMenu = (session: Session) => async () =>
   Menu.buildFromTemplate([
@@ -42,6 +43,10 @@ const applicationMenu = (session: Session) => async () =>
     {
       label: '&View',
       submenu: await projectViewCommands(session)(),
+    },
+    {
+      label: '&Help',
+      submenu: await helpMenu(session)(),
     },
   ])
 
