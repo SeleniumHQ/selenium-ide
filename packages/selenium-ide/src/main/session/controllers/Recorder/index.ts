@@ -187,7 +187,7 @@ export default class RecorderController extends BaseController {
         playbackURL.endsWith('/playback-window.html')
       )
     } else {
-      await this.session.windows.initializePlaybackWindow()
+      await this.session.windows.openPlaybackWindow()
       playbackWindow = await this.session.windows.getLastPlaybackWindow()
       inited = false
     }
