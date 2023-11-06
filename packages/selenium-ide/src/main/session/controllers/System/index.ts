@@ -1,8 +1,8 @@
 import { dialog } from 'electron'
-import BaseController from '../Base'
 import { isAutomated } from 'main/util'
 import { inspect } from 'util'
 import { writeFile } from 'fs/promises'
+import BaseController from '../Base'
 
 let firstTime = true
 export default class SystemController extends BaseController {
@@ -46,7 +46,10 @@ export default class SystemController extends BaseController {
 
   async startup() {
     if (this.isDown) {
-      await this.session.windows.open('logger')
+      await this.session.windows.open('logger', {frame: false, show: false})
+      const loggerWindow = await this.session.windows.get('logger')
+      this.session.windows.useWindowState(loggerWindow, 'windowSizeLogger', 'windowPositionLogger')
+      loggerWindow.show()
       // If automated, assume we already have a chromedriver process running
       if (!isAutomated) {
         const startupError = await this.session.driver.startProcess()
@@ -91,13 +94,11 @@ export default class SystemController extends BaseController {
 
   async beforeQuit() {
     await this.shutdown()
-    await this.session.windows.closeAll()
+    await this.session.windows.closeAllPlaybackWindows()
+    return this.isDown
   }
 
   async quit() {
-    this.beforeQuit()
-    if (this.isDown) {
-      this.session.app.quit()
-    }
+    this.session.app.quit()
   }
 }

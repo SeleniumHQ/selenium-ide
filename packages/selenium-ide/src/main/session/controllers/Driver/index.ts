@@ -76,8 +76,12 @@ export default class DriverController extends BaseController {
       },
       server,
       windowAPI: {
-        setWindowSize: async (_executor, width, height) => {
-          const window = this.session.windows.getLastPlaybackWindow()
+        setWindowSize: async (executor, width, height) => {
+          const handle = await executor.driver.getWindowHandle()
+          const window = await this.session.windows.getPlaybackWindowByHandle(handle)
+          if (!window) {
+            throw new Error('Failed to find playback window')
+          }
           const pbWinCount = this.session.windows.playbackWindows.length
           const b = await window.getBounds()
           const calcNewX = b.x + Math.floor(b.width / 2) - Math.floor(width / 2)

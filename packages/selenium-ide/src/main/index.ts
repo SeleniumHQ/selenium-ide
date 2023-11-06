@@ -59,8 +59,12 @@ app.on('activate', async () => {
   }
 })
 
-app.on('before-quit', async () => {
-  await session.system.beforeQuit()
+app.on('before-quit', async (e) => {
+  e.preventDefault()
+  const successfulExit = await session.system.beforeQuit()
+  if (successfulExit) {
+    app.exit(0)
+  }
 })
 
 app.on('window-all-closed', async () => {

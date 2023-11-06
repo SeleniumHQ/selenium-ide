@@ -12,6 +12,10 @@ export interface StorageSchema {
   recentProjects: string[]
   windowSize: number[]
   windowPosition: number[]
+  windowSizeLogger: number[],
+  windowPositionLogger: number[],
+  windowSizePlayback: number[],
+  windowPositionPlayback: number[],
   userPrefs: UserPrefs
 }
 
@@ -27,6 +31,10 @@ const store = new Store<StorageSchema>({
     recentProjects: [],
     windowSize: [],
     windowPosition: [],
+    windowSizeLogger: [],
+    windowPositionLogger: [],
+    windowSizePlayback: [],
+    windowPositionPlayback: [],
     userPrefs: defaultUserPrefs
   },
 })

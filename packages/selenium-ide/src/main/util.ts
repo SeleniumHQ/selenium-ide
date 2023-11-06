@@ -22,3 +22,6 @@ export const vdebuglog = (namespace: string, color: string) => {
     log(`${prefix}${str}${suffix}`)
   }
 }
+
+export const sleep = (duration: number) =>
+  new Promise((resolve) => setTimeout(resolve, duration))

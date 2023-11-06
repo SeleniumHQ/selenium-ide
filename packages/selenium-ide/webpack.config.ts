@@ -141,10 +141,13 @@ export default [mainConfig, preloadConfig, rendererConfig]
 
 function getBrowserPlugin(filename: string) {
   const componentName = filename.slice(0, -9)
-  const title = componentName
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+  const title =
+    componentName === 'playback-window'
+      ? ''
+      : componentName
+          .split('-')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ')
   const pluginHTML = new HtmlWebpackPlugin({
     filename: `${componentName}.html`,
     inject: false,
@@ -152,7 +155,7 @@ function getBrowserPlugin(filename: string) {
       <!doctype html>
       <html>
         <head>
-          <title>${title}</title>
+          ${title ? `<title>${title}</title>` : ''}
           <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
           <link rel="stylesheet" href="index.css" type="text/css">
           ${

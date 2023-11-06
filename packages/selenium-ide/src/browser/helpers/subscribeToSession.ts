@@ -21,8 +21,12 @@ const performSubscription = async (
       })
     }
     window.sideAPI.state.onMutate.addListener(handler)
-    const removeHandler = () => window.sideAPI.state.onMutate.removeListener(handler)
-    window.addEventListener('beforeunload', removeHandler)
+    const removeHandler = () => {
+      try {
+        window.sideAPI.state.onMutate.removeListener(handler)
+      } catch (e) {}
+    };
+    // window.addEventListener('beforeunload', removeHandler)
     return removeHandler
   }, [])
 }
