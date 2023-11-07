@@ -12,6 +12,7 @@ import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
 import storage from 'main/store'
 import { join } from 'node:path'
+import { platform } from 'node:os'
 import BaseController from '../Base'
 import { isAutomated } from 'main/util'
 
@@ -25,6 +26,8 @@ const playbackWindowOptions = {
     preload: join(__dirname, `playback-window-preload-bundle.js`),
   },
 }
+
+const isMac = platform() === 'darwin'
 
 const projectEditorWindowName = 'project-editor'
 
@@ -284,7 +287,9 @@ export default class WindowsController extends BaseController {
       bw.close()
     })
     const window = await this.openPlaybackWindow({ show: false })
-    window.setWindowButtonVisibility(false)
+    if (isMac) {
+      window.setWindowButtonVisibility(false)
+    }
     await this.useWindowState(window, 'windowSizePlayback', 'windowPositionPlayback')
     window.show()
   }
