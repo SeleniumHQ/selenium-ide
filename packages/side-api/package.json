@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-api",
-  "version": "4.0.0-alpha.32",
+  "version": "4.0.0-alpha.33",
   "private": false,
   "description": "Selenium IDE API command shapes and such",
   "author": "Todd Tarsi <tarsitodd@gmail.com>",
@@ -20,7 +20,7 @@
     "@seleniumhq/browser-info": "^4.0.0-alpha.1",
     "@seleniumhq/get-driver": "^4.0.0-alpha.2",
     "@seleniumhq/side-model": "^4.0.0-alpha.4",
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.30",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.31",
     "lodash": "^4.17.21"
   },
   "devDependencies": {

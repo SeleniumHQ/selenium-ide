@@ -21,7 +21,7 @@
     "@seleniumhq/code-export-python-pytest": "4.0.0-alpha.2"
   },
   "devDependencies": {
-    "@seleniumhq/side-api": "^4.0.0-alpha.32"
+    "@seleniumhq/side-api": "^4.0.0-alpha.33"
   },
   "repository": {
     "type": "git",

@@ -122,6 +122,10 @@ const buildRunners = ({ configuration, logger }: HoistedThings) => {
                   }`
                 )
                 if (state !== 'finished') {
+                  logger.info(
+                    'Last command:',
+                    playback['state'].lastSentCommandState?.command
+                  )
                   return onComplete(
                     playback['state'].lastSentCommandState?.error ||
                       new Error('Unknown error')
