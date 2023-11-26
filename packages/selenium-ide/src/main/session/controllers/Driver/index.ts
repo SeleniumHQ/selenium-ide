@@ -151,4 +151,10 @@ export default class DriverController extends BaseController {
     }
     return null
   }
+
+  async takeScreenshot(): Promise<string> {
+    const driver = this.session.playback.playbacks?.[0]?.executor?.driver
+    if (driver) return await driver.takeScreenshot()
+    return ''
+  }
 }

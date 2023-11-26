@@ -3,12 +3,14 @@ import type { Shape as ListBrowsers } from './listBrowsers'
 import type { Shape as SelectBrowser } from './selectBrowser'
 import type { Shape as StartProcess } from './startProcess'
 import type { Shape as StopProcess } from './stopProcess'
+import type { Shape as TakeScreenshot } from './takeScreenshot'
 
 import * as download from './download'
 import * as listBrowsers from './listBrowsers'
 import * as selectBrowser from './selectBrowser'
 import * as startProcess from './startProcess'
 import * as stopProcess from './stopProcess'
+import * as takeScreenshot from './takeScreenshot'
 
 export const commands = {
   download,
@@ -16,6 +18,7 @@ export const commands = {
   selectBrowser,
   startProcess,
   stopProcess,
+  takeScreenshot,
 }
 
 /**
@@ -28,4 +31,5 @@ export type Shape = {
   selectBrowser: SelectBrowser
   startProcess: StartProcess
   stopProcess: StopProcess
+  takeScreenshot: TakeScreenshot
 }
