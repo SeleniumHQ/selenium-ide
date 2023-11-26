@@ -1,1 +1,3 @@
-import '../../helpers/preload'
+import preload from '../../helpers/preload'
+
+preload()

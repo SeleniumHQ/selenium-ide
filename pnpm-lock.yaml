@@ -270,7 +270,7 @@ importers:
         specifier: ^4.0.0-alpha.1
         version: link:../get-driver
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.33
+        specifier: ^4.0.0-alpha.34
         version: link:../side-api
       '@seleniumhq/side-model':
         specifier: ^4.0.0-alpha.4
@@ -3175,8 +3175,8 @@ packages:
     resolution: {integrity: sha512-+TLf8itRJHRI4dlTErDFtLeWpjDRz7M1VudMOX0iGyQ1PCEpmYuS2w3qfaeU7zRpUBhHyMlLrk+Ge5I6Fah65Q==}
     dev: false
 
-  /@seleniumhq/side-runtime@4.0.0-alpha.30:
-    resolution: {integrity: sha512-/1tBiPGoTCjSb10NwuiX1jtgMWPHn/LyTz3um79IasHK04+3xo+OoTC2dxD4OKdID7y5y0hcim52bd2v882oPw==}
+  /@seleniumhq/side-runtime@4.0.0-alpha.31:
+    resolution: {integrity: sha512-ADDzgBV7z+lHYrj5Yhw9ACpU1JY+efTAhTapw/bCuHV7XHX+8R1aakF0kNjKs+4Fu9JFCLvU2YdEtOiZ5465+Q==}
     dependencies:
       '@seleniumhq/side-commons': 4.0.0-alpha.1
       '@seleniumhq/side-model': 4.0.0-alpha.4
@@ -9964,7 +9964,7 @@ packages:
     hasBin: true
     dependencies:
       '@seleniumhq/side-model': 4.0.0-alpha.4
-      '@seleniumhq/side-runtime': 4.0.0-alpha.30
+      '@seleniumhq/side-runtime': 4.0.0-alpha.31
       commander: 9.4.1
     transitivePeerDependencies:
       - bufferutil

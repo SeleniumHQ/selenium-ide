@@ -61,6 +61,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
               devTools: !isAutomated,
               ...(windowConfig?.webPreferences ?? {}),
               preload: hasPreload ? preloadPath : undefined,
+              sandbox: hasPreload ? false : undefined,
             },
             ...options,
           })
@@ -198,11 +199,19 @@ export default class WindowsController extends BaseController {
       webPreferences: {
         // This should be the default preload, which just adds the sideAPI to the window
         preload: join(__dirname, `project-editor-preload-bundle.js`),
+        sandbox: false,
         ...(opts?.webPreferences ?? {}),
       },
+      show: false,
     })
     this.windows[name] = window
     await window.loadURL(`file://${filepath}`)
+    await this.useWindowState(
+      window,
+      'windowSize' + name,
+      'windowPosition' + name
+    )
+    window.show()
     return true
   }
 
@@ -290,7 +299,11 @@ export default class WindowsController extends BaseController {
     if (isMac) {
       window.setWindowButtonVisibility(false)
     }
-    await this.useWindowState(window, 'windowSizePlayback', 'windowPositionPlayback')
+    await this.useWindowState(
+      window,
+      'windowSizePlayback',
+      'windowPositionPlayback'
+    )
     window.show()
   }
 
@@ -305,14 +318,14 @@ export default class WindowsController extends BaseController {
   ) {
     const size = storage.get(sizeKey) as number[]
     const position = storage.get(positionKey) as number[]
-    if (size.length) window.setSize(size[0], size[1], true)
+    if (size?.length) window.setSize(size[0], size[1], true)
 
     const screenElectron = electron.screen.getPrimaryDisplay()
 
     const sWidth = screenElectron.bounds.width
     const sHeight = screenElectron.bounds.height
 
-    if (position.length) {
+    if (position?.length) {
       const adjustedX = position[0] < 0 ? 50 : position[0]
       const adjustedY = position[1] < 0 ? 50 : position[1]
       window.setPosition(adjustedX, adjustedY)
@@ -347,7 +360,7 @@ export default class WindowsController extends BaseController {
     await this.initializePlaybackWindow()
     await this.close('splash')
 
-    await this.open(projectEditorWindowName, {show: false})
+    await this.open(projectEditorWindowName, { show: false })
     const projectWindow = await this.get(projectEditorWindowName)
     this.useWindowState(projectWindow, 'windowSize', 'windowPosition')
 

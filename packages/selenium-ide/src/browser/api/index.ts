@@ -11,6 +11,7 @@ const api: Api = processApi((path: string) => {
   return Handler()(path)
 })
 
+export {BrowserApiMutators} from './mutator'
 export { Api } from '@seleniumhq/side-api'
 
 export default api

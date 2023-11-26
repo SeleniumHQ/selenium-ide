@@ -106,7 +106,7 @@
     "@seleniumhq/code-export-ruby-rspec": "^4.0.0-alpha.1",
     "side-code-export": "^4.0.0-alpha.11",
     "@seleniumhq/get-driver": "^4.0.0-alpha.1",
-    "@seleniumhq/side-api": "^4.0.0-alpha.33",
+    "@seleniumhq/side-api": "^4.0.0-alpha.34",
     "@seleniumhq/side-model": "^4.0.0-alpha.4",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.31",
     "dnd-core": "^16.0.1",
