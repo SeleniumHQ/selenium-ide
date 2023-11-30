@@ -63,12 +63,14 @@ export type Mutator<Type extends ApiHandler = DefaultRouteShape> = (
   req: RequestData<Type>
 ) => CoreSessionData
 
-export type ListenerFn<ARGS extends VariadicArgs> = (...args: ARGS) => void
+export type ListenerFn<ARGS extends VariadicArgs, RESULT = void> = (
+  ...args: ARGS
+) => RESULT
 
-export interface BaseListener<ARGS extends VariadicArgs> {
+export interface BaseListener<ARGS extends VariadicArgs, RESULT = void> {
   addListener: (listener: ListenerFn<ARGS>) => void
   hasListener: (listener: ListenerFn<ARGS>) => boolean
-  dispatchEvent: ListenerFn<ARGS>
+  dispatchEvent: ListenerFn<ARGS, RESULT[]>
   listeners: ListenerFn<ARGS>[]
   removeListener: (listener: ListenerFn<ARGS>) => void
 }

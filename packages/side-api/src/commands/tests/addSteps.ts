@@ -17,12 +17,12 @@ export const mutator: Mutator<Shape> = (
   session,
   { params: [testID, index], result }
 ) => {
+  const editorInsertIndex =
+    session.state.userPrefs.insertCommandPref === 'After'
+      ? Math.max(...session.state.editor.selectedCommandIndexes, 0) + 1
+      : Math.min(...session.state.editor.selectedCommandIndexes)
   const selectIndex =
-    session.state.status === 'recording'
-      ? index + result.length
-      : session.state.userPrefs.insertCommandPref === 'After'
-      ? index + result.length
-      : index
+    session.state.status === 'recording' ? index + 1 : editorInsertIndex
 
   const sessionWithNewCommands = update(
     'project.tests',

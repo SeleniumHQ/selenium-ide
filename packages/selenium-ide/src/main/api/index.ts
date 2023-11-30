@@ -1,6 +1,6 @@
-import { Api, processApi } from '@seleniumhq/side-api'
+import { Api, BaseListener, processApi } from '@seleniumhq/side-api'
 import { Session } from 'main/types'
-import EventListener from './classes/EventListener'
+import EventListener, {MainListener} from './classes/EventListener'
 import Handler from './classes/Handler'
 import RawHandler from './classes/RawHandler'
 
@@ -11,7 +11,13 @@ export const overrides = {
   }
 } as const
 
-export type MainApi = Api & {
+export type MainApi = {
+  [NS in keyof Api]: {
+    [K in keyof Api[NS]]: Api[NS][K] extends BaseListener<infer ARGS, infer RESULT>
+      ? MainListener<ARGS, RESULT>
+      : Api[NS][K]  
+  }
+} & {
   recorder: {
     getWinHandleId: Session['recorder']['getWinHandleId']
     getFrameLocation: Session['recorder']['getFrameLocation']

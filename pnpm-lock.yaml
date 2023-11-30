@@ -270,7 +270,7 @@ importers:
         specifier: ^4.0.0-alpha.1
         version: link:../get-driver
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.35
+        specifier: ^4.0.0-alpha.36
         version: link:../side-api
       '@seleniumhq/side-model':
         specifier: ^4.0.0-alpha.4

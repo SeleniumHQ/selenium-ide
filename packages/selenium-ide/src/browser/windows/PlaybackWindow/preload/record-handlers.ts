@@ -90,6 +90,7 @@ handlers.push([
     }
     this.recordingState.typeLock = 0
   },
+  true,
 ])
 
 handlers.push([
@@ -98,6 +99,7 @@ handlers.push([
   function (this: Recorder, event) {
     this.recordingState.typeTarget = (event.target as HTMLElement) || null
   },
+  true,
 ])
 
 // © Jie-Lin You, SideeX Team
@@ -151,7 +153,6 @@ handlers.push([
   function (this: Recorder, _event) {
     const event = _event as KeyboardEvent
     const target = event.target as HTMLInputElement
-    console.log(event)
     if (target.tagName) {
       let key = event.keyCode
       let tagName = target.tagName.toLowerCase()

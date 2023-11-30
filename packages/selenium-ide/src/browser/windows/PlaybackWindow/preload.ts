@@ -21,7 +21,6 @@ import preload from 'browser/helpers/preload'
 import { webFrame } from 'electron'
 import Recorder from './preload/recorder'
 
-
 (async () => {
   const plugins = await preload({
     recorder: api.recorder,

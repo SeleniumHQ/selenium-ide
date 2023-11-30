@@ -1,7 +1,6 @@
 import { ipcRenderer } from 'electron'
 import { BaseListener, VariadicArgs } from '@seleniumhq/side-api'
 
-
 const baseListener = <ARGS extends VariadicArgs>(
   path: string
 ): BaseListener<ARGS> => {
@@ -14,7 +13,9 @@ const baseListener = <ARGS extends VariadicArgs>(
     },
     dispatchEvent(...args) {
       console.debug(path, 'dispatching event')
-      listeners.forEach((fn) => fn(...args))
+      const results = listeners.map((fn) => fn(...args))
+      ipcRenderer.send(`${path}.response`, results)
+      return results;
     },
     hasListener(listener) {
       return listeners.includes(listener)

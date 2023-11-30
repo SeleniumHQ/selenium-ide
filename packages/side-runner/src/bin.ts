@@ -191,7 +191,7 @@ configuration.debugStartup &&
   console.debug('Configuration:', util.inspect(configuration))
 
 // All the stuff that goes into a big wrapped jest command
-const jest = 'node '+ resolveBin.sync('jest')
+const jest = 'node ' + resolveBin.sync('jest')
 const jestArgs = [
   '--config=' + path.join(__dirname, '..', 'jest.config.js'),
   '--maxConcurrency=' + configuration.maxWorkers,

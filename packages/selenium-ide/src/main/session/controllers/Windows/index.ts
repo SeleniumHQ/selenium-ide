@@ -199,7 +199,6 @@ export default class WindowsController extends BaseController {
       webPreferences: {
         // This should be the default preload, which just adds the sideAPI to the window
         preload: join(__dirname, `project-editor-preload-bundle.js`),
-        sandbox: false,
         ...(opts?.webPreferences ?? {}),
       },
       show: false,

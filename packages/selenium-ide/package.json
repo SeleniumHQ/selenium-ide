@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "4.0.0-alpha.57",
+  "version": "4.0.0-alpha.58",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -104,9 +104,8 @@
     "@seleniumhq/code-export-javascript-mocha": "^4.0.0-alpha.2",
     "@seleniumhq/code-export-python-pytest": "^4.0.0-alpha.2",
     "@seleniumhq/code-export-ruby-rspec": "^4.0.0-alpha.1",
-    "side-code-export": "^4.0.0-alpha.11",
     "@seleniumhq/get-driver": "^4.0.0-alpha.1",
-    "@seleniumhq/side-api": "^4.0.0-alpha.35",
+    "@seleniumhq/side-api": "^4.0.0-alpha.36",
     "@seleniumhq/side-model": "^4.0.0-alpha.4",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.31",
     "dnd-core": "^16.0.1",
@@ -120,6 +119,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "side-code-export": "^4.0.0-alpha.11",
     "v8-compile-cache": "^2.3.0"
   },
   "devDependencies": {

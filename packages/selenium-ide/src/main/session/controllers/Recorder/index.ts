@@ -141,6 +141,18 @@ export default class RecorderController extends BaseController {
     )
   }
 
+  async requestElementAt(x: number, y: number) {
+    const results =
+      await this.session.api.recorder.onRequestElementAt.dispatchEventAsync(
+        x,
+        y
+      )
+    const allResults = results.flat().flat().filter(Boolean);
+    if (allResults.length) {
+      return allResults[0]
+    }
+  }
+
   async getWinHandleId(): Promise<string> {
     const session = await this.session.state.get()
     const activeTest = getActiveTest(session)

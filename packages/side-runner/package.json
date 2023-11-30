@@ -1,6 +1,6 @@
 {
   "name": "selenium-side-runner",
-  "version": "4.0.0-alpha.60",
+  "version": "4.0.0-alpha.61",
   "private": false,
   "description": "Run Selenium IDE projects in cli",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",

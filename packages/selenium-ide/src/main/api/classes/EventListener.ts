@@ -1,16 +1,28 @@
 import { ipcMain, WebContents } from 'electron'
-import { BaseListener, EventMutator, ListenerFn, VariadicArgs } from '@seleniumhq/side-api'
+import {
+  BaseListener,
+  EventMutator,
+  ListenerFn,
+  VariadicArgs,
+} from '@seleniumhq/side-api'
 import { Session } from 'main/types'
 import getCore from '../helpers/getCore'
 import { COLOR_CYAN, vdebuglog } from 'main/util'
 
 const apiDebugLog = vdebuglog('api', COLOR_CYAN)
 
-const baseListener = <ARGS extends VariadicArgs>(
+export type MainListener<
+  ARGS extends VariadicArgs,
+  RESULT extends any
+> = BaseListener<ARGS> & {
+  dispatchEventAsync: (...args: ARGS) => Promise<RESULT[][]>
+}
+
+const baseListener = <ARGS extends VariadicArgs, RESULT extends any>(
   path: string,
   session: Session,
   mutator?: EventMutator<ARGS>
-): BaseListener<ARGS> => {
+): MainListener<ARGS, RESULT> => {
   const listeners: any[] = []
   return {
     addListener(listener) {
@@ -20,12 +32,25 @@ const baseListener = <ARGS extends VariadicArgs>(
     dispatchEvent(...args) {
       apiDebugLog('Dispatch event', path, args)
       if (mutator) {
+        session.api.state.onMutate.dispatchEvent(path, args)
         const newState = mutator(getCore(session), args)
         session.projects.project = newState.project
         session.state.state = newState.state
-        session.api.state.onMutate.dispatchEvent(path, args)
       }
-      listeners.forEach((fn) => fn(...args))
+      return listeners.map((fn) => fn(...args))
+    },
+    async dispatchEventAsync(...args) {
+      apiDebugLog('Dispatch event async', path, args)
+      if (mutator) {
+        session.api.state.onMutate.dispatchEvent(path, args)
+        const newState = mutator(getCore(session), args)
+        session.projects.project = newState.project
+        session.state.state = newState.state
+      }
+      const results: RESULT[][] = await Promise.all(
+        listeners.map((fn) => fn(...args))
+      )
+      return results;
     },
     hasListener(listener) {
       return listeners.includes(listener)
@@ -47,7 +72,7 @@ const wrappedListener = <ARGS extends VariadicArgs>(
   session: Session,
   mutator?: EventMutator<ARGS>
 ) => {
-  const api = baseListener<ARGS>(path, session, mutator)
+  const api = baseListener<ARGS, any>(path, session, mutator)
   const senders: WebContents[] = []
   const senderCounts: number[] = []
   const senderFns: ListenerFn<ARGS>[] = []
@@ -74,14 +99,17 @@ const wrappedListener = <ARGS extends VariadicArgs>(
       senderCounts[index] += 1
       return
     }
-    const senderFn = (...args: ARGS) => {
+    const senderFn = (...args: ARGS) => new Promise((resolve) => {
       try {
+        ipcMain.once(`${path}.response`, (_event, results) => {
+          resolve(results)
+        });
         sender.send(path, ...args)
       } catch (e) {
         // Sender has expired
         removeListener(event)
       }
-    }
+    });
     api.addListener(senderFn)
     senders.push(sender)
     senderCounts.push(1)
