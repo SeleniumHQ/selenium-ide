@@ -5,6 +5,7 @@ import type { Shape as OnBeforeAll } from './onBeforeAll'
 import type { Shape as OnPlayUpdate } from './onPlayUpdate'
 import type { Shape as OnStepUpdate } from './onStepUpdate'
 import type { Shape as Pause } from './pause'
+import type { Shape as PerformCommand } from './performCommand'
 import type { Shape as Play } from './play'
 import type { Shape as PlaySuite } from './playSuite'
 import type { Shape as Resume } from './resume'
@@ -17,6 +18,7 @@ import * as onBeforeAll from './onBeforeAll'
 import * as onPlayUpdate from './onPlayUpdate'
 import * as onStepUpdate from './onStepUpdate'
 import * as pause from './pause'
+import * as performCommand from './performCommand'
 import * as play from './play'
 import * as playSuite from './playSuite'
 import * as resume from './resume'
@@ -30,6 +32,7 @@ export const commands = {
   onPlayUpdate,
   onStepUpdate,
   pause,
+  performCommand,
   play,
   playSuite,
   resume,
@@ -47,6 +50,7 @@ export type Shape = {
   onPlayUpdate: OnPlayUpdate
   onStepUpdate: OnStepUpdate
   pause: Pause
+  performCommand: PerformCommand
   play: Play
   playSuite: PlaySuite
   resume: Resume

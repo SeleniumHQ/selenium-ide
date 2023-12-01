@@ -1,3 +1,4 @@
+import { CommandShape, hasID } from '@seleniumhq/side-api'
 import {
   Playback,
   PlaybackEvents,
@@ -5,7 +6,6 @@ import {
   Variables,
 } from '@seleniumhq/side-runtime'
 import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/src/webdriver'
-import { hasID } from '@seleniumhq/side-api/dist/helpers/hasID'
 import { randomUUID } from 'crypto'
 import { session } from 'electron'
 import { Session } from 'main/types'
@@ -93,6 +93,23 @@ export default class PlaybackController extends BaseController {
   async pause() {
     this.isPlaying = false
     this.playbacks.forEach((playback) => playback.pause())
+  }
+
+  async performCommand(
+    command: Omit<CommandShape, 'id'>
+  ) {
+    const playback = new Playback({
+      baseUrl: this.session.projects.project.url,
+      executor: await this.session.driver.build({}),
+      getTestByName: (name: string) => this.session.tests.getByName(name),
+      logger: console,
+      variables: new Variables(),
+      options: {
+        delay: this.session.projects.project.delay || 0,
+      },
+    })
+    await playback.playSingleCommand({ ...command, id: '-1' })
+    await playback.cleanup()
   }
 
   async stop() {
