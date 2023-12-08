@@ -12,7 +12,7 @@
     "build": "run-s build:webpack build:electron",
     "build:electron": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl --publish never",
     "build:electron:linux": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -l --publish never",
-    "build:electron:macos": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -m --publish never",
+    "build:electron:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -m --publish never",
     "build:electron:windows": "electron-builder -w --publish never",
     "build:electron:dir": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
     "build:webpack": "webpack",
