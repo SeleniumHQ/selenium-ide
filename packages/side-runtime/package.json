@@ -30,8 +30,8 @@
   "dependencies": {
     "@seleniumhq/side-commons": "^4.0.0-alpha.1",
     "@seleniumhq/side-model": "^4.0.0-alpha.4",
-    "@types/selenium-webdriver": "^4.1.15",
-    "selenium-webdriver": "^4.11.1"
+    "@types/selenium-webdriver": "^4.1.21",
+    "selenium-webdriver": "^4.15.0"
   },
   "gitHead": "507c7c802f34196e6ee4800bf5c0b36553d41369"
 }

@@ -270,7 +270,7 @@ importers:
         specifier: ^4.0.0-alpha.1
         version: link:../get-driver
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.37
+        specifier: ^4.0.0-alpha.38
         version: link:../side-api
       '@seleniumhq/side-model':
         specifier: ^4.0.0-alpha.4
@@ -311,6 +311,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      selenium-webdriver:
+        specifier: ^4.15.0
+        version: 4.15.0
       side-code-export:
         specifier: ^4.0.0-alpha.11
         version: link:../side-code-export
@@ -342,6 +345,9 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.7
         version: 18.2.7
+      '@types/selenium-webdriver':
+        specifier: ^4.1.21
+        version: 4.1.21
       '@types/webpack-env':
         specifier: ^1.16.0
         version: 1.18.0
@@ -356,7 +362,7 @@ importers:
         version: 26.4.0
       electron-builder:
         specifier: ^24.6.4
-        version: 24.6.4
+        version: 24.9.1
       electron-devtools-installer:
         specifier: ^3.2.0
         version: 3.2.0
@@ -378,9 +384,6 @@ importers:
       scroll-into-view-if-needed:
         specifier: ^3.0.10
         version: 3.0.10
-      selenium-webdriver:
-        specifier: ^4.14.0
-        version: 4.14.0
       source-map-loader:
         specifier: ^4.0.1
         version: 4.0.1(webpack@5.89.0)
@@ -480,7 +483,7 @@ importers:
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.37
+        specifier: ^4.0.0-alpha.38
         version: link:../side-api
 
   packages/side-migrate:
@@ -571,11 +574,11 @@ importers:
         specifier: ^4.0.0-alpha.4
         version: link:../side-model
       '@types/selenium-webdriver':
-        specifier: ^4.1.15
-        version: 4.1.15
+        specifier: ^4.1.21
+        version: 4.1.21
       selenium-webdriver:
-        specifier: ^4.11.1
-        version: 4.11.1
+        specifier: ^4.15.0
+        version: 4.15.0
     devDependencies:
       '@seleniumhq/side-testkit':
         specifier: ^4.0.0-alpha.1
@@ -610,16 +613,16 @@ importers:
         specifier: ^8.0.1
         version: 8.1.2
       '@types/selenium-webdriver':
-        specifier: ^4.1.15
-        version: 4.1.15
+        specifier: ^4.1.21
+        version: 4.1.21
       selenium-webdriver:
-        specifier: ^4.11.1
-        version: 4.11.1
+        specifier: ^4.15.0
+        version: 4.15.0
 
 packages:
 
-  /7zip-bin@5.1.1:
-    resolution: {integrity: sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==}
+  /7zip-bin@5.2.0:
+    resolution: {integrity: sha512-ukTPVhqG4jNzMro2qA9HSCSSVJN3aN7tlb+hfqYCt3ER0yWroeA2VR38MNrOHLQ/cVj+DaIMad0kFCtWWowh/A==}
     dev: true
 
   /@aashutoshrathi/word-wrap@1.2.6:
@@ -3180,8 +3183,8 @@ packages:
     dependencies:
       '@seleniumhq/side-commons': 4.0.0-alpha.1
       '@seleniumhq/side-model': 4.0.0-alpha.4
-      '@types/selenium-webdriver': 4.1.15
-      selenium-webdriver: 4.14.0
+      '@types/selenium-webdriver': 4.1.21
+      selenium-webdriver: 4.15.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3544,8 +3547,8 @@ packages:
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
-  /@types/selenium-webdriver@4.1.15:
-    resolution: {integrity: sha512-oQ15G3q3EZ0dS049SB/5zx2tQkIS2kmDQWC/TSfAHJYKvXLZoUiLaPXnfSwbLP8Q5lcJeu5oYjKVSEV0t3H6Bg==}
+  /@types/selenium-webdriver@4.1.21:
+    resolution: {integrity: sha512-QGURnImvxYlIQz5DVhvHdqpYNLBjhJ2Vm+cnQI2G9QZzkWlZm0LkLcvDcHp+qE6N2KBz4CeuvXgPO7W3XQ0Tyw==}
     dependencies:
       '@types/ws': 8.5.3
 
@@ -4063,11 +4066,11 @@ packages:
     resolution: {integrity: sha512-xwdG0FJPQMe0M0UA4Tz0zEB8rBJTRA5a476ZawAqiBkMv16GRK5xpXThOjMaEOFnZ6zabejjG4J3da0SXG63KA==}
     dev: true
 
-  /app-builder-lib@24.6.4:
-    resolution: {integrity: sha512-m9931WXb83teb32N0rKg+ulbn6+Hl8NV5SUpVDOVz9MWOXfhV6AQtTdftf51zJJvCQnQugGtSqoLvgw6mdF/Rg==}
+  /app-builder-lib@24.9.1:
+    resolution: {integrity: sha512-Q1nYxZcio4r+W72cnIRVYofEAyjBd3mG47o+zms8HlD51zWtA/YxJb01Jei5F+jkWhge/PTQK+uldsPh6d0/4g==}
     engines: {node: '>=14.0.0'}
     dependencies:
-      7zip-bin: 5.1.1
+      7zip-bin: 5.2.0
       '@develar/schema-utils': 2.6.5
       '@electron/notarize': 2.1.0
       '@electron/osx-sign': 1.0.5
@@ -4076,12 +4079,12 @@ packages:
       '@types/fs-extra': 9.0.13
       async-exit-hook: 2.0.1
       bluebird-lst: 1.0.9
-      builder-util: 24.5.0
-      builder-util-runtime: 9.2.1
+      builder-util: 24.8.1
+      builder-util-runtime: 9.2.3
       chromium-pickle-js: 0.2.0
       debug: 4.3.4
       ejs: 3.1.8
-      electron-publish: 24.5.0
+      electron-publish: 24.8.1
       form-data: 4.0.0
       fs-extra: 10.1.0
       hosted-git-info: 4.1.0
@@ -4503,8 +4506,8 @@ packages:
     engines: {node: '>=0.2.0'}
     dev: false
 
-  /builder-util-runtime@9.2.1:
-    resolution: {integrity: sha512-2rLv/uQD2x+dJ0J3xtsmI12AlRyk7p45TEbE/6o/fbb633e/S3pPgm+ct+JHsoY7r39dKHnGEFk/AASRFdnXmA==}
+  /builder-util-runtime@9.2.3:
+    resolution: {integrity: sha512-FGhkqXdFFZ5dNC4C+yuQB9ak311rpGAw+/ASz8ZdxwODCv1GGMWgLDeofRkdi0F3VCHQEWy/aXcJQozx2nOPiw==}
     engines: {node: '>=12.0.0'}
     dependencies:
       debug: 4.3.4
@@ -4513,14 +4516,14 @@ packages:
       - supports-color
     dev: true
 
-  /builder-util@24.5.0:
-    resolution: {integrity: sha512-STnBmZN/M5vGcv01u/K8l+H+kplTaq4PAIn3yeuufUKSpcdro0DhJWxPI81k5XcNfC//bjM3+n9nr8F9uV4uAQ==}
+  /builder-util@24.8.1:
+    resolution: {integrity: sha512-ibmQ4BnnqCnJTNrdmdNlnhF48kfqhNzSeqFMXHLIl+o9/yhn6QfOaVrloZ9YUu3m0k3rexvlT5wcki6LWpjTZw==}
     dependencies:
-      7zip-bin: 5.1.1
+      7zip-bin: 5.2.0
       '@types/debug': 4.1.7
       app-builder-bin: 4.0.0
       bluebird-lst: 1.0.9
-      builder-util-runtime: 9.2.1
+      builder-util-runtime: 9.2.3
       chalk: 4.1.2
       cross-spawn: 7.0.3
       debug: 4.3.4
@@ -5239,12 +5242,12 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /dmg-builder@24.6.4:
-    resolution: {integrity: sha512-BNcHRc9CWEuI9qt0E655bUBU/j/3wUCYBVKGu1kVpbN5lcUdEJJJeiO0NHK3dgKmra6LUUZlo+mWqc+OCbi0zw==}
+  /dmg-builder@24.9.1:
+    resolution: {integrity: sha512-huC+O6hvHd24Ubj3cy2GMiGLe2xGFKN3klqVMLAdcbB6SWMd1yPSdZvV8W1O01ICzCCRlZDHiv4VrNUgnPUfbQ==}
     dependencies:
-      app-builder-lib: 24.6.4
-      builder-util: 24.5.0
-      builder-util-runtime: 9.2.1
+      app-builder-lib: 24.9.1
+      builder-util: 24.8.1
+      builder-util-runtime: 9.2.3
       fs-extra: 10.1.0
       iconv-lite: 0.6.3
       js-yaml: 4.1.0
@@ -5389,16 +5392,16 @@ packages:
       jake: 10.8.5
     dev: true
 
-  /electron-builder@24.6.4:
-    resolution: {integrity: sha512-uNWQoU7pE7qOaIQ6CJHpBi44RJFVG8OHRBIadUxrsDJVwLLo8Nma3K/EEtx5/UyWAQYdcK4nVPYKoRqBb20hbA==}
+  /electron-builder@24.9.1:
+    resolution: {integrity: sha512-v7BuakDuY6sKMUYM8mfQGrwyjBpZ/ObaqnenU0H+igEL10nc6ht049rsCw2HghRBdEwJxGIBuzs3jbEhNaMDmg==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
-      app-builder-lib: 24.6.4
-      builder-util: 24.5.0
-      builder-util-runtime: 9.2.1
+      app-builder-lib: 24.9.1
+      builder-util: 24.8.1
+      builder-util-runtime: 9.2.3
       chalk: 4.1.2
-      dmg-builder: 24.6.4
+      dmg-builder: 24.9.1
       fs-extra: 10.1.0
       is-ci: 3.0.1
       lazy-val: 1.0.5
@@ -5438,12 +5441,12 @@ packages:
     resolution: {integrity: sha512-QQ4GvrXO+HkgqqEOYbi+DHL7hj5JM+nHi/j+qrN9zeeXVKy8ZABgbu4CnG+BBqDZ2+tbeq9tUC4DZfIWFU5AZA==}
     dev: false
 
-  /electron-publish@24.5.0:
-    resolution: {integrity: sha512-zwo70suH15L15B4ZWNDoEg27HIYoPsGJUF7xevLJLSI7JUPC8l2yLBdLGwqueJ5XkDL7ucYyRZzxJVR8ElV9BA==}
+  /electron-publish@24.8.1:
+    resolution: {integrity: sha512-IFNXkdxMVzUdweoLJNXSupXkqnvgbrn3J4vognuOY06LaS/m0xvfFYIf+o1CM8if6DuWYWoQFKPcWZt/FUjZPw==}
     dependencies:
       '@types/fs-extra': 9.0.13
-      builder-util: 24.5.0
-      builder-util-runtime: 9.2.1
+      builder-util: 24.8.1
+      builder-util-runtime: 9.2.3
       chalk: 4.1.2
       fs-extra: 10.1.0
       lazy-val: 1.0.5
@@ -8157,7 +8160,7 @@ packages:
       whatwg-encoding: 2.0.0
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
-      ws: 8.13.0
+      ws: 8.14.2
       xml-name-validator: 4.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -9797,19 +9800,8 @@ packages:
     resolution: {integrity: sha512-AckIIV90rPDcBcglUwXPF3kg0P0qmPsPXAj6BBEENQE1p5yA1xfmDJzfi1Tappj37Pv2mVbKpL3Z1T+Nn7k1Qw==}
     dev: true
 
-  /selenium-webdriver@4.11.1:
-    resolution: {integrity: sha512-bvrnr3UZlLScErOmn8gV6cqc+1PYDHn0575CxUR2U14fMWt7OKxSy0lAThhZq4sq4d1HqP8ebz11oiHSlAQ2WA==}
-    engines: {node: '>= 14.20.0'}
-    dependencies:
-      jszip: 3.10.1
-      tmp: 0.2.1
-      ws: 8.13.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
-  /selenium-webdriver@4.14.0:
-    resolution: {integrity: sha512-637rs8anqMKHbWxcBZpyG3Gcs+rBUtAUiqk0O/knUqH4Paj3MFUZrz88/pVGOLNryEVy2z92fZomT8p1ENl1gA==}
+  /selenium-webdriver@4.15.0:
+    resolution: {integrity: sha512-BNG1bq+KWiBGHcJ/wULi0eKY0yaDqFIbEmtbsYJmfaEghdCkXBsx1akgOorhNwjBipOr0uwpvNXqT6/nzl+zjg==}
     engines: {node: '>= 14.20.0'}
     dependencies:
       jszip: 3.10.1
@@ -11257,18 +11249,6 @@ packages:
       utf-8-validate:
         optional: true
     dev: false
-
-  /ws@8.13.0:
-    resolution: {integrity: sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
 
   /ws@8.14.2:
     resolution: {integrity: sha512-wEBG1ftX4jcglPxgFCMJmZ2PLtSbJ2Peg6TmpJFTbe9GZYOQCDPdMYu/Tm0/bGZkw8paZnJY45J4K2PZrLYq8g==}

@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "4.0.0-alpha.59",
+  "version": "4.0.0-alpha.60",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -11,8 +11,10 @@
     "start": "electron build/main-bundle.js",
     "build": "run-s build:webpack build:electron",
     "build:electron": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "build:electron:linux": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -l -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "build:electron:macos": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -m -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "build:electron:windows": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -w -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
     "build:electron:dir": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
-    "build:electron:windows": "node_modules\\.bin\\electron-builder",
     "build:webpack": "webpack",
     "watch": "webpack --watch"
   },
@@ -26,7 +28,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "build": {
     "appId": "org.seleniumhq.selenium-ide",
@@ -75,7 +77,7 @@
     "linux": {
       "target": "AppImage"
     },
-    "nodeVersion": "16.x",
+    "nodeVersion": "18.x",
     "fileAssociations": [
       {
         "ext": "side",
@@ -105,7 +107,7 @@
     "@seleniumhq/code-export-python-pytest": "^4.0.0-alpha.2",
     "@seleniumhq/code-export-ruby-rspec": "^4.0.0-alpha.1",
     "@seleniumhq/get-driver": "^4.0.0-alpha.1",
-    "@seleniumhq/side-api": "^4.0.0-alpha.37",
+    "@seleniumhq/side-api": "^4.0.0-alpha.38",
     "@seleniumhq/side-model": "^4.0.0-alpha.4",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.31",
     "dnd-core": "^16.0.1",
@@ -119,6 +121,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "selenium-webdriver": "^4.15.0",
     "side-code-export": "^4.0.0-alpha.11",
     "v8-compile-cache": "^2.3.0"
   },
@@ -131,6 +134,7 @@
     "@types/lodash": "^4.14.199",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/selenium-webdriver": "^4.1.21",
     "@types/webpack-env": "^1.16.0",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.8.1",
@@ -143,7 +147,6 @@
     "npm-run-all": "^4.1.5",
     "run-script-os": "^1.1.6",
     "scroll-into-view-if-needed": "^3.0.10",
-    "selenium-webdriver": "^4.14.0",
     "source-map-loader": "^4.0.1",
     "source-map-support": "^0.5.21",
     "style-loader": "^3.3.3",

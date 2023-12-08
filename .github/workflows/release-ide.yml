@@ -1,11 +1,21 @@
-name: 'Release IDE to GitHub'
-
 on:
   push:
     branches: [trunk]
 
 jobs:
   release:
+    name: Release IDE to GitHub for ${{ matrix.platform }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: windows
+          - os: macos-latest
+            platform: mac
+
     permissions:
       actions: read
       checks: read
@@ -19,13 +29,12 @@ jobs:
       repository-projects: read
       security-events: read
       statuses: read
-    runs-on: macos-11
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          node-version: '18.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install pnpm
         run: npm i -g pnpm
@@ -39,26 +48,31 @@ jobs:
         env:
           NODE_ENV: "production"
       - name: Build selenium-ide binaries
-        run: pnpm run build:electron
+        run: pnpm run build:electron:${{ matrix.platform }}
       - name: Set env from current release
         run: >
           echo "SIDE_RELEASE_VERSION=$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
         working-directory: ./packages/selenium-ide
       - name: Check env is there
         run: echo "${{ env.SIDE_RELEASE_VERSION }}"
-      - name: Release latest selenium-ide on github
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: true
-          title: "Nightly (Unstable)"
-          files: packages/selenium-ide/dist/Selenium*
       - name: Release selenium-ide on github
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "${{ env.SIDE_RELEASE_VERSION }}"
           prerelease: false
-          files: packages/selenium-ide/dist/Selenium*
         continue-on-error: true
+      - name: Upload binaries to release for ${{ matrix.platform }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: packages/selenium-ide/dist/Selenium*
+          file_glob: true
+          tag: ${{ github.ref }}
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: packages/selenium-ide/dist/Selenium*
+          file_glob: true
+          tag: ${{ github.ref }}
