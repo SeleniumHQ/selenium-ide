@@ -53,26 +53,19 @@ jobs:
         working-directory: ./packages/selenium-ide
       - name: Check env is there
         run: echo "${{ env.SIDE_RELEASE_VERSION }}"
+      - name: Release latest selenium-ide on github
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest-${{ matrix.platform }}"
+          prerelease: true
+          title: "Nightly (Unstable)"
+          files: packages/selenium-ide/dist/Selenium*
       - name: Release selenium-ide on github
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ env.SIDE_RELEASE_VERSION }}-${{ matrix.platform }}"
+          automatic_release_tag: "${{ env.SIDE_RELEASE_VERSION }}"
           prerelease: false
+          files: packages/selenium-ide/dist/Selenium*
         continue-on-error: true
-      - name: Upload binaries to release for ${{ matrix.platform }}
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: packages/selenium-ide/dist/Selenium*
-          file_glob: true
-          overwrite: true
-          tag: "${{ env.SIDE_RELEASE_VERSION }}-${{ matrix.platform }}"
-      - name: Upload binaries to release
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: packages/selenium-ide/dist/Selenium*
-          file_glob: true
-          overwrite: true
-          tag: "${{ env.SIDE_RELEASE_VERSION }}-${{ matrix.platform }}"
