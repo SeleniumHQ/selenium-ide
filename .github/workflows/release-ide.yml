@@ -45,7 +45,8 @@ jobs:
         env:
           NODE_ENV: "production"
       - name: Build selenium-ide binaries
-        run: pnpm run build:electron:${{ matrix.platform }}
+        run: npm run build:electron:${{ matrix.platform }}
+        working-directory: ./packages/selenium-ide
       - name: Set env from current release
         run: >
           echo "SIDE_RELEASE_VERSION=$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
