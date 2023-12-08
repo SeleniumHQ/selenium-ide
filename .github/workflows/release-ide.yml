@@ -40,6 +40,9 @@ jobs:
         run: npm i -g pnpm
       - name: Install dependencies
         run: pnpm -r i
+      - name: Install dependencies
+        run: npm run install-app-deps
+        working-directory: ./packages/selenium-ide
       - name: Build all JS
         run: pnpm run build
         env:

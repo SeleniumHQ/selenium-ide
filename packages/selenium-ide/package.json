@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/selenium-ide",
-  "version": "4.0.0-alpha.61",
+  "version": "4.0.0-alpha.62",
   "private": true,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -16,7 +16,7 @@
     "build:electron:windows": "electron-builder -w --publish never",
     "build:electron:dir": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
     "build:webpack": "webpack",
-    "postinstall": "electron-builder install-app-deps",
+    "install-app-deps": "electron-builder install-app-deps",
     "watch": "webpack --watch"
   },
   "sideEffects": false,
