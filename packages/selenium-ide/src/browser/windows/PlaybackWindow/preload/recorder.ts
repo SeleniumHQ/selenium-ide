@@ -24,10 +24,7 @@ import {
   ExpandedMutationObserver,
 } from 'browser/types'
 import initFindSelect from './find-select'
-import {
-  PluginPreloadOutputShape,
-  RecordNewCommandInput,
-} from '@seleniumhq/side-api'
+import { RecordNewCommandInput, RecorderPreprocessor } from '@seleniumhq/side-api'
 import LocatorBuilders from './locator-builders'
 
 export interface RecordingState {
@@ -48,9 +45,9 @@ export interface RecordingState {
  * @param {Window} window
  */
 export default class Recorder {
-  constructor(window: Window, plugins: PluginPreloadOutputShape[]) {
+  constructor(window: Window, recorderPreprocessors: RecorderPreprocessor[]) {
     this.window = window
-    this.plugins = plugins
+    this.recorderPreprocessors = recorderPreprocessors
     this.eventListeners = {}
     this.attached = false
     this.frameLocation = ''
@@ -77,7 +74,7 @@ export default class Recorder {
   }
 
   winHandleId: string = ''
-  plugins: PluginPreloadOutputShape[]
+  recorderPreprocessors: RecorderPreprocessor[]
   window: Window
   eventListeners: Record<string, EventListener[]>
   attached: boolean = false
@@ -105,11 +102,10 @@ export default class Recorder {
       frameLocation: actualFrameLocation || this.frameLocation,
       winHandleId: this.winHandleId,
     }
-    const plugins = this.plugins
-    for (let i = 0, ii = plugins.length; i !== ii; i++) {
-      const plugin = plugins[i]
-      if (!plugin.hooks.onCommandRecorded) continue
-      const result = plugin.hooks.onCommandRecorded(newCommand, event)
+    const preprocessors = this.recorderPreprocessors
+    for (let i = 0, ii = preprocessors.length; i !== ii; i++) {
+      const preprocessor = preprocessors[i]
+      const result = preprocessor(newCommand, event)
       if (!result) continue
       switch (result.action) {
         case 'drop':

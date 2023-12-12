@@ -36,11 +36,9 @@ export async function resolveDriverUrl({
       )
     }
     case 'chrome': {
-      return `https://chromedriver.storage.googleapis.com/${await getChromedriverVersion(
-        version
-      )}/chromedriver_${getChromedriverPlatformName(platform)}.zip`
+      return await getChromedriverURL(platform, arch, version)
     }
-    case 'edge': {
+    case 'MicrosoftEdge': {
       return `https://msedgedriver.azureedge.net/${version}/edgedriver_${getEdgePlatformName(
         platform,
         arch
@@ -72,20 +70,30 @@ export function resolveDriverName({
   }`
 }
 
-export type Browser = 'chrome' | 'edge' | 'electron' | 'firefox'
+export type Browser = 'chrome' | 'electron' | 'firefox' | 'MicrosoftEdge'
 
 export type Platform = NodeJS.Platform
 
 const DriverNames: BrowserToDriver = {
   chrome: 'chromedriver',
-  edge: 'edge',
   electron: 'chromedriver',
   firefox: 'geckodriver',
+  MicrosoftEdge: 'MicrosoftEdge',
 }
 
-function getChromedriverPlatformName(platform: Platform) {
+function getChromedriverPlatformName(
+  platform: Platform,
+  arch: Arch,
+  majorVersion: number
+) {
   if (platform === 'darwin') {
-    return 'mac64'
+    if (majorVersion < 115) {
+      return 'mac64'
+    }
+    if (arch === 'arm64') {
+      return 'mac-arm64'
+    }
+    return 'mac-x64'
   } else if (platform === 'win32') {
     return 'win32'
   } else {
@@ -93,12 +101,71 @@ function getChromedriverPlatformName(platform: Platform) {
   }
 }
 
-async function getChromedriverVersion(version: string) {
-  const major = version.split('.')[0]
-  const res = await fetch(
-    `https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${major}`
-  )
-  return await res.text()
+export type NewChromeDownloadList = {
+  platform: string
+  url: string
+}[]
+
+export type NewChromedriverListing = {
+  timestamp: string
+  versions: {
+    version: string
+    revision: string
+    downloads: {
+      chrome: NewChromeDownloadList
+      chromedriver: NewChromeDownloadList
+    }
+  }[]
+}
+
+async function getChromedriverURL(
+  platform: Platform,
+  arch: Arch,
+  version: string
+) {
+  const major = Number(version.split('.')[0])
+  const platformName = getChromedriverPlatformName(platform, arch, major)
+  if (major < 115) {
+    const url = `https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${major}`
+    const res = await fetch(url)
+    const responseText = await res.text()
+    if (responseText.includes('Error')) {
+      throw new Error(
+        `Failed to get chromedriver version for chrome version ${version} from url ${url}`
+      )
+    }
+    const outputVersion = responseText.replace(/\n/g, '').trim()
+    return `https://chromedriver.storage.googleapis.com/${outputVersion}/chromedriver_${platformName}.zip`
+  } else {
+    const url =
+      'https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json'
+    const res = await fetch(url)
+    const versionLibrary: NewChromedriverListing = await res.json()
+    const perfectMatch = versionLibrary.versions.find(
+      (v) =>
+        v.version === version &&
+        v.downloads.chromedriver.find((d) => d.platform === platformName)
+    )
+    if (perfectMatch) {
+      return perfectMatch.downloads.chromedriver.find(
+        (d) => d.platform === platformName
+      )!.url!
+    }
+    const closestMatch = versionLibrary.versions.find(
+      (v) =>
+        Number(v.version.split('.')[0]) === major &&
+        v.downloads.chromedriver.find((d) => d.platform === platformName)
+    )
+    if (closestMatch) {
+      return closestMatch.downloads.chromedriver.find(
+        (d) => d.platform === platformName
+      )!.url!
+    }
+    throw new Error(
+      'Failed to find chromedriver url for inputs ' +
+        JSON.stringify({ platform, arch, version })
+    )
+  }
 }
 
 function getEdgePlatformName(platform: Platform, arch: Arch) {

@@ -14,54 +14,35 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-import { PluginPreloadOutputShape } from '@seleniumhq/side-api'
-import api, { Api, BrowserApiMutators } from 'browser/api'
+import type { Api } from '@seleniumhq/side-api'
+import api, { BrowserApiMutators } from 'browser/api'
 import mutators from 'browser/api/mutator'
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge } from 'electron'
+
+export type NestedPartial<API> = {
+  [K in keyof API]?: API[K] extends Record<string, unknown>
+    ? NestedPartial<API[K]>
+    : API[K]
+}
 
 export default (
-  apiSubset: Partial<Api> & { mutators: Partial<BrowserApiMutators> } = {
+  apiSubset: NestedPartial<Api> & { mutators: NestedPartial<BrowserApiMutators> } = {
     ...api,
     mutators,
-  }
-) =>
-  new Promise<(PluginPreloadOutputShape | null)[]>((resolve) => {
-    const loadPluginFromPath = ([pluginPath, preloadPath]: [
-      string,
-      string
-    ]): PluginPreloadOutputShape | null => {
-      try {
-        const pluginPreload = __non_webpack_require__(preloadPath)
-        const pluginHandler =
-          typeof pluginPreload === 'function'
-            ? pluginPreload
-            : pluginPreload.default
-        return pluginHandler((...args: any[]) =>
-          ipcRenderer.send(`message-${pluginPath}`, ...args)
-        )
-      } catch (e) {
-        console.error(e)
-        return null
-      }
-    }
+  },
+  isElectron: boolean = true
+) => {
+  window.sideAPI = apiSubset as Api & { mutators: BrowserApiMutators }
 
-    window.sideAPI = apiSubset as Api & { mutators: BrowserApiMutators }
-
+  /**
+   * Binds our API on initialization
+   */
+  process.once('loaded', async () => {
     /**
-     * Binds our API on initialization
+     * Expose it in the main context
      */
-    process.once('loaded', async () => {
-      /**
-       * Expose it in the main context
-       */
+    if (isElectron) {
       contextBridge.exposeInMainWorld('sideAPI', window.sideAPI)
-      const pluginPaths = await api.plugins.list()
-      const preloadPaths = await api.plugins.listPreloadPaths()
-      const richPlugins: [string, string][] = pluginPaths.map((p, i) => [
-        p,
-        preloadPaths[i],
-      ])
-      const plugins = richPlugins.map(loadPluginFromPath)
-      resolve(plugins)
-    })
+    }
   })
+}

@@ -30,18 +30,21 @@ export const port = app.isPackaged ? 9516 : 9515
  *   4. When Electron is quitting, close the child driver process
  */
 
-const getDriver = ({ browser, version }: BrowserInfo) =>
-  (browser === 'electron'
-    ? path.resolve(
-        path.join(
-          __dirname,
-          '..',
-          'node_modules',
-          'electron-chromedriver',
-          'bin',
-          'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
-        )
-      )
+const ourElectronPath = path
+  .resolve(
+    path.join(
+      __dirname,
+      '..',
+      'node_modules',
+      'electron-chromedriver',
+      'bin',
+      'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
+    )
+  )
+
+const getDriver = ({ browser, version }: BrowserInfo) => (
+  browser === 'electron'
+    ? ourElectronPath
     : path.resolve(
         path.join(
           __dirname,
@@ -65,6 +68,7 @@ const startDriver: StartDriver = () => (info) =>
     let initialized = false
     const args = ['--verbose', `--port=${port}`]
     const driverPath = getDriver(info)
+    console.log('Starting driver', info.browser, 'at', driverPath, 'with args', args.join(' '))
     if (fs.existsSync(driverPath)) {
       const driver = spawn(driverPath.replace(/\s/g, ' '), args, {
         env: {},
@@ -79,7 +83,6 @@ const startDriver: StartDriver = () => (info) =>
           WebdriverDebugLog('Driver has initialized!')
           resolve({ success: true, driver: driver })
           process.on('beforeExit', async () => {
-            console.log('Exiting?');
             try {
               if (!driver.killed) {
                 await driver.kill(9)

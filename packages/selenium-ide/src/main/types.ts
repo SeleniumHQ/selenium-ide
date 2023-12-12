@@ -22,12 +22,13 @@ import { MainApi } from './api'
 import { StorageSchema } from './store'
 
 export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
+  binary?: Chrome.BrowserInfo['binary']
   browser: Browser
 }
 
 export interface BrowsersInfo {
   browsers: BrowserInfo[]
-  selected: BrowserInfo
+  selected: BrowserInfo | null
 }
 
 export type Config = typeof config

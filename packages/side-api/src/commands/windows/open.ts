@@ -6,5 +6,5 @@ import { BrowserWindowConstructorOptions } from 'electron'
  */
 export type Shape = (
   name: string,
-  opts: BrowserWindowConstructorOptions
+  opts?: BrowserWindowConstructorOptions
 ) => Promise<void>

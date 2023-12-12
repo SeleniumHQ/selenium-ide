@@ -6,6 +6,7 @@ import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import { CoreSessionData, VerboseBoolean } from '@seleniumhq/side-api'
 import React, { FC } from 'react'
+import DriverSelector from './DriverSelect'
 
 export interface SystemSettingsProps {
   state: CoreSessionData['state']
@@ -106,6 +107,9 @@ const SystemSettings: FC<SystemSettingsProps> = ({ state }) => (
         <MenuItem value="Yes">Yes</MenuItem>
         <MenuItem value="No">No</MenuItem>
       </Select>
+    </FormControl>
+    <FormControl>
+      <DriverSelector />
     </FormControl>
   </Stack>
 )

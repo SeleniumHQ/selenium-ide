@@ -27,9 +27,6 @@ const plugin: PluginShape = {
     onBeforeCommand: (input) => {
       console.log('Before command', input)
     },
-    onMessage: (...args) => {
-      console.log('Received message!', ...args)
-    },
   },
 }
 

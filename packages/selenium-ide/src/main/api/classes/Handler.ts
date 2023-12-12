@@ -31,7 +31,7 @@ const defaultHandler = <HANDLER extends ApiHandler>(
     // @ts-expect-error
     return controller[method].bind(controller) as AsyncHandler<HANDLER>
   }
-  console.warn(`Missing method for path ${path}, using passthrough`)
+  apiDebugLog(`Missing method for path ${path}, using passthrough`)
   return noop as unknown as AsyncHandler<HANDLER>
 }
 
