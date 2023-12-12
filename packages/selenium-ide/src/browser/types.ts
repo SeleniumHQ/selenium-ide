@@ -1,7 +1,6 @@
-import { CoreSessionData } from '@seleniumhq/side-api'
+import type { Api, CoreSessionData } from '@seleniumhq/side-api'
 import { BrowserWindowConstructorOptions } from 'electron'
 import { Session } from 'main/types'
-import type { Api } from './api'
 import ApiMutators from './api/mutator'
 import Recorder from './windows/PlaybackWindow/preload/recorder'
 

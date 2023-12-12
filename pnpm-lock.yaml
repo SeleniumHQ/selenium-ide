@@ -282,11 +282,11 @@ importers:
         specifier: ^16.0.1
         version: 16.0.1
       electron-chromedriver:
-        specifier: ^26.4.0
-        version: 26.4.0
+        specifier: ^28.0.0
+        version: 28.0.0
       electron-log:
-        specifier: ^4.4.8
-        version: 4.4.8
+        specifier: ^5.0.1
+        version: 5.0.1
       electron-store:
         specifier: ^8.1.0
         version: 8.1.0
@@ -312,8 +312,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       selenium-webdriver:
-        specifier: ^4.15.0
-        version: 4.15.0
+        specifier: ^4.16.0
+        version: 4.16.0
       side-code-export:
         specifier: ^4.0.0-alpha.11
         version: link:../side-code-export
@@ -358,10 +358,10 @@ importers:
         specifier: ^6.8.1
         version: 6.8.1(webpack@5.89.0)
       electron:
-        specifier: ^26.4.0
-        version: 26.4.0
+        specifier: ^28.0.0
+        version: 28.0.0
       electron-builder:
-        specifier: ^24.6.4
+        specifier: ^24.9.1
         version: 24.9.1
       electron-devtools-installer:
         specifier: ^3.2.0
@@ -431,8 +431,8 @@ importers:
         specifier: ^4.14.199
         version: 4.14.199
       electron:
-        specifier: 26.4.0
-        version: 26.4.0
+        specifier: ^28.0.0
+        version: 28.0.0
 
   packages/side-cli:
     dependencies:
@@ -577,8 +577,8 @@ importers:
         specifier: ^4.1.21
         version: 4.1.21
       selenium-webdriver:
-        specifier: ^4.15.0
-        version: 4.15.0
+        specifier: ^4.16.0
+        version: 4.16.0
     devDependencies:
       '@seleniumhq/side-testkit':
         specifier: ^4.0.0-alpha.1
@@ -616,8 +616,8 @@ importers:
         specifier: ^4.1.21
         version: 4.1.21
       selenium-webdriver:
-        specifier: ^4.15.0
-        version: 4.15.0
+        specifier: ^4.16.0
+        version: 4.16.0
 
 packages:
 
@@ -3222,7 +3222,7 @@ packages:
       '@seleniumhq/side-commons': 4.0.0-alpha.1
       '@seleniumhq/side-model': 4.0.0-alpha.4
       '@types/selenium-webdriver': 4.1.21
-      selenium-webdriver: 4.15.0
+      selenium-webdriver: 4.16.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -5444,8 +5444,8 @@ packages:
       - supports-color
     dev: true
 
-  /electron-chromedriver@26.4.0:
-    resolution: {integrity: sha512-VIsN1PvozEfwKve8q4SSWBb71C24lr5Q6m1vpU/Dc+WAvgqjRgaeHx0p4aAHjSbt3630q9XlSlDzzHcOa2IEIg==}
+  /electron-chromedriver@28.0.0:
+    resolution: {integrity: sha512-dGygERvVDIZV0WCYLTmzF0ENOPrjPQ36t2rz0X5C9uZfVoXIlq4cShN4mHdYosAcrXLauG2+xAZVEkRcKPE8cA==}
     engines: {node: '>=10.12.0'}
     hasBin: true
     requiresBuild: true
@@ -5469,8 +5469,9 @@ packages:
     resolution: {integrity: sha512-3X99K852Yoqu9AcW50qz3ibYBWY79/pBhlMCab8ToEWS48R0T9tyxRiQhwylE7zQdXrMnx2JKqUJyMPmt5FBqA==}
     dev: false
 
-  /electron-log@4.4.8:
-    resolution: {integrity: sha512-QQ4GvrXO+HkgqqEOYbi+DHL7hj5JM+nHi/j+qrN9zeeXVKy8ZABgbu4CnG+BBqDZ2+tbeq9tUC4DZfIWFU5AZA==}
+  /electron-log@5.0.1:
+    resolution: {integrity: sha512-x4wnwHg00h/onWQgjmvcdLV7Mrd9TZjxNs8LmXVpqvANDf4FsSs5wLlzOykWLcaFzR3+5hdVEQ8ctmrUxgHlPA==}
+    engines: {node: '>= 14'}
     dev: false
 
   /electron-publish@24.8.1:
@@ -5507,8 +5508,8 @@ packages:
       serialize-error: 8.1.0
     dev: false
 
-  /electron@26.4.0:
-    resolution: {integrity: sha512-FUEFwmIlflLxImRtTmDp8CWpH4KqlyAwga6vauaz6+882SmyC3bJRhgqOIT5s6rMbW25WezNiaqfKqHDJjz3pw==}
+  /electron@28.0.0:
+    resolution: {integrity: sha512-eDhnCFBvG0PGFVEpNIEdBvyuGUBsFdlokd+CtuCe2ER3P+17qxaRfWRxMmksCOKgDHb5Wif5UxqOkZSlA4snlw==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
     requiresBuild: true
@@ -9837,8 +9838,8 @@ packages:
     resolution: {integrity: sha512-AckIIV90rPDcBcglUwXPF3kg0P0qmPsPXAj6BBEENQE1p5yA1xfmDJzfi1Tappj37Pv2mVbKpL3Z1T+Nn7k1Qw==}
     dev: true
 
-  /selenium-webdriver@4.15.0:
-    resolution: {integrity: sha512-BNG1bq+KWiBGHcJ/wULi0eKY0yaDqFIbEmtbsYJmfaEghdCkXBsx1akgOorhNwjBipOr0uwpvNXqT6/nzl+zjg==}
+  /selenium-webdriver@4.16.0:
+    resolution: {integrity: sha512-IbqpRpfGE7JDGgXHJeWuCqT/tUqnLvZ14csSwt+S8o4nJo3RtQoE9VR4jB47tP/A8ArkYsh/THuMY6kyRP6kuA==}
     engines: {node: '>= 14.20.0'}
     dependencies:
       jszip: 3.10.1

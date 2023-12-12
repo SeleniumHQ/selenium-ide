@@ -50,7 +50,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
     ([key, { window }]: [string, WindowConfig]) => {
       const filename = kebabCase(key)
       const preloadPath = join(__dirname, `${filename}-preload-bundle.js`)
-      const hasPreload = existsSync(preloadPath)
+      const hasPreload = filename !== 'playback-window' && existsSync(preloadPath)
       const windowLoader: WindowLoaderFactory =
         (session: Session) =>
         (options: BrowserWindowConstructorOptions = {}) => {

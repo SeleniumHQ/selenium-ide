@@ -60,33 +60,26 @@ export default class PlaybackController extends BaseController {
       }
     }
 
-    if (this.session.playback.playingSuite) {
-      const window = await windows.openPlaybackWindow({
-        show: false,
-        title: UUID,
-      })
-      await registerWindow(window.id)
-      await windows.arrangeWindow(
-        window,
-        'windowSizePlayback',
-        'windowPositionPlayback'
-      )
-      window.show()
-      return
-    }
-
-    const playbackWindow = await windows.getPlaybackWindow()
-    if (playbackWindow) {
-      const handle = await windows.getPlaybackWindowHandleByID(
-        playbackWindow.id
-      )
-      if (handle) {
-        await driver.switchTo().window(handle)
-        return
+    if (!this.session.playback.playingSuite) {
+      const playbackWindow = await windows.getPlaybackWindow()
+      if (playbackWindow) {
+        const handle = await windows.getPlaybackWindowHandleByID(
+          playbackWindow.id
+        )
+        if (handle) {
+          await driver.switchTo().window(handle)
+          return
+        }
       }
     }
 
     const window = await windows.openPlaybackWindow({ title: UUID })
+    await windows.arrangeWindow(
+      window,
+      'windowSizePlayback',
+      'windowPositionPlayback'
+    )
+    window.show()
     await registerWindow(window.id)
   }
 
@@ -95,12 +88,13 @@ export default class PlaybackController extends BaseController {
     this.playbacks.forEach((playback) => playback.pause())
   }
 
-  async performCommand(
-    command: Omit<CommandShape, 'id'>
-  ) {
+  async performCommand(command: Omit<CommandShape, 'id'>) {
+    const browserInfo = this.session.store.get('browserInfo')
     const playback = new Playback({
       baseUrl: this.session.projects.project.url,
-      executor: await this.session.driver.build({}),
+      executor: await this.session.driver.build({
+        browser: browserInfo.browser,
+      }),
       getTestByName: (name: string) => this.session.tests.getByName(name),
       logger: console,
       variables: new Variables(),
@@ -139,10 +133,12 @@ export default class PlaybackController extends BaseController {
     /**
      * Create playback if none exists
      */
-    // const browser = 'electron'
+    const browserInfo = this.session.store.get('browserInfo')
     const playback = new Playback({
       baseUrl: this.session.projects.project.url,
-      executor: await this.session.driver.build({}),
+      executor: await this.session.driver.build({
+        browser: browserInfo.browser,
+      }),
       getTestByName: (name: string) => this.session.tests.getByName(name),
       logger: console,
       variables: new Variables(),
@@ -150,10 +146,7 @@ export default class PlaybackController extends BaseController {
         delay: this.session.projects.project.delay || 0,
       },
     })
-    console.log('playback init')
     await playback.init()
-    console.log('playback cookies deleted')
-
     const EE = playback['event-emitter']
     EE.addListener(
       PlaybackEvents.PLAYBACK_STATE_CHANGED,

@@ -14,34 +14,39 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-import { PluginPreloadOutputShape } from '@seleniumhq/side-api'
+import { RecorderPreprocessor } from '@seleniumhq/side-api'
 import api from 'browser/api'
 import apiMutators from 'browser/api/mutator'
-import preload from 'browser/helpers/preload'
 import { webFrame } from 'electron'
 import Recorder from './preload/recorder'
+import preload from '../../helpers/preload'
 
-;(async () => {
-  console.log('Preloading?')
-  const plugins = await preload({
+const recorderProcessors: RecorderPreprocessor[] = []
+preload(
+  {
+    plugins: {
+      addRecorderPreprocessor: (fn) => {
+        recorderProcessors.push(fn)
+      },
+    },
     recorder: api.recorder,
-    mutators: { recorder: apiMutators.recorder },
-  })
-  console.log('Preloading!')
-  console.log('Executing webframe script?')
+    mutators: {
+      plugins: {},
+      recorder: apiMutators.recorder,
+    },
+  },
+  false
+)
+window.addEventListener('DOMContentLoaded', async () => {
   webFrame.executeJavaScript(`
-      Object.defineProperty(navigator, 'webdriver', {
-        get () {
-          return true
-        } 
-      })
-    `)
-  console.log('Executed webframe script?')
-  console.log('Initializing the recorder')
-  const recorder = new Recorder(
-    window,
-    plugins.filter(Boolean) as PluginPreloadOutputShape[]
-  )
-  recorder.attach()
-  console.log('Recorder initialized')
-})()
+    Object.defineProperty(navigator, 'webdriver', {
+      get () {
+        return true
+      } 
+    })
+  `)
+  setTimeout(async () => {
+    console.debug('Initializing the recorder')
+    new Recorder(window, recorderProcessors)
+  }, 500)
+})

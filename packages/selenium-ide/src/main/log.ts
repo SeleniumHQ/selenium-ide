@@ -19,8 +19,9 @@ export const configureLogging = () => {
 
 // Wire up logging to the frontend
 export const connectSessionLogging = (session: Session) => {
-  const sessionTransport = (msg: LogMessage) =>
+  const sessionTransport: Partial<log.Transport>  = (msg: LogMessage) =>
     session.api.system.onLog.dispatchEvent(msg.level, inspect(msg.data))
   sessionTransport.level = 'debug' as const
-  log.transports.session = sessionTransport
+  sessionTransport.transforms = []
+  log.transports.session = sessionTransport as log.Transport
 }
