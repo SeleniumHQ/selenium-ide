@@ -1,4 +1,4 @@
-import { ProjectShape } from '@seleniumhq/side-model'
+import { CommandShape, ProjectShape } from '@seleniumhq/side-model'
 import { Chrome } from '@seleniumhq/browser-info'
 import { Browser } from '@seleniumhq/get-driver'
 import { StateShape } from '../models/state'
@@ -80,8 +80,10 @@ export type EventListenerParams<LISTENER extends BaseListener<any>> =
 
 export type LocatorFields = 'target' | 'value'
 
-export interface RecordNewCommandInput {
-  command: string
+export type RecordNewCommandInput = Omit<
+  CommandShape,
+  'id' | 'target' | 'value'
+> & {
   target: string | [string, string][]
   value: string | [string, string][]
   insertBeforeLastCommand?: boolean

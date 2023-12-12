@@ -23,20 +23,12 @@ export type PluginHookInput = {
 
 export type PluginMenuConfigurator = (api: Api) => void
 
-export interface PluginPreloadOutputShape {
-  hooks: {
-    onCommandRecorded?: (
-      command: RecordNewCommandInput,
-      event: Event | KeyboardEvent | MouseEvent | MutationRecord[] | undefined
-    ) => OnCommandRecordedResult
-  }
-}
+export type RecorderPreprocessor = (
+  command: RecordNewCommandInput,
+  event: Event | KeyboardEvent | MouseEvent | MutationRecord[] | undefined
+) => OnCommandRecordedResult
 
 export type SendMessage = (...args: any[]) => void
-
-export type PluginPreloadShape = (
-  sendMessage: SendMessage
-) => PluginPreloadOutputShape
 
 export interface PluginHooksShape extends PluginHooks {
   onLoad?: (api: Api) => Promise<void>

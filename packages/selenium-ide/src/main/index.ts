@@ -7,11 +7,10 @@ import createSession from './session'
 import installReactDevtools from './install-react-devtools'
 import { isAutomated } from './util'
 
+// whatever
+app.commandLine.appendSwitch('remote-debugging-port', '8315')
 // Configure logging
 configureLogging();
-
-// Enable debugging - required for electron-chromedriver
-app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
 // Capture and show unhandled exceptions
 process.on('unhandledRejection', function handleWarning(reason) {

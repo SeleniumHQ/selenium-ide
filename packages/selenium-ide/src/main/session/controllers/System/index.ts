@@ -52,7 +52,7 @@ export default class SystemController extends BaseController {
       loggerWindow.show()
       // If automated, assume we already have a chromedriver process running
       if (!isAutomated) {
-        const startupError = await this.session.driver.startProcess()
+        const startupError = await this.session.driver.startProcess(this.session.store.get('browserInfo'))
         if (startupError) {
           await this.crash(
             `Unable to startup due to chromedriver error: ${startupError}`
