@@ -24,7 +24,10 @@ import {
   ExpandedMutationObserver,
 } from 'browser/types'
 import initFindSelect from './find-select'
-import { PluginPreloadOutputShape, RecordNewCommandInput } from '@seleniumhq/side-api'
+import {
+  PluginPreloadOutputShape,
+  RecordNewCommandInput,
+} from '@seleniumhq/side-api'
 import LocatorBuilders from './locator-builders'
 
 export interface RecordingState {
@@ -56,41 +59,21 @@ export default class Recorder {
     this.getFrameLocation = this.getFrameLocation.bind(this)
     this.setWindowHandle = this.setWindowHandle.bind(this)
     // @ts-expect-error
-    this.window.addEventListener('message', this.setWindowHandle)
-    this.window.sideAPI.recorder.onFrameRecalculate.addListener(
-      this.getFrameLocation
-    )
-
-    this.window.addEventListener('beforeunload', () => {
-      try {
-        this.window.sideAPI.recorder.onFrameRecalculate.removeListener(
-          this.getFrameLocation
-        )
-      } catch (e) {
-        // ignore
-      }
-    })
-    // @ts-expect-error
     this.recordingState = {}
     this.addRecorderTracingAttribute()
     initFindSelect()
-    this.window.sideAPI.recorder.onLocatorOrderChanged.addListener(
-      LocatorBuilders.setPreferredOrder
-    )
     // e.g., once on load
     this.getFrameLocation()
 
     this.window.sideAPI.recorder.getWinHandleId().then((id) => {
       this.winHandleId = id
     })
-
     handlers.forEach((handler) => {
       this.addEventHandler(...handler)
     })
     observers.forEach((observer) => {
       this.addMutationObserver(...observer)
     })
-    this.attach()
   }
 
   winHandleId: string = ''
@@ -120,7 +103,7 @@ export default class Recorder {
       value,
       insertBeforeLastCommand,
       frameLocation: actualFrameLocation || this.frameLocation,
-      winHandleId: this.winHandleId
+      winHandleId: this.winHandleId,
     }
     const plugins = this.plugins
     for (let i = 0, ii = plugins.length; i !== ii; i++) {
@@ -172,6 +155,14 @@ export default class Recorder {
 
   attach() {
     if (!this.attached) {
+      // @ts-expect-error
+      this.window.addEventListener('message', this.setWindowHandle)
+      this.window.sideAPI.recorder.onFrameRecalculate.addListener(
+        this.getFrameLocation
+      )
+      this.window.sideAPI.recorder.onLocatorOrderChanged.addListener(
+        LocatorBuilders.setPreferredOrder
+      )
       for (let eventKey in this.eventHandlers) {
         const eventInfo = this.parseEventKey(eventKey)
         const eventName = eventInfo.eventName
@@ -213,6 +204,14 @@ export default class Recorder {
   }
 
   detach() {
+    // @ts-expect-error
+    this.window.removeEventListener('message', this.setWindowHandle)
+    this.window.sideAPI.recorder.onFrameRecalculate.removeListener(
+      this.getFrameLocation
+    )
+    this.window.sideAPI.recorder.onLocatorOrderChanged.removeListener(
+      LocatorBuilders.setPreferredOrder
+    )
     for (let eventKey in this.eventListeners) {
       const eventInfo = this.parseEventKey(eventKey)
       const eventName = eventInfo.eventName

@@ -21,26 +21,27 @@ import preload from 'browser/helpers/preload'
 import { webFrame } from 'electron'
 import Recorder from './preload/recorder'
 
-(async () => {
+;(async () => {
+  console.log('Preloading?')
   const plugins = await preload({
     recorder: api.recorder,
     mutators: { recorder: apiMutators.recorder },
   })
-  window.addEventListener('DOMContentLoaded', async () => {
-    webFrame.executeJavaScript(`
+  console.log('Preloading!')
+  console.log('Executing webframe script?')
+  webFrame.executeJavaScript(`
       Object.defineProperty(navigator, 'webdriver', {
         get () {
           return true
         } 
       })
     `)
-    setTimeout(async () => {
-      console.debug('Initializing the recorder')
-      new Recorder(window, plugins.filter(Boolean) as PluginPreloadOutputShape[])
-    }, 500)
-  })
-})();
-
-/**
- * Expose it in the main context
- */
+  console.log('Executed webframe script?')
+  console.log('Initializing the recorder')
+  const recorder = new Recorder(
+    window,
+    plugins.filter(Boolean) as PluginPreloadOutputShape[]
+  )
+  recorder.attach()
+  console.log('Recorder initialized')
+})()
