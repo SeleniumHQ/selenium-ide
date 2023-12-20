@@ -15,9 +15,9 @@
 // specific language governing permissions and limitations
 // under the License.
 import type { Api } from '@seleniumhq/side-api'
-import api, { BrowserApiMutators } from 'browser/api'
+import { BrowserApiMutators } from 'browser/api'
 import mutators from 'browser/api/mutator'
-import { contextBridge } from 'electron'
+import { noop } from 'lodash/fp'
 
 export type NestedPartial<API> = {
   [K in keyof API]?: API[K] extends Record<string, unknown>
@@ -25,24 +25,15 @@ export type NestedPartial<API> = {
     : API[K]
 }
 
-export default (
-  apiSubset: NestedPartial<Api> & { mutators: NestedPartial<BrowserApiMutators> } = {
-    ...api,
-    mutators,
-  },
-  isElectron: boolean = true
-) => {
-  window.sideAPI = apiSubset as Api & { mutators: BrowserApiMutators }
-
-  /**
-   * Binds our API on initialization
-   */
-  process.once('loaded', async () => {
-    /**
-     * Expose it in the main context
-     */
-    if (isElectron) {
-      contextBridge.exposeInMainWorld('sideAPI', window.sideAPI)
-    }
-  })
-}
+export default (api: Api, cb = noop) =>
+  (
+    apiSubset: NestedPartial<Api> & {
+      mutators: NestedPartial<BrowserApiMutators>
+    } = {
+      ...api,
+      mutators,
+    },
+  ) => {
+    window.sideAPI = apiSubset as Api & { mutators: BrowserApiMutators }
+    cb()
+  }

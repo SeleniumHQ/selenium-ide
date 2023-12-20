@@ -1,4 +1,3 @@
-import storage from 'main/store'
 import BaseController from '../Base'
 
 const addToBeginning = (prevList: string[], entry: string) => {
@@ -26,24 +25,24 @@ const removeOne=(list: string[], entry: string)=>{
 
 export default class RecentProjectsController extends BaseController {
   add(filepath: string) {
-    const entries = storage.get<'recentProjects'>('recentProjects', [])
+    const entries = this.session.store.get('recentProjects')
     const newEntries = addToBeginning(entries, filepath)
-    storage.set<'recentProjects'>('recentProjects', newEntries)
+    this.session.store.set('recentProjects', newEntries)
     this.session.app.addRecentDocument(filepath)
   }
   remove(filepath: string) {
-    const entries = storage.get<'recentProjects'>('recentProjects', [])
+    const entries = this.session.store.get('recentProjects')
     const newEntries = removeOne(entries, filepath)
-    storage.set<'recentProjects'>('recentProjects', newEntries)
+    this.session.store.set('recentProjects', newEntries)
     this.session.app.clearRecentDocuments()
     return newEntries
   }
   clear() {
-    storage.set<'recentProjects'>('recentProjects', [])
+    this.session.store.set('recentProjects', [])
     this.session.app.clearRecentDocuments()
     return true
   }
   get(): string[] {
-    return storage.get<'recentProjects'>('recentProjects', [])
+    return this.session.store.get('recentProjects', [])
   }
 }

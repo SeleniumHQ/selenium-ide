@@ -11,7 +11,6 @@ import {
   UserPrefs,
 } from '@seleniumhq/side-api'
 import clone from 'lodash/fp/clone'
-import storage from 'main/store'
 import BaseController from '../Base'
 
 export default class StateController extends BaseController {
@@ -35,17 +34,19 @@ export default class StateController extends BaseController {
   async onProjectLoaded() {
     // If this file has been saved, fetch state
     if (this.session.projects.filepath) {
-      const storageState: StateShape = storage.get(this.getStatePath());
+      const storageState: StateShape = this.session.store.get(
+        this.getStatePath()
+      )
       const newState: StateShape = {
         ...defaultState,
         ...storageState,
         commands: this.state.commands,
         editor: {
           ...defaultState.editor,
-          ...storageState?.editor ?? {},
+          ...(storageState?.editor ?? {}),
           selectedCommandIndexes: [],
-        }
-      };
+        },
+      }
       this.state = newState
     }
   }
@@ -53,7 +54,7 @@ export default class StateController extends BaseController {
   async onProjectUnloaded() {
     if (this.session.projects.filepath) {
       // If this file has been loaded or saved, save state
-      storage.set(this.getStatePath(), {
+      this.session.store.set(this.getStatePath(), {
         ...this.state,
         playback: defaultState.playback,
         recorder: defaultState.recorder,
@@ -71,38 +72,43 @@ export default class StateController extends BaseController {
   }
 
   async toggleUserPrefCamelCase(camelCaseNamesPref: CamelCaseNamesPref) {
-    const userPrefs = await storage.get<'userPrefs'>(
+    const userPrefs = await this.session.store.get(
       'userPrefs',
       defaultUserPrefs
     )
-    storage.set<'userPrefs'>('userPrefs', { ...userPrefs, camelCaseNamesPref })
+    this.session.store.set('userPrefs', { ...userPrefs, camelCaseNamesPref })
   }
 
   async toggleUserPrefTheme(themePref: ThemePref) {
-    const userPrefs = await storage.get<'userPrefs'>(
+    const userPrefs = await this.session.store.get(
       'userPrefs',
       defaultUserPrefs
     )
-    storage.set<'userPrefs'>('userPrefs', { ...userPrefs, themePref })
+    this.session.store.set('userPrefs', { ...userPrefs, themePref })
   }
 
   async toggleUserPrefInsert(insertCommandPref: InsertCommandPref) {
-    const userPrefs = await storage.get<'userPrefs'>(
+    const userPrefs = await this.session.store.get(
       'userPrefs',
       defaultUserPrefs
     )
-    storage.set<'userPrefs'>('userPrefs', { ...userPrefs, insertCommandPref })
+    this.session.store.set('userPrefs', { ...userPrefs, insertCommandPref })
   }
 
-  async toggleUserPrefIgnoreCertificateErrors(ignoreCertificateErrorsPref: IgnoreCertificateErrorsPref) {
-    const userPrefs = await storage.get<'userPrefs'>(
+  async toggleUserPrefIgnoreCertificateErrors(
+    ignoreCertificateErrorsPref: IgnoreCertificateErrorsPref
+  ) {
+    const userPrefs = await this.session.store.get(
       'userPrefs',
       defaultUserPrefs
     )
-    storage.set<'userPrefs'>('userPrefs', { ... userPrefs, ignoreCertificateErrorsPref})
+    this.session.store.set('userPrefs', {
+      ...userPrefs,
+      ignoreCertificateErrorsPref,
+    })
   }
 
   async getUserPrefs(): Promise<UserPrefs> {
-    return storage.get<'userPrefs'>('userPrefs', defaultUserPrefs)
+    return this.session.store.get('userPrefs', defaultUserPrefs)
   }
 }

@@ -1,28 +1,28 @@
 import { Chrome } from '@seleniumhq/browser-info'
 import { WebDriverExecutor } from '@seleniumhq/side-runtime'
 import { ChildProcess } from 'child_process'
-import { readFileSync } from 'fs'
 import { BrowserInfo, Session } from 'main/types'
-import { join } from 'path'
 import getScriptManager from 'selenium-webdriver/bidi/scriptManager'
 import { Builder } from 'selenium-webdriver'
+
 import downloadDriver from './download'
 import startDriver, { port, WebdriverDebugLog } from './start'
 import BaseController from '../Base'
-
-const useBidi = false
-
-const playbackWindowPreload = readFileSync(
-  join(__dirname, `playback-window-preload-bundle.js`),
-  'utf-8'
-)
+import { createBidiAPIBindings } from './bidi'
 
 // Escape hatch to avoid dealing with rootDir complexities in TS
 // https://stackoverflow.com/questions/50822310/how-to-import-package-json-in-typescript
 const ElectronVersion = require('electron/package.json').version
 const ourElectronBrowserInfo: BrowserInfo = {
   browser: 'electron',
+  useBidi: false,
   version: ElectronVersion,
+}
+const electronCapabilities = {
+  'goog:chromeOptions': {
+    debuggerAddress: 'localhost:8315',
+    w3c: true,
+  },
 }
 
 type WindowType = 'webview'
@@ -61,43 +61,44 @@ export default class DriverController extends BaseController {
   }
 
   driverProcess?: ChildProcess
+  executor?: WebDriverExecutor
+  scriptManager?: Awaited<ReturnType<typeof getScriptManager>>
   windowHandle?: string
 
-  async build({
-    browser = 'electron',
-    capabilities = {
-      'goog:chromeOptions': {
-        debuggerAddress: 'localhost:8315',
-        w3c: true,
+  async build(
+    {
+      browser = this.session.store.get('browserInfo.browser') ?? 'electron',
+      capabilities = {
+        webSocketUrl: this.session.store.get('browserInfo.useBidi') ?? false,
       },
-      webSocketUrl: useBidi,
-    },
-    // The "9515" is the port opened by chrome driver.
-    server = 'http://localhost:' + port,
-  }: DriverOptions): Promise<WebDriverExecutor> {
-    console.info('Building driver for ' + browser)
+      // The "9515" is the port opened by chrome driver.
+      server = 'http://localhost:' + port,
+    }: DriverOptions = {
+      browser: this.session.store.get('browserInfo.browser') ?? 'electron',
+      capabilities: {
+        webSocketUrl: this.session.store.get('browserInfo.useBidi') ?? false,
+      },
+    }
+  ): Promise<WebDriverExecutor> {
+    if (this.executor) {
+      return this.executor
+    }
     const browserName = browser === 'electron' ? 'chrome' : browser
+    console.info('Instantiating driver builder for ', browser)
     const driverBuilder = await new Builder()
       .withCapabilities({
         browserName,
         ...capabilities,
+        ...(capabilities.webSocketUrl === false ? electronCapabilities : {}),
       })
       .usingServer(server)
       .forBrowser(browserName)
+    console.info('Building driver for ' + browser)
+    const driver = await driverBuilder.build()
     console.info('Built driver for ' + browser)
-    const driver = driverBuilder.build()
+    const useBidi = await this.session.store.get('browserInfo.useBidi')
     if (useBidi) {
-      console.info('Adding preload script to driver for ' + browser)
-      const scriptManager = await getScriptManager(
-        'selenium-ide',
-        driver as any
-      )
-      await scriptManager.addPreloadScript(
-        playbackWindowPreload as any,
-        [],
-        'false' as any
-      )
-      console.info('Added preload script to driver for ' + browser)
+      createBidiAPIBindings(this.session, driver)
     }
     const executor: WebDriverExecutor = new WebDriverExecutor({
       customCommands: this.session.commands.customCommands,
@@ -109,31 +110,35 @@ export default class DriverController extends BaseController {
       hooks: {
         onBeforePlay: (v) => this.session.playback.onBeforePlay(v),
       },
-      windowAPI: {
-        setWindowSize: async (executor, width, height) => {
-          const handle = await executor.driver.getWindowHandle()
-          const window = await this.session.windows.getPlaybackWindowByHandle(
-            handle
-          )
-          if (!window) {
-            throw new Error('Failed to find playback window')
-          }
-          const pbWinCount = this.session.windows.playbackWindows.length
-          const b = await window.getBounds()
-          const calcNewX = b.x + Math.floor(b.width / 2) - Math.floor(width / 2)
-          const calcNewY =
-            b.y + Math.floor(b.height / 2) - Math.floor(height / 2)
-          const newX = calcNewX < 0 ? pbWinCount * 20 : calcNewX
-          const newY = calcNewY < 0 ? pbWinCount * 20 : calcNewY
-          await window.setBounds({
-            x: newX,
-            y: newY,
-            height,
-            width,
-          })
-        },
-      },
+      windowAPI:
+        browser !== 'electron'
+          ? undefined
+          : {
+              setWindowSize: async (executor, width, height) => {
+                const handle = await executor.driver.getWindowHandle()
+                const window =
+                  await this.session.windows.getPlaybackWindowByHandle(handle)
+                if (!window) {
+                  throw new Error('Failed to find playback window')
+                }
+                const pbWinCount = this.session.windows.playbackWindows.length
+                const b = await window.getBounds()
+                const calcNewX =
+                  b.x + Math.floor(b.width / 2) - Math.floor(width / 2)
+                const calcNewY =
+                  b.y + Math.floor(b.height / 2) - Math.floor(height / 2)
+                const newX = calcNewX < 0 ? pbWinCount * 20 : calcNewX
+                const newY = calcNewY < 0 ? pbWinCount * 20 : calcNewY
+                await window.setBounds({
+                  x: newX,
+                  y: newY,
+                  height,
+                  width,
+                })
+              },
+            },
     })
+    this.executor = executor
     return executor
   }
 
@@ -152,8 +157,8 @@ export default class DriverController extends BaseController {
       : [chromeBrowserInfo]
     const ourChromeBrowserInfo: BrowserInfo[] = chromeBrowserInfoArr.map(
       (info) => ({
-        version: info.version,
         browser: 'chrome',
+        version: info.version,
       })
     )
     return {
@@ -182,7 +187,8 @@ export default class DriverController extends BaseController {
 
   async stopProcess(): Promise<null | string> {
     if (this.driverProcess) {
-      const browser = this.session.store.get('browserInfo')?.browser ?? 'electron';
+      const browser =
+        this.session.store.get('browserInfo')?.browser ?? 'electron'
       console.log('Stopping process for driver', browser)
       const procKilled = await this.driverProcess.kill(9)
       WebdriverDebugLog('Killed driver?', procKilled)

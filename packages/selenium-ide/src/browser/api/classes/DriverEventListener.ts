@@ -1,5 +1,4 @@
 import { BaseListener, VariadicArgs } from '@seleniumhq/side-api'
-import { sendMessage } from './DriverUtils'
 
 type DriverEventShape<PARAMS> = {
   path: string
@@ -13,12 +12,12 @@ const baseListener = <ARGS extends VariadicArgs>(
   return {
     addListener(listener) {
       console.debug(path, 'listener added')
-      sendMessage(`${path}.addListener`)
       listeners.push(listener)
     },
     dispatchEvent(...args) {
       console.debug(path, 'dispatching event')
-      listeners.forEach((fn) => fn(...args))
+      const results = listeners.map((fn) => fn(...args))
+      return results;
     },
     hasListener(listener) {
       return listeners.includes(listener)
@@ -29,7 +28,6 @@ const baseListener = <ARGS extends VariadicArgs>(
       if (index === -1) {
         throw new Error(`Unable to remove listener for ${path} ${listener}`)
       }
-      sendMessage(`${path}.removeListener`)
       console.debug(path, 'listener removed')
       listeners.splice(index, 1)
     },

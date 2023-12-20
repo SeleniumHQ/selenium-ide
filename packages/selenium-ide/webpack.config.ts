@@ -80,6 +80,7 @@ const commonConfig: Pick<
 // Our renderer and preload files
 const windowData = fs
   .readdirSync(path.join(__dirname, 'src', 'browser', 'windows'))
+  .filter((filename) => filename !== 'PlaybackWindowBidi')
   .map((filename) => [
     kebabCase(filename),
     path.join(__dirname, 'src', 'browser', 'windows', filename),
@@ -115,7 +116,42 @@ const rendererConfig: Configuration = {
     Object.values(rendererEntries).map(
       ([filename]) =>
         getBrowserPlugin(filename) as unknown as WebpackPluginInstance
+    )
+  ),
+  target: 'electron-renderer',
+}
+
+const playbackPreloadBidiConfig: Configuration = {
+  ...commonConfig,
+  entry: {
+    'playback-window-bidi-preload': path.join(
+      __dirname,
+      'src',
+      'browser',
+      'windows',
+      'PlaybackWindowBidi',
+      'preload.ts'
     ),
+  },
+  plugins: commonPlugins,
+  target: 'web',
+}
+
+const playbackRendererBidiConfig: Configuration = {
+  ...commonConfig,
+  entry: {
+    'playback-window-bidi-renderer': path.join(
+      __dirname,
+      'src',
+      'browser',
+      'windows',
+      'PlaybackWindowBidi',
+      'renderer.tsx'
+    ),
+  },
+  plugins: commonPlugins.concat(
+    getBrowserPlugin('playback-window-bidi') as unknown as WebpackPluginInstance
+  ).concat(
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -125,7 +161,7 @@ const rendererConfig: Configuration = {
       ],
     })
   ),
-  target: 'electron-renderer',
+  target: 'web',
 }
 
 const mainConfig: Configuration = {
@@ -137,12 +173,18 @@ const mainConfig: Configuration = {
   target: 'electron-main',
 }
 
-export default [mainConfig, preloadConfig, rendererConfig]
+export default [
+  mainConfig,
+  preloadConfig,
+  rendererConfig,
+  playbackPreloadBidiConfig,
+  playbackRendererBidiConfig,
+]
 
 function getBrowserPlugin(filename: string) {
   const componentName = filename.slice(0, -9)
   const title =
-    componentName === 'playback-window'
+    componentName.startsWith('playback-window')
       ? ''
       : componentName
           .split('-')

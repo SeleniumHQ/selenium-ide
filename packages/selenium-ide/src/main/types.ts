@@ -24,6 +24,7 @@ import { StorageSchema } from './store'
 export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
   binary?: Chrome.BrowserInfo['binary']
   browser: Browser
+  useBidi?: boolean
 }
 
 export interface BrowsersInfo {

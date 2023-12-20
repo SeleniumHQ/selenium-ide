@@ -13,6 +13,9 @@ import { randomInt, randomUUID } from 'crypto'
 import { relative } from 'node:path'
 import BaseController from '../Base'
 import { BrowserWindow } from 'electron'
+import { WebDriverExecutor } from '@seleniumhq/side-runtime'
+
+const uninitializedWindows = ['data:,', 'about:blank']
 
 const makeSelectFrameCMD = (target: string): CommandShape => ({
   command: 'selectFrame',
@@ -71,6 +74,7 @@ const getLastActiveWindowHandleId = (session: CoreSessionData): string => {
   return 'root'
 }
 export default class RecorderController extends BaseController {
+  driver!: WebDriverExecutor
   windowIDs: number[] = []
 
   async recordNewCommand(
@@ -147,7 +151,7 @@ export default class RecorderController extends BaseController {
         x,
         y
       )
-    const allResults = results.flat().flat().filter(Boolean);
+    const allResults = results.flat().flat().filter(Boolean)
     if (allResults.length) {
       return allResults[0]
     }
@@ -190,6 +194,17 @@ export default class RecorderController extends BaseController {
   }
 
   async start(): Promise<string | null> {
+    const useBidi = this.session.store.get('browserInfo.useBidi')
+    this.driver = await this.session.driver.build()
+    if (useBidi) {
+      const firstWindowURL = await this.driver.driver.getCurrentUrl()
+      if (uninitializedWindows.includes(firstWindowURL)) {
+        await this.driver.doOpen(this.session.projects.project.url)
+      }
+      await this.driver.driver.getWindowHandle()
+      return null
+    }
+
     let playbackWindow = await this.session.windows.getLastPlaybackWindow()
     let inited = false
     if (playbackWindow) {

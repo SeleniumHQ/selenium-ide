@@ -15,17 +15,17 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { handlers, observers } from './record-handlers'
-import * as recordShortcuts from './record-shortcuts'
-import { attach, detach } from './prompt-injector'
+import { RecordNewCommandInput, RecorderPreprocessor } from '@seleniumhq/side-api'
+import initFindSelect from 'browser/windows/PlaybackWindow/preload/find-select'
+import LocatorBuilders from 'browser/windows/PlaybackWindow/preload/locator-builders'
+import { attach, detach } from 'browser/windows/PlaybackWindow/preload/prompt-injector'
+import { handlers, observers } from 'browser/windows/PlaybackWindow/preload/record-handlers'
 import {
   EventHandler,
   ExpandedMessageEvent,
   ExpandedMutationObserver,
 } from 'browser/types'
-import initFindSelect from './find-select'
-import { RecordNewCommandInput, RecorderPreprocessor } from '@seleniumhq/side-api'
-import LocatorBuilders from './locator-builders'
+import * as recordShortcuts from './record-shortcuts'
 
 export interface RecordingState {
   typeTarget: HTMLElement | null
@@ -94,7 +94,6 @@ export default class Recorder {
     insertBeforeLastCommand: boolean = false,
     actualFrameLocation?: string
   ) {
-    console.log('record', event, command, target, value, insertBeforeLastCommand)
     let newCommand: RecordNewCommandInput = {
       command,
       target,

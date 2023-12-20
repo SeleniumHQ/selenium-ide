@@ -10,7 +10,6 @@ import electron, {
 import { existsSync, readFileSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
-import storage from 'main/store'
 import { join } from 'node:path'
 import { platform } from 'node:os'
 import BaseController from '../Base'
@@ -50,11 +49,11 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
     ([key, { window }]: [string, WindowConfig]) => {
       const filename = kebabCase(key)
       const preloadPath = join(__dirname, `${filename}-preload-bundle.js`)
-      const hasPreload = filename !== 'playback-window' && existsSync(preloadPath)
+      const hasPreload = !filename.endsWith('-bidi') && existsSync(preloadPath)
       const windowLoader: WindowLoaderFactory =
-        (session: Session) =>
+        (_session: Session) =>
         (options: BrowserWindowConstructorOptions = {}) => {
-          const windowConfig = window(session)
+          const windowConfig = window()
           const win = new BrowserWindow({
             ...windowConfig,
             webPreferences: {
@@ -315,8 +314,8 @@ export default class WindowsController extends BaseController {
     sizeKey: string,
     positionKey: string
   ) {
-    const size = storage.get(sizeKey) as number[]
-    const position = storage.get(positionKey) as number[]
+    const size = this.session.store.get(sizeKey) as number[]
+    const position = this.session.store.get(positionKey) as number[]
     if (size?.length) window.setSize(size[0], size[1], true)
 
     const screenElectron = electron.screen.getPrimaryDisplay()
@@ -347,11 +346,11 @@ export default class WindowsController extends BaseController {
     this.arrangeWindow(window, sizeKey, positionKey)
     window.on('moved', () => {
       const position = window.getPosition() as [number, number]
-      storage.set(positionKey as any, position)
+      this.session.store.set(positionKey as any, position)
     })
     window.on('resize', () => {
       const size = window.getSize() as [number, number]
-      storage.set(sizeKey as any, size)
+      this.session.store.set(sizeKey as any, size)
     })
   }
 
