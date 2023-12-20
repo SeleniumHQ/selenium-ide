@@ -1,5 +1,13 @@
 export const UniqueIdentifier = '!!!SELENIUM_IDE_IDENTIFIER_HERE!!!'
 
-export const sendMessage = (message: any) => {
-  console.log(UniqueIdentifier + JSON.stringify(message))
+type Message = {
+  path: string
+  args: any[]
+}
+
+let id = 0
+export const sendMessage = (message: Message) => {
+  const nextID = id++
+  console.log(UniqueIdentifier + JSON.stringify({ ...message, id: nextID }))
+  return nextID
 }

@@ -41,6 +41,31 @@ export default class PlaybackController extends BaseController {
   }) => {
     const { driver } = executor
     const { windows } = this.session
+    const capabilities = await driver.getCapabilities()
+    const useBidi = capabilities.get('webSocketUrl')
+
+    if (useBidi) {
+      const handles = await driver.getAllWindowHandles()
+      if (!handles.length) {
+        const playbackPos = await this.session.store.get('windowPositionPlayback')
+        const playbackSize = await this.session.store.get('windowSizePlayback')
+        await driver.switchTo().newWindow('tab')
+        await driver.manage().window().setPosition(...playbackPos)
+        await driver.manage().window().setSize(...playbackSize)
+        const windowDimensionCache = setInterval(async () => {
+          const handles = await driver.getAllWindowHandles()
+          if (!handles.length) {
+            clearInterval(windowDimensionCache)
+          }
+          const pos = await driver.manage().window().getPosition()
+          const size = await driver.manage().window().getSize()
+          await this.session.store.set('windowPositionPlayback', [pos.x, pos.y])  
+          await this.session.store.set('windowSizePlayback', [size.width, size.height])
+        }, 1000);
+      }
+      return
+    }
+
     const UUID = randomUUID()
     const registerWindow = async (windowID: number) => {
       let success = false

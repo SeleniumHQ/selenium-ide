@@ -1,6 +1,6 @@
 // import { ipcRenderer } from 'electron'
 import Recorder from './recorder'
-import {singleton as locatorBuilders} from './locator-builders'
+import {singleton as locatorBuilders} from 'browser/windows/PlaybackWindow/preload/locator-builders'
 
 let recorder: Recorder
 let eleTarget: HTMLElement | null

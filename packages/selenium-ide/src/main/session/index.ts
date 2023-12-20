@@ -14,17 +14,17 @@ import SystemController from './controllers/System'
 import TestsController from './controllers/Tests'
 import WindowsController from './controllers/Windows'
 import Api from '../api'
-import { Session, Storage } from '../types'
+import Store from '../store'
+import { Session } from '../types'
 import OutputFormatsController from './controllers/OutputFormats'
 
-export default function createSession(
+export default async function createSession(
   app: App,
-  store: Storage
-): Session {
+): Promise<Session> {
   // Building our session object
   const partialSession: Partial<Session> = {
     app,
-    store,
+    store: await Store(),
   }
   partialSession.dialogs = new DialogsController(partialSession as Session)
   partialSession.argTypes = new ArgTypesController(partialSession as Session)

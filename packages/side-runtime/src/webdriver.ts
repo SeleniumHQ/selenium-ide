@@ -20,8 +20,6 @@ import webdriver, {
   WebDriver,
   WebElement as WebElementShape,
 } from 'selenium-webdriver'
-// @ts-expect-error missing types
-import LogInspector from 'selenium-webdriver/bidi/logInspector'
 import { absolutifyUrl } from './utils'
 import {
   composePreprocessors,
@@ -107,7 +105,6 @@ export type GeneralHook<T> = (input: T) => Promise<void> | void
 
 export interface WebDriverExecutorHooks {
   onBeforePlay?: GeneralHook<BeforePlayHookInput>
-  onLog?: GeneralHook<LogInspector>
   onAfterCommand?: GeneralHook<CommandHookInput>
   onBeforeCommand?: GeneralHook<CommandHookInput>
   onStoreWindowHandle?: GeneralHook<StoreWindowHandleHookInput>
@@ -825,6 +822,7 @@ export default class WebDriverExecutor {
   }
 
   async doExecuteScript(script: ScriptShape, optionalVariable?: string) {
+    console.log(script)
     const result = await this.driver.executeScript(
       script.script,
       ...script.argv

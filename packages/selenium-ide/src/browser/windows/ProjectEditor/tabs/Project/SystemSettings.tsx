@@ -108,9 +108,7 @@ const SystemSettings: FC<SystemSettingsProps> = ({ state }) => (
         <MenuItem value="No">No</MenuItem>
       </Select>
     </FormControl>
-    <FormControl>
-      <DriverSelector />
-    </FormControl>
+    <DriverSelector />
   </Stack>
 )
 

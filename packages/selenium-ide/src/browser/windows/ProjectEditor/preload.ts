@@ -1,3 +1,3 @@
-import preload from '../../helpers/preload'
+import preload from '../../helpers/preload-electron'
 
 preload()

@@ -1,9 +1,10 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import {createRoot} from 'react-dom/client'
 
 export default (Component: React.FC | React.ComponentClass) => {
   document.addEventListener('DOMContentLoaded', () => {
     const domContainer = document.querySelector('#root')
-    ReactDOM.render(React.createElement(Component), domContainer)
+    const root = createRoot(domContainer!)
+    root.render(React.createElement(Component))
   });
 }

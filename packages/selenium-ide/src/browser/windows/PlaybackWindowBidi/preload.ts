@@ -15,10 +15,10 @@
 // specific language governing permissions and limitations
 // under the License.
 import { RecorderPreprocessor } from '@seleniumhq/side-api'
-import api from 'browser/api'
+import api from 'browser/api/bidi'
+import { resolversByID } from 'browser/api/classes/DriverHandler'
 import apiMutators from 'browser/api/mutator'
-import preload from 'browser/helpers/preload-electron'
-import { webFrame } from 'electron'
+import preload from 'browser/helpers/preload-bidi'
 import Recorder from './preload/recorder'
 
 const recorderProcessors: RecorderPreprocessor[] = []
@@ -34,14 +34,13 @@ preload({
     recorder: apiMutators.recorder,
   },
 })
+window.sideAPI.resolveAPI = (id: string, ...args: any[]) => {
+  const resolver = resolversByID[id]
+  if (resolver) {
+    resolver(...args);
+  }
+}
 window.addEventListener('DOMContentLoaded', async () => {
-  webFrame.executeJavaScript(`
-    Object.defineProperty(navigator, 'webdriver', {
-      get () {
-        return true
-      } 
-    })
-  `)
   setTimeout(async () => {
     console.debug('Initializing the recorder')
     new Recorder(window, recorderProcessors)

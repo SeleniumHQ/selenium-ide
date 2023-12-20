@@ -1,7 +1,6 @@
 import { PluginShape } from '@seleniumhq/side-api'
 import { correctPluginPaths, loadPlugins } from '@seleniumhq/side-runtime'
 import { ipcMain } from 'electron'
-import storage from 'main/store'
 import BaseController from '../Base'
 import path from 'node:path'
 
@@ -16,7 +15,7 @@ export default class PluginsController extends BaseController {
   plugins: PluginShape[] = []
   pluginHooks: PluginHooksState[] = []
   async list() {
-    const systemPlugins = storage.get<'plugins'>('plugins')
+    const systemPlugins = this.session.store.get('plugins')
     const projectPath = this.session.projects.filepath as string
     const activeProject = await this.session.projects.getActive()
     return systemPlugins
