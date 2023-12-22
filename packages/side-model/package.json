@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-model",
-  "version": "4.0.0-alpha.4",
+  "version": "4.0.0-alpha.5",
   "private": false,
   "description": "Selenium IDE shared models",
   "author": "Tomer <tomer@corevo.io>",
