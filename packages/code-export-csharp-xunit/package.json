@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export-csharp-xunit",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.0-alpha.3",
   "private": false,
   "description": "Export Selenium IDE project contents to C# XUnit",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
@@ -19,10 +19,10 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@seleniumhq/code-export-csharp-commons": "^4.0.0-alpha.2",
-    "side-code-export": "^4.0.0-alpha.11"
+    "side-code-export": "^4.0.0-alpha.13"
   },
   "devDependencies": {
-    "@seleniumhq/side-model": "^4.0.0-alpha.4"
+    "@seleniumhq/side-model": "^4.0.0-alpha.5"
   },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"
 }
