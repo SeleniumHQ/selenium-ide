@@ -135,15 +135,15 @@ export namespace Chrome {
     }
   }
 
-  export interface BrowserInfo {
-    channel: ChromeChannel
-    binary: string
-    version: string
-  }
-
   export enum ChromeChannel {
     stable = 'stable',
     beta = 'beta',
     canary = 'canary',
+  }
+
+  export interface BrowserInfo {
+    channel: ChromeChannel
+    binary: string
+    version: string
   }
 }

@@ -21,6 +21,5 @@ import express, { Express } from 'express'
 export default function createStaticSite(): Express {
   const app = express()
   app.use(express.static(path.join(__dirname, '../fixtures/static')))
-
   return app
 }

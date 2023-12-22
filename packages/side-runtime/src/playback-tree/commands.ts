@@ -28,7 +28,7 @@ export const ControlFlowCommandNames = {
   times: 'times',
   try: 'try',
   while: 'while',
-}
+} as const
 
 function commandNamesEqual(command: CommandShape, target: string) {
   if (command) {

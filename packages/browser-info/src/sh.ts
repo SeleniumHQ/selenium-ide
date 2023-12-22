@@ -23,7 +23,7 @@ export async function sh(
   args: string[] = [],
   options?: object
 ): Promise<Output> {
-  let resolve: (value: Output) => void, reject: (reason: Error & Output) => void
+  let resolve: (value: Output) => void, reject: (reason: ShellError) => void
   const p = new Promise<Output>((res, rej) => {
     resolve = res
     reject = rej
@@ -64,7 +64,7 @@ export function makeError(
   stdout: string,
   stderr: string
 ) {
-  const err = new Error(message) as Error & Output & ErrorWithExitCode
+  const err = new Error(message) as ShellError
   err.stdout = stdout
   err.stderr = stderr
   err.code = code
@@ -72,11 +72,13 @@ export function makeError(
   return err
 }
 
-interface Output {
+export interface Output {
   stdout: string
   stderr: string
 }
 
-interface ErrorWithExitCode {
+export interface ErrorWithExitCode {
   code: number
 }
+
+export interface ShellError extends Error, Output, ErrorWithExitCode {}

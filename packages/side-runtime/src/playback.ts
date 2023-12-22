@@ -235,9 +235,8 @@ export default class Playback {
         },
       })
       this[state].callstack = callstack
-      await (
-        await this._play()
-      )()
+      const running = await this._play()
+      await running()
     }
   }
 
@@ -258,6 +257,9 @@ export default class Playback {
   }
 
   async pause({ graceful } = { graceful: false }) {
+    if (!this.currentExecutingNode) {
+      return
+    }
     this[state].pausing = true
     if (!graceful) {
       await this.executor.cancel()
@@ -287,7 +289,7 @@ export default class Playback {
 
     // play will throw but the user will catch it with this.play()
     // this.stop() should resolve once play finishes
-    await (this[state].playPromise as RunningPromise).catch(() => {})
+    await this[state].playPromise
   }
 
   async abort() {
@@ -302,12 +304,15 @@ export default class Playback {
     // we kill regardless of wether the test is paused to keep the
     // behavior consistent
 
-    // @ts-expect-error
-    await this.executor.kill()
+    await this.executor.cancel()
 
     // play will throw but the user will catch it with this.play()
     // this.abort() should resolve once play finishes
-    await (this[state].playPromise as RunningPromise).catch(() => {})
+    try {
+      await this[state].playPromise
+    } catch (err) {
+      // ignore
+    }
   }
 
   async cleanup() {
@@ -376,7 +381,7 @@ export default class Playback {
   ): Promise<void> {
     if (
       !this.currentExecutingNode &&
-      (this[state].callstack as Callstack).length > 1
+      (this[state]?.callstack?.length ?? 0) > 1
     ) {
       this._unwind()
     }
@@ -492,7 +497,6 @@ export default class Playback {
 
       return await this._executionLoop()
     }
-    throw new Error('Uh oh, why am I here?!?')
   }
 
   async _playSingleCommand(command: CommandShape) {
@@ -628,6 +632,7 @@ export default class Playback {
         )
       )
     }
+
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: this[state].exitCondition || PlaybackStates.FINISHED,
     })
@@ -666,7 +671,7 @@ export default class Playback {
       playTo.res()
     }
 
-    await new Promise((res) => {
+    return new Promise((res) => {
       this[state].resumeResolve = res
     })
   }

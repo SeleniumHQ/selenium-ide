@@ -1,7 +1,7 @@
 {
-  "name": "@seleniumhq/selenium-ide",
+  "name": "selenium-ide",
   "version": "4.0.0-alpha.63",
-  "private": true,
+  "private": false,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
@@ -18,6 +18,9 @@
     "build:webpack": "webpack",
     "install-app-deps": "electron-builder install-app-deps",
     "watch": "webpack --watch"
+  },
+  "bin": {
+    "selenium-ide": "dist/bin.js"
   },
   "sideEffects": false,
   "main": "build/main-bundle.js",
@@ -112,6 +115,7 @@
     "@seleniumhq/side-model": "^4.0.0-alpha.4",
     "@seleniumhq/side-runtime": "^4.0.0-alpha.31",
     "dnd-core": "^16.0.1",
+    "electron": "^28.0.0",
     "electron-chromedriver": "^28.0.0",
     "electron-log": "^5.0.1",
     "electron-store": "^8.1.0",
@@ -122,6 +126,7 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^18.2.0",
+    "scroll-into-view-if-needed": "^3.0.10",
     "selenium-webdriver": "^4.16.0",
     "side-code-export": "^4.0.0-alpha.11",
     "v8-compile-cache": "^2.3.0"
@@ -139,7 +144,6 @@
     "@types/webpack-env": "^1.16.0",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.8.1",
-    "electron": "^28.0.0",
     "electron-builder": "^24.9.1",
     "electron-devtools-installer": "^3.2.0",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
@@ -147,7 +151,6 @@
     "mini-css-extract-plugin": "^2.7.6",
     "npm-run-all": "^4.1.5",
     "run-script-os": "^1.1.6",
-    "scroll-into-view-if-needed": "^3.0.10",
     "source-map-loader": "^4.0.1",
     "source-map-support": "^0.5.21",
     "style-loader": "^3.3.3",

@@ -33,5 +33,7 @@ jobs:
         run: pnpm -r i
       - name: Build side-runner and selenium-ide
         run: pnpm run build
-      - name: Test the side-runner
+      - name: Run the tests
+        run: npm run test:setup
+      - name: Run the project examples as tests
         run: npm run test:side-runner:ci

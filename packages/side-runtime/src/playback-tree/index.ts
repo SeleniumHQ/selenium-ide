@@ -230,11 +230,13 @@ function connectCommandNode({
 }) {
   if (
     commandNode.command.skip ||
-    !commandNodeConnectors[commandNode.command.command]
+    !(commandNode.command.command in commandNodeConnectors)
   ) {
     connectDefault(commandNode, nextCommandNode, commandNodeStack, state)
   } else {
-    commandNodeConnectors[commandNode.command.command](
+    const connectorKey = commandNode.command
+      .command as keyof typeof commandNodeConnectors
+    commandNodeConnectors[connectorKey](
       commandNode,
       nextCommandNode,
       commandNodeStack,
@@ -254,4 +256,4 @@ const commandNodeConnectors = {
   [ControlFlowCommandNames.times]: connectConditionalForBranchOpen,
   [ControlFlowCommandNames.try]: connectConditionalForBranchOpen,
   [ControlFlowCommandNames.while]: connectConditionalForBranchOpen,
-}
+} as const

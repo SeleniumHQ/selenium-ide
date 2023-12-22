@@ -41,7 +41,7 @@ jobs:
         run: pnpm -r i
         env:
           NODE_ENV: "production"
-      - name: Publish non IDE packages to npm
-        run: pnpm -r publish --no-git-checks --filter=!packages/selenium-ide --access public
+      - name: Publish packages to npm
+        run: pnpm -r publish --no-git-checks --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

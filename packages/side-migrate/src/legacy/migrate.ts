@@ -143,7 +143,8 @@ function migrateSuite(
 }
 
 export function migrateTestCase(data: string): {
-  test: Partial<TestShape>
+  test: Pick<TestShape, 'commands' | 'name'> &
+    Omit<Partial<TestShape>, 'commands' | 'name'>
   baseUrl: string
 } {
   const sanitized = sanitizeXml(data)
@@ -170,7 +171,10 @@ export function migrateTestCase(data: string): {
   return { test, baseUrl }
 }
 
-export function migrateUrls(test: TestShape, url: string): TestShape {
+export function migrateUrls(
+  test: Pick<TestShape, 'commands'> & Omit<Partial<TestShape>, 'commands'>,
+  url: string
+): Pick<TestShape, 'commands'> & Omit<Partial<TestShape>, 'commands'> {
   return Object.assign({}, test, {
     commands: test.commands.map((command) => {
       if (command.command === 'open') {

@@ -8,6 +8,7 @@ export interface CommandShape {
   command: string
   target?: string
   targets?: [string, string][]
+  fallbackTargets?: [string, string][]
   targetFallback?: [string, string][]
   value?: string
   values?: [string, string][]

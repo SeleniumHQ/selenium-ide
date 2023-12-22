@@ -16,5 +16,6 @@
 // under the License.
 
 import _static from './static'
+export type { Express } from 'express'
 
 export const createStaticSite = _static

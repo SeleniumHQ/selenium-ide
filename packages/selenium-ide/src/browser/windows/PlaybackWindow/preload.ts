@@ -44,6 +44,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   `)
   setTimeout(async () => {
     console.debug('Initializing the recorder')
-    new Recorder(window, recorderProcessors)
+    const recorder = new Recorder(window, recorderProcessors)
+    recorder.attach()
   }, 500)
 })

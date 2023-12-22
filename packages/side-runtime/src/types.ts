@@ -29,7 +29,7 @@ export interface StoreWindowHandleHookInput {
 export interface WindowAppearedHookInput {
   command: CommandShape
   windowHandleName: CommandShape['windowHandleName']
-  windowHandle: string
+  windowHandle?: string
 }
 
 export interface WindowSwitchedHookInput {

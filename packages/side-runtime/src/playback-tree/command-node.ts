@@ -23,6 +23,7 @@ import { CommandNodeOptions } from '../types'
 import Variables from '../variables'
 import { WebDriverExecutorCondEvalResult } from '../webdriver'
 import { ControlFlowCommandChecks } from './commands'
+import { AssertionError, VerificationError } from '../errors'
 
 export interface CommandExecutorOptions {
   executorOverride?: Fn
@@ -125,9 +126,16 @@ export class CommandNode {
       const executor = customCommand
         ? () => customCommand.execute(command, commandExecutor)
         : // @ts-expect-error webdriver is too kludged by here
-          () => commandExecutor[existingCommandName](target, value, commandName)
-      const ignoreRetry =
-        commandName === 'pause' || commandName.startsWith('wait')
+          () => commandExecutor[existingCommandName](target, value, command)
+      const cmdList = [
+        'click',
+        'check',
+        'select',
+        'type',
+        'sendKeys',
+        'uncheck',
+      ]
+      const ignoreRetry = !cmdList.includes(commandName)
       if (ignoreRetry) {
         return executor()
       }
@@ -158,9 +166,7 @@ export class CommandNode {
       return result
     } catch (e) {
       clearTimeout(expirationTimer)
-      this.handleTransientError(e, timeout)
-      await this.pauseTimeout()
-      return this.retryCommand(execute, timeout)
+      throw e
     }
   }
 
@@ -173,6 +179,12 @@ export class CommandNode {
   }
 
   handleTransientError(e: unknown, timeout: number) {
+    if (e instanceof VerificationError) {
+      throw e
+    }
+    if (e instanceof AssertionError) {
+      throw e
+    }
     const { command, target, value } = this.command
     const thisCommand = `${command}-${target}-${value}`
     const thisErrorMessage = e instanceof Error ? e.message : ''

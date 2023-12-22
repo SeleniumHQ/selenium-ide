@@ -97,12 +97,19 @@ function preprocessObject(
 export type Interpolator = (value: string, variables: Variables) => string
 
 export function preprocessArray(interpolator: Interpolator) {
-  return function preprocessArray(items: string[], variables: Variables) {
-    return items.map((item) => [interpolator(item[0], variables), item[1]])
+  return function preprocessArray(
+    items: [string, string][],
+    variables: Variables
+  ) {
+    return items.map((item) => [
+      interpolator(item[0], variables),
+      interpolator(item[1], variables),
+    ])
   }
 }
 
 export function interpolateString(value: string, variables: Variables) {
+  if (!value) return ''
   value = value.replace(/^\s+/, '')
   value = value.replace(/\s+$/, '')
   let r2

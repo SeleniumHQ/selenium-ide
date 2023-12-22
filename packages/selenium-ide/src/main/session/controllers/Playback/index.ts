@@ -190,12 +190,12 @@ export default class PlaybackController extends BaseController {
     if (playRange[1] !== -1) {
       const test = this.session.tests.getByID(testID)
       if (playRange[0] === playRange[1]) {
-        playback.playSingleCommand(test.commands[playRange[0]])
+         await playback.playSingleCommand(test.commands[playRange[0]])
       } else {
-        playback.playTo(test, playRange[1], playRange[0])
+        await playback.playTo(test, playRange[1], playRange[0])
       }
     } else {
-      playback.play(this.session.tests.getByID(testID), {
+      await playback.play(this.session.tests.getByID(testID), {
         startingCommandIndex: playRange[0],
       })
     }
