@@ -67,8 +67,9 @@ const levelElse: LevelCommand = (_command, level, _levels) => {
 }
 
 const levelCommand: LevelCommand = (command, level, levels) => {
-  if (!command.skip && commandLevelers[command.command]) {
-    return commandLevelers[command.command](command, level, levels)
+  if (!command.skip && command.command in commandLevelers) {
+    const levelerKey = command.command as keyof typeof commandLevelers
+    return commandLevelers[levelerKey](command, level, levels)
   }
   return levelDefault(command, level, levels)
 }
@@ -84,4 +85,4 @@ const commandLevelers = {
   [ControlFlowCommandNames.times]: levelBranchOpen,
   [ControlFlowCommandNames.try]: levelBranchOpen,
   [ControlFlowCommandNames.while]: levelBranchOpen,
-}
+} as const

@@ -1,12 +1,11 @@
 import { CommandShape } from '@seleniumhq/side-model'
 import {
   getActiveCommand,
-  getActiveTest,
   getActiveCommandIndex,
+  getActiveWindowHandleID,
 } from '@seleniumhq/side-api/dist/helpers/getActiveData'
 import {
   LocatorFields,
-  CoreSessionData,
   RecordNewCommandInput,
 } from '@seleniumhq/side-api'
 import { randomInt, randomUUID } from 'crypto'
@@ -54,25 +53,6 @@ const getFrameTraversalCommands = (
   }
 }
 
-const getLastActiveWindowHandleId = (session: CoreSessionData): string => {
-  const activeTest = getActiveTest(session)
-  const activeIndex = getActiveCommandIndex(session)
-  if (activeIndex > -1) {
-    const commands = activeTest.commands
-    for (let i = activeIndex; i >= 0; i--) {
-      let item = commands[i]
-      if (item.command == 'selectWindow') {
-        let target = item.target as string
-        return target.substring('handle=${'.length, target.length - 1)
-      }
-      if (item.command == 'storeWindowHandle') {
-        return item.target as string
-      }
-    }
-  }
-
-  return 'root'
-}
 export default class RecorderController extends BaseController {
   driver!: WebDriverExecutor
   windowIDs: number[] = []
@@ -84,8 +64,9 @@ export default class RecorderController extends BaseController {
     if (session.state.status !== 'recording') {
       return null
     }
+    const activeWindowHandleID = getActiveWindowHandleID(session) || 'root'
     const commands = []
-    if (getLastActiveWindowHandleId(session) != cmd.winHandleId) {
+    if (activeWindowHandleID != cmd.winHandleId) {
       const selectWindowCommand: CommandShape = {
         id: randomUUID(),
         command: 'selectWindow',
@@ -102,12 +83,6 @@ export default class RecorderController extends BaseController {
       value: Array.isArray(cmd.value) ? cmd.value[0][0] : cmd.value,
     }
     const windows = BrowserWindow.getAllWindows()
-    const newWindowIDs = windows.map((window) => window.id)
-    const opensWindow = this.windowIDs.length < newWindowIDs.length
-    if (opensWindow) {
-      mainCommand.opensWindow = true
-      mainCommand.windowHandleName = `win${randomInt(1, 9999)}`
-    }
     this.windowIDs = windows.map((window) => window.id)
 
     commands.push(
@@ -127,7 +102,7 @@ export default class RecorderController extends BaseController {
     )
   }
 
-  async handleNewWindow(_details: Electron.HandlerDetails) {
+  async handleNewWindow() {
     const session = await this.session.state.get()
     if (session.state.status !== 'recording') return
     const newWindowID = `win${randomInt(1, 9999)}`
@@ -159,24 +134,7 @@ export default class RecorderController extends BaseController {
 
   async getWinHandleId(): Promise<string> {
     const session = await this.session.state.get()
-    const activeTest = getActiveTest(session)
-    const activeIndex = getActiveCommandIndex(session)
-
-    if (activeIndex > -1) {
-      const commands = activeTest.commands
-      for (let i = activeIndex; i >= 0; i--) {
-        let item = commands[i]
-        if (item.opensWindow && item.windowHandleName) {
-          return item.windowHandleName
-        }
-
-        if (item.command == 'selectWindow') {
-          let target = item.target as string
-          return target.substring('handle=${'.length, target.length - 1)
-        }
-      }
-    }
-    return 'root'
+    return getActiveWindowHandleID(session) || 'root'
   }
 
   async getFrameLocation(event: Electron.IpcMainEvent): Promise<string> {
@@ -193,46 +151,62 @@ export default class RecorderController extends BaseController {
     return frameLocation
   }
 
-  async start(): Promise<string | null> {
+  /**
+   * Returns a string correlating to the window handle of the window that was opened.
+   * If the window was opened by a command, the handle will be the name of the window.
+   */
+  async start(): Promise<{
+    newStepID: string
+    windowHandle: string | null
+  } | null> {
     const useBidi = this.session.store.get('browserInfo.useBidi')
+    const newStepID = randomUUID()
     this.driver = await this.session.driver.build()
     if (useBidi) {
       const firstWindowURL = await this.driver.driver.getCurrentUrl()
       if (uninitializedWindows.includes(firstWindowURL)) {
         await this.driver.doOpen(this.session.projects.project.url)
       }
-      await this.driver.driver.getWindowHandle()
-      return null
+      const windowHandle = await this.driver.driver.getWindowHandle()
+      return { newStepID, windowHandle }
     }
 
     let playbackWindow = await this.session.windows.getLastPlaybackWindow()
-    let inited = false
     if (playbackWindow) {
-      const playbackURL = playbackWindow.webContents.getURL()
-      inited = !(
-        playbackURL.startsWith('file://') &&
-        playbackURL.endsWith('/playback-window.html')
-      )
-    } else {
-      await this.session.windows.openPlaybackWindow()
-      playbackWindow = await this.session.windows.getLastPlaybackWindow()
-      inited = false
+      playbackWindow.focus()
+      const windowHandle =
+        (await this.session.windows.getPlaybackWindowHandleByID(
+          playbackWindow.id
+        )) as string
+      return { newStepID, windowHandle }
     }
 
-    if (!inited) {
-      // Needs to open a URL, if on an open command, just use that
-      // Otherwise add an open command to the record commands
-      const state = await this.session.state.get()
-      const currentCommand = getActiveCommand(state)
-      if (currentCommand.command !== 'open') {
-        playbackWindow.webContents.loadURL(`${state.project.url}/`)
-        return randomUUID()
-      }
-      let url = new URL(currentCommand.target as string, state.project.url)
-      playbackWindow.webContents.loadURL(url.toString())
+    const state = await this.session.state.get()
+    console.log('hello!!')
+    const activeCommand = getActiveCommand(state)
+    const activeCommandIndex = getActiveCommandIndex(state)
+    if (activeCommandIndex > 0) {
+      await this.session.playback.play(state.state.activeTestID, [
+        0,
+        activeCommandIndex,
+      ])
+      await this.session.playback.stop()
+      await this.session.api.state.setActiveCommand(activeCommand.id)
+      const windowHandle = await this.getWinHandleId()
+      return { newStepID, windowHandle }
     }
-    playbackWindow.focus()
-    return null
+    // Needs to open a URL, if on an open command, just use that
+    // Otherwise add an open command to the record commands
+    playbackWindow = await this.session.windows.openPlaybackWindow()
+    const currentCommand = getActiveCommand(state)
+    if (currentCommand.command !== 'open') {
+      playbackWindow.webContents.loadURL(`${state.project.url}/`)
+      return { newStepID, windowHandle: 'root' }
+    }
+    let url = new URL(currentCommand.target as string, state.project.url)
+    playbackWindow.webContents.loadURL(url.toString())
+    const windowHandle = currentCommand.windowHandleName! || 'root'
+    return { newStepID, windowHandle }
   }
   async stop() {}
 }

@@ -63,7 +63,7 @@ function assignStringKey(key: string, value: string, keyObject: KeyObject) {
 function parseStringValue(value: string) {
   // is array
   if (/^\[.*\]$/.test(value)) {
-    const matches = value.slice(1, -2).match(/(([^,]*)*)/g) as string[]
+    const matches = value.slice(1, -1).match(/(([^,]*)*)/g) as string[]
     return matches.filter((s) => !!s).map((s) => s.trim())
   }
   try {
@@ -81,7 +81,7 @@ function parseStringValue(value: string) {
 function trimSingleQuote(value: string) {
   let str = value.trim()
   if (str[0] === str[str.length - 1] && str[0] === "'") {
-    return str.slice(1, -2)
+    return str.slice(1, -1)
   }
   return str
 }

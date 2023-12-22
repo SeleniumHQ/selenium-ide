@@ -1,13 +1,10 @@
-/** eslint-disable **/
-const path = require('path');
-const process = require('process');
-
 module.exports = {
-  reporters: ['default'],
-  rootDir: path.resolve(__dirname),
-  testEnvironment: 'node',
-  testPathIgnorePatterns: ["<rootDir>/node_modules/"],
-  verbose: true,
-};
-
-
+  testEnvironmentOptions: {
+    url: 'http://localhost/index.html',
+  },
+  testMatch: ['**/packages/**/__test?(s)__/**/*.spec.[jt]s?(x)'],
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  transform: {
+    '^.+\\.ts?$': 'ts-jest',
+  },
+}

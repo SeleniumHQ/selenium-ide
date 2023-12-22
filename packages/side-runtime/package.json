@@ -9,6 +9,7 @@
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist tsconfig.tsbuildinfo node_modules",
+    "seed:drivers": "node ./scripts/seed-drivers.js",
     "watch": "tsc --watch"
   },
   "main": "dist/index.js",
@@ -24,6 +25,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "devDependencies": {
+    "@seleniumhq/get-driver": "^4.0.0-alpha.2",
     "@seleniumhq/side-testkit": "^4.0.0-alpha.1",
     "@seleniumhq/webdriver-testkit": "^4.0.0-alpha.1"
   },

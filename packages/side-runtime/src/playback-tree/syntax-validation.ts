@@ -40,12 +40,9 @@ function validateCommand(
   commandIndex: number,
   state: State
 ) {
-  if (!command.skip && commandValidators[command.command]) {
-    return commandValidators[command.command](
-      command.command,
-      commandIndex,
-      state
-    )
+  if (!command.skip && command.command in commandValidators) {
+    const validatorKey = command.command as keyof typeof commandValidators
+    return commandValidators[validatorKey](command.command, commandIndex, state)
   }
 }
 
@@ -60,7 +57,7 @@ const commandValidators = {
   [ControlFlowCommandNames.times]: trackControlFlowBranchOpen,
   [ControlFlowCommandNames.try]: trackControlFlowBranchOpen,
   [ControlFlowCommandNames.while]: trackControlFlowBranchOpen,
-}
+} as const
 
 function trackControlFlowBranchOpen(
   commandName: string,

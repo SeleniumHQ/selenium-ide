@@ -281,6 +281,9 @@ importers:
       dnd-core:
         specifier: ^16.0.1
         version: 16.0.1
+      electron:
+        specifier: ^28.0.0
+        version: 28.0.0
       electron-chromedriver:
         specifier: ^28.0.0
         version: 28.0.0
@@ -311,6 +314,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      scroll-into-view-if-needed:
+        specifier: ^3.0.10
+        version: 3.0.10
       selenium-webdriver:
         specifier: ^4.16.0
         version: 4.16.0
@@ -357,9 +363,6 @@ importers:
       css-loader:
         specifier: ^6.8.1
         version: 6.8.1(webpack@5.89.0)
-      electron:
-        specifier: ^28.0.0
-        version: 28.0.0
       electron-builder:
         specifier: ^24.9.1
         version: 24.9.1
@@ -381,9 +384,6 @@ importers:
       run-script-os:
         specifier: ^1.1.6
         version: 1.1.6
-      scroll-into-view-if-needed:
-        specifier: ^3.0.10
-        version: 3.0.10
       source-map-loader:
         specifier: ^4.0.1
         version: 4.0.1(webpack@5.89.0)
@@ -580,6 +580,9 @@ importers:
         specifier: ^4.16.0
         version: 4.16.0
     devDependencies:
+      '@seleniumhq/get-driver':
+        specifier: ^4.0.0-alpha.2
+        version: link:../get-driver
       '@seleniumhq/side-testkit':
         specifier: ^4.0.0-alpha.1
         version: link:../side-testkit
@@ -3516,7 +3519,6 @@ packages:
 
   /@types/node@18.16.19:
     resolution: {integrity: sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==}
-    dev: true
 
   /@types/normalize-package-data@2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -4891,7 +4893,7 @@ packages:
 
   /compute-scroll-into-view@3.0.3:
     resolution: {integrity: sha512-nadqwNxghAGTamwIqQSG433W6OADZx2vCo3UXHNrzTRHK/htu+7+L0zhjEoaeaQVNAi3YgqWDv8+tzf0hRfR+A==}
-    dev: true
+    dev: false
 
   /concat-map@0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
@@ -5530,7 +5532,6 @@ packages:
       extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /emittery@0.13.1:
     resolution: {integrity: sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==}
@@ -9842,7 +9843,7 @@ packages:
     resolution: {integrity: sha512-t44QCeDKAPf1mtQH3fYpWz8IM/DyvHLjs8wUvvwMYxk5moOqCzrMSxK6HQVD0QVmVjXFavoFIPRVrMuJPKAvtg==}
     dependencies:
       compute-scroll-into-view: 3.0.3
-    dev: true
+    dev: false
 
   /secure-compare@3.0.1:
     resolution: {integrity: sha512-AckIIV90rPDcBcglUwXPF3kg0P0qmPsPXAj6BBEENQE1p5yA1xfmDJzfi1Tappj37Pv2mVbKpL3Z1T+Nn7k1Qw==}

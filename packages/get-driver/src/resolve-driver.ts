@@ -194,7 +194,16 @@ function getGeckodriverVersion(version: string) {
   if (major < 60) {
     return '0.25.0'
   }
-  return '0.26.0'
+  if (major < 78) {
+    return '0.29.1'
+  }
+  if (major < 91) {
+    return '0.30.0'
+  }
+  if (major < 102) {
+    return '0.31.0'
+  }
+  return '0.33.0'
 }
 
 type MappedBrowserNames = { [key in Browser]: string }

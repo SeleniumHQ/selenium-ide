@@ -15,37 +15,42 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import * as fs from 'fs-extra'
-import os from 'os'
 import { Chrome } from '@seleniumhq/browser-info'
 import { downloadDriver } from '@seleniumhq/get-driver'
-import { CACHE_PATH } from './cache'
 import { Arch } from '@seleniumhq/get-driver/dist/types'
+import * as fs from 'fs-extra'
+import os from 'os'
+import path from 'path'
+import { CACHE_PATH } from './cache'
 
 export async function updateDrivers() {
   const downloadDirectory = CACHE_PATH
   await fs.mkdirp(downloadDirectory)
 
-  console.log('updating chromedriver...')
   const chromeInfo = (await Chrome.getBrowserInfo(
     Chrome.ChromeChannel.stable
   )) as Chrome.BrowserInfo
-  await downloadDriver({
-    downloadDirectory,
-    browser: 'chrome',
-    platform: os.platform(),
-    arch: os.arch() as Arch,
-    version: chromeInfo.version,
-    artifactName: 'chromedriver',
-  })
+  if (!fs.existsSync(path.join(downloadDirectory, 'chromedriver'))) {
+    console.log('updating chromedriver...')
+    await downloadDriver({
+      downloadDirectory,
+      browser: 'chrome',
+      platform: os.platform(),
+      arch: os.arch() as Arch,
+      version: chromeInfo.version,
+      artifactName: 'chromedriver',
+    })
+  }
 
-  console.log('updating geckodriver...')
-  await downloadDriver({
-    downloadDirectory,
-    browser: 'firefox',
-    platform: os.platform(),
-    arch: os.arch() as Arch,
-    version: '70.0', // hard coded until browser-info will support firefox
-    artifactName: 'geckodriver',
-  })
+  if (!fs.existsSync(path.join(downloadDirectory, 'geckodriver'))) {
+    console.log('updating geckodriver...')
+    await downloadDriver({
+      downloadDirectory,
+      browser: 'firefox',
+      platform: os.platform(),
+      arch: os.arch() as Arch,
+      version: '120.0', // hard coded until browser-info will support firefox
+      artifactName: 'geckodriver',
+    })
+  }
 }

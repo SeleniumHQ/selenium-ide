@@ -17,6 +17,11 @@
 
 import { WebDriver } from 'selenium-webdriver'
 import { WebDriverExecutor } from '.'
+import {
+  StoreWindowHandleHookInput,
+  WindowAppearedHookInput,
+  WindowSwitchedHookInput,
+} from './types'
 
 export interface RecorderSyncronizerInput {
   sessionId: string
@@ -44,7 +49,7 @@ export default function createRecorderSyncronizer({
   async function onStoreWindowHandle({
     windowHandle,
     windowHandleName,
-  }: WindowFnInput) {
+  }: StoreWindowHandleHookInput) {
     pendingWindows[windowHandle] = windowHandleName
     await syncWindowHandle(windowHandle)
   }
@@ -52,13 +57,13 @@ export default function createRecorderSyncronizer({
   async function onWindowAppeared({
     windowHandle,
     windowHandleName,
-  }: WindowFnInput) {
-    if (!syncedWindows[windowHandle]) {
+  }: WindowAppearedHookInput) {
+    if (windowHandle && windowHandleName && !syncedWindows[windowHandle]) {
       pendingWindows[windowHandle] = windowHandleName
     }
   }
 
-  async function onWindowSwitched({ windowHandle }: WindowFnInput) {
+  async function onWindowSwitched({ windowHandle }: WindowSwitchedHookInput) {
     if (pendingWindows[windowHandle]) {
       await syncWindowHandle(windowHandle)
     } else if (!syncedWindows[windowHandle] && logger) {

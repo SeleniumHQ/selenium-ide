@@ -15,23 +15,26 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { ProxyCapabilities } from '../types'
 import ParseProxy from '../proxy'
 
 describe('proxy parser', () => {
   it('should parse a direct proxy', () => {
-    expect(ParseProxy('direct')).toEqual({
+    expect(ParseProxy('direct')).toEqual<ProxyCapabilities>({
       proxyType: 'direct',
     })
   })
   it('should parse a system proxy', () => {
-    expect(ParseProxy('system')).toEqual({
+    expect(ParseProxy('system')).toEqual<ProxyCapabilities>({
       proxyType: 'system',
     })
   })
   it('should parse a pac proxy', () => {
-    expect(ParseProxy('pac', 'http://localhost/pac')).toEqual({
+    expect(
+      ParseProxy('pac', 'http://localhost/pac')
+    ).toEqual<ProxyCapabilities>({
       proxyType: 'pac',
-      proxyOptions: 'http://localhost/pac',
+      proxyAutoconfigUrl: 'http://localhost/pac',
     })
   })
   it('should throw if no pac file was given', () => {
@@ -40,19 +43,16 @@ describe('proxy parser', () => {
     )
   })
   it('should parse a manual proxy', () => {
-    expect(ParseProxy('manual', {})).toEqual({
+    expect(ParseProxy('manual', {})).toEqual<ProxyCapabilities>({
       proxyType: 'manual',
-      proxyOptions: {},
     })
   })
   it('should omit redundant keys from the proxy', () => {
     expect(
       ParseProxy('manual', { test: 4, http: 'http://localhost:4324' })
-    ).toEqual({
+    ).toEqual<ProxyCapabilities>({
       proxyType: 'manual',
-      proxyOptions: {
-        http: 'http://localhost:4324',
-      },
+      httpProxy: 'http://localhost:4324',
     })
   })
   it('should whitelist the allowed proxy protocols', () => {
@@ -64,20 +64,17 @@ describe('proxy parser', () => {
         ftp: 'http://localhost:4324',
         bypass: ['http://something.com'],
       })
-    ).toEqual({
+    ).toEqual<ProxyCapabilities>({
       proxyType: 'manual',
-      proxyOptions: {
-        http: 'http://localhost:4324',
-        https: 'http://localhost:4324',
-        ftp: 'http://localhost:4324',
-        bypass: ['http://something.com'],
-      },
+      httpProxy: 'http://localhost:4324',
+      ftpProxy: 'http://localhost:4324',
+      sslProxy: 'http://localhost:4324',
+      noProxy: ['http://something.com'],
     })
   })
   it('should return an empty object if no options were given to manual proxy', () => {
-    expect(ParseProxy('manual')).toEqual({
+    expect(ParseProxy('manual')).toEqual<ProxyCapabilities>({
       proxyType: 'manual',
-      proxyOptions: {},
     })
   })
   it('should throw if non object was passed to manual proxy type', () => {
@@ -87,31 +84,27 @@ describe('proxy parser', () => {
     )
   })
   it('should parse socks proxy', () => {
-    expect(ParseProxy('socks', { socksProxy: 'localhost:213' })).toEqual({
-      proxyType: 'socks',
-      proxyOptions: {
-        socksProxy: 'localhost:213',
-      },
+    expect(
+      ParseProxy('socks', { socksProxy: 'localhost:213' })
+    ).toEqual<ProxyCapabilities>({
+      proxyType: 'manual',
+      socksProxy: 'localhost:213',
     })
   })
   it('should parse socks proxy version', () => {
     expect(
       ParseProxy('socks', { socksProxy: 'localhost:213', socksVersion: 5 })
-    ).toEqual({
-      proxyType: 'socks',
-      proxyOptions: {
-        socksProxy: 'localhost:213',
-        socksVersion: 5,
-      },
+    ).toEqual<ProxyCapabilities>({
+      proxyType: 'manual',
+      socksProxy: 'localhost:213',
+      socksVersion: 5,
     })
     expect(
       ParseProxy('socks', { socksProxy: 'localhost:213', socksVersion: '5' })
-    ).toEqual({
-      proxyType: 'socks',
-      proxyOptions: {
-        socksProxy: 'localhost:213',
-        socksVersion: 5,
-      },
+    ).toEqual<ProxyCapabilities>({
+      proxyType: 'manual',
+      socksProxy: 'localhost:213',
+      socksVersion: 5,
     })
   })
   it('should throw if no socks proxy url was given', () => {

@@ -68,6 +68,10 @@ const startDriver: StartDriver = () => (info) =>
     let initialized = false
     const args = ['--verbose', `--port=${port}`]
     const driverPath = getDriver(info)
+    switch (info.browser) {
+      case 'electron':
+        
+    }
     console.log('Starting driver', info.browser, 'at', driverPath, 'with args', args.join(' '))
     if (fs.existsSync(driverPath)) {
       const driver = spawn(driverPath.replace(/\s/g, ' '), args, {

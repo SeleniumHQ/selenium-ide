@@ -166,8 +166,16 @@ export default class WindowsController extends BaseController {
     return this.windows[name]
   }
 
+  /**
+   * We ignore the first window here as its more of a landing pad for the
+   * other windows
+   */
   getLastPlaybackWindow(): BrowserWindow {
-    return this.playbackWindows[this.playbackWindows.length - 1]
+    const windowCount = this.playbackWindows.length
+    if (windowCount < 2) {
+      return null as any
+    }
+    return this.playbackWindows[windowCount - 1]
   }
 
   async open(
@@ -242,8 +250,8 @@ export default class WindowsController extends BaseController {
   handlePlaybackWindow(window: BrowserWindow) {
     this.playbackWindows.push(window)
     window.webContents.insertCSS(playbackCSS)
-    window.webContents.setWindowOpenHandler((details) => {
-      this.session.recorder.handleNewWindow(details)
+    window.webContents.setWindowOpenHandler(() => {
+      this.session.recorder.handleNewWindow()
       return {
         action: 'allow',
         overrideBrowserWindowOptions: playbackWindowOptions,

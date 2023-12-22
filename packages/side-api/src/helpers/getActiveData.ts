@@ -46,6 +46,25 @@ export const getActiveCommandIndex = (session: CoreSessionData): number => {
   return session.state.editor.selectedCommandIndexes.slice(-1)[0]
 }
 
+export const getActiveWindowHandleID = (
+  session: CoreSessionData
+): null | string => {
+  const activeTest = getActiveTest(session)
+  const activeIndex = Math.max(0, getActiveCommandIndex(session))
+  const commands = activeTest.commands
+  for (let i = activeIndex; i >= 0; i--) {
+    let item = commands[i]
+    if (item.command == 'selectWindow') {
+      let target = item.target as string
+      return target.substring('handle=${'.length, target.length - 1)
+    }
+    if (item.command == 'storeWindowHandle') {
+      return item.target as string
+    }
+  }
+  return null
+}
+
 export const getCommandIndex = (
   session: CoreSessionData,
   commandID: string,

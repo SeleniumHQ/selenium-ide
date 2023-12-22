@@ -1,0 +1,1050 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Playback Event emitting Control Flow forEach 1`] = `
+[
+  {
+    "collection": [
+      "a",
+      "b",
+      "c",
+    ],
+    "commandId": "asdf0",
+    "index": 0,
+    "iterator": "a",
+    "type": "loop",
+  },
+]
+`;
+
+exports[`Playback Playback test queue should play a nested test case 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "run",
+      "id": "2",
+      "target": "test2",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "run",
+      "id": "2",
+      "target": "test2",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 1,
+    "command": {
+      "command": "open",
+      "id": "4",
+      "target": "",
+      "value": "",
+    },
+    "id": "4",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 1,
+    "command": {
+      "command": "open",
+      "id": "4",
+      "target": "",
+      "value": "",
+    },
+    "id": "4",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 1,
+    "command": {
+      "command": "open",
+      "id": "5",
+      "target": "",
+      "value": "",
+    },
+    "id": "5",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 1,
+    "command": {
+      "command": "open",
+      "id": "5",
+      "target": "",
+      "value": "",
+    },
+    "id": "5",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 1,
+    "command": {
+      "command": "open",
+      "id": "6",
+      "target": "",
+      "value": "",
+    },
+    "id": "6",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 1,
+    "command": {
+      "command": "open",
+      "id": "6",
+      "target": "",
+      "value": "",
+    },
+    "id": "6",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback abort should abort a paused test 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback abort should abort a test 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback abort should abort a test after attempting to stop 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "error": [Error: Playback stopped],
+    "id": "3",
+    "message": "Playback stopped",
+    "state": "errored",
+  },
+]
+`;
+
+exports[`Playback ignore breakpoints should ignore breakpoints 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "isBreakpoint": true,
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "isBreakpoint": true,
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback pause on exceptions should pause for every type of error 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "error": [Error: Mock error in open],
+    "id": "1",
+    "message": "Mock error in open",
+    "state": "errored",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "verify",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "verify",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "error": [Error: Mock error in verify],
+    "id": "2",
+    "message": "Mock error in verify",
+    "state": "failed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "verify",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "verify",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "assert",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "assert",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "error": [Error: Mock error in assert],
+    "id": "3",
+    "message": "Mock error in assert",
+    "state": "failed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "assert",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "assert",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback pause on exceptions should pause until the command is fixed 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "error": [Error: Mock open error],
+    "id": "1",
+    "message": "Mock open error",
+    "state": "errored",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "error": [Error: Mock open error],
+    "id": "1",
+    "message": "Mock open error",
+    "state": "errored",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "error": [Error: Mock open error],
+    "id": "1",
+    "message": "Mock open error",
+    "state": "errored",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback resume resume after hitting a breakpoint 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "isBreakpoint": true,
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "isBreakpoint": true,
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "isBreakpoint": true,
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback resume should resume a paused test 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "message": undefined,
+    "state": "passed",
+  },
+]
+`;
+
+exports[`Playback stop should stop a paused test 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "error": [Error: Playback stopped],
+    "id": "3",
+    "message": "Playback stopped",
+    "state": "errored",
+  },
+]
+`;
+
+exports[`Playback stop should stop a test 1`] = `
+[
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "1",
+      "target": "",
+      "value": "",
+    },
+    "id": "1",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "2",
+      "target": "",
+      "value": "",
+    },
+    "id": "2",
+    "message": undefined,
+    "state": "passed",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "id": "3",
+    "state": "executing",
+  },
+  {
+    "callstackIndex": 0,
+    "command": {
+      "command": "open",
+      "id": "3",
+      "target": "",
+      "value": "",
+    },
+    "error": [Error: Playback stopped],
+    "id": "3",
+    "message": "Playback stopped",
+    "state": "errored",
+  },
+]
+`;

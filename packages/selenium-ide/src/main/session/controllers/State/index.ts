@@ -44,7 +44,7 @@ export default class StateController extends BaseController {
         editor: {
           ...defaultState.editor,
           ...(storageState?.editor ?? {}),
-          selectedCommandIndexes: [],
+          selectedCommandIndexes: [0],
         },
       }
       this.state = newState

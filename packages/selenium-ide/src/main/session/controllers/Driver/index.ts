@@ -186,6 +186,8 @@ export default class DriverController extends BaseController {
   }
 
   async stopProcess(): Promise<null | string> {
+    await this.session.windows.closeAllPlaybackWindows()
+    await this.session.driver.executor?.cleanup()
     if (this.driverProcess) {
       const browser =
         this.session.store.get('browserInfo')?.browser ?? 'electron'
