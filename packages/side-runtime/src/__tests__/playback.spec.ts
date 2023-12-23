@@ -421,6 +421,7 @@ describe('Playback', () => {
         value: '',
       })
       await playback.resume()
+      await psetTimeout(10)
       expect(executor.doOpen).toHaveBeenCalledTimes(4)
     })
 

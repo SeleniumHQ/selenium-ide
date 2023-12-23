@@ -251,7 +251,6 @@ export default class WindowsController extends BaseController {
     this.playbackWindows.push(window)
     window.webContents.insertCSS(playbackCSS)
     window.webContents.setWindowOpenHandler(() => {
-      this.session.recorder.handleNewWindow()
       return {
         action: 'allow',
         overrideBrowserWindowOptions: playbackWindowOptions,

@@ -35,6 +35,10 @@ preload({
   },
 })
 window.addEventListener('DOMContentLoaded', async () => {
+  const plugins = await api.plugins.listPreloadPaths()
+  for (const plugin of plugins) {
+    __non_webpack_require__(plugin)
+  }
   webFrame.executeJavaScript(`
     Object.defineProperty(navigator, 'webdriver', {
       get () {
