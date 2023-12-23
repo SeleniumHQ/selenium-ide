@@ -193,7 +193,7 @@ configuration.debugStartup &&
 // All the stuff that goes into a big wrapped jest command
 const jest = 'node ' + resolveBin.sync('jest')
 const jestArgs = [
-  '--config=' + path.join(__dirname, '..', 'jest.config.js'),
+  '--config=' + path.join(__dirname, '..', 'runner.jest.config.js'),
   '--maxConcurrency=' + configuration.maxWorkers,
 ]
   .concat(
@@ -204,7 +204,7 @@ const jestArgs = [
         ]
       : []
   )
-  .concat(options.jestOptions.slice(1, -1).split(' '))
+  .concat(options.jestOptions.slice(1, -1).split(' ').filter(Boolean))
   .concat(['--runTestsByPath', path.join(__dirname, 'main.test.js')])
 
 const jestEnv = {
@@ -215,6 +215,7 @@ const jestEnv = {
 configuration.debugStartup &&
   console.debug('Jest command:', jest, jestArgs, jestEnv)
 spawn(jest, jestArgs, {
+  cwd: process.cwd(),
   env: jestEnv,
   shell: true,
   stdio: 'inherit',
