@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
@@ -31,6 +32,7 @@ const DriverSelector = () => {
     await window.sideAPI.driver.stopProcess()
     await window.sideAPI.driver.startProcess(browser)
     await window.sideAPI.driver.selectBrowser(browser)
+    await window.sideAPI.windows.open('playback-window')
     setBrowserInfo((info) => ({
       browsers: info!.browsers,
       selected: browser,
@@ -52,10 +54,31 @@ const DriverSelector = () => {
   }
   return (
     <>
+      <Typography variant='caption'>Bidi settings (Experimental / Non working)</Typography>
+      <FormControl>
+        <InputLabel id="useBidi">
+          Use Bidi
+        </InputLabel>
+        <Select
+          id="useBidi"
+          label="Use Bidi"
+          name="useBidi"
+          value={browserInfo.selected?.useBidi ? 'Yes' : 'No'}
+          onChange={(e) => {
+            const value = e.target.value as VerboseBoolean
+            const bool = value === 'Yes'
+            processBidiSelection(bool)
+          }}
+        >
+          <MenuItem value="Yes">Yes</MenuItem>
+          <MenuItem value="No">No</MenuItem>
+        </Select>
+      </FormControl>
       <FormControl>
         <InputLabel id="browser-label">Selected Playback Browser</InputLabel>
         {browserInfo.selected ? (
           <Select
+            disabled={!browserInfo.selected?.useBidi}
             label="Selected Playback Browser"
             labelId="browser-label"
             onChange={selectBrowser}
@@ -82,25 +105,6 @@ const DriverSelector = () => {
             </MenuItem>
           </Select>
         )}
-      </FormControl>
-      <FormControl>
-        <InputLabel id="useBidi">
-          Use Bidi
-        </InputLabel>
-        <Select
-          id="useBidi"
-          label="Use Bidi"
-          name="useBidi"
-          value={browserInfo.selected?.useBidi ? 'Yes' : 'No'}
-          onChange={(e) => {
-            const value = e.target.value as VerboseBoolean
-            const bool = value === 'Yes'
-            processBidiSelection(bool)
-          }}
-        >
-          <MenuItem value="Yes">Yes</MenuItem>
-          <MenuItem value="No">No</MenuItem>
-        </Select>
       </FormControl>
     </>
   )

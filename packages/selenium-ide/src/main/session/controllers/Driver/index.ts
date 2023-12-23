@@ -171,6 +171,7 @@ export default class DriverController extends BaseController {
     selected: BrowserInfo = ourElectronBrowserInfo
   ): Promise<void> {
     this.session.store.set('browserInfo', selected)
+    this.session.windows.initializePlaybackWindow()
   }
 
   async startProcess(
