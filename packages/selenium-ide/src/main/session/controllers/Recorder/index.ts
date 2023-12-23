@@ -8,11 +8,10 @@ import {
   LocatorFields,
   RecordNewCommandInput,
 } from '@seleniumhq/side-api'
-import { randomInt, randomUUID } from 'crypto'
+import { randomUUID } from 'crypto'
 import { relative } from 'node:path'
 import BaseController from '../Base'
 import { BrowserWindow } from 'electron'
-import { WebDriverExecutor } from '@seleniumhq/side-runtime'
 
 const uninitializedWindows = ['data:,', 'about:blank']
 
@@ -54,7 +53,6 @@ const getFrameTraversalCommands = (
 }
 
 export default class RecorderController extends BaseController {
-  driver!: WebDriverExecutor
   windowIDs: number[] = []
 
   async recordNewCommand(
@@ -65,6 +63,7 @@ export default class RecorderController extends BaseController {
       return null
     }
     const activeWindowHandleID = getActiveWindowHandleID(session) || 'root'
+    console.log(activeWindowHandleID, session.project.tests[0].commands)
     const commands = []
     if (activeWindowHandleID != cmd.winHandleId) {
       const selectWindowCommand: CommandShape = {
@@ -99,16 +98,6 @@ export default class RecorderController extends BaseController {
     const activeCommand = getActiveCommand(await this.session.state.get())
     this.session.api.recorder.onHighlightElement.dispatchEvent(
       activeCommand[fieldName] as string
-    )
-  }
-
-  async handleNewWindow() {
-    const session = await this.session.state.get()
-    if (session.state.status !== 'recording') return
-    const newWindowID = `win${randomInt(1, 9999)}`
-    this.session.api.recorder.onNewWindow.dispatchEvent(
-      newWindowID,
-      randomUUID()
     )
   }
 
@@ -159,15 +148,17 @@ export default class RecorderController extends BaseController {
     newStepID: string
     windowHandle: string | null
   } | null> {
+    const playback = await this.session.playback.getPlayback()
+    const executor = playback.executor
+    const driver = executor.driver
     const useBidi = this.session.store.get('browserInfo.useBidi')
     const newStepID = randomUUID()
-    this.driver = await this.session.driver.build()
     if (useBidi) {
-      const firstWindowURL = await this.driver.driver.getCurrentUrl()
+      const firstWindowURL = await driver.getCurrentUrl()
       if (uninitializedWindows.includes(firstWindowURL)) {
-        await this.driver.doOpen(this.session.projects.project.url)
+        await executor.doOpen(this.session.projects.project.url)
       }
-      const windowHandle = await this.driver.driver.getWindowHandle()
+      const windowHandle = await driver.getWindowHandle()
       return { newStepID, windowHandle }
     }
 

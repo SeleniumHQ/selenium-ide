@@ -47,11 +47,19 @@ export default class PlaybackController extends BaseController {
     if (useBidi) {
       const handles = await driver.getAllWindowHandles()
       if (!handles.length) {
-        const playbackPos = await this.session.store.get('windowPositionPlayback')
+        const playbackPos = await this.session.store.get(
+          'windowPositionPlayback'
+        )
         const playbackSize = await this.session.store.get('windowSizePlayback')
         await driver.switchTo().newWindow('tab')
-        await driver.manage().window().setPosition(...playbackPos)
-        await driver.manage().window().setSize(...playbackSize)
+        await driver
+          .manage()
+          .window()
+          .setPosition(...playbackPos)
+        await driver
+          .manage()
+          .window()
+          .setSize(...playbackSize)
         const windowDimensionCache = setInterval(async () => {
           const handles = await driver.getAllWindowHandles()
           if (!handles.length) {
@@ -59,9 +67,12 @@ export default class PlaybackController extends BaseController {
           }
           const pos = await driver.manage().window().getPosition()
           const size = await driver.manage().window().getSize()
-          await this.session.store.set('windowPositionPlayback', [pos.x, pos.y])  
-          await this.session.store.set('windowSizePlayback', [size.width, size.height])
-        }, 1000);
+          await this.session.store.set('windowPositionPlayback', [pos.x, pos.y])
+          await this.session.store.set('windowSizePlayback', [
+            size.width,
+            size.height,
+          ])
+        }, 1000)
       }
       return
     }
@@ -151,37 +162,48 @@ export default class PlaybackController extends BaseController {
     }
   }
 
+  async getPlayback(testID?: string) {
+    const browserInfo = this.session.store.get('browserInfo')
+    const allowMultiplePlaybacks =
+      (await this.isParallel()) && this.testQueue.length
+    const makeNewPlayback = allowMultiplePlaybacks || !this.playbacks.length
+    if (makeNewPlayback) {
+      const playback = new Playback({
+        baseUrl: this.session.projects.project.url,
+        executor: await this.session.driver.build({
+          browser: browserInfo.browser,
+        }),
+        getTestByName: (name: string) => this.session.tests.getByName(name),
+        logger: console,
+        variables: new Variables(),
+        options: {
+          delay: this.session.projects.project.delay || 0,
+        },
+      })
+      await playback.init()
+      const EE = playback['event-emitter']
+      EE.addListener(
+        PlaybackEvents.PLAYBACK_STATE_CHANGED,
+        this.handlePlaybackStateChanged(
+          playback,
+          allowMultiplePlaybacks ? testID : null
+        )
+      )
+      EE.addListener(
+        PlaybackEvents.COMMAND_STATE_CHANGED,
+        this.handleCommandStateChanged
+      )
+      this.playbacks.push(playback)
+      return playback
+    }
+    return this.playbacks[0]
+  }
+
   async play(testID: string, playRange = PlaybackController.defaultPlayRange) {
     this.playingTest = testID
     this.playRange = playRange
     this.isPlaying = true
-    /**
-     * Create playback if none exists
-     */
-    const browserInfo = this.session.store.get('browserInfo')
-    const playback = new Playback({
-      baseUrl: this.session.projects.project.url,
-      executor: await this.session.driver.build({
-        browser: browserInfo.browser,
-      }),
-      getTestByName: (name: string) => this.session.tests.getByName(name),
-      logger: console,
-      variables: new Variables(),
-      options: {
-        delay: this.session.projects.project.delay || 0,
-      },
-    })
-    await playback.init()
-    const EE = playback['event-emitter']
-    EE.addListener(
-      PlaybackEvents.PLAYBACK_STATE_CHANGED,
-      this.handlePlaybackStateChanged(playback, testID)
-    )
-    EE.addListener(
-      PlaybackEvents.COMMAND_STATE_CHANGED,
-      this.handleCommandStateChanged
-    )
-    this.playbacks.push(playback)
+    const playback = await this.getPlayback(testID)
     /**
      * If not ending at end of test, use playTo command
      * or playSingleCommand if just one command specified.
@@ -190,7 +212,7 @@ export default class PlaybackController extends BaseController {
     if (playRange[1] !== -1) {
       const test = this.session.tests.getByID(testID)
       if (playRange[0] === playRange[1]) {
-         await playback.playSingleCommand(test.commands[playRange[0]])
+        await playback.playSingleCommand(test.commands[playRange[0]])
       } else {
         await playback.playTo(test, playRange[1], playRange[0])
       }
@@ -199,6 +221,17 @@ export default class PlaybackController extends BaseController {
         startingCommandIndex: playRange[0],
       })
     }
+  }
+
+  async isParallel() {
+    const {
+      project: { suites },
+      state: { activeSuiteID },
+    } = await this.session.state.get()
+    this.playingSuite = activeSuiteID
+    const suite = suites.find(hasID(activeSuiteID))
+    this.testQueue = suite?.tests ?? []
+    return suite?.parallel ?? false
   }
 
   async playSuite() {
@@ -248,9 +281,11 @@ export default class PlaybackController extends BaseController {
   }
 
   handlePlaybackStateChanged =
-    (playback: Playback, testID: string) =>
+    (playback: Playback, testID: string | null = null) =>
     async (e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
-      const testName = this.session.tests.getByID(testID)?.name
+      const testName = this.session.tests.getByID(
+        testID || this.session.state.state.activeTestID
+      )?.name
       console.debug(
         `Playing state changed ${e.state} for test ${testName}`,
         this.playingSuite

@@ -191,7 +191,7 @@ export default class WebDriverExecutor {
   }
 
   async cleanup() {
-    if (this.initialized) {
+    if (this.driver) {
       await this.driver.quit()
       // @ts-expect-error
       this.driver = undefined

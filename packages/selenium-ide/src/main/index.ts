@@ -32,12 +32,7 @@ app.on('ready', async () => {
   connectSessionLogging(session)
   await session.system.startup()
 
-  process.on('SIGINT', async () => {
-    await session.system.shutdown()
-    if (session.system.isDown) {
-      await session.system.quit()
-    }
-  })
+  process.on('SIGINT', () => app.quit())
   app.on('open-file', async (_e, path) => {
     // Instantiate the session
     await session.projects.load(path)
