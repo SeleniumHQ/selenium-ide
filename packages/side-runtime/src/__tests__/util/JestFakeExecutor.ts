@@ -18,7 +18,7 @@
 import { CommandShape } from '@seleniumhq/side-model'
 import Variables from '../../variables'
 
-class FakeExecutor {
+export default class FakeExecutor {
   customCommands: { [key: string]: () => void } = {}
   implicitWait = 50
   initialized: boolean = false
@@ -29,15 +29,15 @@ class FakeExecutor {
     return this
   }
 
-  init({ variables }: { variables: Variables }) {
+  init = jest.fn(({ variables }: { variables: Variables }) => {
     // this can be async
     this.variables = variables
     this.initialized = true
-  }
+  })
 
-  executeHook() {}
+  executeHook = jest.fn()
 
-  name(command: string) {
+  name = jest.fn((command: string) => {
     if (!command) {
       return 'skip'
     }
@@ -49,33 +49,35 @@ class FakeExecutor {
       throw new Error(`Unknown command ${command}`)
     }
     return func
-  }
+  })
 
-  cancel() {}
-  cleanup() {}
-  async kill() {
+  cancel = jest.fn()
+  cleanup = jest.fn()
+  kill = jest.fn(async () => {
     this.killed = true
-  }
-  async beforeCommand(_commandObject: CommandShape) {
-    if (!this.initialized) throw new Error('executor is dead')
-    if (this.killed) throw new Error('playback is dead')
-  }
-  afterCommand(_commandObject: CommandShape) {
-    if (!this.initialized) throw new Error('executor is dead')
-    if (this.killed) throw new Error('playback is dead')
-  }
-  doAssert() {}
-  doAssertText() {}
-  doPause(timeout = 0) {
-    return new Promise((res) => {
-      setTimeout(res, Number(timeout))
-    })
-  }
-  doOpen() {}
-  doVerify() {}
-  doVerifyText() {}
-  doFake(..._args: any[]) {}
-  evaluateConditional() {}
-}
+  })
 
-export default FakeExecutor
+  beforeCommand = jest.fn(async (_commandObject: CommandShape) => {
+    if (!this.initialized) throw new Error('executor is dead')
+    if (this.killed) throw new Error('playback is dead')
+  })
+
+  afterCommand = jest.fn((_commandObject: CommandShape) => {
+    if (!this.initialized) throw new Error('executor is dead')
+    if (this.killed) throw new Error('playback is dead')
+  })
+
+  doAssert = jest.fn()
+  doAssertText = jest.fn()
+  doPause = jest.fn(
+    (timeout = 0) =>
+      new Promise((res) => {
+        setTimeout(res, Number(timeout))
+      })
+  )
+  doOpen = jest.fn()
+  doVerify = jest.fn()
+  doVerifyText = jest.fn()
+  doFake = jest.fn()
+  evaluateConditional = jest.fn()
+}

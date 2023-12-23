@@ -25,8 +25,7 @@ import Playback, {
 import { AssertionError, VerificationError } from '../errors'
 import Variables from '../variables'
 import { TestShape } from '@seleniumhq/side-model'
-
-import FakeExecutor from './util/FakeExecutor'
+import FakeExecutor from './util/JestFakeExecutor'
 
 describe('Playback', () => {
   describe('Event emitting', () => {
