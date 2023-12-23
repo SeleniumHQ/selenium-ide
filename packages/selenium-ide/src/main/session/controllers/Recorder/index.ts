@@ -63,7 +63,6 @@ export default class RecorderController extends BaseController {
       return null
     }
     const activeWindowHandleID = getActiveWindowHandleID(session) || 'root'
-    console.log(activeWindowHandleID, session.project.tests[0].commands)
     const commands = []
     if (activeWindowHandleID != cmd.winHandleId) {
       const selectWindowCommand: CommandShape = {
@@ -144,10 +143,7 @@ export default class RecorderController extends BaseController {
    * Returns a string correlating to the window handle of the window that was opened.
    * If the window was opened by a command, the handle will be the name of the window.
    */
-  async start(): Promise<{
-    newStepID: string
-    windowHandle: string | null
-  } | null> {
+  async start(): Promise<string> {
     const playback = await this.session.playback.getPlayback()
     const executor = playback.executor
     const driver = executor.driver
@@ -158,22 +154,16 @@ export default class RecorderController extends BaseController {
       if (uninitializedWindows.includes(firstWindowURL)) {
         await executor.doOpen(this.session.projects.project.url)
       }
-      const windowHandle = await driver.getWindowHandle()
-      return { newStepID, windowHandle }
+      return newStepID
     }
 
     let playbackWindow = await this.session.windows.getLastPlaybackWindow()
     if (playbackWindow) {
       playbackWindow.focus()
-      const windowHandle =
-        (await this.session.windows.getPlaybackWindowHandleByID(
-          playbackWindow.id
-        )) as string
-      return { newStepID, windowHandle }
+      return newStepID
     }
 
     const state = await this.session.state.get()
-    console.log('hello!!')
     const activeCommand = getActiveCommand(state)
     const activeCommandIndex = getActiveCommandIndex(state)
     if (activeCommandIndex > 0) {
@@ -183,8 +173,7 @@ export default class RecorderController extends BaseController {
       ])
       await this.session.playback.stop()
       await this.session.api.state.setActiveCommand(activeCommand.id)
-      const windowHandle = await this.getWinHandleId()
-      return { newStepID, windowHandle }
+      return newStepID
     }
     // Needs to open a URL, if on an open command, just use that
     // Otherwise add an open command to the record commands
@@ -192,12 +181,10 @@ export default class RecorderController extends BaseController {
     const currentCommand = getActiveCommand(state)
     if (currentCommand.command !== 'open') {
       playbackWindow.webContents.loadURL(`${state.project.url}/`)
-      return { newStepID, windowHandle: 'root' }
     }
     let url = new URL(currentCommand.target as string, state.project.url)
     playbackWindow.webContents.loadURL(url.toString())
-    const windowHandle = currentCommand.windowHandleName! || 'root'
-    return { newStepID, windowHandle }
+    return newStepID
   }
   async stop() {}
 }
