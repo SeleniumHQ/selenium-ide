@@ -17,6 +17,7 @@
 
 import { Fn } from '@seleniumhq/side-commons'
 import Variables from './variables'
+import type WebDriverExecutor from './webdriver'
 
 const nbsp = String.fromCharCode(160)
 
@@ -30,41 +31,49 @@ export function composePreprocessors(...args: any[]) {
   if (params.length === 0) {
     return func
   } else if (params.length === 1) {
-    return function preprocess(target: any) {
-      // @ts-expect-error
-      return func.call(this, runPreprocessor(params[0], target, this.variables))
+    return function preprocess(
+      this: WebDriverExecutor,
+      target: any,
+      ...args: any[]
+    ) {
+      return func.call(
+        this,
+        runPreprocessor(params[0], target, this.variables),
+        ...args
+      )
     }
   } else if (params.length === 2) {
-    return function preprocess(target: any, value: any) {
+    return function preprocess(
+      this: WebDriverExecutor,
+      target: any,
+      value: any,
+      ...args: any[]
+    ) {
       return func.call(
-        // @ts-expect-error
         this,
-        // @ts-expect-error
         runPreprocessor(params[0], target, this.variables),
-        // @ts-expect-error
-        runPreprocessor(params[1], value, this.variables)
+        runPreprocessor(params[1], value, this.variables),
+        ...args
       )
     }
   } else {
-    return function preprocess(target: any, value: any, options: any) {
+    return function preprocess(
+      this: WebDriverExecutor,
+      target: any,
+      value: any,
+      options: any
+    ) {
       if (!options) {
         return func.call(
-          // @ts-expect-error
           this,
-          // @ts-expect-error
           runPreprocessor(params[0], target, this.variables),
-          // @ts-expect-error
           runPreprocessor(params[1], value, this.variables)
         )
       }
       return func.call(
-        // @ts-expect-error
         this,
-        // @ts-expect-error
         runPreprocessor(params[0], target, this.variables),
-        // @ts-expect-error
         runPreprocessor(params[1], value, this.variables),
-        // @ts-expect-error
         preprocessObject(params[2], options, this.variables)
       )
     }
