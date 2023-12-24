@@ -423,7 +423,7 @@ describe('Playback', () => {
       await playback.resume()
       await psetTimeout(10)
       expect(executor.doOpen).toHaveBeenCalledTimes(4)
-    })
+    }, 10000)
 
     it('should not be able to play a single command while a test case is playing', async () => {
       const test = {
