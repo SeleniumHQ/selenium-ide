@@ -261,7 +261,7 @@ export default class WebDriverExecutor {
   async waitForNewWindow(timeout: number = 2000) {
     const finder = new Promise<string | undefined>((resolve) => {
       const start = Date.now()
-      const findHandle = async () => {
+      const findHandle = this.withCancel(async () => {
         if (Date.now() - start > timeout) {
           resolve(undefined)
           return
@@ -277,7 +277,7 @@ export default class WebDriverExecutor {
         }
         // cant find, wait next time.
         setTimeout(findHandle, 200)
-      }
+      })
 
       findHandle()
     })
@@ -1353,13 +1353,36 @@ export default class WebDriverExecutor {
     return null
   }
 
+  withCancel<T extends () => Promise<any>>(poller: T) {
+    let resolveCancel: (value?: unknown) => void
+    const cancelPromise = new Promise((res) => {
+      resolveCancel = res
+    })
+    let cancelled = false
+    this.cancellable = {
+      cancel: () => {
+        cancelled = true
+        return cancelPromise
+      },
+    }
+    return async () => {
+      if (cancelled) {
+        resolveCancel()
+        throw new Error('aborted')
+      }
+      return await poller()
+    }
+  }
+
   async waitForElement(
     locator: string,
     ...fallbacks: (undefined | [string, string][])[]
   ): Promise<WebElementShape> {
     const locatorCondition = new WebElementCondition(
       'for element to be located',
-      async () => await this.elementIsLocated(locator, ...fallbacks)
+      this.withCancel(
+        async () => await this.elementIsLocated(locator, ...fallbacks)
+      )
     )
     return await this.driver.wait<WebElementShape>(
       locatorCondition,
@@ -1383,12 +1406,12 @@ export default class WebDriverExecutor {
   ) {
     const visibleCondition = new WebElementCondition(
       'for element to be visible',
-      async () => {
+      this.withCancel(async () => {
         const el = await this.elementIsLocated(locator, ...fallbacks)
         if (!el) return null
         if (!(await el.isDisplayed())) return null
         return el
-      }
+      })
     )
     return await this.driver.wait<WebElementShape>(visibleCondition, timeout)
   }
@@ -1401,12 +1424,12 @@ export default class WebDriverExecutor {
     const timeout = this.implicitWait
     const textCondition = new Condition(
       'for text to be present in element',
-      async () => {
+      this.withCancel(async () => {
         const el = await this.elementIsLocated(locator, fallback)
         if (!el) return null
         const elText = await el.getText()
         return elText === text
-      }
+      })
     )
     await this.driver.wait<boolean>(textCondition, timeout)
   }
