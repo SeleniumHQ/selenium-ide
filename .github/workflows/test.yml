@@ -33,6 +33,6 @@ jobs:
       - name: Install dependencies
         run: pnpm -r i
       - name: Build side-runner and selenium-ide
-        run: pnpm run build
+        run: npm run build
       - name: Run all tests
-        run: pnpm run test
+        run: npm run test
