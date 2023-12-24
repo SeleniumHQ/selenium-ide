@@ -263,6 +263,12 @@
           "value": ""
         },
         {
+          "command": "acceptAlert",
+          "target": "",
+          "value": "",
+          "id": "5d626b3c-ce13-4392-bb2e-b7591c58e680"
+        },
+        {
           "id": "a0feb0c9-a451-4efe-9e23-b2c65501a14e",
           "comment": "",
           "command": "assertTitle",

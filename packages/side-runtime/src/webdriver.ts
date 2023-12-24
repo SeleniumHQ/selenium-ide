@@ -456,8 +456,18 @@ export default class WebDriverExecutor {
     }
   }
 
-  async doClick(locator: string, _?: string) {
-    const element = await this.waitForElementVisible(locator, this.implicitWait)
+  async doClick(
+    locator: string,
+    _?: string,
+    commandObject: Partial<CommandShape> = {}
+  ) {
+    const element = await this.waitForElementVisible(
+      locator,
+      this.implicitWait,
+      commandObject.targetFallback,
+      commandObject.targets,
+      commandObject.fallbackTargets
+    )
     await element.click()
   }
 
@@ -866,7 +876,6 @@ export default class WebDriverExecutor {
   }
 
   async doExecuteScript(script: ScriptShape, optionalVariable?: string) {
-    console.log(script)
     const result = await this.driver.executeScript(
       script.script,
       ...script.argv
@@ -1345,11 +1354,11 @@ export default class WebDriverExecutor {
 
   async waitForElement(
     locator: string,
-    ..._fallbacks: (undefined | [string, string][])[]
+    ...fallbacks: (undefined | [string, string][])[]
   ): Promise<WebElementShape> {
     const locatorCondition = new WebElementCondition(
       'for element to be located',
-      async () => await this.elementIsLocated(locator, ..._fallbacks)
+      async () => await this.elementIsLocated(locator, ...fallbacks)
     )
     return await this.driver.wait<WebElementShape>(
       locatorCondition,
@@ -1369,13 +1378,12 @@ export default class WebDriverExecutor {
   async waitForElementVisible(
     locator: string,
     timeout: number,
-
-    fallback: [string, string][] = []
+    ...fallbacks: (undefined | [string, string][])[]
   ) {
     const visibleCondition = new WebElementCondition(
       'for element to be visible',
       async () => {
-        const el = await this.elementIsLocated(locator, fallback)
+        const el = await this.elementIsLocated(locator, ...fallbacks)
         if (!el) return null
         if (!(await el.isDisplayed())) return null
         return el
