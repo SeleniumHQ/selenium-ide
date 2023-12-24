@@ -1294,6 +1294,7 @@ describe('Playback', () => {
       await psetTimeout(15)
       await playback.abort()
       await playbackPromise()
+      await psetTimeout(2)
 
       const results = flat(cb.mock.calls)
       expect(results.length).toBe(3)
@@ -1353,6 +1354,7 @@ describe('Playback', () => {
       await psetTimeout(2)
       await playback.abort()
       await playbackPromise()
+      await psetTimeout(2)
 
       const results = flat(cb.mock.calls)
       expect(results.length).toBe(3)
