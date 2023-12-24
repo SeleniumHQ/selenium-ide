@@ -46,13 +46,19 @@ export default class SystemController extends BaseController {
 
   async startup() {
     if (this.isDown) {
-      await this.session.windows.open('logger', {frame: false, show: false})
+      await this.session.windows.open('logger', { frame: false, show: false })
       const loggerWindow = await this.session.windows.get('logger')
-      this.session.windows.useWindowState(loggerWindow, 'windowSizeLogger', 'windowPositionLogger')
+      this.session.windows.useWindowState(
+        loggerWindow,
+        'windowSizeLogger',
+        'windowPositionLogger'
+      )
       loggerWindow.show()
       // If automated, assume we already have a chromedriver process running
       if (!isAutomated) {
-        const startupError = await this.session.driver.startProcess(this.session.store.get('browserInfo'))
+        const startupError = await this.session.driver.startProcess(
+          this.session.store.get('browserInfo')
+        )
         if (startupError) {
           await this.crash(
             `Unable to startup due to chromedriver error: ${startupError}`
@@ -72,7 +78,9 @@ export default class SystemController extends BaseController {
         this.shuttingDown = true
         const confirm = await this.session.projects.onProjectUnloaded()
         if (confirm) {
-          await this.session.driver.stopProcess()
+          try {
+            await this.session.driver.stopProcess()
+          } catch (e) {}
           this.isDown = true
         }
         this.shuttingDown = false

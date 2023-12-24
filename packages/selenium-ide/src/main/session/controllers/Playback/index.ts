@@ -1,4 +1,4 @@
-import { CommandShape, hasID } from '@seleniumhq/side-api'
+import { CommandShape, getActiveCommand, hasID } from '@seleniumhq/side-api'
 import {
   Playback,
   PlaybackEvents,
@@ -77,25 +77,6 @@ export default class PlaybackController extends BaseController {
       return
     }
 
-    const UUID = randomUUID()
-    const registerWindow = async (windowID: number) => {
-      let success = false
-      const handles = await driver.getAllWindowHandles()
-      for (let i = 0, ii = handles.length; i !== ii; i++) {
-        const handle = handles[i]
-        await driver.switchTo().window(handle)
-        const title = await driver.getTitle()
-        if (title === UUID) {
-          await windows.registerPlaybackWindowHandle(handle, windowID)
-          success = true
-          break
-        }
-      }
-      if (!success) {
-        throw new Error('Failed to switch to playback window')
-      }
-    }
-
     if (!this.session.playback.playingSuite) {
       const playbackWindow = await windows.getPlaybackWindow()
       if (playbackWindow) {
@@ -108,15 +89,6 @@ export default class PlaybackController extends BaseController {
         }
       }
     }
-
-    const window = await windows.openPlaybackWindow({ title: UUID })
-    await windows.arrangeWindow(
-      window,
-      'windowSizePlayback',
-      'windowPositionPlayback'
-    )
-    window.show()
-    await registerWindow(window.id)
   }
 
   async pause() {
@@ -166,7 +138,7 @@ export default class PlaybackController extends BaseController {
     const browserInfo = this.session.store.get('browserInfo')
     const allowMultiplePlaybacks =
       (await this.isParallel()) && this.testQueue.length
-    const makeNewPlayback = allowMultiplePlaybacks || !this.playbacks.length
+    const makeNewPlayback = !this.playbacks.length || allowMultiplePlaybacks  
     if (makeNewPlayback) {
       const playback = new Playback({
         baseUrl: this.session.projects.project.url,
@@ -194,9 +166,60 @@ export default class PlaybackController extends BaseController {
         this.handleCommandStateChanged
       )
       this.playbacks.push(playback)
+      if (browserInfo.browser === 'electron') {
+        await this.claimPlaybackWindow(playback)
+      } else {
+        await playback.executor.driver.switchTo().newWindow('window')
+      }
+      const state = await this.session.state.get()
+      const currentCommand = getActiveCommand(state)
+      const url =
+        currentCommand.command === 'open'
+          ? new URL(currentCommand.target as string, state.project.url).href
+          : state.project.url
+      playback.executor.doOpen(url)
       return playback
     }
     return this.playbacks[0]
+  }
+
+  async claimPlaybackWindow(playback: Playback) {
+    const executor = playback.executor
+    const driver = executor.driver
+    const handle = await driver.getWindowHandle()
+    const existingWindow = await this.session.windows.getPlaybackWindowByHandle(
+      handle
+    )
+    if (existingWindow && existingWindow.isVisible()) {
+      return
+    }
+    let success = false
+    const UUID = randomUUID()
+    const window = await this.session.windows.openPlaybackWindow({
+      title: UUID,
+    })
+    await this.session.windows.arrangeWindow(
+      window,
+      'windowSizePlayback',
+      'windowPositionPlayback'
+    )
+    const handles = await driver.getAllWindowHandles()
+    for (let i = 0, ii = handles.length; i !== ii; i++) {
+      const handle = handles[i]
+      await driver.switchTo().window(handle)
+      const title = await driver.getTitle()
+      if (title === UUID) {
+        await this.session.windows.registerPlaybackWindowHandle(
+          handle,
+          window.id
+        )
+        success = true
+        break
+      }
+    }
+    if (!success) {
+      throw new Error('Failed to switch to playback window')
+    }
   }
 
   async play(testID: string, playRange = PlaybackController.defaultPlayRange) {
@@ -228,9 +251,10 @@ export default class PlaybackController extends BaseController {
       project: { suites },
       state: { activeSuiteID },
     } = await this.session.state.get()
-    this.playingSuite = activeSuiteID
+    if (!this.playingSuite) {
+      return false
+    }
     const suite = suites.find(hasID(activeSuiteID))
-    this.testQueue = suite?.tests ?? []
     return suite?.parallel ?? false
   }
 
@@ -302,7 +326,7 @@ export default class PlaybackController extends BaseController {
             } catch (e) {}
             this.playbacks.splice(this.playbacks.indexOf(playback), 1)
             await playback.cleanup()
-            if (!this.testQueue.length && !this.playbacks.length) {
+            if (!this.testQueue.length) {
               this.playingSuite = ''
               this.session.api.state.onMutate.dispatchEvent('playback.stop', {
                 params: [],
