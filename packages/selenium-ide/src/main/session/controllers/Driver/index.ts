@@ -61,7 +61,6 @@ export default class DriverController extends BaseController {
   }
 
   driverProcess?: ChildProcess
-  executor?: WebDriverExecutor
   scriptManager?: Awaited<ReturnType<typeof getScriptManager>>
   windowHandle?: string
 
@@ -80,9 +79,6 @@ export default class DriverController extends BaseController {
       },
     }
   ): Promise<WebDriverExecutor> {
-    if (this.executor) {
-      return this.executor
-    }
     const browserName = browser === 'electron' ? 'chrome' : browser
     console.info('Instantiating driver builder for ', browser)
     const driverBuilder = await new Builder()
@@ -138,7 +134,6 @@ export default class DriverController extends BaseController {
               },
             },
     })
-    this.executor = executor
     return executor
   }
 
@@ -192,7 +187,6 @@ export default class DriverController extends BaseController {
       this.session.playback.playbacks.map((playback) => playback.cleanup())
     )
     await this.session.windows.closeAllPlaybackWindows()
-    await this.session.driver.executor?.cleanup()
     if (this.driverProcess) {
       const browser =
         this.session.store.get('browserInfo')?.browser ?? 'electron'

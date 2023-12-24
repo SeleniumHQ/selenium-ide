@@ -177,13 +177,12 @@ export default class RecorderController extends BaseController {
     }
     // Needs to open a URL, if on an open command, just use that
     // Otherwise add an open command to the record commands
-    playbackWindow = await this.session.windows.openPlaybackWindow()
     const currentCommand = getActiveCommand(state)
     if (currentCommand.command !== 'open') {
-      playbackWindow.webContents.loadURL(`${state.project.url}/`)
+      playback.executor.doOpen(state.project.url)
     }
-    let url = new URL(currentCommand.target as string, state.project.url)
-    playbackWindow.webContents.loadURL(url.toString())
+    const url = new URL(currentCommand.target as string, state.project.url)
+    playback.executor.doOpen(url.toString())
     return newStepID
   }
   async stop() {}
