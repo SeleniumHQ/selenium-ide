@@ -191,7 +191,7 @@ export default class WebDriverExecutor {
   }
 
   async cleanup() {
-    await this.cancel()
+    // await this.cancel()
     if (this.driver) {
       await this.driver.quit()
       // @ts-expect-error
