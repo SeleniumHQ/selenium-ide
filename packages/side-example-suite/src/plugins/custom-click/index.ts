@@ -16,8 +16,9 @@ const plugin: PluginShape = {
         name: 'locator',
         description: 'The target of the original recorded click',
       },
-      execute: (command, driver) =>
-        driver.doClick(command.target as string, command.value || ''),
+      execute: async (command, driver) => {
+        await driver.doClick(command.target!, command.value!, command)
+      },
     },
   },
   hooks: {

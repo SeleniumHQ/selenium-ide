@@ -23,6 +23,12 @@
           "id": "9e61266a-9cb0-49b6-b5bf-a362bd181b58"
         },
         {
+          "command": "pause",
+          "target": "500",
+          "value": "",
+          "id": "1a1d5263-dadd-40d0-9ae7-1f7c6fd2686c"
+        },
+        {
           "command": "customClick",
           "target": "id=a",
           "value": "",
