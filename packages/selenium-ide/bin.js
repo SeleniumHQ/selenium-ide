@@ -1,11 +1,34 @@
 #!/usr/bin/env node
-const { join } = require('path');
-const { spawn } = require('child_process');
-const electronPath = require('electron');
+const { join } = require('path')
+const { spawn } = require('child_process')
 
-const appPath = join(__dirname, 'build', 'main-bundle.js');
+const { execSync } = require('child_process')
+const fs = require('fs/promises')
 
-const electronProcess = spawn(electronPath, [appPath]);
-electronProcess.stdout.on('data', (data) => process.stdout.write(data));
-electronProcess.stderr.on('data', (data) => process.stderr.write(data));
-electronProcess.on('close', (code) => process.exit(code));
+async function installElectron() {
+  // Read package.json
+  const packageJson = JSON.parse(fs.readFile('package.json', 'utf8'))
+  // Get the Electron version from package.json
+  const electronVersion = packageJson.devDependencies.electron
+  // Install Electron
+  console.log(`Installing Electron ${electronVersion}...`)
+  execSync(`npm i electron@${electronVersion}`, { stdio: 'inherit' })
+  console.log('Electron installed successfully.')
+}
+
+const main = async () => {
+  let electronPath
+  try {
+    electronPath = require('electron')
+  } catch (e) {
+    await installElectron()
+  }
+  electronPath = require('electron')
+  const appPath = join(__dirname, 'build', 'main-bundle.js')
+  const electronProcess = spawn(electronPath, [appPath])
+  electronProcess.stdout.on('data', (data) => process.stdout.write(data))
+  electronProcess.stderr.on('data', (data) => process.stderr.write(data))
+  electronProcess.on('close', (code) => process.exit(code))
+}
+
+main()
