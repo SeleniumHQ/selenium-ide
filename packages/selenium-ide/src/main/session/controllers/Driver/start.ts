@@ -30,20 +30,16 @@ export const port = app.isPackaged ? 9516 : 9515
  *   4. When Electron is quitting, close the child driver process
  */
 
-const ourElectronPath = path
-  .resolve(
-    path.join(
-      __dirname,
-      '..',
-      'node_modules',
-      'electron-chromedriver',
-      'bin',
-      'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
-    )
+const ourElectronPath = __non_webpack_require__.resolve(
+  path.join(
+    'electron-chromedriver',
+    'bin',
+    'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
   )
+)
 
-const getDriver = ({ browser, version }: BrowserInfo) => (
-  browser === 'electron'
+const getDriver = ({ browser, version }: BrowserInfo) =>
+  (browser === 'electron'
     ? ourElectronPath
     : path.resolve(
         path.join(
@@ -70,9 +66,15 @@ const startDriver: StartDriver = () => (info) =>
     const driverPath = getDriver(info)
     switch (info.browser) {
       case 'electron':
-        
     }
-    console.log('Starting driver', info.browser, 'at', driverPath, 'with args', args.join(' '))
+    console.log(
+      'Starting driver',
+      info.browser,
+      'at',
+      driverPath,
+      'with args',
+      args.join(' ')
+    )
     if (fs.existsSync(driverPath)) {
       const driver = spawn(driverPath.replace(/\s/g, ' '), args, {
         env: {},
