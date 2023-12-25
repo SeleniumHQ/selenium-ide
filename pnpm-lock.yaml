@@ -281,9 +281,6 @@ importers:
       dnd-core:
         specifier: ^16.0.1
         version: 16.0.1
-      electron:
-        specifier: ^28.0.0
-        version: 28.0.0
       electron-chromedriver:
         specifier: ^28.0.0
         version: 28.0.0
@@ -363,6 +360,9 @@ importers:
       css-loader:
         specifier: ^6.8.1
         version: 6.8.1(webpack@5.89.0)
+      electron:
+        specifier: ^28.0.0
+        version: 28.0.0
       electron-builder:
         specifier: ^24.9.1
         version: 24.9.1
@@ -3212,7 +3212,7 @@ packages:
   /@seleniumhq/code-export-python-pytest@4.0.0-alpha.3:
     resolution: {integrity: sha512-HDAyXgtOghulK50AkdIcHJ94cXu/bE/VK4vp1kmz1SqCCZVb5xzZWKmqNphfCpDUe0HtmTCJUyYRP4bE2CYUsg==}
     dependencies:
-      side-code-export: 4.0.0-alpha.11
+      side-code-export: 4.0.0-alpha.13
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -3222,15 +3222,15 @@ packages:
     resolution: {integrity: sha512-Nruf1JuEvQP9W8i7ntlZ4GBROITIjIsqhkdDB44PK1F9GxYRUFm9/ZBGhtMXyzL6gih+JPgtcO/ljdq5yqz3WA==}
     dev: false
 
-  /@seleniumhq/side-model@4.0.0-alpha.4:
-    resolution: {integrity: sha512-+TLf8itRJHRI4dlTErDFtLeWpjDRz7M1VudMOX0iGyQ1PCEpmYuS2w3qfaeU7zRpUBhHyMlLrk+Ge5I6Fah65Q==}
+  /@seleniumhq/side-model@4.0.0-alpha.5:
+    resolution: {integrity: sha512-+6SeXnd1MRqF1Fl1cVMGRJLbgKQeubuGoThiE2RaFYXxWQmAMzIk8aXOtTXXDxBhF9Stxns8u/LUzW0ZcbMjcQ==}
     dev: false
 
-  /@seleniumhq/side-runtime@4.0.0-alpha.31:
-    resolution: {integrity: sha512-ADDzgBV7z+lHYrj5Yhw9ACpU1JY+efTAhTapw/bCuHV7XHX+8R1aakF0kNjKs+4Fu9JFCLvU2YdEtOiZ5465+Q==}
+  /@seleniumhq/side-runtime@4.0.0-alpha.32:
+    resolution: {integrity: sha512-EMCsuBCCXANkn/Xt5aZBeIHiHxI6s5oL4Bvr6S4BwiFeC0RY9kqirHcSQSiRtPe5r/V5l/Slmmy+gnzhumq3ag==}
     dependencies:
       '@seleniumhq/side-commons': 4.0.0-alpha.1
-      '@seleniumhq/side-model': 4.0.0-alpha.4
+      '@seleniumhq/side-model': 4.0.0-alpha.5
       '@types/selenium-webdriver': 4.1.21
       selenium-webdriver: 4.16.0
     transitivePeerDependencies:
@@ -3519,6 +3519,7 @@ packages:
 
   /@types/node@18.16.19:
     resolution: {integrity: sha512-IXl7o+R9iti9eBW4Wg2hx1xQDig183jj7YLn8F7udNceyfkbn1ZxmzZXuak20gR40D7pIkIY1kYGx5VIGbaHKA==}
+    dev: true
 
   /@types/normalize-package-data@2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -5532,6 +5533,7 @@ packages:
       extract-zip: 2.0.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
 
   /emittery@0.13.1:
     resolution: {integrity: sha512-DeWwawk6r5yR9jFgnDKYt4sLS0LmHJJi3ZOnb5/JdbYwj3nW+FxQnHIjhBKz8YLC7oRNPVM9NQ47I3CVx34eqQ==}
@@ -9998,12 +10000,12 @@ packages:
       get-intrinsic: 1.2.1
       object-inspect: 1.12.3
 
-  /side-code-export@4.0.0-alpha.11:
-    resolution: {integrity: sha512-bKyAwbnZxWLQEZ21yFx9oMOmniMN7UdWsshTpaZ2mI+crYjdqJ+C0QQmID9GHI21S4Tq/+ZGpkAa1J9MiOtpSg==}
+  /side-code-export@4.0.0-alpha.13:
+    resolution: {integrity: sha512-LKVFH7VHKmAlrKk/5GSfMKgrlQeJ1GZX4VhMFgZEICTQWr15ZnRyPzlrkqlU5M3sYraTisQz9mBljsbIQHiKTA==}
     hasBin: true
     dependencies:
-      '@seleniumhq/side-model': 4.0.0-alpha.4
-      '@seleniumhq/side-runtime': 4.0.0-alpha.31
+      '@seleniumhq/side-model': 4.0.0-alpha.5
+      '@seleniumhq/side-runtime': 4.0.0-alpha.32
       commander: 9.4.1
     transitivePeerDependencies:
       - bufferutil
