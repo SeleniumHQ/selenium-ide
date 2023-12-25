@@ -166,7 +166,7 @@ export default class PlaybackController extends BaseController {
         this.handleCommandStateChanged
       )
       this.playbacks.push(playback)
-      if (browserInfo.browser === 'electron') {
+      if (!browserInfo.useBidi) {
         await this.claimPlaybackWindow(playback)
       } else {
         await playback.executor.driver.switchTo().newWindow('window')
