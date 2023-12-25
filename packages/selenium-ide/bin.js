@@ -7,7 +7,7 @@ const fs = require('fs/promises')
 
 async function installElectron() {
   // Read package.json
-  const packageJson = JSON.parse(fs.readFile('package.json', 'utf8'))
+  const packageJson = JSON.parse(await fs.readFile('package.json', 'utf8'))
   // Get the Electron version from package.json
   const electronVersion = packageJson.devDependencies.electron
   // Install Electron
