@@ -31,24 +31,13 @@ export const port = app.isPackaged ? 9516 : 9515
  */
 
 const electronBinary = `chromedriver${os.platform() === 'win32' ? '.exe' : ''}`
-const ourElectronPath = app.isPackaged
-  ? path.resolve(
-      path.join(
-        __dirname,
-        '..',
-        'node_modules',
-        'electron-chromedriver',
-        'bin',
-        electronBinary
-      )
-    )
-  : __non_webpack_require__.resolve(
-      path.join(
-        'electron-chromedriver',
-        'bin',
-        electronBinary
-      )
-    )
+const ourElectronPath = __non_webpack_require__.resolve(
+  path.join(
+    'electron-chromedriver',
+    'bin',
+    electronBinary
+  )
+)
 
 const getDriver = ({ browser, version }: BrowserInfo) =>
   (browser === 'electron'

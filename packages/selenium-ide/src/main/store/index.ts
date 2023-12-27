@@ -33,7 +33,7 @@ export default () => {
   const store = new Store<StorageSchema>({
     defaults: {
       browserInfo: {
-        browser: 'chrome',
+        browser: 'electron',
         useBidi: false,
         version: '',
       },
