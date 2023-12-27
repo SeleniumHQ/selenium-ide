@@ -261,7 +261,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../code-export-javascript-mocha
       '@seleniumhq/code-export-python-pytest':
-        specifier: ^4.0.0-alpha.3
+        specifier: ^4.0.0-alpha.4
         version: link:../code-export-python-pytest
       '@seleniumhq/code-export-ruby-rspec':
         specifier: ^4.0.0-alpha.3
@@ -276,7 +276,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.32
+        specifier: ^4.0.0-alpha.33
         version: link:../side-runtime
       dnd-core:
         specifier: ^16.0.1
@@ -516,7 +516,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.32
+        specifier: ^4.0.0-alpha.33
         version: link:../side-runtime
       commander:
         specifier: ^11.0.0

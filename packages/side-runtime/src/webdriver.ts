@@ -620,7 +620,7 @@ export default class WebDriverExecutor {
 
     // try top
     if (rect.top > 0) {
-      const y = -(rect.height / 2 + 1)
+      const y = Math.round(-(rect.height / 2 + 1))
       return await this.driver
         .actions({ bridge: true })
         .move({ origin: element, y })
@@ -628,7 +628,7 @@ export default class WebDriverExecutor {
     }
     // try right
     else if (vp.width > rect.right) {
-      const x = rect.right / 2 + 1
+      const x = Math.round(rect.right / 2 + 1)
       return await this.driver
         .actions({ bridge: true })
         .move({ origin: element, x })
@@ -636,7 +636,7 @@ export default class WebDriverExecutor {
     }
     // try bottom
     else if (vp.height > rect.bottom) {
-      const y = rect.height / 2 + 1
+      const y = Math.round(rect.height / 2 + 1)
       return await this.driver
         .actions({ bridge: true })
         .move({ origin: element, y })
