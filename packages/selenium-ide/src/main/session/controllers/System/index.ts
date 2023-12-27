@@ -56,11 +56,10 @@ export default class SystemController extends BaseController {
       loggerWindow.show()
       // If automated, assume we already have a chromedriver process running
       if (!isAutomated) {
-        try {
-          await this.session.driver.startProcess(
-            this.session.store.get('browserInfo')
-          )
-        } catch (e) {
+        const startupError = await this.session.driver.startProcess(
+          this.session.store.get('browserInfo')
+        )
+        if (startupError) {
           console.warn(`
             Failed to locate non-electron driver on startup,
             Resetting to electron driver.
@@ -70,12 +69,12 @@ export default class SystemController extends BaseController {
             useBidi: false,
             version: '',
           })
-          const startupError = await this.session.driver.startProcess(
+          const fallbackStartupError = await this.session.driver.startProcess(
             this.session.store.get('browserInfo')
           )
-          if (startupError) {
+          if (fallbackStartupError) {
             await this.crash(
-              `Unable to startup due to chromedriver error: ${startupError}`
+              `Unable to startup due to chromedriver error: ${fallbackStartupError}`
             )
           }
         }
