@@ -138,9 +138,10 @@ export default class PlaybackController extends BaseController {
     const browserInfo = this.session.store.get('browserInfo')
     const allowMultiplePlaybacks =
       (await this.isParallel()) && this.testQueue.length
-    const makeNewPlayback = !this.playbacks.length || allowMultiplePlaybacks  
+    const makeNewPlayback = !this.playbacks.length || allowMultiplePlaybacks
+    let playback: Playback
     if (makeNewPlayback) {
-      const playback = new Playback({
+      playback = new Playback({
         baseUrl: this.session.projects.project.url,
         executor: await this.session.driver.build({
           browser: browserInfo.browser,
@@ -171,28 +172,24 @@ export default class PlaybackController extends BaseController {
       } else {
         await playback.executor.driver.switchTo().newWindow('window')
       }
-      const state = await this.session.state.get()
-      const currentCommand = getActiveCommand(state)
-      const url =
-        currentCommand.command === 'open'
-          ? new URL(currentCommand.target as string, state.project.url).href
-          : state.project.url
-      playback.executor.doOpen(url)
-      return playback
+    } else {
+      playback = this.playbacks[0]
+      await this.claimPlaybackWindow(playback)
     }
-    return this.playbacks[0]
+    return playback
   }
 
   async claimPlaybackWindow(playback: Playback) {
     const executor = playback.executor
     const driver = executor.driver
-    const handle = await driver.getWindowHandle()
-    const existingWindow = await this.session.windows.getPlaybackWindowByHandle(
-      handle
-    )
-    if (existingWindow && existingWindow.isVisible()) {
-      return
-    }
+    try {
+      const handle = await driver.getWindowHandle()
+      const existingWindow =
+        await this.session.windows.getPlaybackWindowByHandle(handle)
+      if (existingWindow && existingWindow.isVisible()) {
+        return
+      }
+    } catch (windowDoesNotExist) {}
     let success = false
     const UUID = randomUUID()
     const window = await this.session.windows.openPlaybackWindow({
@@ -220,6 +217,13 @@ export default class PlaybackController extends BaseController {
     if (!success) {
       throw new Error('Failed to switch to playback window')
     }
+    const state = await this.session.state.get()
+    const currentCommand = getActiveCommand(state)
+    const url =
+      currentCommand.command === 'open'
+        ? new URL(currentCommand.target as string, state.project.url).href
+        : state.project.url
+    playback.executor.doOpen(url)
   }
 
   async play(testID: string, playRange = PlaybackController.defaultPlayRange) {

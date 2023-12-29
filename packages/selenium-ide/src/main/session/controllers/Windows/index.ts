@@ -60,7 +60,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
               devTools: !isAutomated,
               ...(windowConfig?.webPreferences ?? {}),
               preload: hasPreload ? preloadPath : undefined,
-              sandbox: hasPreload ? false : undefined,
+              sandbox: true,
             },
             ...options,
           })
@@ -288,7 +288,7 @@ export default class WindowsController extends BaseController {
 
   async removePlaybackWIndow(window: Electron.BrowserWindow) {
     this.playbackWindows.splice(this.playbackWindows.indexOf(window), 1)
-    if (this.playbackWindows.length === 0) {
+    if (this.playbackWindows.length === 1) {
       if (this.session.state.state.status === 'recording') {
         await this.session.api.recorder.stop()
       }

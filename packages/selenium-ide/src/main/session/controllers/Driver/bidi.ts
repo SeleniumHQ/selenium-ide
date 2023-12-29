@@ -29,11 +29,12 @@ export const createBidiAPIBindings = async (
     console.log('Playback javascript exception', entry)
   })
 
-  const scriptManager = await getScriptManager(null as any, driver as any)
+  const handle = await driver.getWindowHandle() as any
+  const scriptManager = await getScriptManager(handle, driver as any)
   await scriptManager.addPreloadScript(
     playbackWindowBidiPreload as any,
     [],
-    null
+    false
   )
   const pluginPreloads = await session.plugins.listPreloadPaths()
   pluginPreloads.forEach(async (preloadPath) => {

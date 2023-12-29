@@ -17,7 +17,6 @@
 import type { Api } from '@seleniumhq/side-api'
 import { BrowserApiMutators } from 'browser/api'
 import mutators from 'browser/api/mutator'
-import { noop } from 'lodash/fp'
 
 export type NestedPartial<API> = {
   [K in keyof API]?: API[K] extends Record<string, unknown>
@@ -25,8 +24,8 @@ export type NestedPartial<API> = {
     : API[K]
 }
 
-export default (api: Api, cb = noop) =>
-  (
+export default (api: Api, ...cbs: (() => void)[]) =>
+  async (
     apiSubset: NestedPartial<Api> & {
       mutators: NestedPartial<BrowserApiMutators>
     } = {
@@ -35,5 +34,14 @@ export default (api: Api, cb = noop) =>
     },
   ) => {
     window.sideAPI = apiSubset as Api & { mutators: BrowserApiMutators }
-    cb()
+    if (cbs?.length) {
+      for (const cb of cbs) {
+        await cb()
+      }
+    }
+
+    return cbs.reduce((acc, cb) => () => {
+        acc()
+        cb()
+    })
   }
