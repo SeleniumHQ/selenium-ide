@@ -4,6 +4,7 @@ import { CoreSessionData, LocatorFields } from '@seleniumhq/side-api'
 export interface CommandEditorProps {
   command: CommandShape
   commands: CoreSessionData['state']['commands']
+  disabled?: boolean
   testID: string
 }
 

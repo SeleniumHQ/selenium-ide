@@ -25,7 +25,18 @@ export default class PluginsController extends BaseController {
   }
 
   async getPreloads() {
-    const preloadPaths = (await this.listPreloadPaths())
+    const plugins = await this.list()
+    const preloadPaths = plugins.map((pluginPath) => {
+      const actualPluginPath = __non_webpack_require__.resolve(pluginPath)
+      const preloadPath = path.join(
+        actualPluginPath,
+        '..',
+        'preload',
+        'index.js'
+      )
+      return preloadPath
+    })
+    const correctedPreloadPaths = preloadPaths
       .map((preloadPath) => {
         try {
           const path = __non_webpack_require__.resolve(preloadPath) as string
@@ -37,22 +48,8 @@ export default class PluginsController extends BaseController {
       .filter(Boolean) as string[]
     
     return Promise.all(
-      preloadPaths.map((preloadPath) => readFile(preloadPath, 'utf-8'))
+      correctedPreloadPaths.map((preloadPath) => readFile(preloadPath, 'utf-8'))
     )
-  }
-
-  async listPreloadPaths() {
-    const list = await this.list()
-    return list.map((pluginPath) => {
-      const actualPluginPath = __non_webpack_require__.resolve(pluginPath)
-      const preloadPath = path.join(
-        actualPluginPath,
-        '..',
-        'preload',
-        'index.js'
-      )
-      return preloadPath
-    })
   }
 
   async onProjectLoaded() {

@@ -31,6 +31,7 @@ interface CommandRowProps {
   activeTest: string
   commandState: PlaybackEventShapes['COMMAND_STATE_CHANGED']
   command: CommandShape
+  disabled?: boolean
   index: number
   reorderPreview: ReorderPreview
   resetPreview: () => void
@@ -54,6 +55,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
   activeTest,
   commandState = defaultCommandState,
   command: { command, id, isBreakpoint, opensWindow, target, value },
+  disabled = false,
   index,
   reorderPreview,
   resetPreview,
@@ -93,6 +95,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
       secondaryAction={
         <IconButton
           color={isBreakpoint ? 'primary' : 'default'}
+          disabled={disabled}
           edge="end"
           onClick={toggleBreakpoint}
         >

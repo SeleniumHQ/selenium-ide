@@ -1,4 +1,5 @@
 import { BaseApi } from './types/base'
+import { commands as channels } from './commands/channels'
 import { commands as dialogs } from './commands/dialogs'
 import { commands as driver } from './commands/driver'
 import { commands as menus } from './commands/menus'
@@ -13,6 +14,7 @@ import { commands as tests } from './commands/tests'
 import { commands as windows } from './commands/windows'
 
 export interface ApiHoist extends BaseApi {
+  channels: typeof channels
   dialogs: typeof dialogs
   driver: typeof driver
   menus: typeof menus
@@ -28,6 +30,7 @@ export interface ApiHoist extends BaseApi {
 }
 
 export const api: ApiHoist = {
+  channels,
   dialogs,
   driver,
   menus,

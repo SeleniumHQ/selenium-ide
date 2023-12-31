@@ -61,6 +61,7 @@ interface CommandRowProps {
   activeTest: string
   commandState: PlaybackEventShapes['COMMAND_STATE_CHANGED']
   command: CommandShape
+  disabled?: boolean
   index: number
   reorderPreview: ReorderPreview
   resetPreview: () => void
@@ -81,6 +82,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
   activeTest,
   commandState = {},
   command: { command, comment, id, isBreakpoint, target, value },
+  disabled = false,
   index,
   reorderPreview,
   resetPreview,
@@ -133,6 +135,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
       secondaryAction={
         <IconButton
           color={isBreakpoint ? 'warning' : 'default'}
+          disabled={disabled}
           onClick={toggleBreakpoint}
         >
           <PauseIcon />
@@ -191,7 +194,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
         <Box sx={{ flex: 2, ...argTextFormat }}>{value}</Box>
         <Box sx={{ flex: 0, flexBasis: 50 }}></Box>
       </Box>
-      {commandState.message && (
+      {'message' in commandState && (
         <Box sx={errorTextFormat}>
           <Typography>{commandState.message}</Typography>
         </Box>

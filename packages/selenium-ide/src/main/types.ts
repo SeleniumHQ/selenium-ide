@@ -4,6 +4,7 @@ import { App } from 'electron'
 import Store from 'electron-store'
 import config from './store/config'
 import ArgTypesController from './session/controllers/ArgTypes'
+import ChannelsController from './session/controllers/Channels'
 import CommandsController from './session/controllers/Commands'
 import DialogsController from './session/controllers/Dialogs'
 import DriverController from './session/controllers/Driver'
@@ -40,6 +41,7 @@ export interface Session {
   api: MainApi
   app: App
   argTypes: ArgTypesController
+  channels: ChannelsController
   commands: CommandsController
   dialogs: DialogsController
   driver: DriverController

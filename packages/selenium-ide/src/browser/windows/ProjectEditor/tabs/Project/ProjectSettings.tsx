@@ -57,6 +57,23 @@ const ProjectSettings: FC<ProjectSettingsProps> = ({
       </FormControl>
       <FormControl>
         <TextField
+          id="timeout"
+          label="Step Timeout (MILLISECONDS)"
+          helperText="Steps will fail if they take longer than this setting"
+          name="timeout"
+          type="number"
+          inputProps={{ min:0, step: 1000 }}
+          onChange={(e: any) => {
+            update({
+              delay: Math.max(parseInt(e.target.value || '0'), 0),
+            })
+          }}
+          size="small"
+          value={project.delay || 0}
+        />
+      </FormControl>
+      <FormControl>
+        <TextField
           id="delay"
           label="Step Delay (MILLISECONDS)"
           helperText="Each step will pause by this setting"

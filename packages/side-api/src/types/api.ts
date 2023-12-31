@@ -1,3 +1,4 @@
+import { type Shape as Channels } from '../commands/channels'
 import { type Shape as Dialogs } from '../commands/dialogs'
 import { type Shape as Driver } from '../commands/driver'
 import { type Shape as Menus } from '../commands/menus'
@@ -15,6 +16,7 @@ import { type Shape as Windows } from '../commands/windows'
  * The full API usable by Selenium IDE
  */
 export type Api = {
+  channels: Channels
   dialogs: Dialogs
   driver: Driver
   menus: Menus

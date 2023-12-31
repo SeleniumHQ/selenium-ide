@@ -9,8 +9,9 @@ import Tooltip from '@mui/material/Tooltip'
 import { LocatorFields } from '@seleniumhq/side-api'
 
 const CommandTextField: FC<CommandFieldProps> = ({
-  commands,
   command,
+  commands,
+  disabled,
   fieldName,
   note,
   testID,
@@ -27,6 +28,7 @@ const CommandTextField: FC<CommandFieldProps> = ({
     <FormControl className="flex flex-row">
       <TextField
         className="flex-1"
+        disabled={disabled}
         id={`${fieldName}-${command.id}`}
         label={label}
         InputLabelProps={{

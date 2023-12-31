@@ -1,5 +1,8 @@
 import Paper from '@mui/material/Paper'
-import { getActiveCommand, getActiveTest } from '@seleniumhq/side-api/dist/helpers/getActiveData'
+import {
+  getActiveCommand,
+  getActiveTest,
+} from '@seleniumhq/side-api/dist/helpers/getActiveData'
 import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
 import React from 'react'
 import CommandEditor from './TestCommandEditor'
@@ -42,6 +45,7 @@ const TestsTab: React.FC<{
 
   const activeTest = getActiveTest(session)
   const activeCommand = getActiveCommand(session)
+  const disabled = ['playing', 'recording'].includes(session.state.status)
   return (
     <>
       <MainHeader />
@@ -50,6 +54,7 @@ const TestsTab: React.FC<{
         bottomOffset={bottomOffset}
         commands={activeTest.commands}
         commandStates={playback.commands}
+        disabled={disabled}
         selectedCommandIndexes={selectedCommandIndexes}
       />
       <Paper
@@ -67,6 +72,7 @@ const TestsTab: React.FC<{
         <CommandEditor
           commands={commands}
           command={activeCommand}
+          disabled={disabled}
           selectedCommandIndexes={selectedCommandIndexes}
           testID={activeTestID}
         />

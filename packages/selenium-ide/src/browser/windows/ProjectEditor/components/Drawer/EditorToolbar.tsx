@@ -8,6 +8,7 @@ import ListSubheader, { ListSubheaderProps } from '@mui/material/ListSubheader'
 import React, { FC } from 'react'
 
 interface EditorToolbarProps extends ListSubheaderProps {
+  disabled?: boolean
   onAdd?: () => void
   onEdit?: () => void
   onRemove?: () => void
@@ -24,6 +25,7 @@ const standardIconProps = {
 const EditorToolbar: FC<EditorToolbarProps> = ({
   children,
   className = 'lh-36',
+  disabled = false,
   onAdd,
   onEdit,
   onRemove,
@@ -41,7 +43,12 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
     {onAdd ? (
       <Box sx={{ flex: 0 }}>
         <Tooltip title="Add">
-          <IconButton {...standardIconProps} color="success" onClick={onAdd}>
+          <IconButton
+            {...standardIconProps}
+            color="success"
+            disabled={disabled}
+            onClick={onAdd}
+          >
             <AddIcon />
           </IconButton>
         </Tooltip>
@@ -50,7 +57,12 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
     {onRemove ? (
       <Box sx={{ flex: 0 }}>
         <Tooltip title="Remove">
-          <IconButton {...standardIconProps} color="warning" onClick={onRemove}>
+          <IconButton
+            {...standardIconProps}
+            color="warning"
+            disabled={disabled}
+            onClick={onRemove}
+          >
             <RemoveIcon />
           </IconButton>
         </Tooltip>
@@ -59,7 +71,12 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
     {onEdit ? (
       <Box sx={{ flex: 0 }}>
         <Tooltip title="Edit">
-          <IconButton {...standardIconProps} color="info" onClick={onEdit}>
+          <IconButton
+            {...standardIconProps}
+            color="info"
+            disabled={disabled}
+            onClick={onEdit}
+          >
             <EditIcon />
           </IconButton>
         </Tooltip>
@@ -68,7 +85,12 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
     {onView ? (
       <Box sx={{ flex: 0 }}>
         <Tooltip title="View Playback Results">
-          <IconButton {...standardIconProps} color="info" onClick={onView}>
+          <IconButton
+            {...standardIconProps}
+            color="info"
+            disabled={disabled}
+            onClick={onView}
+          >
             <VisibilityIcon />
           </IconButton>
         </Tooltip>

@@ -16,6 +16,7 @@ type PluralField = 'targets' | 'values'
 const CommandLocatorField: FC<CommandArgFieldProps> = ({
   command,
   commands,
+  disabled,
   fieldName,
   testID,
 }) => {
@@ -44,6 +45,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
     <FormControl className="flex flex-row">
       <Autocomplete
         className="flex-1"
+        disabled={disabled}
         freeSolo
         inputValue={localValue || ''}
         componentsProps={{
@@ -81,6 +83,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
       />
       <IconButton
         className="ml-4"
+        disabled={disabled}
         onClick={() =>
           window.sideAPI.recorder.requestHighlightElement(fieldName)
         }
@@ -88,6 +91,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         <FindInPageIcon />
       </IconButton>
       <IconButton
+        disabled={disabled}
         onClick={() =>
           window.sideAPI.recorder.requestSelectElement(true, fieldName)
         }

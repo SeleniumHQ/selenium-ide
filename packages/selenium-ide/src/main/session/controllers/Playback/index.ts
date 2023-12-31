@@ -174,7 +174,14 @@ export default class PlaybackController extends BaseController {
       }
     } else {
       playback = this.playbacks[0]
-      await this.claimPlaybackWindow(playback)
+      try {
+        await this.claimPlaybackWindow(playback)
+      } catch (e) {
+        // playback has become invalid
+        this.playbacks.splice(this.playbacks.indexOf(playback), 1)
+        await playback.cleanup()
+        playback = await this.getPlayback(testID)
+      }
     }
     return playback
   }

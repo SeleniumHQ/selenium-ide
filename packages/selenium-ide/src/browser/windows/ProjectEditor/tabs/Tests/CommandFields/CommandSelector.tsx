@@ -14,6 +14,7 @@ const updateCommand = updateACField('command')
 const CommandSelector: FC<CommandSelectorProps> = ({
   command,
   commands,
+  disabled,
   isDisabled,
   testID,
 }) => {
@@ -40,6 +41,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
         <Autocomplete
           id="command-selector"
           className="flex-1"
+          disabled={disabled}
           onChange={updateCommand(testID, command.id)}
           getOptionLabel={(option) => option.label}
           options={commandOptions}
@@ -65,7 +67,10 @@ const CommandSelector: FC<CommandSelectorProps> = ({
           } a new window`}
           placement="top-end"
         >
-          <IconButton onClick={() => setOpensWindow(!command.opensWindow)}>
+          <IconButton
+            disabled={disabled}
+            onClick={() => setOpensWindow(!command.opensWindow)}
+          >
             <OpenInNew color={command.opensWindow ? 'info' : 'inherit'} />
           </IconButton>
         </Tooltip>
@@ -75,6 +80,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
           placement="top-end"
         >
           <IconButton
+            disabled={disabled}
             onClick={() =>
               setCommand(isDisabled ? command.command : `//${command.command}`)
             }

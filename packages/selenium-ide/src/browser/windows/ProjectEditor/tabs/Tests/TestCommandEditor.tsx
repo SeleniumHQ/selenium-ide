@@ -10,6 +10,7 @@ import CommandTextField from './CommandFields/TextField'
 export interface CommandEditorProps {
   command: CommandShape
   commands: CoreSessionData['state']['commands']
+  disabled?: boolean
   selectedCommandIndexes: number[]
   testID: string
 }

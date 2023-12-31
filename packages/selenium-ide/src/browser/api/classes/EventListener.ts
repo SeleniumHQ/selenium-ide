@@ -3,7 +3,7 @@ import { BaseListener, VariadicArgs } from '@seleniumhq/side-api'
 
 const baseListener = <ARGS extends VariadicArgs>(
   path: string
-): BaseListener<ARGS> => {
+): BaseListener<ARGS> & { emitEvent: (...args: ARGS) => void } => {
   const listeners: any[] = []
   return {
     addListener(listener) {
@@ -15,7 +15,11 @@ const baseListener = <ARGS extends VariadicArgs>(
       console.debug(path, 'dispatching event')
       const results = listeners.map((fn) => fn(...args))
       ipcRenderer.send(`${path}.response`, results)
-      return results;
+      return results
+    },
+    emitEvent(...args) {
+      console.debug(path, 'emitting event')
+      ipcRenderer.send(`${path}.emit`, ...args)
     },
     hasListener(listener) {
       return listeners.includes(listener)

@@ -36,10 +36,10 @@ export const createBidiAPIBindings = async (
     [],
     false
   )
-  const pluginPreloads = await session.plugins.listPreloadPaths()
-  pluginPreloads.forEach(async (preloadPath) => {
+  const pluginPreloads = await session.plugins.getPreloads()
+  pluginPreloads.forEach(async (preload) => {
     await scriptManager.addPreloadScript(
-      (await readFile(preloadPath, 'utf-8')) as any,
+      (await readFile(preload, 'utf-8')) as any,
       [],
       null
     )

@@ -28,6 +28,15 @@ const plugin: PluginShape = {
     onBeforeCommand: (input) => {
       console.log('Before command', input)
     },
+    async onLoad(api) {
+      console.log('Loading example plugin!')
+      api.channels.onSend.addListener((channel, command) => {
+        if (channel === 'example-plugin') {
+          console.log('Message received', channel, command)
+        }
+      })
+      console.log('Loaded example plugin!')
+    },
   },
 }
 

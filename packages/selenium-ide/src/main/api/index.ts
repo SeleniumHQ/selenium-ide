@@ -17,12 +17,7 @@ export type MainApi = {
       ? MainListener<ARGS, RESULT>
       : Api[NS][K]  
   }
-} & {
-  recorder: {
-    getWinHandleId: Session['recorder']['getWinHandleId']
-    getFrameLocation: Session['recorder']['getFrameLocation']
-  }
-}
+} & typeof overrides
 
 export default (session: Session): MainApi => ({
   ...processApi((path, handler) => {

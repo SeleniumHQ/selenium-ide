@@ -12,6 +12,7 @@ export interface CommandListProps {
   bottomOffset: number
   commands: CommandShape[]
   commandStates: CommandsStateShape
+  disabled?: boolean
   selectedCommandIndexes: number[]
 }
 
@@ -22,6 +23,7 @@ const CommandList: FC<CommandListProps> = ({
   bottomOffset,
   commandStates,
   commands,
+  disabled = false,
   selectedCommandIndexes,
 }) => {
   const [preview, reorderPreview, resetPreview] = useReorderPreview(
@@ -34,9 +36,10 @@ const CommandList: FC<CommandListProps> = ({
     <ReorderableList
       bottomOffset={bottomOffset}
       dense
+      aria-disabled={disabled}
       subheader={
         <EditorToolbar
-          sx={{ top: '48px', zIndex: 100 }}
+          disabled={disabled}
           onAdd={() =>
             window.sideAPI.tests.addSteps(
               activeTest,
@@ -52,6 +55,7 @@ const CommandList: FC<CommandListProps> = ({
                   )
               : undefined
           }
+          sx={{ top: '48px', zIndex: 100 }}
         >
           <span className="ml-4">Commands</span>
         </EditorToolbar>
@@ -67,6 +71,7 @@ const CommandList: FC<CommandListProps> = ({
             activeTest={activeTest}
             command={command}
             commandState={commandStates[id]}
+            disabled={disabled}
             key={id}
             index={index}
             reorderPreview={reorderPreview}

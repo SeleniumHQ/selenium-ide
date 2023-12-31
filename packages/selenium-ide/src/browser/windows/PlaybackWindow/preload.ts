@@ -18,17 +18,23 @@ import { RecorderPreprocessor } from '@seleniumhq/side-api'
 import api from 'browser/api'
 import apiMutators from 'browser/api/mutator'
 import preload from 'browser/helpers/preload'
-import {cb as ElectronCallback} from 'browser/helpers/preload-electron'
+import { cb as ElectronCallback } from 'browser/helpers/preload-electron'
 import { webFrame } from 'electron'
 import Recorder from './preload/recorder'
 
 const recorderProcessors: RecorderPreprocessor[] = []
 async function main() {
-  const preloads = await api.plugins.getPreloads()
-  for (const preload of preloads) {
-    eval(preload)
-  }
   window.addEventListener('DOMContentLoaded', async () => {
+    const preloads = await api.plugins.getPreloads()
+    for (const preload of preloads) {
+      try {
+        console.debug(`Loading preload: ${preload}`)
+        eval(preload)
+        console.debug(`Loaded preload!`)
+      } catch (e) {
+        console.error(`Error loading preload: ${preload}`, e)
+      }
+    }
     webFrame.executeJavaScript(`
       Object.defineProperty(navigator, 'webdriver', {
         get () {
@@ -44,17 +50,20 @@ async function main() {
   })
 }
 
-preload(api, ElectronCallback, main)(
-  {
-    plugins: {
-      addRecorderPreprocessor: (fn) => {
-        recorderProcessors.push(fn)
-      },
-    },
-    recorder: api.recorder,
-    mutators: {
-      plugins: {},
-      recorder: apiMutators.recorder,
+preload(
+  api,
+  ElectronCallback,
+  main
+)({
+  channels: api.channels,
+  plugins: {
+    addRecorderPreprocessor: (fn) => {
+      recorderProcessors.push(fn)
     },
   },
-)
+  recorder: api.recorder,
+  mutators: {
+    plugins: {},
+    recorder: apiMutators.recorder,
+  },
+})

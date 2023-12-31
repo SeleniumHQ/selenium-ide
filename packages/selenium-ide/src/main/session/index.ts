@@ -1,5 +1,6 @@
 import { App } from 'electron'
 import ArgTypesController from './controllers/ArgTypes'
+import ChannelsController from './controllers/Channels'
 import CommandsController from './controllers/Commands'
 import DialogsController from './controllers/Dialogs'
 import DriverController from './controllers/Driver'
@@ -26,6 +27,7 @@ export default async function createSession(
     app,
     store: await Store(),
   }
+  partialSession.channels = new ChannelsController(partialSession as Session)
   partialSession.dialogs = new DialogsController(partialSession as Session)
   partialSession.argTypes = new ArgTypesController(partialSession as Session)
   partialSession.commands = new CommandsController(partialSession as Session)

@@ -5,6 +5,7 @@ const api = window.sideAPI as Api
 api.plugins.addRecorderPreprocessor((command, event) => {
   console.debug('Recorded command', command, event)
   if (command.command !== 'click') return
+  api.channels.send('example-plugin', command)
   return {
     action: 'update',
     command: {
@@ -13,3 +14,5 @@ api.plugins.addRecorderPreprocessor((command, event) => {
     },
   }
 })
+
+export = true

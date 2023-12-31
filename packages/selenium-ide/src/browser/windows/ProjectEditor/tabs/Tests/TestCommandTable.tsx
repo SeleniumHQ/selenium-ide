@@ -13,6 +13,7 @@ export interface CommandListProps {
   bottomOffset: number
   commands: CommandShape[]
   commandStates: CommandsStateShape
+  disabled?: boolean
   selectedCommandIndexes: number[]
 }
 
@@ -23,6 +24,7 @@ const CommandList: FC<CommandListProps> = ({
   bottomOffset,
   commandStates,
   commands,
+  disabled,
   selectedCommandIndexes,
 }) => {
   const [preview, reorderPreview, resetPreview] = useReorderPreview(
@@ -33,6 +35,7 @@ const CommandList: FC<CommandListProps> = ({
   useKeyboundNav(commands, selectedCommandIndexes)
   return (
     <ReorderableList
+      aria-disabled={disabled}
       bottomOffset={bottomOffset}
       dense
       subheader={
@@ -73,6 +76,7 @@ const CommandList: FC<CommandListProps> = ({
             activeTest={activeTest}
             command={command}
             commandState={commandStates[id]}
+            disabled={disabled}
             key={id}
             index={index}
             reorderPreview={reorderPreview}
