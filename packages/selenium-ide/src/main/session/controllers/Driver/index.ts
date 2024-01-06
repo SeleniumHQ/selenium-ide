@@ -1,5 +1,5 @@
 import { Chrome } from '@seleniumhq/browser-info'
-import { WebDriverExecutor } from '@seleniumhq/side-runtime'
+import { PluginRuntimeShape, WebDriverExecutor } from '@seleniumhq/side-runtime'
 import { ChildProcess } from 'child_process'
 import { BrowserInfo, Session } from 'main/types'
 import getScriptManager from 'selenium-webdriver/bidi/scriptManager'
@@ -9,6 +9,7 @@ import downloadDriver from './download'
 import startDriver, { port, WebdriverDebugLog } from './start'
 import BaseController from '../Base'
 import { createBidiAPIBindings } from './bidi'
+import { CommandShape } from '@seleniumhq/side-model'
 
 // Escape hatch to avoid dealing with rootDir complexities in TS
 // https://stackoverflow.com/questions/50822310/how-to-import-package-json-in-typescript
@@ -44,6 +45,91 @@ export interface BrowsersInfo {
   browsers: BrowserInfo[]
   selected: BrowserInfo
 }
+
+const promptInitiators = (session: Session) =>
+  Object.fromEntries(
+    ['click', 'sendKeys', 'select', 'submit'].map((commandName) => [
+      commandName,
+      {
+        execute: (command: CommandShape, executor: WebDriverExecutor) =>
+          new Promise<void>((resolve, reject) => {
+            const origCommandName = executor.nameTransform(commandName)
+            console.log('orig name', origCommandName, commandName)
+            const checkForPrompt = () => {
+              if (session.prompt.promptQuestion) {
+                resolve();
+              } else {
+                setTimeout(checkForPrompt, 100)
+              }
+            };
+            // @ts-expect-error - I still need to pattern the index key to 'do*'
+            executor[origCommandName](command.target, command.value, command)
+              .then(resolve)
+              .catch(reject)
+            checkForPrompt()
+          }),
+        name: commandName,
+        description: 'Wrapped command to handle electron prompts',
+      },
+    ])
+  )
+
+const electronPolyfills = (
+  session: Session
+): PluginRuntimeShape['commands'] => ({
+  ...promptInitiators(session),
+  assertPrompt: {
+    execute: async (command: CommandShape) => {
+      const expectedPromptQuestion = command.target
+      const actualPromptQuestion = session.prompt.promptQuestion
+      if (expectedPromptQuestion !== actualPromptQuestion) {
+        throw new Error(
+          `Prompt assertion failed. Expected "${expectedPromptQuestion}", but got "${actualPromptQuestion}"`
+        )
+      }
+    },
+    name: 'assertPrompt',
+    description: 'Asserts that a prompt has been shown with the given message',
+  },
+  answerPrompt: {
+    execute: async (command: CommandShape) => {
+      session.prompt.promptResolve!(command.target || '')
+    },
+    name: 'answerPrompt',
+    description: 'Answers a prompt with the given message',
+  },
+  dismissPrompt: {
+    execute: async () => {
+      session.prompt.promptResolve!(null)
+    },
+    name: 'dismissPrompt',
+    description: 'Dismisses a prompt',
+  },
+  setWindowSize: {
+    execute: async (command: CommandShape, executor: WebDriverExecutor) => {
+      const [width, height] = command.target!.split('x').map((v) => parseInt(v))
+      const handle = await executor.driver.getWindowHandle()
+      const window = await session.windows.getPlaybackWindowByHandle(handle)
+      if (!window) {
+        throw new Error('Failed to find playback window')
+      }
+      const pbWinCount = session.windows.playbackWindows.length
+      const b = await window.getBounds()
+      const calcNewX = b.x + Math.floor(b.width / 2) - Math.floor(width / 2)
+      const calcNewY = b.y + Math.floor(b.height / 2) - Math.floor(height / 2)
+      const newX = calcNewX < 0 ? pbWinCount * 20 : calcNewX
+      const newY = calcNewY < 0 ? pbWinCount * 20 : calcNewY
+      await window.setBounds({
+        x: newX,
+        y: newY,
+        height,
+        width,
+      })
+    },
+    name: 'setWindowSize',
+    description: 'Sets the playback window size',
+  },
+})
 
 /**
  * This is a shameful controller truly. It is a wrapper on the side-runtime
@@ -96,8 +182,13 @@ export default class DriverController extends BaseController {
     if (useBidi) {
       createBidiAPIBindings(this.session, driver)
     }
+    const browserPolyfills =
+      browser !== 'electron' ? {} : electronPolyfills(this.session)
     const executor: WebDriverExecutor = new WebDriverExecutor({
-      customCommands: this.session.commands.customCommands,
+      customCommands: {
+        ...browserPolyfills,
+        ...this.session.commands.customCommands,
+      },
       disableCodeExportCompat:
         this.session.state.state.userPrefs.disableCodeExportCompat === 'Yes'
           ? true
@@ -106,33 +197,6 @@ export default class DriverController extends BaseController {
       hooks: {
         onBeforePlay: (v) => this.session.playback.onBeforePlay(v),
       },
-      windowAPI:
-        browser !== 'electron'
-          ? undefined
-          : {
-              setWindowSize: async (executor, width, height) => {
-                const handle = await executor.driver.getWindowHandle()
-                const window =
-                  await this.session.windows.getPlaybackWindowByHandle(handle)
-                if (!window) {
-                  throw new Error('Failed to find playback window')
-                }
-                const pbWinCount = this.session.windows.playbackWindows.length
-                const b = await window.getBounds()
-                const calcNewX =
-                  b.x + Math.floor(b.width / 2) - Math.floor(width / 2)
-                const calcNewY =
-                  b.y + Math.floor(b.height / 2) - Math.floor(height / 2)
-                const newX = calcNewX < 0 ? pbWinCount * 20 : calcNewX
-                const newY = calcNewY < 0 ? pbWinCount * 20 : calcNewY
-                await window.setBounds({
-                  x: newX,
-                  y: newY,
-                  height,
-                  width,
-                })
-              },
-            },
     })
     return executor
   }

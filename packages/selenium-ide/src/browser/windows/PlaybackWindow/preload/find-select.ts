@@ -66,12 +66,16 @@ function processSelectionCommand(
 function processElementAtCommand(
   x: number,
   y: number
-): [string, string][] | void {
-  const element = document.elementFromPoint(x, y)
-  if (element) {
-    const target = locatorBuilders.buildAll(element as HTMLElement)
-    return target
-  }
+): [string, string][] | null {
+  console.log('Processing element at command?', x, y)
+  try {
+    const element = document.elementFromPoint(x, y)
+    if (element) {
+      const target = locatorBuilders.buildAll(element as HTMLElement)
+      return target
+    }
+  } catch (e) {}
+  return null
 }
 
 let targetSelector: TargetSelector | null = null

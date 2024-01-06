@@ -14,7 +14,7 @@ const apiDebugLog = vdebuglog('api', COLOR_CYAN)
 export type MainListener<
   ARGS extends VariadicArgs,
   RESULT extends any
-> = BaseListener<ARGS> & {
+> = BaseListener<ARGS, RESULT> & {
   dispatchEventAsync: (...args: ARGS) => Promise<RESULT[][]>
 }
 
@@ -29,7 +29,7 @@ const baseListener = <ARGS extends VariadicArgs, RESULT extends any>(
       apiDebugLog('Listener added', path)
       listeners.push(listener)
     },
-    dispatchEvent(...args) {
+    async dispatchEvent(...args) {
       apiDebugLog('Dispatch event', path, args)
       if (mutator) {
         session.api.state.onMutate.dispatchEvent(path, args)
@@ -37,7 +37,7 @@ const baseListener = <ARGS extends VariadicArgs, RESULT extends any>(
         session.projects.project = newState.project
         session.state.state = newState.state
       }
-      return listeners.map((fn) => fn(...args))
+      return await Promise.all<RESULT>(listeners.map((fn) => fn(...args)))
     },
     async dispatchEventAsync(...args) {
       apiDebugLog('Dispatch event async', path, args)
@@ -99,7 +99,7 @@ const wrappedListener = <ARGS extends VariadicArgs>(
       senderCounts[index] += 1
       return
     }
-    const senderFn = (...args: ARGS) => new Promise((resolve) => {
+    const senderFn = (...args: ARGS): Promise<any> => new Promise((resolve) => {
       try {
         ipcMain.once(`${path}.response`, (_event, results) => {
           resolve(results)

@@ -18,5 +18,8 @@ There are three regions to the code:
     * Playback window
 
 3. API: The imported side-api package. This contains common code used by the
-main and browser segments. This is separated out to make importing types for
-plugins not require the entire dependency tree of selenium-ide, which involves electron and react and is quite extensive.
+main and browser segments.
+
+This is separated out to make importing types for plugins not require the entire
+dependency tree of selenium-ide, which involves electron and react and is quite
+extensive.

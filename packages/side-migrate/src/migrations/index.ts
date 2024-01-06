@@ -23,7 +23,7 @@ import scriptInterpolation from './script-interpolation'
 import waitForCommands from './wait-for-commands'
 import variableName from './variable-name'
 import selectWindow from './select-window'
-import prompt from './prompt'
+// import prompt from './prompt'
 import title from './title'
 import storeElementCount from './store-element-count'
 import targetFallback from './target-fallback'
@@ -35,7 +35,7 @@ export const migrators: Record<string, MigratorFunction> = {
   waitForCommands,
   variableName,
   selectWindow,
-  prompt,
+  // prompt,
   title,
   storeElementCount,
   targetFallback,

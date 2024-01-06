@@ -70,7 +70,6 @@ export interface WebDriverExecutorConstructorArgs {
   hooks?: WebDriverExecutorHooks
   implicitWait?: number
   server?: string
-  windowAPI?: WindowAPI
 }
 
 export interface WebDriverExecutorInitOptions {
@@ -114,12 +113,6 @@ export interface ScriptShape {
   argv: any[]
 }
 
-const defaultWindowAPI: WindowAPI = {
-  setWindowSize: async (executor: WebDriverExecutor, width, height) => {
-    await executor.driver.manage().window().setRect({ width, height })
-  },
-}
-
 export default class WebDriverExecutor {
   constructor({
     customCommands = {},
@@ -129,7 +122,6 @@ export default class WebDriverExecutor {
     server,
     hooks = {},
     implicitWait,
-    windowAPI = defaultWindowAPI,
   }: WebDriverExecutorConstructorArgs) {
     if (driver) {
       this.driver = driver
@@ -143,7 +135,6 @@ export default class WebDriverExecutor {
     this.hooks = hooks
     this.waitForNewWindow = this.waitForNewWindow.bind(this)
     this.customCommands = customCommands
-    this.windowAPI = windowAPI
   }
   baseUrl?: string
   // @ts-expect-error
@@ -155,7 +146,6 @@ export default class WebDriverExecutor {
   // @ts-expect-error
   driver: WebDriver
   server?: string
-  windowAPI: WindowAPI
   windowHandle?: string
   hooks: WebDriverExecutorHooks
   implicitWait: number
@@ -211,16 +201,20 @@ export default class WebDriverExecutor {
       return 'skip'
     }
 
-    const upperCase = command.charAt(0).toUpperCase() + command.slice(1)
-    const func = 'do' + upperCase
+    if (this.customCommands[command]) {
+      return command
+    }
+    const func = this.nameTransform(command)
     // @ts-expect-error The functions can be overridden by custom commands and stuff
     if (!this[func]) {
-      if (this.customCommands[command]) {
-        return command
-      }
       throw new Error(`Unknown command ${command}`)
     }
     return func
+  }
+
+  nameTransform(command: string) {
+    const upperCase = command.charAt(0).toUpperCase() + command.slice(1)
+    return 'do' + upperCase
   }
 
   async executeHook<T extends HookKeys>(
@@ -302,7 +296,7 @@ export default class WebDriverExecutor {
 
   async doSetWindowSize(widthXheight: string) {
     const [width, height] = widthXheight.split('x').map((v) => parseInt(v))
-    await this.windowAPI.setWindowSize(this, width, height)
+    await this.driver.manage().window().setRect({ width, height })
   }
 
   async doSelectWindow(handleLocator: string) {
@@ -368,12 +362,6 @@ export default class WebDriverExecutor {
       const element = await this.waitForElement(locator)
       await targetLocator.frame(element)
     }
-  }
-
-  async doSubmit() {
-    throw new Error(
-      '"submit" is not a supported command in Selenium WebDriver. Please re-record the step.'
-    )
   }
 
   // mouse commands
@@ -725,6 +713,28 @@ export default class WebDriverExecutor {
     )
     const option = await element.findElement(parseOptionLocator(optionLocator))
     await option.click()
+  }
+
+  async doSubmit(
+    locator: string,
+    _?: string,
+    _commandObject?: Partial<CommandShape>
+  ) {
+    const commandObject = _commandObject || {}
+    const element = await this.waitForElement(
+      locator,
+      commandObject.targetFallback,
+      commandObject.targets,
+      commandObject.fallbackTargets
+    )
+
+    console.error(`
+      "submit" is not a good command in Selenium WebDriver. It's not supported by 
+      all browsers and it's manually triggering an event, when it should really
+      be driven out of an interaction (click submit, hit enter, etc).
+      Please re-record the step using a "click" or "sendKeys" command instead.
+    `)
+    await element.submit()
   }
 
   // keyboard commands

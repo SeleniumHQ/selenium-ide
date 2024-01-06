@@ -17,7 +17,7 @@ const baseListener = <ARGS extends VariadicArgs>(
       apiDebugLog('Listener added', path)
       listeners.push(listener)
     },
-    dispatchEvent(...args) {
+    async dispatchEvent(...args) {
       apiDebugLog('Dispatch event', path, args)
       if (mutator) {
         const newState = mutator(getCore(session), args)
@@ -75,7 +75,7 @@ const wrappedListener = <ARGS extends VariadicArgs>(
       senderCounts[index] += 1
       return
     }
-    const senderFn = (...args: ARGS) => {
+    const senderFn = async (...args: ARGS) => {
       try {
         sender.send(path, ...args)
       } catch (e) {

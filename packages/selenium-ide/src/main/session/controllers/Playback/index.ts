@@ -3,6 +3,7 @@ import {
   Playback,
   PlaybackEvents,
   PlaybackEventShapes,
+  RunningPromise,
   Variables,
 } from '@seleniumhq/side-runtime'
 import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/src/webdriver'
@@ -97,21 +98,8 @@ export default class PlaybackController extends BaseController {
   }
 
   async performCommand(command: Omit<CommandShape, 'id'>) {
-    const browserInfo = this.session.store.get('browserInfo')
-    const playback = new Playback({
-      baseUrl: this.session.projects.project.url,
-      executor: await this.session.driver.build({
-        browser: browserInfo.browser,
-      }),
-      getTestByName: (name: string) => this.session.tests.getByName(name),
-      logger: console,
-      variables: new Variables(),
-      options: {
-        delay: this.session.projects.project.delay || 0,
-      },
-    })
+    const playback = await this.getPlayback()
     await playback.playSingleCommand({ ...command, id: '-1' })
-    await playback.cleanup()
   }
 
   async stop() {
@@ -154,18 +142,6 @@ export default class PlaybackController extends BaseController {
         },
       })
       await playback.init()
-      const EE = playback['event-emitter']
-      EE.addListener(
-        PlaybackEvents.PLAYBACK_STATE_CHANGED,
-        this.handlePlaybackStateChanged(
-          playback,
-          allowMultiplePlaybacks ? testID : null
-        )
-      )
-      EE.addListener(
-        PlaybackEvents.COMMAND_STATE_CHANGED,
-        this.handleCommandStateChanged
-      )
       this.playbacks.push(playback)
       if (!browserInfo.useBidi) {
         await this.claimPlaybackWindow(playback)
@@ -189,11 +165,15 @@ export default class PlaybackController extends BaseController {
   async claimPlaybackWindow(playback: Playback) {
     const executor = playback.executor
     const driver = executor.driver
+
+    // Confirm webdriver connection
+    driver.executeScript('true')
     try {
       const handle = await driver.getWindowHandle()
       const existingWindow =
         await this.session.windows.getPlaybackWindowByHandle(handle)
       if (existingWindow && existingWindow.isVisible()) {
+        await driver.switchTo().window(handle)
         return
       }
     } catch (windowDoesNotExist) {}
@@ -238,23 +218,45 @@ export default class PlaybackController extends BaseController {
     this.playRange = playRange
     this.isPlaying = true
     const playback = await this.getPlayback(testID)
+    const EE = playback['event-emitter']
+    const handlePlaybackStateChanged = this.handlePlaybackStateChanged(
+      playback,
+      testID
+    )
+    EE.addListener(
+      PlaybackEvents.PLAYBACK_STATE_CHANGED,
+      handlePlaybackStateChanged
+    )
+    EE.addListener(
+      PlaybackEvents.COMMAND_STATE_CHANGED,
+      this.handleCommandStateChanged
+    )
     /**
      * If not ending at end of test, use playTo command
      * or playSingleCommand if just one command specified.
      * Otherwise, use full play command.
      */
+    let promise: () => RunningPromise | undefined
     if (playRange[1] !== -1) {
       const test = this.session.tests.getByID(testID)
-      if (playRange[0] === playRange[1]) {
-        await playback.playSingleCommand(test.commands[playRange[0]])
-      } else {
-        await playback.playTo(test, playRange[1], playRange[0])
-      }
+      promise = await playback.playTo(test, playRange[1], playRange[0])
     } else {
-      await playback.play(this.session.tests.getByID(testID), {
+      promise = await playback.play(this.session.tests.getByID(testID), {
         startingCommandIndex: playRange[0],
       })
     }
+    const handleTestResolution = async () => {
+      await promise()
+      EE.removeListener(
+        PlaybackEvents.PLAYBACK_STATE_CHANGED,
+        handlePlaybackStateChanged
+      )
+      EE.removeListener(
+        PlaybackEvents.COMMAND_STATE_CHANGED,
+        this.handleCommandStateChanged
+      )
+    }
+    handleTestResolution()
   }
 
   async isParallel() {
@@ -307,7 +309,9 @@ export default class PlaybackController extends BaseController {
   handleCommandStateChanged = async (
     e: PlaybackEventShapes['COMMAND_STATE_CHANGED']
   ) => {
-    this.session.api.playback.onStepUpdate.dispatchEvent(e)
+    if (e.id !== '-1') {
+      this.session.api.playback.onStepUpdate.dispatchEvent(e)
+    }
     const cmd = e.command
     const niceString = [cmd.command, cmd.target, cmd.value]
       .filter((v) => !!v)

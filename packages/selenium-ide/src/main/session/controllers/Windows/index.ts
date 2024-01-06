@@ -300,7 +300,10 @@ export default class WindowsController extends BaseController {
       this.removePlaybackWIndow(bw)
       bw.close()
     })
-    const window = await this.openPlaybackWindow({ show: false })
+    const window = await this.openPlaybackWindow({
+      show: false,
+      webPreferences: { preload: undefined },
+    })
     if (isMac) {
       window.setWindowButtonVisibility(false)
     }

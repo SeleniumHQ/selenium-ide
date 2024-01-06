@@ -63,9 +63,9 @@ export type Mutator<Type extends ApiHandler = DefaultRouteShape> = (
   req: RequestData<Type>
 ) => CoreSessionData
 
-export type ListenerFn<ARGS extends VariadicArgs, RESULT = void> = (
+export type ListenerFn<ARGS extends VariadicArgs, RESULT = any> = (
   ...args: ARGS
-) => RESULT
+) => Promise<RESULT> | RESULT
 
 export interface BaseListener<ARGS extends VariadicArgs, RESULT = void> {
   addListener: (listener: ListenerFn<ARGS>) => void

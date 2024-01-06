@@ -18,6 +18,7 @@ import Api from '../api'
 import Store from '../store'
 import { Session } from '../types'
 import OutputFormatsController from './controllers/OutputFormats'
+import PromptController from './controllers/Prompt'
 
 export default async function createSession(
   app: App,
@@ -27,6 +28,7 @@ export default async function createSession(
     app,
     store: await Store(),
   }
+  partialSession.prompt = new PromptController(partialSession as Session)
   partialSession.channels = new ChannelsController(partialSession as Session)
   partialSession.dialogs = new DialogsController(partialSession as Session)
   partialSession.argTypes = new ArgTypesController(partialSession as Session)

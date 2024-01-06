@@ -56,7 +56,7 @@ export default class RecorderController extends BaseController {
   windowIDs: number[] = []
 
   async recordNewCommand(
-    cmd: RecordNewCommandInput
+    cmd: RecordNewCommandInput,
   ): Promise<CommandShape[] | null> {
     const session = await this.session.state.get()
     if (session.state.status !== 'recording') {
@@ -115,9 +115,7 @@ export default class RecorderController extends BaseController {
         y
       )
     const allResults = results.flat().flat().filter(Boolean)
-    if (allResults.length) {
-      return allResults[0]
-    }
+    return allResults
   }
 
   async getWinHandleId(): Promise<string> {
