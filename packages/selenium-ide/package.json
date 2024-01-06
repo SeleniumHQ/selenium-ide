@@ -113,7 +113,7 @@
     "@seleniumhq/get-driver": "^4.0.0-alpha.3",
     "@seleniumhq/side-api": "^4.0.0-alpha.41",
     "@seleniumhq/side-model": "^4.0.0-alpha.5",
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.33",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.34",
     "dnd-core": "^16.0.1",
     "electron-chromedriver": "^28.0.0",
     "electron-log": "^5.0.1",

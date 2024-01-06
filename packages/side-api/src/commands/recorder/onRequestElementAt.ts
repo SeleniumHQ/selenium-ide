@@ -8,4 +8,4 @@ export type Shape = BaseListener<
   OnRequestElementAtRecorderResult
 >
 export type OnRequestElementAtRecorder = [number, number]
-export type OnRequestElementAtRecorderResult = [string, string][] | void
+export type OnRequestElementAtRecorderResult = [string, string][] | null

@@ -18,48 +18,55 @@ import { RecorderPreprocessor } from '@seleniumhq/side-api'
 import api from 'browser/api'
 import apiMutators from 'browser/api/mutator'
 import preload from 'browser/helpers/preload'
-import { cb as ElectronCallback } from 'browser/helpers/preload-electron'
-import { webFrame } from 'electron'
+import { cb as ElectronInit } from 'browser/helpers/preload-electron'
 import Recorder from './preload/recorder'
+import { contextBridge, ipcRenderer, webFrame } from 'electron'
+
+// This is a hack to get around the fact that the prompt is not
+// available in the renderer process. This is a temporary solution
+const polyfill = () => {
+  contextBridge.exposeInMainWorld(
+    'prompt-polyfill',
+    (question: string, defaultValue = '') => {
+      const result = ipcRenderer.sendSync('prompt-polyfill', question, defaultValue)
+      return result
+    }
+  )
+  webFrame.executeJavaScript("window.prompt = window['prompt-polyfill'];")
+}
 
 const recorderProcessors: RecorderPreprocessor[] = []
-async function main() {
-  window.addEventListener('DOMContentLoaded', async () => {
-    const preloads = await api.plugins.getPreloads()
-    for (const preload of preloads) {
-      try {
-        console.debug(`Loading preload: ${preload}`)
-        eval(preload)
-        console.debug(`Loaded preload!`)
-      } catch (e) {
-        console.error(`Error loading preload: ${preload}`, e)
-      }
+function injectRecorder() {
+  return new Promise<void>((resolve) => {
+    const isLoading = document.readyState === 'loading'
+    const handler = async () => {
+      polyfill()
+      setTimeout(async () => {
+        console.debug('Initializing the recorder')
+        const recorder = new Recorder(window, recorderProcessors)
+        recorder.attach()
+        resolve()
+      }, 500)
     }
-    webFrame.executeJavaScript(`
-      Object.defineProperty(navigator, 'webdriver', {
-        get () {
-          return true
-        } 
-      })
-    `)
-    setTimeout(async () => {
-      console.debug('Initializing the recorder')
-      const recorder = new Recorder(window, recorderProcessors)
-      recorder.attach()
-    }, 500)
+    if (isLoading) {
+      window.addEventListener('DOMContentLoaded', handler)
+    } else {
+      handler()
+    }
   })
 }
 
 preload(
   api,
-  ElectronCallback,
-  main
+  ElectronInit(true),
+  injectRecorder
 )({
   channels: api.channels,
   plugins: {
     addRecorderPreprocessor: (fn) => {
       recorderProcessors.push(fn)
     },
+    getPreloads: api.plugins.getPreloads,
   },
   recorder: api.recorder,
   mutators: {

@@ -1,6 +1,10 @@
 import { ipcRenderer } from 'electron'
 import { BaseListener, VariadicArgs } from '@seleniumhq/side-api'
 
+const isDefined = <T>(value: T | undefined): value is T => {
+  return value !== undefined
+}
+
 const baseListener = <ARGS extends VariadicArgs>(
   path: string
 ): BaseListener<ARGS> & { emitEvent: (...args: ARGS) => void } => {
@@ -11,10 +15,10 @@ const baseListener = <ARGS extends VariadicArgs>(
       ipcRenderer.send(`${path}.addListener`)
       listeners.push(listener)
     },
-    dispatchEvent(...args) {
+    async dispatchEvent(...args) {
       console.debug(path, 'dispatching event')
-      const results = listeners.map((fn) => fn(...args))
-      ipcRenderer.send(`${path}.response`, results)
+      const results = await Promise.all(listeners.map((fn) => fn(...args)))
+      ipcRenderer.send(`${path}.response`, results.filter(isDefined))
       return results
     },
     emitEvent(...args) {

@@ -15,13 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { ProjectShape } from "@seleniumhq/side-model"
+import { ProjectShape } from '@seleniumhq/side-model'
 
 export default function migrate(project: ProjectShape) {
   let r = Object.assign({}, project)
-  r.tests = r.tests.map(test => {
+  r.tests = r.tests.map((test) => {
     return Object.assign({}, test, {
-      commands: test.commands.map(c => {
+      commands: test.commands.map((c) => {
         if (c.command === 'storeTitle') {
           return Object.assign({}, c, {
             command: c.command,

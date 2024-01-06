@@ -15,13 +15,13 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { ProjectShape } from "@seleniumhq/side-model"
+import { ProjectShape } from '@seleniumhq/side-model'
 
 export default function migrate(project: ProjectShape) {
   let r: ProjectShape = Object.assign({}, project)
-  r.tests = r.tests.map(test => {
+  r.tests = r.tests.map((test) => {
     return Object.assign({}, test, {
-      commands: test.commands.map(c => {
+      commands: test.commands.map((c) => {
         let newCmd = Object.assign({}, c)
         if (c.command === 'waitForVisible' || c.command === 'waitForEditable') {
           newCmd.command = migrateCommand(newCmd.command)
