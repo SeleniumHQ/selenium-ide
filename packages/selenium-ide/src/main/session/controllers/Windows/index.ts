@@ -223,6 +223,7 @@ export default class WindowsController extends BaseController {
 
   async getPlaybackWindowByHandle(handle: string) {
     const id = this.handlesToIDs[handle]
+    console.log('match?', handle, id);
     return this.playbackWindows.find((bw) => bw.id === id)
   }
 

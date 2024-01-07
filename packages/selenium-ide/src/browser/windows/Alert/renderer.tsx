@@ -7,7 +7,7 @@ import React from 'react'
 
 const Prompt = () => {
   // @ts-expect-error this exists
-  const acceptAlert = () => window.acceptAlert(answerRef.current!.value);
+  const acceptAlert = () => window.acceptAlert();
 
   React.useEffect(() => {
     window.addEventListener('error', (e) => {

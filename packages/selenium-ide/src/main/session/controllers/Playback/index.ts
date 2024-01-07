@@ -1,4 +1,9 @@
-import { CommandShape, getActiveCommand, hasID } from '@seleniumhq/side-api'
+import {
+  CommandShape,
+  getActiveCommand,
+  getActiveTest,
+  hasID,
+} from '@seleniumhq/side-api'
 import {
   Playback,
   PlaybackEvents,
@@ -169,48 +174,56 @@ export default class PlaybackController extends BaseController {
     // Confirm webdriver connection
     driver.executeScript('true')
     try {
-      const handle = await driver.getWindowHandle()
-      const existingWindow =
-        await this.session.windows.getPlaybackWindowByHandle(handle)
-      if (existingWindow && existingWindow.isVisible()) {
-        await driver.switchTo().window(handle)
+      const existingWindow = await this.session.windows.getLastPlaybackWindow()
+      if (existingWindow!.isVisible()) {
+        const handle = await this.session.windows.getPlaybackWindowHandleByID(existingWindow.id)
+        await driver.switchTo().window(handle!)
         return
       }
-    } catch (windowDoesNotExist) {}
-    let success = false
-    const UUID = randomUUID()
-    const window = await this.session.windows.openPlaybackWindow({
-      title: UUID,
-    })
-    await this.session.windows.arrangeWindow(
-      window,
-      'windowSizePlayback',
-      'windowPositionPlayback'
-    )
-    const handles = await driver.getAllWindowHandles()
-    for (let i = 0, ii = handles.length; i !== ii; i++) {
-      const handle = handles[i]
-      await driver.switchTo().window(handle)
-      const title = await driver.getTitle()
-      if (title === UUID) {
-        await this.session.windows.registerPlaybackWindowHandle(
-          handle,
-          window.id
-        )
-        success = true
-        break
+    } catch (windowDoesNotExist) {
+      let success = false
+      const UUID = randomUUID()
+      const window = await this.session.windows.openPlaybackWindow({
+        title: UUID,
+      })
+      console.log('Opened playback window?', UUID)
+      await this.session.windows.arrangeWindow(
+        window,
+        'windowSizePlayback',
+        'windowPositionPlayback'
+      )
+      const handles = await driver.getAllWindowHandles()
+      for (let i = 0, ii = handles.length; i !== ii; i++) {
+        const handle = handles[i]
+        await driver.switchTo().window(handle)
+        const title = await driver.getTitle()
+        if (title === UUID) {
+          await this.session.windows.registerPlaybackWindowHandle(
+            handle,
+            window.id
+          )
+          success = true
+          break
+        }
       }
+      if (!success) {
+        throw new Error('Failed to switch to playback window')
+      }
+    } finally {
+      const state = await this.session.state.get()
+      const currentTest = getActiveTest(state)
+      const currentCommand = getActiveCommand(state)
+      const firstURL = new URL(
+        currentTest.commands.find((cmd) => cmd.command === 'open')?.target ??
+          '/',
+        state.project.url
+      )
+      const url =
+        currentCommand.command === 'open'
+          ? new URL(currentCommand.target as string, state.project.url).href
+          : firstURL.href
+      playback.executor.doOpen(url)
     }
-    if (!success) {
-      throw new Error('Failed to switch to playback window')
-    }
-    const state = await this.session.state.get()
-    const currentCommand = getActiveCommand(state)
-    const url =
-      currentCommand.command === 'open'
-        ? new URL(currentCommand.target as string, state.project.url).href
-        : state.project.url
-    playback.executor.doOpen(url)
   }
 
   async play(testID: string, playRange = PlaybackController.defaultPlayRange) {
@@ -246,15 +259,22 @@ export default class PlaybackController extends BaseController {
       })
     }
     const handleTestResolution = async () => {
-      await promise()
-      EE.removeListener(
-        PlaybackEvents.PLAYBACK_STATE_CHANGED,
-        handlePlaybackStateChanged
-      )
-      EE.removeListener(
-        PlaybackEvents.COMMAND_STATE_CHANGED,
-        this.handleCommandStateChanged
-      )
+      console.log('Waiting for play to finish...')
+      try {
+        await promise()
+      } catch (e) {
+        console.error(e)
+      } finally {
+        console.log('Play finished!')
+        EE.removeListener(
+          PlaybackEvents.PLAYBACK_STATE_CHANGED,
+          handlePlaybackStateChanged
+        )
+        EE.removeListener(
+          PlaybackEvents.COMMAND_STATE_CHANGED,
+          this.handleCommandStateChanged
+        )
+      }
     }
     handleTestResolution()
   }
@@ -335,12 +355,9 @@ export default class PlaybackController extends BaseController {
         case 'failed':
         case 'finished':
         case 'stopped':
+          this.playbacks.splice(this.playbacks.indexOf(playback), 1)
+          await playback.cleanup()
           if (this.playingSuite) {
-            try {
-              await playback.executor.driver.close()
-            } catch (e) {}
-            this.playbacks.splice(this.playbacks.indexOf(playback), 1)
-            await playback.cleanup()
             if (!this.testQueue.length) {
               this.playingSuite = ''
               this.session.api.state.onMutate.dispatchEvent('playback.stop', {
@@ -349,6 +366,14 @@ export default class PlaybackController extends BaseController {
             } else {
               this.playNextTest()
             }
+          }
+          if (e.state === 'finished') {
+            await this.session.api.state.updateStepSelection(
+              0,
+              false,
+              false,
+              true
+            )
           }
       }
       this.session.api.playback.onPlayUpdate.dispatchEvent(e)

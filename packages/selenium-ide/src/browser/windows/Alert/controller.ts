@@ -1,7 +1,7 @@
 import { WindowConfig } from 'browser/types'
 
-const DEFAULT_WIDTH = 600
-const DEFAULT_HEIGHT = 600
+const DEFAULT_WIDTH = 400
+const DEFAULT_HEIGHT = 150
 
 export const window: WindowConfig['window'] = () => ({
   width: DEFAULT_WIDTH,

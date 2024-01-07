@@ -116,7 +116,6 @@ export default class SystemController extends BaseController {
 
   async beforeQuit() {
     await this.shutdown()
-    await this.session.windows.closeAllPlaybackWindows()
     return this.isDown
   }
 

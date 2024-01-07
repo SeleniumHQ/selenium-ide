@@ -78,6 +78,7 @@ const startDriver: StartDriver = () => (info) =>
     )
     if (fs.existsSync(driverPath)) {
       const driver = spawn(driverPath.replace(/\s/g, ' '), args, {
+        detached: true,
         env: {},
         shell: false,
       })
