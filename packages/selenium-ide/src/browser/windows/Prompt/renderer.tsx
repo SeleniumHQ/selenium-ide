@@ -10,9 +10,9 @@ import React from 'react'
 const Prompt = () => {
   const answerRef = React.useRef<HTMLInputElement>(null)
   // @ts-expect-error this exists
-  const promptCancel = () => window.promptCancel()
+  const dismissPrompt = () => window.dismissPrompt()
   // @ts-expect-error this exists
-  const promptSubmit = () => window.promptSubmit(answerRef.current!.value);
+  const answerPrompt = () => window.answerPrompt(answerRef.current!.value);
 
   React.useEffect(() => {
     answerRef.current!.focus()
@@ -34,8 +34,8 @@ const Prompt = () => {
           id="answer"
           inputRef={answerRef}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') promptSubmit()
-            else if (e.key === 'Escape') promptCancel()
+            if (e.key === 'Enter') answerPrompt()
+            else if (e.key === 'Escape') dismissPrompt()
           }}
           name="answer"
           size="small"
@@ -43,12 +43,12 @@ const Prompt = () => {
       </Stack>
       <Grid className="centered" container spacing={1}>
         <Grid item xs={6}>
-          <Button onClick={promptCancel} variant="contained">
+          <Button onClick={dismissPrompt} variant="outlined">
             Cancel
           </Button>
         </Grid>
         <Grid item xs={6}>
-          <Button onClick={promptSubmit} variant="outlined">
+          <Button onClick={answerPrompt} variant="contained">
             Submit
           </Button>
         </Grid>

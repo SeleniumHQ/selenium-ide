@@ -272,11 +272,14 @@ importers:
       '@seleniumhq/side-api':
         specifier: ^4.0.0-alpha.41
         version: link:../side-api
+      '@seleniumhq/side-commons':
+        specifier: ^4.0.0-alpha.2
+        version: link:../side-commons
       '@seleniumhq/side-model':
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.34
+        specifier: ^4.0.0-alpha.35
         version: link:../side-runtime
       dnd-core:
         specifier: ^16.0.1
@@ -516,7 +519,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.34
+        specifier: ^4.0.0-alpha.35
         version: link:../side-runtime
       commander:
         specifier: ^11.0.0
@@ -568,7 +571,7 @@ importers:
   packages/side-runtime:
     dependencies:
       '@seleniumhq/side-commons':
-        specifier: ^4.0.0-alpha.1
+        specifier: ^4.0.0-alpha.2
         version: link:../side-commons
       '@seleniumhq/side-model':
         specifier: ^4.0.0-alpha.5
@@ -3226,8 +3229,8 @@ packages:
     resolution: {integrity: sha512-+6SeXnd1MRqF1Fl1cVMGRJLbgKQeubuGoThiE2RaFYXxWQmAMzIk8aXOtTXXDxBhF9Stxns8u/LUzW0ZcbMjcQ==}
     dev: false
 
-  /@seleniumhq/side-runtime@4.0.0-alpha.33:
-    resolution: {integrity: sha512-a6NAljypmb5j8blZuOR8mASvkdWh7jpZnNIfOHuKIAfA7zrroKGEP5TowPRh6s9I1qcdT2Usjz8NJJ0q8gtwhw==}
+  /@seleniumhq/side-runtime@4.0.0-alpha.34:
+    resolution: {integrity: sha512-n7stTVNuZhMfs9FVQe+bSLInd/lDRFKsGfOAGkkRThpbrrLCwUpnHDPJdvyQgy8fQR69/95TfdnjgwBWsnocyQ==}
     dependencies:
       '@seleniumhq/side-commons': 4.0.0-alpha.1
       '@seleniumhq/side-model': 4.0.0-alpha.5
@@ -10005,7 +10008,7 @@ packages:
     hasBin: true
     dependencies:
       '@seleniumhq/side-model': 4.0.0-alpha.5
-      '@seleniumhq/side-runtime': 4.0.0-alpha.33
+      '@seleniumhq/side-runtime': 4.0.0-alpha.34
       commander: 9.4.1
     transitivePeerDependencies:
       - bufferutil

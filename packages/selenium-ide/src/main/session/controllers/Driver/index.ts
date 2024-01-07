@@ -48,25 +48,24 @@ export interface BrowsersInfo {
 
 const promptInitiators = (session: Session) =>
   Object.fromEntries(
-    ['click', 'sendKeys', 'select', 'submit'].map((commandName) => [
+    ['clickAt', 'click', 'sendKeys', 'select', 'submit'].map((commandName) => [
       commandName,
       {
         execute: (command: CommandShape, executor: WebDriverExecutor) =>
           new Promise<void>((resolve, reject) => {
             const origCommandName = executor.nameTransform(commandName)
-            console.log('orig name', origCommandName, commandName)
-            const checkForPrompt = () => {
-              if (session.prompt.promptQuestion) {
-                resolve();
+            const checkForBlockingDialog = () => {
+              if (session.polyfill.hasBlockingDialog()) {
+                resolve()
               } else {
-                setTimeout(checkForPrompt, 100)
+                setTimeout(checkForBlockingDialog, 100)
               }
-            };
+            }
             // @ts-expect-error - I still need to pattern the index key to 'do*'
             executor[origCommandName](command.target, command.value, command)
               .then(resolve)
               .catch(reject)
-            checkForPrompt()
+            checkForBlockingDialog()
           }),
         name: commandName,
         description: 'Wrapped command to handle electron prompts',
@@ -78,10 +77,64 @@ const electronPolyfills = (
   session: Session
 ): PluginRuntimeShape['commands'] => ({
   ...promptInitiators(session),
+  acceptAlert: {
+    execute: async () => {
+      await session.polyfill.alert.resolve!()
+    },
+    name: 'acceptAlert',
+    description: 'Accepts an alert',
+  },
+  assertAlert: {
+    execute: async (command: CommandShape) => {
+      const expectedAlert = command.target
+      const actualAlert = session.polyfill.alert.alert
+      if (expectedAlert !== actualAlert) {
+        throw new Error(
+          `Alert assertion failed. Expected "${expectedAlert}", but got "${actualAlert}"`
+        )
+      }
+    },
+    name: 'assertAlert',
+    description: 'Asserts that an alert has been shown with the given message',
+  },
+  acceptConfirmation: {
+    execute: async () => {
+      await session.polyfill.confirm.resolve!(true)
+    },
+    name: 'acceptConfirmation',
+    description: 'Accepts a confirmation',
+  },
+  assertConfirmation: {
+    execute: async (command: CommandShape) => {
+      const expectedConfirmation = command.target
+      const actualConfirmation = session.polyfill.confirm.confirm
+      if (expectedConfirmation !== actualConfirmation) {
+        throw new Error(
+          `Confirmation assertion failed. Expected "${expectedConfirmation}", but got "${actualConfirmation}"`
+        )
+      }
+    },
+    name: 'assertConfirmation',
+    description: 'Asserts that a confirmation has been shown with the given message',
+  },
+  dismissConfirmation: {
+    execute: async () => {
+      session.polyfill.confirm.resolve!(false)
+    },
+    name: 'dismissConfirmation',
+    description: 'Dismisses a confirmation',
+  },
+  answerPrompt: {
+    execute: async (command: CommandShape) => {
+      session.polyfill.prompt.resolve!(command.target || '')
+    },
+    name: 'answerPrompt',
+    description: 'Answers a prompt with the given message',
+  },
   assertPrompt: {
     execute: async (command: CommandShape) => {
       const expectedPromptQuestion = command.target
-      const actualPromptQuestion = session.prompt.promptQuestion
+      const actualPromptQuestion = session.polyfill.prompt.question
       if (expectedPromptQuestion !== actualPromptQuestion) {
         throw new Error(
           `Prompt assertion failed. Expected "${expectedPromptQuestion}", but got "${actualPromptQuestion}"`
@@ -91,16 +144,9 @@ const electronPolyfills = (
     name: 'assertPrompt',
     description: 'Asserts that a prompt has been shown with the given message',
   },
-  answerPrompt: {
-    execute: async (command: CommandShape) => {
-      session.prompt.promptResolve!(command.target || '')
-    },
-    name: 'answerPrompt',
-    description: 'Answers a prompt with the given message',
-  },
   dismissPrompt: {
     execute: async () => {
-      session.prompt.promptResolve!(null)
+      session.polyfill.prompt.resolve!(null)
     },
     name: 'dismissPrompt',
     description: 'Dismisses a prompt',

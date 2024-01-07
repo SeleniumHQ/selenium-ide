@@ -12,8 +12,8 @@ import MenuController from './session/controllers/Menu'
 import OutputFormatsController from './session/controllers/OutputFormats'
 import PlaybackController from './session/controllers/Playback'
 import PluginsController from './session/controllers/Plugins'
+import PolyfillController from './session/controllers/Polyfill'
 import ProjectsController from './session/controllers/Projects'
-import PromptController from './session/controllers/Prompt'
 import RecorderController from './session/controllers/Recorder'
 import StateController from './session/controllers/State'
 import SuitesController from './session/controllers/Suites'
@@ -51,7 +51,7 @@ export interface Session {
   playback: PlaybackController
   plugins: PluginsController
   projects: ProjectsController
-  prompt: PromptController
+  polyfill: PolyfillController
   recorder: RecorderController
   state: StateController
   store: Storage

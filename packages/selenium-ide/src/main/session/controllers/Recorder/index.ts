@@ -64,7 +64,7 @@ export default class RecorderController extends BaseController {
     }
     const activeWindowHandleID = getActiveWindowHandleID(session) || 'root'
     const commands = []
-    if (activeWindowHandleID != cmd.winHandleId) {
+    if (cmd.winHandleId && activeWindowHandleID != cmd.winHandleId) {
       const selectWindowCommand: CommandShape = {
         id: randomUUID(),
         command: 'selectWindow',
