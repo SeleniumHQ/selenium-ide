@@ -25,14 +25,20 @@ import { contextBridge, ipcRenderer, webFrame } from 'electron'
 // This is a hack to get around the fact that the prompt is not
 // available in the renderer process. This is a temporary solution
 const polyfill = () => {
-  contextBridge.exposeInMainWorld(
-    'prompt-polyfill',
-    (question: string, defaultValue = '') => {
-      const result = ipcRenderer.sendSync('prompt-polyfill', question, defaultValue)
-      return result
-    }
-  )
-  webFrame.executeJavaScript("window.prompt = window['prompt-polyfill'];")
+  const keys = ['alert', 'confirm', 'prompt']
+  keys.forEach((key) => {
+    contextBridge.exposeInMainWorld(
+      key + '-polyfill',
+      (...args: any[]) => {
+        const result = ipcRenderer.sendSync(
+          key + '-polyfill',
+          ...args
+        )
+        return result
+      }
+    )
+    webFrame.executeJavaScript(`window.${key} = window['${key}-polyfill'];`)
+  })
 }
 
 const recorderProcessors: RecorderPreprocessor[] = []

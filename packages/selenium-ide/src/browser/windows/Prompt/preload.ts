@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron"
 
-function promptCancel() {
-  ipcRenderer.send('prompt-cancel')
+function dismissPrompt() {
+  ipcRenderer.send('dismiss-prompt')
 }
 
 function promptError(error: Error | string) {
@@ -12,10 +12,10 @@ function promptError(error: Error | string) {
   ipcRenderer.send('prompt-error', error)
 }
 
-function promptSubmit(answer: string) {
-  ipcRenderer.send('prompt-submit', answer)
+function answerPrompt(answer: string) {
+  ipcRenderer.send('answer-prompt', answer)
 }
 
-contextBridge.exposeInMainWorld('promptCancel', promptCancel);
+contextBridge.exposeInMainWorld('answerPrompt', answerPrompt);
+contextBridge.exposeInMainWorld('dismissPrompt', dismissPrompt);
 contextBridge.exposeInMainWorld('promptError', promptError);
-contextBridge.exposeInMainWorld('promptSubmit', promptSubmit);

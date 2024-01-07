@@ -7,6 +7,7 @@ import DriverController from './controllers/Driver'
 import MenuController from './controllers/Menu'
 import PlaybackController from './controllers/Playback'
 import PluginsController from './controllers/Plugins'
+import PolyfillController from './controllers/Polyfill'
 import ProjectsController from './controllers/Projects'
 import RecorderController from './controllers/Recorder'
 import StateController from './controllers/State'
@@ -18,7 +19,6 @@ import Api from '../api'
 import Store from '../store'
 import { Session } from '../types'
 import OutputFormatsController from './controllers/OutputFormats'
-import PromptController from './controllers/Prompt'
 
 export default async function createSession(
   app: App,
@@ -28,7 +28,7 @@ export default async function createSession(
     app,
     store: await Store(),
   }
-  partialSession.prompt = new PromptController(partialSession as Session)
+  partialSession.polyfill = new PolyfillController(partialSession as Session)
   partialSession.channels = new ChannelsController(partialSession as Session)
   partialSession.dialogs = new DialogsController(partialSession as Session)
   partialSession.argTypes = new ArgTypesController(partialSession as Session)
