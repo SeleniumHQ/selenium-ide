@@ -25,7 +25,7 @@ const baseListener = <ARGS extends VariadicArgs>(
         session.state.state = newState.state
         session.api.state.onMutate.dispatchEvent(path, args)
       }
-      const results = listeners.map((fn) => fn(...args))
+      const results = await Promise.all(listeners.map((fn) => fn(...args)))
       return results;
     },
     hasListener(listener) {
