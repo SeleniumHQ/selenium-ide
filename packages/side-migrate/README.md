@@ -6,7 +6,7 @@ This package is meant to upgrade commands in a project from v3 to v4 effortlessl
 
 Honestly, just do something like this:
 
-`npx @seleniuhq/side-migrate ./existing_file.side ./new_v4_file.side`
+`npx @seleniumhq/side-migrate ./existing_file.side ./new_v4_file.side`
 
 After that, your project json should be upgraded to v4. If that doesn't work
 right for ya, please raise an issue [here](
