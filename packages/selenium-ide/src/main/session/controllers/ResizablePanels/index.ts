@@ -26,8 +26,24 @@ export default class ResizablePanelsController extends BaseController {
       resizablePanelDefaults?.[id] ?? [50, 50]
     )
   }
+  async recalculatePlaybackWindows() {
+    const panelScreenPosition = await this.getPanelScreenPosition(
+      'playback-panel'
+    )
+    this.session.windows.playbackWindows.forEach((playbackWindow) => {
+      playbackWindow.setSize(
+        panelScreenPosition.width,
+        panelScreenPosition.height,
+      )
+      playbackWindow.setPosition(
+        panelScreenPosition.x,
+        panelScreenPosition.y,
+      )
+    })
+  }
   async setPanelGroup(id: string, dimensions: number[]) {
     this.session.store.set(`panelGroup.${id}`, dimensions)
+    this.recalculatePlaybackWindows()
   }
   async getPanelScreenPosition(id: string) {
     const projectWindow = await this.session.windows.get('project-main-window')
@@ -37,10 +53,10 @@ export default class ResizablePanelsController extends BaseController {
         `JSON.parse(JSON.stringify(document.querySelector('[data-panel-id="${id}"]').getBoundingClientRect()))`
       )) as Rect
     return {
-      x: Math.round(panelGroupPosition.x + projectWindowBounds.x) + 11,
-      y: Math.round(panelGroupPosition.y + projectWindowBounds.y) + 38,
-      width: Math.round(panelGroupPosition.width) - 24,
-      height: Math.round(panelGroupPosition.height) - 20,
+      x: Math.round(panelGroupPosition.x + projectWindowBounds.x) + 2,
+      y: Math.round(panelGroupPosition.y + projectWindowBounds.y) + 30,
+      width: Math.round(panelGroupPosition.width) - 5,
+      height: Math.round(panelGroupPosition.height) - 3,
     }
   }
 }

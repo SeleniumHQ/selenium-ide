@@ -240,8 +240,10 @@ export default class WindowsController extends BaseController {
     const window = this.windowLoaders[playbackWindowName]({
       ...opts,
       ...playbackScreenPosition,
+      parent: await this.session.windows.get(projectEditorWindowName),
     })
     this.handlePlaybackWindow(window)
+    window.showInactive()
     if (opts.title) {
       window.webContents.executeJavaScript(`document.title = "${opts.title}";`)
     }
@@ -363,15 +365,8 @@ export default class WindowsController extends BaseController {
     await this.open(projectEditorWindowName, { show: false })
     const projectWindow = await this.get(projectEditorWindowName)
     this.useWindowState(projectWindow, 'windowSize', 'windowPosition')
-    projectWindow.on('focus', () => {
-      this.playbackWindows.forEach((bw) => {
-        bw.setAlwaysOnTop(true)
-      })
-    })
-    projectWindow.on('blur', () => {
-      this.playbackWindows.forEach((bw) => {
-        bw.setAlwaysOnTop(false)
-      })
+    projectWindow.on('resize', () => {
+      this.session.resizablePanels.recalculatePlaybackWindows()
     })
 
     projectWindow.show()

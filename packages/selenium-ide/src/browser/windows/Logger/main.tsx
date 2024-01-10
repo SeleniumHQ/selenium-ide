@@ -13,11 +13,13 @@ const SIDELogger: React.FC = () => {
   const logContainer = React.useRef<HTMLPreElement>(null)
   React.useEffect(() => {
     const handleLog = (level: LogLevel, log: string) => {
-      logContainer.current?.append(
+      const el = logContainer.current
+      if (!el) return; 
+      console.info(el.scrollHeight)
+      el.append(
         `${new Date().toLocaleTimeString()} [${level}] ${log}\n`
       )
-      console.log(logContainer.current?.scrollHeight)
-      window.scrollTo(0, logContainer.current?.scrollHeight ?? 0)
+      el.scrollTo(0, el.scrollHeight)
     }
     window.sideAPI.system.onLog.addListener(handleLog)
     return () => {
