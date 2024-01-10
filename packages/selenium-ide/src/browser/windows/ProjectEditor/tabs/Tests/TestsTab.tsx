@@ -1,17 +1,19 @@
+import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
 import {
   getActiveCommand,
   getActiveTest,
 } from '@seleniumhq/side-api/dist/helpers/getActiveData'
-import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
-import React from 'react'
+import React, { useRef } from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import CommandTable from './TestCommandTable'
-import { CoreSessionData } from '@seleniumhq/side-api'
 import MainHeader from '../../components/Main/Header'
 import { loadingID } from '@seleniumhq/side-api/dist/constants/loadingID'
-import { Typography, useMediaQuery } from '@mui/material'
+import { SIDEMainProps } from '../../components/types'
+import AppBar from '../../components/AppBar'
+import TestSelector from './TestSelector'
 
 const sxCenter = { textAlign: 'center' }
 const NoTestFound = () => (
@@ -23,9 +25,12 @@ const NoTestFound = () => (
   </>
 )
 
-const TestsTab: React.FC<{
-  session: CoreSessionData
-}> = ({ session }) => {
+const TestsTab: React.FC<
+  Pick<
+    SIDEMainProps,
+    'openDrawer' | 'session' | 'setOpenDrawer' | 'setTab' | 'tab'
+  >
+> = ({ openDrawer, session, setOpenDrawer, setTab, tab }) => {
   const {
     state: {
       activeTestID,
@@ -35,49 +40,67 @@ const TestsTab: React.FC<{
     },
   } = session
 
-  const isTableWidth = useMediaQuery('only screen and (min-width: 600px)')
+  const ref = useRef<HTMLDivElement>(null)
+  const [isTableWidth, setIsTableWidth] = React.useState(false)
+  React.useEffect(() => {
+    if (!ref.current) {
+      return
+    }
+    const current = ref.current
+    const width = current.offsetWidth
+    setIsTableWidth(width > 600)
+    const resizeObserver = new ResizeObserver(() => {
+      const width = current.offsetWidth
+      setIsTableWidth(width > 500)
+    })
+
+    // Start observing the target element
+    resizeObserver.observe(current)
+
+    // Clean up by disconnecting the observer when the component unmounts
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [ref])
   const CommandsComponent = isTableWidth ? CommandTable : CommandList
-  const bottomOffset = useHeightFromElement('command-editor')
-
-  if (activeTestID === loadingID) {
-    return <NoTestFound />
-  }
-
   const activeTest = getActiveTest(session)
   const activeCommand = getActiveCommand(session)
   const disabled = ['playing', 'recording'].includes(session.state.status)
   return (
-    <>
-      <MainHeader />
-      <CommandsComponent
-        activeTest={activeTestID}
-        bottomOffset={bottomOffset}
-        commands={activeTest.commands}
-        commandStates={playback.commands}
+    <Box className="fill flex flex-col">
+      <Box className="flex-initial">
+        <AppBar
+          openDrawer={openDrawer}
+          session={session}
+          setOpenDrawer={setOpenDrawer}
+          setTab={setTab}
+          tab={tab}
+        />
+      </Box>
+      <Box className="flex-1 flex-col" ref={ref}>
+        <TestSelector session={session} />
+        {activeTestID === loadingID ? (
+          <NoTestFound />
+        ) : (
+          <>
+            <CommandsComponent
+              activeTest={activeTestID}
+              commands={activeTest.commands}
+              commandStates={playback.commands}
+              disabled={disabled}
+              selectedCommandIndexes={selectedCommandIndexes}
+            />
+          </>
+        )}
+      </Box>
+      <CommandEditor
+        commands={commands}
+        command={activeCommand}
         disabled={disabled}
         selectedCommandIndexes={selectedCommandIndexes}
+        testID={activeTestID}
       />
-      <Paper
-        elevation={1}
-        id="command-editor"
-        square
-        sx={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          zIndex: 2000,
-        }}
-      >
-        <CommandEditor
-          commands={commands}
-          command={activeCommand}
-          disabled={disabled}
-          selectedCommandIndexes={selectedCommandIndexes}
-          testID={activeTestID}
-        />
-      </Paper>
-    </>
+    </Box>
   )
 }
 

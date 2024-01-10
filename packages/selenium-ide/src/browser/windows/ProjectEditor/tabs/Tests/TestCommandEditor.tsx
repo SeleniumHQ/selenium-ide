@@ -1,3 +1,4 @@
+import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { CommandShape } from '@seleniumhq/side-model'
@@ -39,7 +40,7 @@ const CommandEditor: FC<CommandEditorProps> = ({
     !commands[correctedCommand.command]
   ) {
     return (
-      <Stack className="p-4" spacing={1} style={{height: 240}}>
+      <Stack className="p-4" spacing={1} style={{ height: 240 }}>
         <Typography className="centered py-4" variant="body2">
           {selectedCommandIndexes.length === 0
             ? 'No commands selected'
@@ -49,29 +50,31 @@ const CommandEditor: FC<CommandEditorProps> = ({
     )
   }
   return (
-    <Stack className="p-4" spacing={1}>
-      <CommandSelector
-        command={correctedCommand}
-        isDisabled={isDisabled}
-        {...props}
-      />
-      <ArgField command={correctedCommand} {...props} fieldName="target" />
-      <ArgField command={correctedCommand} {...props} fieldName="value" />
-      {command.opensWindow && (
+    <Paper square>
+      <Stack className="flex-initial p-4" spacing={1}>
+        <CommandSelector
+          command={correctedCommand}
+          isDisabled={isDisabled}
+          {...props}
+        />
+        <ArgField command={correctedCommand} {...props} fieldName="target" />
+        <ArgField command={correctedCommand} {...props} fieldName="value" />
+        {command.opensWindow && (
+          <CommandTextField
+            command={correctedCommand}
+            {...props}
+            fieldName="windowHandleName"
+            note="Variable name to set to the new window handle"
+          />
+        )}
         <CommandTextField
           command={correctedCommand}
           {...props}
-          fieldName="windowHandleName"
-          note="Variable name to set to the new window handle"
+          fieldName="comment"
+          note=""
         />
-      )}
-      <CommandTextField
-        command={correctedCommand}
-        {...props}
-        fieldName="comment"
-        note=""
-      />
-    </Stack>
+      </Stack>
+    </Paper>
   )
 }
 

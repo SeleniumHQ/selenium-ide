@@ -270,7 +270,7 @@ importers:
         specifier: ^4.0.0-alpha.3
         version: link:../get-driver
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.41
+        specifier: ^4.0.0-alpha.42
         version: link:../side-api
       '@seleniumhq/side-commons':
         specifier: ^4.0.0-alpha.2
@@ -314,6 +314,9 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
+      react-resizable-panels:
+        specifier: ^1.0.8
+        version: 1.0.8(react-dom@18.2.0)(react@18.2.0)
       scroll-into-view-if-needed:
         specifier: ^3.0.10
         version: 3.0.10
@@ -486,7 +489,7 @@ importers:
         version: link:../side-code-export
     devDependencies:
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.41
+        specifier: ^4.0.0-alpha.42
         version: link:../side-api
 
   packages/side-migrate:
@@ -3221,18 +3224,18 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@seleniumhq/side-commons@4.0.0-alpha.1:
-    resolution: {integrity: sha512-Nruf1JuEvQP9W8i7ntlZ4GBROITIjIsqhkdDB44PK1F9GxYRUFm9/ZBGhtMXyzL6gih+JPgtcO/ljdq5yqz3WA==}
+  /@seleniumhq/side-commons@4.0.0-alpha.2:
+    resolution: {integrity: sha512-i3EMsK5C08LvycylCLlGxZZxVwdAdJmDeNU4CdznN+AmDTIKqf2/I3hs3EEoUNeHCvW9Xu9/0S0cKsR5XSBZaw==}
     dev: false
 
   /@seleniumhq/side-model@4.0.0-alpha.5:
     resolution: {integrity: sha512-+6SeXnd1MRqF1Fl1cVMGRJLbgKQeubuGoThiE2RaFYXxWQmAMzIk8aXOtTXXDxBhF9Stxns8u/LUzW0ZcbMjcQ==}
     dev: false
 
-  /@seleniumhq/side-runtime@4.0.0-alpha.34:
-    resolution: {integrity: sha512-n7stTVNuZhMfs9FVQe+bSLInd/lDRFKsGfOAGkkRThpbrrLCwUpnHDPJdvyQgy8fQR69/95TfdnjgwBWsnocyQ==}
+  /@seleniumhq/side-runtime@4.0.0-alpha.35:
+    resolution: {integrity: sha512-wK7Wssrt7o3sd+dbJbqpjfJagnZl5MFMgksWmbsPFBees/u6KeOAR6bPq66QXGq0zRKOEBo9LKCVRJV+Die2+w==}
     dependencies:
-      '@seleniumhq/side-commons': 4.0.0-alpha.1
+      '@seleniumhq/side-commons': 4.0.0-alpha.2
       '@seleniumhq/side-model': 4.0.0-alpha.5
       '@types/selenium-webdriver': 4.1.21
       selenium-webdriver: 4.16.0
@@ -9425,6 +9428,16 @@ packages:
       scheduler: 0.20.2
     dev: false
 
+  /react-resizable-panels@1.0.8(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-IuivK06FWN115VSN8TDGYuIoAzplC4oPUCDZ5d+VWJj0p6N3SMfwjggpjMUGSpQJLvMi0FXPSLLn4rGVmESjmA==}
+    peerDependencies:
+      react: ^16.14.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /react-transition-group@4.4.5(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-pZcd1MCJoiKiBR2NRxeCRg13uCXbydPnmB4EOeRrY7480qNWO8IIgQG6zlDkm6uRMsURXPuKq0GWtiM59a5Q6g==}
     peerDependencies:
@@ -10008,7 +10021,7 @@ packages:
     hasBin: true
     dependencies:
       '@seleniumhq/side-model': 4.0.0-alpha.5
-      '@seleniumhq/side-runtime': 4.0.0-alpha.34
+      '@seleniumhq/side-runtime': 4.0.0-alpha.35
       commander: 9.4.1
     transitivePeerDependencies:
       - bufferutil

@@ -2,7 +2,7 @@ import set from 'lodash/fp/set'
 import { Mutator } from '../../types/base'
 
 /**
- * Sets the active command for the test editor
+ * Sets a key on the session state
  */
 export type Shape = (path: string, value: any) => Promise<boolean>
 

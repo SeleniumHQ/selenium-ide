@@ -16,6 +16,7 @@ const SIDELogger: React.FC = () => {
       logContainer.current?.append(
         `${new Date().toLocaleTimeString()} [${level}] ${log}\n`
       )
+      console.log(logContainer.current?.scrollHeight)
       window.scrollTo(0, logContainer.current?.scrollHeight ?? 0)
     }
     window.sideAPI.system.onLog.addListener(handleLog)
@@ -25,9 +26,8 @@ const SIDELogger: React.FC = () => {
   }, [logContainer])
   return (
     <>
-      <pre ref={logContainer} style={consoleStyle} />
-      <div className="p-1 pos-fixed" style={{ top: 0, right: 0 }}>
-        <Paper className="p-1" elevation={3}>
+      <div className="p-1 pos-abs" style={{ top: 0, right: 0 }}>
+        <Paper className="p-1" elevation={3} square>
           <IconButton
             onClick={() => {
               if (logContainer.current) {
@@ -39,6 +39,11 @@ const SIDELogger: React.FC = () => {
           </IconButton>
         </Paper>
       </div>
+      <pre
+        className="fill overflow-y"
+        ref={logContainer}
+        style={consoleStyle}
+      />
     </>
   )
 }

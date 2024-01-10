@@ -30,4 +30,4 @@ export const cb = (isWebdriver: boolean) => () => new Promise<void>((resolve) =>
   })
 });
 
-export default preload(api, cb(false))
+export default () => preload(api, cb(false))

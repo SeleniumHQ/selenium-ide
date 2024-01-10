@@ -6,6 +6,7 @@ import { type Shape as Playback } from '../commands/playback'
 import { type Shape as Plugins } from '../commands/plugins'
 import { type Shape as Projects } from '../commands/projects'
 import { type Shape as Recorder } from '../commands/recorder'
+import { type Shape as ResizablePanels } from '../commands/resizable-panels'
 import { type Shape as State } from '../commands/state'
 import { type Shape as Suites } from '../commands/suites'
 import { type Shape as System } from '../commands/system'
@@ -24,6 +25,7 @@ export type Api = {
   plugins: Plugins
   projects: Projects
   recorder: Recorder
+  resizablePanels: ResizablePanels
   state: State
   suites: Suites
   system: System

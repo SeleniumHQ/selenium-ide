@@ -43,20 +43,6 @@ const ProjectSettings: FC<ProjectSettingsProps> = ({
       </FormControl>
       <FormControl>
         <TextField
-          id="url"
-          label="URL"
-          name="url"
-          onChange={(e: any) => {
-            update({
-              url: e.target.value,
-            })
-          }}
-          size="small"
-          value={project.url}
-        />
-      </FormControl>
-      <FormControl>
-        <TextField
           id="timeout"
           label="Step Timeout (MILLISECONDS)"
           helperText="Steps will fail if they take longer than this setting"
@@ -94,8 +80,6 @@ const ProjectSettings: FC<ProjectSettingsProps> = ({
       dense
       subheader={
         <EditorToolbar
-          disableGutters={false}
-          sx={{ top: '48px', zIndex: 100 }}
           onAdd={() => projectCreate()}
         >
           Project Plugins

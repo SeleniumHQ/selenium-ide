@@ -10,10 +10,9 @@ import electron, {
 import { existsSync, readFileSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
-import { join } from 'node:path'
-import { platform } from 'node:os'
-import BaseController from '../Base'
 import { isAutomated } from 'main/util'
+import { join } from 'node:path'
+import BaseController from '../Base'
 
 const playbackWindowName = 'playback-window'
 const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
@@ -26,9 +25,7 @@ const playbackWindowOptions = {
   },
 }
 
-const isMac = platform() === 'darwin'
-
-const projectEditorWindowName = 'project-editor'
+const projectEditorWindowName = 'project-main-window'
 
 export type WindowLoader = (
   opts?: BrowserWindowConstructorOptions
@@ -52,9 +49,9 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
       const hasPreload = !filename.endsWith('-bidi') && existsSync(preloadPath)
       const windowLoader: WindowLoaderFactory =
         (_session: Session) =>
-        (options: BrowserWindowConstructorOptions = {}) => {
+        (_options: BrowserWindowConstructorOptions = {}) => {
           const windowConfig = window()
-          const win = new BrowserWindow({
+          const options: Electron.BrowserWindowConstructorOptions = {
             ...windowConfig,
             webPreferences: {
               devTools: !isAutomated,
@@ -62,8 +59,9 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
               preload: hasPreload ? preloadPath : undefined,
               sandbox: true,
             },
-            ...options,
-          })
+            ..._options,
+          }
+          const win = new BrowserWindow(options)
           win.loadFile(join(__dirname, `${filename}.html`))
           return win
         }
@@ -172,7 +170,7 @@ export default class WindowsController extends BaseController {
    */
   getLastPlaybackWindow(): BrowserWindow {
     const windowCount = this.playbackWindows.length
-    if (windowCount < 2) {
+    if (windowCount === 0) {
       return null as any
     }
     return this.playbackWindows[windowCount - 1]
@@ -223,7 +221,7 @@ export default class WindowsController extends BaseController {
 
   async getPlaybackWindowByHandle(handle: string) {
     const id = this.handlesToIDs[handle]
-    console.log('match?', handle, id);
+    console.log('match?', handle, id)
     return this.playbackWindows.find((bw) => bw.id === id)
   }
 
@@ -235,9 +233,15 @@ export default class WindowsController extends BaseController {
   }
 
   async openPlaybackWindow(opts: BrowserWindowConstructorOptions = {}) {
-    const window = this.windowLoaders[playbackWindowName](opts)
+    const playbackScreenPosition =
+      await this.session.resizablePanels.getPanelScreenPosition(
+        'playback-panel'
+      )
+    const window = this.windowLoaders[playbackWindowName]({
+      ...opts,
+      ...playbackScreenPosition,
+    })
     this.handlePlaybackWindow(window)
-    this.arrangeWindow(window, 'windowSizePlayback', 'windowPositionPlayback')
     if (opts.title) {
       window.webContents.executeJavaScript(`document.title = "${opts.title}";`)
     }
@@ -301,19 +305,6 @@ export default class WindowsController extends BaseController {
       this.removePlaybackWIndow(bw)
       bw.close()
     })
-    const window = await this.openPlaybackWindow({
-      show: false,
-      webPreferences: { preload: undefined },
-    })
-    if (isMac) {
-      window.setWindowButtonVisibility(false)
-    }
-    await this.useWindowState(
-      window,
-      'windowSizePlayback',
-      'windowPositionPlayback'
-    )
-    window.show()
   }
 
   async getPlaybackWindow() {
@@ -372,6 +363,16 @@ export default class WindowsController extends BaseController {
     await this.open(projectEditorWindowName, { show: false })
     const projectWindow = await this.get(projectEditorWindowName)
     this.useWindowState(projectWindow, 'windowSize', 'windowPosition')
+    projectWindow.on('focus', () => {
+      this.playbackWindows.forEach((bw) => {
+        bw.setAlwaysOnTop(true)
+      })
+    })
+    projectWindow.on('blur', () => {
+      this.playbackWindows.forEach((bw) => {
+        bw.setAlwaysOnTop(false)
+      })
+    })
 
     projectWindow.show()
 

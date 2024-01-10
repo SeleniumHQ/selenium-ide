@@ -1,19 +1,10 @@
 import List from '@mui/material/List'
-import { EditorStateShape } from '@seleniumhq/side-api'
-import { SuiteShape } from '@seleniumhq/side-model'
-import React, { FC } from 'react'
+import React from 'react'
 import Drawer from '../../components/Drawer/Wrapper'
 import EditorToolbar from '../../components/Drawer/EditorToolbar'
 import RenamableListItem from '../../components/Drawer/RenamableListItem'
 import SuiteNewDialog from './SuiteNewDialog'
-
-export interface SuiteListProps {
-  activeSuite: string
-  open: boolean
-  setOpen: (b: boolean) => void
-  suiteMode: EditorStateShape['suiteMode']
-  suites: SuiteShape[]
-}
+import { SIDEMainProps } from '../../components/types'
 
 const {
   state: { setActiveSuite: setSelected },
@@ -22,49 +13,43 @@ const {
 
 const rename = (id: string, name: string) => update(id, { name })
 
-const SuiteList: FC<SuiteListProps> = ({
-  activeSuite,
-  open,
-  setOpen,
-  suiteMode,
-  suites,
-}) => {
+const SuiteList: React.FC<
+  Pick<SIDEMainProps, 'openDrawer' | 'session' | 'setOpenDrawer'>
+> = ({ openDrawer, session, setOpenDrawer }) => {
+  const {
+    project: { suites },
+    state: { activeSuiteID },
+  } = session
   const [confirmNew, setConfirmNew] = React.useState(false)
 
   return (
     <Drawer
-      footerID={suiteMode === 'editor' ? 'suite-editor' : ''}
-      open={open}
+      className="flex flex-col h-100"
+      open={openDrawer}
       header="Select Suite"
-      setOpen={setOpen}
+      setOpen={setOpenDrawer}
     >
-      <SuiteNewDialog confirmNew={confirmNew} setConfirmNew={setConfirmNew} />
-
+      <EditorToolbar
+        className="flex-initial"
+        onAdd={async () => {
+          console.log('setIsOpen(true)')
+          setConfirmNew(true)
+        }}
+        onRemove={
+          suites.length > 1
+            ? () => {
+                const doDelete = window.confirm('Delete this suite?')
+                if (doDelete) {
+                  window.sideAPI.suites.delete(activeSuiteID)
+                }
+              }
+            : undefined
+        }
+      />
       <List
+        className="flex-col flex-1 overflow-y pt-0"
         dense
         sx={{ borderColor: 'primary.main' }}
-        subheader={
-          <EditorToolbar
-            onAdd={async () => {
-              console.log('setIsOpen(true)')
-              setConfirmNew(true)
-            }}
-            onRemove={
-              suites.length > 1
-                ? () => {
-                  const doDelete = window.confirm('Delete this suite?')
-                  if (doDelete) {
-                    window.sideAPI.suites.delete(activeSuite)
-                  }
-                }
-                : undefined
-            }
-            sx={{
-              top: '47px',
-              zIndex: 100,
-            }}
-          />
-        }
       >
         {suites
           .slice()
@@ -75,14 +60,15 @@ const SuiteList: FC<SuiteListProps> = ({
               key={id}
               name={name}
               onContextMenu={() => {
-                window.sideAPI.menus.open('suiteManager', [id]);
+                window.sideAPI.menus.open('suiteManager', [id])
               }}
               rename={rename}
-              selected={id === activeSuite}
+              selected={id === activeSuiteID}
               setSelected={setSelected}
             />
           ))}
       </List>
+      <SuiteNewDialog confirmNew={confirmNew} setConfirmNew={setConfirmNew} />
     </Drawer>
   )
 }

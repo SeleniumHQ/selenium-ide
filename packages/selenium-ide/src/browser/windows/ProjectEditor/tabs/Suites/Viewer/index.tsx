@@ -1,15 +1,16 @@
 import List from '@mui/material/List'
 import { CoreSessionData, getActiveSuite, hasID } from '@seleniumhq/side-api'
 import { TestShape } from '@seleniumhq/side-model'
-import React, { FC } from 'react'
+import React from 'react'
 import SuiteViewerEntry from './Entry'
 import EditorToolbar from '../../../components/Drawer/EditorToolbar'
+import { SIDEMainProps } from 'browser/windows/ProjectEditor/components/types'
 
 export interface CurrentSuiteTestListProps {
   session: CoreSessionData
 }
 
-const SuiteViewer: FC<CurrentSuiteTestListProps> = ({ session }) => {
+const SuiteViewer: React.FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
   const tests = session.project.tests
   const testResults = session.state.playback.testResults
   const commandResults = session.state.playback.commands
@@ -21,7 +22,7 @@ const SuiteViewer: FC<CurrentSuiteTestListProps> = ({ session }) => {
       >
         <span className="ml-4">Suite Player</span>
       </EditorToolbar>
-      <List dense>
+      <List className='overflow-y pt-0' dense>
         {activeSuite.tests.map((testID) => {
           const test = tests.find(hasID(testID)) as TestShape
           const lastCommand = testResults[test.id]?.lastCommand

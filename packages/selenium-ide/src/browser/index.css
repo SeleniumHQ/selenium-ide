@@ -14,9 +14,18 @@ body,
   box-sizing: border-box;
 }
 
+.resize-bar {
+  background-color: #999;
+  min-height: 4px;
+  min-width: 4px;
+}
+
 @media (prefers-color-scheme: dark) {
   html, body, #root {
     background-color: #111;
+  }
+  .resize-bar {
+    background-color: #666;
   }
 }
 
@@ -53,6 +62,9 @@ body,
   opacity: 0.75;
 }
 
+.block {
+  display: block;
+}
 /**
  * Flexbox
  */
@@ -60,10 +72,12 @@ body,
   display: flex !important;
 }
 .flex-1 {
+  display: flex;
   min-height: 0;
   flex: 1 1 1px;
 }
 .flex-initial {
+  display: flex;
   flex: 0 0 auto;
 }
 .flex-col {
@@ -88,6 +102,14 @@ body,
 }
 .no-overflow-y {
   overflow-y: hidden;
+}
+.no-overflow-x {
+  overflow-x: hidden;
+}
+.text-overflow {
+  display: block;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
 }
 
 /**
@@ -162,21 +184,26 @@ body,
 /**
  * Padding
  */
-.pt-0 {
-  padding-top: 0;
-}
-
 .p-1 {
   padding: 0.125rem;
 }
-
-.py-3 {
-  padding-bottom: 0.5rem;
-  padding-top: 0.5rem;
+.p-2 {
+  padding: 0.25rem;
 }
-
+.p-3 {
+  padding: 0.5rem;
+}
 .p-4 {
   padding: 1rem;
+}
+.p-5 {
+  padding: 2rem;
+}
+.pb-0 {
+  padding-bottom: 0 !important;
+}
+.pt-0 {
+  padding-top: 0 !important;
 }
 .pt-4 {
   padding-top: 1rem;
@@ -184,6 +211,10 @@ body,
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
+}
+.py-3 {
+  padding-bottom: 0.5rem;
+  padding-top: 0.5rem;
 }
 .py-4 {
   padding-bottom: 1rem;
@@ -268,12 +299,6 @@ body,
   padding-top: 14px;
 }
 
-.playback-text {
-  position: absolute;
-  top: 45%;
-  padding: 24px;
-}
-
 /*
  * Playback command overlay colors
  */
@@ -314,6 +339,10 @@ body,
 }
 .MuiList-dense > :last-child {
   border-bottom: 0 !important;
+}
+
+.square {
+  border-radius: 0;
 }
 
 /*

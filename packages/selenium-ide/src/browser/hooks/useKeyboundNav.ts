@@ -3,7 +3,6 @@ import { useEffect } from 'react'
 
 export interface useKeyboundNavInput {
   activeSuite: string
-  bottomOffset: number
   selectedIndexes: number[]
   tests: TestShape[]
 }

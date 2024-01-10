@@ -1,18 +1,13 @@
+import Paper, {PaperProps} from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
 
-const DrawerHeader = styled('div')(({ theme }) => ({
-  alignItems: 'center',
-  backgroundColor: theme.palette.background.paper,
-  borderBottom: '1px solid',
-  borderColor: theme.palette.action.focus,
-  display: 'flex',
-  // necessary for content to be below app bar
-  height: '47px !important',
-  justifyContent: 'flex-end',
-  minHeight: '47px !important',
-  position: 'sticky',
-  top: 0,
-  zIndex: 100,
-}))
+const DrawerHeader: React.FC<PaperProps> = styled(Paper)(
+  ({ theme }) => ({
+    alignItems: 'center',
+    borderColor: theme.palette.action.focus,
+    // necessary for content to be below app bar
+    justifyContent: 'flex-end',
+  })
+)
 
 export default DrawerHeader

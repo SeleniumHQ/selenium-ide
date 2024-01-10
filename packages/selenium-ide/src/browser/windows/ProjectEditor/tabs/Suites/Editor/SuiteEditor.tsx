@@ -15,7 +15,7 @@ export interface MiniSuiteShape {
 }
 
 const SuiteEditor: FC<SuiteEditorProps> = ({ suite }) => (
-  <Stack className="p-4" spacing={1}>
+  <Stack className="p-4 width-100" spacing={1}>
     <FormControl>
       <TextField
         label="Name"

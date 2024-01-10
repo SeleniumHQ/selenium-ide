@@ -32,7 +32,6 @@ const DriverSelector = () => {
     await window.sideAPI.driver.stopProcess()
     await window.sideAPI.driver.startProcess(browser)
     await window.sideAPI.driver.selectBrowser(browser)
-    await window.sideAPI.windows.open('playback-window')
     setBrowserInfo((info) => ({
       browsers: info!.browsers,
       selected: browser,

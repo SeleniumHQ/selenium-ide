@@ -10,7 +10,6 @@ import { Box } from '@mui/material'
 
 export interface CommandListProps {
   activeTest: string
-  bottomOffset: number
   commands: CommandShape[]
   commandStates: CommandsStateShape
   disabled?: boolean
@@ -21,7 +20,6 @@ const useKeyboundNav = makeKeyboundNav(window.sideAPI.state.updateStepSelection)
 
 const CommandList: FC<CommandListProps> = ({
   activeTest,
-  bottomOffset,
   commandStates,
   commands,
   disabled,
@@ -34,58 +32,59 @@ const CommandList: FC<CommandListProps> = ({
   )
   useKeyboundNav(commands, selectedCommandIndexes)
   return (
-    <ReorderableList
-      aria-disabled={disabled}
-      bottomOffset={bottomOffset}
-      dense
-      subheader={
-        <EditorToolbar
-          sx={{ top: '48px', zIndex: 100 }}
-          onAdd={() =>
-            window.sideAPI.tests.addSteps(
-              activeTest,
-              Math.max(selectedCommandIndexes.slice(-1)[0], 0)
-            )
-          }
-          onRemove={
-            commands.length > 1
-              ? () =>
-                  window.sideAPI.tests.removeSteps(
-                    activeTest,
-                    selectedCommandIndexes
-                  )
-              : undefined
-          }
-        >
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Box sx={{ flex: 0, flexBasis: 50 }}>&nbsp;</Box>
-            <Box sx={{ flex: 1 }}>Cmd</Box>
-            <Box sx={{ flex: 2, paddingLeft: 2 }}>Target</Box>
-            <Box sx={{ flex: 2, paddingLeft: 2 }}>Value</Box>
-          </Box>
-        </EditorToolbar>
-      }
-    >
-      {preview.map(([command, origIndex], index) => {
-        if (!command) {
-          return null
+    <>
+      <EditorToolbar
+        onAdd={() =>
+          window.sideAPI.tests.addSteps(
+            activeTest,
+            Math.max(selectedCommandIndexes.slice(-1)[0], 0)
+          )
         }
-        const { id } = command
-        return (
-          <CommandRow
-            activeTest={activeTest}
-            command={command}
-            commandState={commandStates[id]}
-            disabled={disabled}
-            key={id}
-            index={index}
-            reorderPreview={reorderPreview}
-            resetPreview={resetPreview}
-            selected={selectedCommandIndexes.includes(origIndex)}
-          />
-        )
-      })}
-    </ReorderableList>
+        onRemove={
+          commands.length > 1
+            ? () =>
+                window.sideAPI.tests.removeSteps(
+                  activeTest,
+                  selectedCommandIndexes
+                )
+            : undefined
+        }
+      >
+        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+          <Box className="flex" sx={{ flex: 0, flexBasis: 50 }}>&nbsp;</Box>
+          <Box className="flex" sx={{ flex: 1 }}>Cmd</Box>
+          <Box className="flex" sx={{ flex: 2, paddingLeft: 2 }}>Target</Box>
+          <Box className="flex" sx={{ flex: 2, paddingLeft: 2 }}>Value</Box>
+        </Box>
+      </EditorToolbar>
+      <ReorderableList
+        aria-disabled={disabled}
+        classes={{
+          root: 'overflow-y pt-0',
+        }}
+        dense
+      >
+        {preview.map(([command, origIndex], index) => {
+          if (!command) {
+            return null
+          }
+          const { id } = command
+          return (
+            <CommandRow
+              activeTest={activeTest}
+              command={command}
+              commandState={commandStates[id]}
+              disabled={disabled}
+              key={id}
+              index={index}
+              reorderPreview={reorderPreview}
+              resetPreview={resetPreview}
+              selected={selectedCommandIndexes.includes(origIndex)}
+            />
+          )
+        })}
+      </ReorderableList>
+    </>
   )
 }
 

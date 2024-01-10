@@ -17,8 +17,7 @@
 import { RecorderPreprocessor } from '@seleniumhq/side-api'
 import api from 'browser/api/bidi'
 import { resolversByID } from 'browser/api/classes/DriverHandler'
-import apiMutators from 'browser/api/mutator'
-import preload from 'browser/helpers/preload-bidi'
+import preload from 'browser/helpers/preload'
 import Recorder from './preload/recorder'
 
 const recorderProcessors: RecorderPreprocessor[] = []
@@ -29,10 +28,6 @@ preload({
     },
   },
   recorder: api.recorder,
-  mutators: {
-    plugins: {},
-    recorder: apiMutators.recorder,
-  },
 })
 window.sideAPI.resolveAPI = (id: string, ...args: any[]) => {
   const resolver = resolversByID[id]

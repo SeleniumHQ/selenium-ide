@@ -2,14 +2,9 @@ import List from '@mui/material/List'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemText from '@mui/material/ListItemText'
 import { ConfigSettingsGroup } from '@seleniumhq/side-api'
-import React, { FC } from 'react'
+import React from 'react'
 import Drawer from '../../components/Drawer/Wrapper'
-
-export interface ProjectDrawerProps {
-  configSettingsGroup: ConfigSettingsGroup
-  open: boolean
-  setOpen: (b: boolean) => void
-}
+import { SIDEMainProps } from '../../components/types'
 
 type ConfigGroupFactory = (
   group: ConfigSettingsGroup
@@ -36,18 +31,24 @@ const ConfigGroup: ConfigGroupFactory =
 const ProjectConfig = ConfigGroup('project')
 const SystemConfig = ConfigGroup('system')
 
-const ProjectDrawer: FC<ProjectDrawerProps> = ({
-  configSettingsGroup,
-  open,
-  setOpen,
+const ProjectDrawer: React.FC<
+  Pick<SIDEMainProps, 'openDrawer' | 'session' | 'setOpenDrawer'>
+> = ({
+  openDrawer,
+  session: {
+    state: {
+      editor: { configSettingsGroup },
+    },
+  },
+  setOpenDrawer,
 }) => (
   <Drawer
-    footerID="project-editor"
-    open={open}
+    className="flex flex-col h-100"
+    open={openDrawer}
     header="Settings Group"
-    setOpen={setOpen}
+    setOpen={setOpenDrawer}
   >
-    <List dense sx={{ borderColor: 'primary.main' }}>
+    <List dense className='pt-0' sx={{ borderColor: 'primary.main' }}>
       <ProjectConfig value={configSettingsGroup} />
       <SystemConfig value={configSettingsGroup} />
     </List>

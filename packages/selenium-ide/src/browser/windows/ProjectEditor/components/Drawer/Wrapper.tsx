@@ -1,25 +1,24 @@
 import Divider from '@mui/material/Divider'
-import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
+import Box, { BoxProps } from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import ChevronLeft from '@mui/icons-material/ChevronLeft'
 import React from 'react'
 import DrawerWrapperHeader from './Header'
-import { useHeightFromElement } from 'browser/helpers/useHeightFromElement'
+import baseControlProps from '../Controls/BaseProps'
 
 export const drawerWidth = 160
 
-export const drawerStyle = (footerHeight: number) => ({
-  width: drawerWidth,
+export const drawerStyle = (open: boolean) => ({
+  width: open ? drawerWidth : 0,
   flexShrink: 0,
   '& .MuiDrawer-paper': {
     boxSizing: 'border-box',
-    height: `calc(100% - ${footerHeight}px)`,
-    width: drawerWidth,
+    height: '100%',
+    width: '100%'
   },
 })
 
-export interface DrawerWrapperProps extends DrawerProps {
-  footerID: string
+export interface DrawerWrapperProps extends BoxProps {
   header: React.ReactNode
   open: boolean
   setOpen: (b: boolean) => void
@@ -27,29 +26,21 @@ export interface DrawerWrapperProps extends DrawerProps {
 
 const DrawerWrapper: React.FC<DrawerWrapperProps> = ({
   children,
-  footerID,
+  className,
   header = null,
   open,
   setOpen,
-}) => {
-  const footerHeight = useHeightFromElement(footerID)
-  return (
-    <MuiDrawer
-      variant="persistent"
-      anchor="left"
-      open={open}
-      sx={drawerStyle(footerHeight)}
-    >
-      <DrawerWrapperHeader>
-        <IconButton onClick={() => setOpen(false)}>
-          <ChevronLeft />
-        </IconButton>
-        <span className="flex flex-1">{header}</span>
-      </DrawerWrapperHeader>
-      <Divider sx={{ position: 'sticky', top: '46px' }} />
-      {children}
-    </MuiDrawer>
-  )
-}
+}) => (
+  <Box className={className + ' flex no-overflow-x'} sx={drawerStyle(open)}>
+    <DrawerWrapperHeader className='flex-initial flex-row' elevation={7} square>
+      <IconButton {...baseControlProps} onClick={() => setOpen(false)}>
+        <ChevronLeft />
+      </IconButton>
+      <span className="flex flex-1">{header}</span>
+    </DrawerWrapperHeader>
+    <Divider className='flex-initial' />
+    {children}
+  </Box>
+)
 
 export default DrawerWrapper

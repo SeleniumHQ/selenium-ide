@@ -2,12 +2,15 @@ import AddIcon from '@mui/icons-material/Add'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import EditIcon from '@mui/icons-material/Edit'
 import RemoveIcon from '@mui/icons-material/Remove'
-import { Box, Tooltip } from '@mui/material'
+import Box from '@mui/material/Box'
+import {PaperProps} from '@mui/material/Paper'
+import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton'
-import ListSubheader, { ListSubheaderProps } from '@mui/material/ListSubheader'
 import React, { FC } from 'react'
+import DrawerHeader from './Header'
+import baseControlProps from '../Controls/BaseProps'
 
-interface EditorToolbarProps extends ListSubheaderProps {
+export interface EditorToolbarIconsProps {
   disabled?: boolean
   onAdd?: () => void
   onEdit?: () => void
@@ -15,36 +18,19 @@ interface EditorToolbarProps extends ListSubheaderProps {
   onView?: () => void
 }
 
-const standardIconProps = {
-  className: 'mx-2',
-  disableRipple: true,
-  size: 'small',
-  sx: { float: 'right' },
-} as const
-
-const EditorToolbar: FC<EditorToolbarProps> = ({
-  children,
-  className = 'lh-36',
+export const EditorToolbarIcons: FC<EditorToolbarIconsProps> = ({
   disabled = false,
   onAdd,
   onEdit,
   onRemove,
   onView,
-  sx = {},
-  ...props
 }) => (
-  <ListSubheader
-    className={className}
-    disableGutters
-    sx={{ zIndex: 100, display: 'flex', flexDirection: 'row', ...sx }}
-    {...props}
-  >
-    <Box sx={{ flex: 1 }}>{children}</Box>
+  <>
     {onAdd ? (
       <Box sx={{ flex: 0 }}>
         <Tooltip title="Add">
           <IconButton
-            {...standardIconProps}
+            {...baseControlProps}
             color="success"
             disabled={disabled}
             onClick={onAdd}
@@ -58,7 +44,7 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
       <Box sx={{ flex: 0 }}>
         <Tooltip title="Remove">
           <IconButton
-            {...standardIconProps}
+            {...baseControlProps}
             color="warning"
             disabled={disabled}
             onClick={onRemove}
@@ -72,7 +58,7 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
       <Box sx={{ flex: 0 }}>
         <Tooltip title="Edit">
           <IconButton
-            {...standardIconProps}
+            {...baseControlProps}
             color="info"
             disabled={disabled}
             onClick={onEdit}
@@ -86,7 +72,7 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
       <Box sx={{ flex: 0 }}>
         <Tooltip title="View Playback Results">
           <IconButton
-            {...standardIconProps}
+            {...baseControlProps}
             color="info"
             disabled={disabled}
             onClick={onView}
@@ -96,7 +82,53 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
         </Tooltip>
       </Box>
     ) : null}
-  </ListSubheader>
+  </>
+)
+
+export const EditorToolbarShell: FC<PaperProps> = ({
+  children,
+  className = '',
+  elevation = 7,
+  ...props
+}) => (
+  <DrawerHeader
+    className={className + ' flex flex-row'}
+    elevation={elevation}
+    square
+    {...props}
+  >
+    <Box sx={{ flex: 1 }}>{children}</Box>
+  </DrawerHeader>
+)
+
+export interface EditorToolbarProps extends PaperProps, EditorToolbarIconsProps {}
+
+const EditorToolbar: FC<EditorToolbarProps> = ({
+  children,
+  className = '',
+  disabled = false,
+  elevation = 7,
+  onAdd,
+  onEdit,
+  onRemove,
+  onView,
+  ...props
+}) => (
+  <DrawerHeader
+    className={className + ' flex flex-row'}
+    elevation={elevation}
+    square
+    {...props}
+  >
+    <Box sx={{ flex: 1 }}>{children}</Box>
+    <EditorToolbarIcons
+      disabled={disabled}
+      onAdd={onAdd}
+      onEdit={onEdit}
+      onRemove={onRemove}
+      onView={onView}
+    />
+  </DrawerHeader>
 )
 
 export default EditorToolbar

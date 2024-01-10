@@ -7,6 +7,7 @@ import { commands as playback } from './commands/playback'
 import { commands as plugins } from './commands/plugins'
 import { commands as projects } from './commands/projects'
 import { commands as recorder } from './commands/recorder'
+import { commands as resizablePanels } from './commands/resizable-panels'
 import { commands as state } from './commands/state'
 import { commands as suites } from './commands/suites'
 import { commands as system } from './commands/system'
@@ -22,6 +23,7 @@ export interface ApiHoist extends BaseApi {
   plugins: typeof plugins
   projects: typeof projects
   recorder: typeof recorder
+  resizablePanels: typeof resizablePanels
   state: typeof state
   suites: typeof suites
   system: typeof system
@@ -38,6 +40,7 @@ export const api: ApiHoist = {
   plugins,
   projects,
   recorder,
+  resizablePanels,
   state,
   suites,
   system,

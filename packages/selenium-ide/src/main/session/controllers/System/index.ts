@@ -46,14 +46,6 @@ export default class SystemController extends BaseController {
 
   async startup() {
     if (this.isDown) {
-      await this.session.windows.open('logger', { frame: false, show: false })
-      const loggerWindow = await this.session.windows.get('logger')
-      this.session.windows.useWindowState(
-        loggerWindow,
-        'windowSizeLogger',
-        'windowPositionLogger'
-      )
-      loggerWindow.show()
       // If automated, assume we already have a chromedriver process running
       if (!isAutomated) {
         const startupError = await this.session.driver.startProcess(

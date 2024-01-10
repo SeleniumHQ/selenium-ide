@@ -1,15 +1,16 @@
+import Box from '@mui/material/Box'
+import ListItemText from '@mui/material/ListItemText'
 import { TestShape } from '@seleniumhq/side-model'
 import React, { FC } from 'react'
-import CurrentSuiteTestRow from './CurrentSuiteTestRow'
 import useReorderPreview from 'browser/hooks/useReorderPreview'
 import DropTargetListItem from 'browser/components/DropTargetListItem'
-import { ListItemText, ListSubheader } from '@mui/material'
 import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
 import ReorderableList from 'browser/components/ReorderableList'
+import EditorToolbar from 'browser/windows/ProjectEditor/components/Drawer/EditorToolbar'
+import CurrentSuiteTestRow from './CurrentSuiteTestRow'
 
 export interface CurrentSuiteTestListProps {
   activeSuite: string
-  bottomOffset: number
   selectedIndexes: number[]
   tests: TestShape[]
 }
@@ -18,7 +19,6 @@ const useKeyboundNav = makeKeyboundNav(window.sideAPI.state.updateStepSelection)
 
 const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
   activeSuite,
-  bottomOffset,
   selectedIndexes,
   tests,
 }) => {
@@ -29,45 +29,39 @@ const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
   )
   useKeyboundNav(tests, selectedIndexes)
   return (
-    <ReorderableList
-      bottomOffset={bottomOffset}
-      dense
-      sx={{
-        display: 'inline-block',
-        width: '50%',
-      }}
-    >
-
-      <ListSubheader className="lh-36" sx={{ top: '48px', zIndex: 100 }}>
-        Tests in suite
-      </ListSubheader>
-      {preview.map(([id, origIndex], index) => {
-        const test = tests[origIndex]
-        if (!test) {
-          return null
-        }
-        return (
-          <CurrentSuiteTestRow
-            activeSuite={activeSuite}
-            index={index}
-            key={`${id}-${origIndex}`}
-            reorder={reorderPreview}
-            reorderReset={resetPreview}
-            selected={selectedIndexes.includes(origIndex)}
-            test={test}
-          />
-        )
-      })}
-      <DropTargetListItem
-        dragType="TEST"
-        index={tests.length}
-        reorderConfirm={() => {}}
-        reorder={reorderPreview}
-        reorderReset={resetPreview}
-      >
-        <ListItemText>Drop Tests Here</ListItemText>
-      </DropTargetListItem>
-    </ReorderableList>
+    <Box className="flex flex-col flex-1">
+      <EditorToolbar className="flex-initial" elevation={0}>
+        <span className="ml-4">Tests in suite</span>
+      </EditorToolbar>
+      <ReorderableList className="flex flex-col flex-1 overflow-y pt-0" dense>
+        {preview.map(([id, origIndex], index) => {
+          const test = tests[origIndex]
+          if (!test) {
+            return null
+          }
+          return (
+            <CurrentSuiteTestRow
+              activeSuite={activeSuite}
+              index={index}
+              key={`${id}-${origIndex}`}
+              reorder={reorderPreview}
+              reorderReset={resetPreview}
+              selected={selectedIndexes.includes(origIndex)}
+              test={test}
+            />
+          )
+        })}
+        <DropTargetListItem
+          dragType="TEST"
+          index={tests.length}
+          reorderConfirm={() => {}}
+          reorder={reorderPreview}
+          reorderReset={resetPreview}
+        >
+          <ListItemText>Drop Tests Here</ListItemText>
+        </DropTargetListItem>
+      </ReorderableList>
+    </Box>
   )
 }
 

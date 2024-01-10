@@ -1,5 +1,4 @@
 import React from 'react'
-import Main from './MainCore'
 import TabPanel from '../Tab/Panel'
 import { PROJECT_TAB, SUITES_TAB, TESTS_TAB } from '../../enums/tab'
 import ProjectTab from '../../tabs/Project/ProjectTab'
@@ -8,23 +7,40 @@ import TestsTab from '../../tabs/Tests/TestsTab'
 import { SIDEMainProps } from '../types'
 
 const SIDEMain: React.FC<
-  Pick<SIDEMainProps, 'openDrawer' | 'session' | 'tab'>
-> = ({ openDrawer, session, tab }) => (
-  <Main
-    className="fill no-select"
-    hasDrawer={tab !== PROJECT_TAB}
-    openDrawer={openDrawer}
+  Pick<
+    SIDEMainProps,
+    'openDrawer' | 'session' | 'setOpenDrawer' | 'setTab' | 'tab'
   >
+> = ({ openDrawer, session, setOpenDrawer, setTab, tab }) => (
+  <>
     <TabPanel index={TESTS_TAB} value={tab}>
-      <TestsTab session={session} />
+      <TestsTab
+        openDrawer={openDrawer}
+        session={session}
+        setOpenDrawer={setOpenDrawer}
+        setTab={setTab}
+        tab={tab}
+      />
     </TabPanel>
     <TabPanel index={SUITES_TAB} value={tab}>
-      <SuitesTab session={session} />
+      <SuitesTab
+        openDrawer={openDrawer}
+        session={session}
+        setOpenDrawer={setOpenDrawer}
+        setTab={setTab}
+        tab={tab}
+      />
     </TabPanel>
     <TabPanel index={PROJECT_TAB} value={tab}>
-      <ProjectTab session={session} />
+      <ProjectTab
+        openDrawer={openDrawer}
+        session={session}
+        setOpenDrawer={setOpenDrawer}
+        setTab={setTab}
+        tab={tab}
+      />
     </TabPanel>
-  </Main>
+  </>
 )
 
 export default SIDEMain

@@ -186,12 +186,6 @@ export default class PlaybackController extends BaseController {
       const window = await this.session.windows.openPlaybackWindow({
         title: UUID,
       })
-      console.log('Opened playback window?', UUID)
-      await this.session.windows.arrangeWindow(
-        window,
-        'windowSizePlayback',
-        'windowPositionPlayback'
-      )
       const handles = await driver.getAllWindowHandles()
       for (let i = 0, ii = handles.length; i !== ii; i++) {
         const handle = handles[i]
@@ -259,13 +253,11 @@ export default class PlaybackController extends BaseController {
       })
     }
     const handleTestResolution = async () => {
-      console.log('Waiting for play to finish...')
       try {
         await promise()
       } catch (e) {
         console.error(e)
       } finally {
-        console.log('Play finished!')
         EE.removeListener(
           PlaybackEvents.PLAYBACK_STATE_CHANGED,
           handlePlaybackStateChanged
@@ -298,7 +290,7 @@ export default class PlaybackController extends BaseController {
     } = await this.session.state.get()
     this.playingSuite = activeSuiteID
     const suite = suites.find(hasID(activeSuiteID))
-    this.testQueue = suite?.tests ?? []
+    this.testQueue = suite?.tests.slice() ?? []
     if (suite?.parallel) {
       for (let i = 0; i < parallelExecutions; i++) {
         this.playNextTest()
@@ -309,7 +301,7 @@ export default class PlaybackController extends BaseController {
   }
 
   async playNextTest() {
-    const nextTest = this.testQueue.shift()
+    const nextTest = this.testQueue.shift() 
     if (nextTest) {
       const {
         project: { suites },

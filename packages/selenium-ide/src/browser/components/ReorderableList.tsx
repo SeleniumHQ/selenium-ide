@@ -3,12 +3,10 @@ import List, { ListProps } from '@mui/material/List'
 import React, { FC } from 'react'
 
 export type ReorderableListProps = ListProps & TableBodyProps & {
-  bottomOffset: number
   Component?: React.FC | React.ComponentClass
 }
 
 const ReorderableList: FC<ReorderableListProps> = ({
-  bottomOffset,
   children,
   Component = List,
   sx = {},
@@ -18,7 +16,6 @@ const ReorderableList: FC<ReorderableListProps> = ({
       dense
       sx={{
         borderColor: 'primary.main',
-        marginBottom: `${bottomOffset}px`,
         verticalAlign: 'top',
         ...sx,
       }}

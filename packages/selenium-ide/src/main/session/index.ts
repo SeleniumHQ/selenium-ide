@@ -10,6 +10,7 @@ import PluginsController from './controllers/Plugins'
 import PolyfillController from './controllers/Polyfill'
 import ProjectsController from './controllers/Projects'
 import RecorderController from './controllers/Recorder'
+import ResizablePanelsController from './controllers/ResizablePanels'
 import StateController from './controllers/State'
 import SuitesController from './controllers/Suites'
 import SystemController from './controllers/System'
@@ -40,6 +41,7 @@ export default async function createSession(
   partialSession.plugins = new PluginsController(partialSession as Session)
   partialSession.projects = new ProjectsController(partialSession as Session)
   partialSession.recorder = new RecorderController(partialSession as Session)
+  partialSession.resizablePanels = new ResizablePanelsController(partialSession as Session)
   partialSession.state = new StateController(partialSession as Session)
   partialSession.suites = new SuitesController(partialSession as Session)
   partialSession.system = new SystemController(partialSession as Session)

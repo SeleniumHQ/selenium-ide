@@ -16,7 +16,6 @@
 // under the License.
 import { RecorderPreprocessor } from '@seleniumhq/side-api'
 import api from 'browser/api'
-import apiMutators from 'browser/api/mutator'
 import preload from 'browser/helpers/preload'
 import { cb as ElectronInit } from 'browser/helpers/preload-electron'
 import Recorder from './preload/recorder'
@@ -27,16 +26,10 @@ import { contextBridge, ipcRenderer, webFrame } from 'electron'
 const polyfill = () => {
   const keys = ['alert', 'confirm', 'prompt']
   keys.forEach((key) => {
-    contextBridge.exposeInMainWorld(
-      key + '-polyfill',
-      (...args: any[]) => {
-        const result = ipcRenderer.sendSync(
-          key + '-polyfill',
-          ...args
-        )
-        return result
-      }
-    )
+    contextBridge.exposeInMainWorld(key + '-polyfill', (...args: any[]) => {
+      const result = ipcRenderer.sendSync(key + '-polyfill', ...args)
+      return result
+    })
     webFrame.executeJavaScript(`window.${key} = window['${key}-polyfill'];`)
   })
 }
@@ -63,20 +56,16 @@ function injectRecorder() {
 }
 
 preload(
-  api,
+  {
+    channels: api.channels,
+    plugins: {
+      addRecorderPreprocessor: (fn) => {
+        recorderProcessors.push(fn)
+      },
+      getPreloads: api.plugins.getPreloads,
+    },
+    recorder: api.recorder,
+  },
   ElectronInit(true),
   injectRecorder
-)({
-  channels: api.channels,
-  plugins: {
-    addRecorderPreprocessor: (fn) => {
-      recorderProcessors.push(fn)
-    },
-    getPreloads: api.plugins.getPreloads,
-  },
-  recorder: api.recorder,
-  mutators: {
-    plugins: {},
-    recorder: apiMutators.recorder,
-  },
-})
+)

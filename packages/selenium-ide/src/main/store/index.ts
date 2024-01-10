@@ -10,6 +10,7 @@ import config from './config'
 export interface StorageSchema {
   config: typeof config
   browserInfo: BrowserInfo
+  panelGroups: Record<string, number[]>
   plugins: string[]
   projectStates: Record<
     string,
@@ -38,6 +39,10 @@ export default () => {
         version: '',
       },
       config,
+      panelGroups: {
+        'editor-playback': [25, 75],
+        'playback-logger': [80, 20],
+      },
       plugins: [],
       projectStates: {},
       recentProjects: [],
@@ -59,5 +64,5 @@ export default () => {
       userPrefs: defaultUserPrefs,
     },
   })
-  return store;
+  return store
 }

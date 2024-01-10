@@ -24,24 +24,60 @@ export type NestedPartial<API> = {
     : API[K]
 }
 
-export default (api: Api, ...cbs: (() => void)[]) =>
-  async (
-    apiSubset: NestedPartial<Api> & {
-      mutators: NestedPartial<BrowserApiMutators>
-    } = {
-      ...api,
-      mutators,
-    },
-  ) => {
-    window.sideAPI = apiSubset as Api & { mutators: BrowserApiMutators }
-    if (cbs?.length) {
-      for (const cb of cbs) {
-        await cb()
-      }
-    }
-
-    return cbs.reduce((acc, cb) => () => {
-        acc()
-        cb()
-    })
+function isDictionary(obj: any): obj is Record<string, unknown> {
+  if (typeof obj !== 'object' || obj === null) {
+    return false
   }
+
+  for (const key in obj) {
+    if (typeof key !== 'string') {
+      return false
+    }
+  }
+
+  return true
+}
+
+function getApiSubset(
+  originalObj: any,
+  nestedSubset: any
+): Record<string, any> | undefined {
+  if (!isDictionary(originalObj)) {
+    return originalObj
+  }
+  if (!isDictionary(nestedSubset)) {
+    return undefined
+  }
+  const results: Record<string, any> = {}
+  for (const key in nestedSubset) {
+    const result = getApiSubset(originalObj[key], nestedSubset[key])
+    if (result === undefined) {
+      results[key] = originalObj[key]
+    } else {
+      results[key] = result
+    }
+  }
+  return results
+}
+
+type ApiWithMutators = Api & {
+  mutators: BrowserApiMutators
+}
+
+export default async (api: NestedPartial<Api>, ...cbs: (() => void)[]) => {
+  window.sideAPI = {
+    ...api,
+    mutators: getApiSubset(mutators, api),
+  } as ApiWithMutators
+  console.log(api, mutators, getApiSubset(mutators, api))
+  if (cbs?.length) {
+    for (const cb of cbs) {
+      await cb()
+    }
+  }
+
+  return cbs.reduce((acc, cb) => () => {
+    acc()
+    cb()
+  })
+}

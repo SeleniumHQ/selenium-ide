@@ -15,6 +15,7 @@ import PluginsController from './session/controllers/Plugins'
 import PolyfillController from './session/controllers/Polyfill'
 import ProjectsController from './session/controllers/Projects'
 import RecorderController from './session/controllers/Recorder'
+import ResizablePanelsController from './session/controllers/ResizablePanels'
 import StateController from './session/controllers/State'
 import SuitesController from './session/controllers/Suites'
 import SystemController from './session/controllers/System'
@@ -53,6 +54,7 @@ export interface Session {
   projects: ProjectsController
   polyfill: PolyfillController
   recorder: RecorderController
+  resizablePanels: ResizablePanelsController
   state: StateController
   store: Storage
   suites: SuitesController
