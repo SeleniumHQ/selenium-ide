@@ -1,10 +1,13 @@
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import React from 'react'
 import { SIDEMainProps } from '../../components/types'
 import EditorToolbar from '../../components/Drawer/EditorToolbar'
-import TestNewDialog from './TestNewDialog'
-import { FormControl, InputLabel } from '@mui/material'
+import TestCreateDialog from './TestCreateDialog'
+import TestRenameDialog from './TestRenameDialog'
+import TestDeleteDialog from './TestDeleteDialog'
 
 const TestSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
   session,
@@ -13,22 +16,22 @@ const TestSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
     project: { tests },
     state: { activeTestID },
   } = session
-  const [disabled, setDisabled] = React.useState(false)
-  const [confirmNew, setConfirmNew] = React.useState(false)
+  const [disabled /*, setDisabled*/] = React.useState(false)
+  const [confirmDelete, setConfirmDelete] = React.useState(false)
+  const [confirmRename, setConfirmRename] = React.useState(false)
+  const [confirmCreate, setConfirmCreate] = React.useState(false)
+  const activeTestName = tests.find((t) => t.id === activeTestID)?.name ?? ''
   return (
     <>
       <EditorToolbar
         className="py-3"
         disabled={disabled}
-        onAdd={async () => {
-          setDisabled(true)
-          const test = await window.sideAPI.tests.create()
-          await window.sideAPI.state.setActiveTest(test.id)
-          setDisabled(false)
-        }}
+        onAdd={() => setConfirmCreate(true)}
+        onRemove={activeTestID ? async () => setConfirmDelete(true) : undefined}
+        onEdit={activeTestID ? async () => setConfirmRename(true) : undefined}
       >
         <FormControl className="flex flex-1">
-          <InputLabel id="test-select-label">Test</InputLabel>
+          <InputLabel id="test-select-label">Selected Test</InputLabel>
           <Select
             label="test-select-label"
             onChange={async (event) => {
@@ -37,6 +40,7 @@ const TestSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
                 await window.sideAPI.state.setActiveTest(test.id)
               }
             }}
+            margin="dense"
             placeholder={tests.length ? 'Select a test' : 'No tests found'}
             size="small"
             value={activeTestID}
@@ -49,7 +53,23 @@ const TestSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
           </Select>
         </FormControl>
       </EditorToolbar>
-      <TestNewDialog confirmNew={confirmNew} setConfirmNew={setConfirmNew} />
+      {confirmDelete && (
+        <TestDeleteDialog
+          open
+          setOpen={setConfirmDelete}
+          testID={activeTestID}
+          testName={activeTestName}
+        />
+      )}
+      {confirmRename && (
+        <TestRenameDialog
+          open
+          setOpen={setConfirmRename}
+          testID={activeTestID}
+          testName={activeTestName}
+        />
+      )}
+      {confirmCreate && <TestCreateDialog open setOpen={setConfirmCreate} />}
     </>
   )
 }

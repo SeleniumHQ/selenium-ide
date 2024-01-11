@@ -24,6 +24,7 @@ const SuiteCustomizer: React.FC<Pick<SIDEMainProps, 'session'>> = ({
   return (
     <>
       <EditorToolbar
+        elevation={4}
         onView={() => window.sideAPI.state.toggleSuiteMode('viewer')}
       >
         <span className="ml-4">Suite Editor</span>

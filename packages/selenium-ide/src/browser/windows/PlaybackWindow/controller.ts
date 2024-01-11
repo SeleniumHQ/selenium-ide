@@ -6,5 +6,6 @@ export const window: WindowConfig['window'] = () => ({
   resizable: false,
   roundedCorners: false,
   show: false,
+  skipTaskbar: true,
   title: 'Playback Window',
 })

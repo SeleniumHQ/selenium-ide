@@ -13,21 +13,26 @@ const {
 type CloseReason = 'Create' | 'Cancel'
 
 export interface SuiteNewDialogProps {
-  confirmNew: boolean
-  setConfirmNew: React.Dispatch<React.SetStateAction<boolean>>
+  open: boolean
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({
-  confirmNew,
-  setConfirmNew,
+  open,
+  setOpen,
 }) => {
   const [suiteName, setSuiteName] = React.useState('')
+
+  const createSuite = async () => {
+    const newSuite = await window.sideAPI.suites.create(suiteName)
+    setSelected(newSuite.id)
+  }
 
   const handleClose = async (value: CloseReason) => {
     if (value === 'Create') {
       createSuite()
     }
-    setConfirmNew(false)
+    setOpen(false)
   }
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
@@ -35,18 +40,12 @@ const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({
     if (event.key === 'Enter') {
       event.preventDefault()
       event.stopPropagation()
-      createSuite()
-      setConfirmNew(false)
+      handleClose('Create')
     }
   }
 
-  const createSuite = async () => {
-    const activeSuite = (await window.sideAPI.suites.create(suiteName)).id
-    setSelected(activeSuite)
-  }
-
   return (
-    <Dialog open={confirmNew} onClose={handleClose} style={{ zIndex: 99999 }}>
+    <Dialog open={open} onClose={handleClose}>
       <DialogContent>
         <DialogContentText>Please specify the new suite name</DialogContentText>
         <TextField

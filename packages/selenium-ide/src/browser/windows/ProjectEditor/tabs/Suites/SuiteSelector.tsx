@@ -1,10 +1,13 @@
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import React from 'react'
 import { SIDEMainProps } from '../../components/types'
 import EditorToolbar from '../../components/Drawer/EditorToolbar'
-import SuiteNewDialog from './SuiteNewDialog'
-import { FormControl, InputLabel } from '@mui/material'
+import SuiteCreateDialog from './SuiteCreateDialog'
+import SuiteRenameDialog from './SuiteRenameDialog'
+import SuiteDeleteDialog from './SuiteDeleteDialog'
 
 const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
   session,
@@ -13,22 +16,22 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
     project: { suites },
     state: { activeSuiteID },
   } = session
-  const [disabled, setDisabled] = React.useState(false)
-  const [confirmNew, setConfirmNew] = React.useState(false)
+  const [disabled /*, setDisabled*/] = React.useState(false)
+  const [confirmDelete, setConfirmDelete] = React.useState(false)
+  const [confirmRename, setConfirmRename] = React.useState(false)
+  const [confirmCreate, setConfirmCreate] = React.useState(false)
+  const activeSuiteName = suites.find((t) => t.id === activeSuiteID)?.name ?? ''
   return (
     <>
       <EditorToolbar
         className="py-3"
         disabled={disabled}
-        onAdd={async () => {
-          setDisabled(true)
-          const suite = await window.sideAPI.suites.create()
-          await window.sideAPI.state.setActiveSuite(suite.id)
-          setDisabled(false)
-        }}
+        onAdd={() => setConfirmCreate(true)}
+        onRemove={activeSuiteID ? async () => setConfirmDelete(true) : undefined}
+        onEdit={activeSuiteID ? async () => setConfirmRename(true) : undefined}
       >
         <FormControl className="flex flex-1">
-          <InputLabel id="suite-select-label">Suite</InputLabel>
+          <InputLabel id="suite-select-label">Selected Suite</InputLabel>
           <Select
             label="suite-select-label"
             onChange={async (event) => {
@@ -37,6 +40,7 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
                 await window.sideAPI.state.setActiveSuite(suite.id)
               }
             }}
+            margin="dense"
             placeholder={suites.length ? 'Select a suite' : 'No suites found'}
             size="small"
             value={activeSuiteID}
@@ -49,7 +53,25 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
           </Select>
         </FormControl>
       </EditorToolbar>
-      <SuiteNewDialog confirmNew={confirmNew} setConfirmNew={setConfirmNew} />
+      {confirmDelete && (
+        <SuiteDeleteDialog
+          open
+          setOpen={setConfirmDelete}
+          suiteID={activeSuiteID}
+          suiteName={activeSuiteName}
+        />
+      )}
+      {confirmRename && (
+        <SuiteRenameDialog
+          open
+          setOpen={setConfirmRename}
+          suiteID={activeSuiteID}
+          suiteName={activeSuiteName}
+        />
+      )}
+      {confirmCreate && (
+        <SuiteCreateDialog open setOpen={setConfirmCreate} />
+      )}
     </>
   )
 }

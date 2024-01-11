@@ -25,12 +25,11 @@ const NoTestFound = () => (
   </>
 )
 
-const TestsTab: React.FC<
-  Pick<
-    SIDEMainProps,
-    'openDrawer' | 'session' | 'setOpenDrawer' | 'setTab' | 'tab'
-  >
-> = ({ openDrawer, session, setOpenDrawer, setTab, tab }) => {
+const TestsTab: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = ({
+  session,
+  setTab,
+  tab,
+}) => {
   const {
     state: {
       activeTestID,
@@ -70,9 +69,7 @@ const TestsTab: React.FC<
     <Box className="fill flex flex-col">
       <Box className="flex-initial">
         <AppBar
-          openDrawer={openDrawer}
           session={session}
-          setOpenDrawer={setOpenDrawer}
           setTab={setTab}
           tab={tab}
         />

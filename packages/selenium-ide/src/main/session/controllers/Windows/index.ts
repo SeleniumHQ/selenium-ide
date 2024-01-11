@@ -219,17 +219,30 @@ export default class WindowsController extends BaseController {
     return true
   }
 
-  async getPlaybackWindowByHandle(handle: string) {
+  getPlaybackWindowByHandle(handle: string) {
     const id = this.handlesToIDs[handle]
-    console.log('match?', handle, id)
     return this.playbackWindows.find((bw) => bw.id === id)
   }
 
-  async getPlaybackWindowHandleByID(id: number) {
+  getPlaybackWindowHandleByID(id: number) {
     const handle = Object.entries(this.handlesToIDs).find(
       ([_, value]) => value === id
     )?.[0]
     return handle
+  }
+
+  async closePlaybackWindow(id: number) {
+    const window = BrowserWindow.fromId(id)
+    if (window) {
+      window.close()
+    }
+  }
+
+  async focusPlaybackWindow(id: number) {
+    const window = await BrowserWindow.fromId(id)
+    if (window) {
+      window.focus()
+    }
   }
 
   async openPlaybackWindow(opts: BrowserWindowConstructorOptions = {}) {
@@ -241,6 +254,9 @@ export default class WindowsController extends BaseController {
       ...opts,
       ...playbackScreenPosition,
       parent: await this.session.windows.get(projectEditorWindowName),
+    })
+    this.session.api.windows.onPlaybackWindowOpened.dispatchEvent(window.id, {
+      title: window.getTitle(),
     })
     this.handlePlaybackWindow(window)
     window.showInactive()
@@ -289,13 +305,38 @@ export default class WindowsController extends BaseController {
         this.playbackWindows.splice(windowIndex, 1)
         this.playbackWindows.push(window)
       }
+      this.session.api.windows.onPlaybackWindowChanged.dispatchEvent(
+        window.id,
+        {
+          focused: true,
+        }
+      )
     })
-    window.on('closed', () => this.removePlaybackWIndow(window))
+    window.on('blur', () => {
+      this.session.api.windows.onPlaybackWindowChanged.dispatchEvent(
+        window.id,
+        {
+          focused: false,
+        }
+      )
+    })
+    window.webContents.on('did-navigate', () => {
+      this.session.api.windows.onPlaybackWindowChanged.dispatchEvent(
+        window.id,
+        {
+          title: window.webContents.getURL(),
+        }
+      )
+    })
+    window.on('closed', () => {
+      this.session.api.windows.onPlaybackWindowClosed.dispatchEvent(window.id)
+      this.removePlaybackWIndow(window)
+    })
   }
 
   async removePlaybackWIndow(window: Electron.BrowserWindow) {
     this.playbackWindows.splice(this.playbackWindows.indexOf(window), 1)
-    if (this.playbackWindows.length === 1) {
+    if (this.playbackWindows.length === 0) {
       if (this.session.state.state.status === 'recording') {
         await this.session.api.recorder.stop()
       }

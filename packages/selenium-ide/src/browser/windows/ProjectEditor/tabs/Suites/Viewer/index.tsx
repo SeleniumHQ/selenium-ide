@@ -18,11 +18,12 @@ const SuiteViewer: React.FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
   return (
     <>
       <EditorToolbar
+        elevation={4}
         onEdit={() => window.sideAPI.state.toggleSuiteMode('editor')}
       >
         <span className="ml-4">Suite Player</span>
       </EditorToolbar>
-      <List className='overflow-y pt-0' dense>
+      <List className="overflow-y pt-0" dense>
         {activeSuite.tests.map((testID) => {
           const test = tests.find(hasID(testID)) as TestShape
           const lastCommand = testResults[test.id]?.lastCommand

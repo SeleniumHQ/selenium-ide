@@ -13,21 +13,26 @@ const {
 type CloseReason = 'Create' | 'Cancel'
 
 export interface TestNewDialogProps {
-  confirmNew: boolean
-  setConfirmNew: React.Dispatch<React.SetStateAction<boolean>>
+  open: boolean
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const TestNewDialog: React.FC<TestNewDialogProps> = ({
-  confirmNew,
-  setConfirmNew,
+  open,
+  setOpen,
 }) => {
   const [testName, setTestName] = React.useState('')
+
+  const createTest = async () => {
+    const newTest = await window.sideAPI.tests.create(testName)
+    setSelected(newTest.id)
+  }
 
   const handleClose = async (value: CloseReason) => {
     if (value === 'Create') {
       createTest()
     }
-    setConfirmNew(false)
+    setOpen(false)
   }
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>): void => {
@@ -35,20 +40,12 @@ const TestNewDialog: React.FC<TestNewDialogProps> = ({
     if (event.key === 'Enter') {
       event.preventDefault()
       event.stopPropagation()
-      createTest()
-      setConfirmNew(false)
+      handleClose('Create')
     }
   }
 
-  const createTest = async () => {
-    console.log('Create ' + testName)
-    const activeTest = (await window.sideAPI.tests.create(testName)).id
-    console.log('activeTest is ' + activeTest)
-    setSelected(activeTest)
-  }
-
   return (
-    <Dialog open={confirmNew} onClose={handleClose} style={{ zIndex: 99999 }}>
+    <Dialog open={open} onClose={handleClose}>
       <DialogContent>
         <DialogContentText>Please specify the new test name</DialogContentText>
         <TextField

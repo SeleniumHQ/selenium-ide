@@ -1,5 +1,3 @@
-import IconButton from '@mui/material/IconButton'
-import MenuIcon from '@mui/icons-material/Menu'
 import React from 'react'
 import TabPanel from '../Tab/Panel'
 import SuiteControls from '../../tabs/Suites/Controls'
@@ -9,29 +7,13 @@ import { SIDEMainProps } from '../types'
 import AppBarTabs from './AppBarTabs'
 import { Paper } from '@mui/material'
 
-const SIDEAppBar: React.FC<SIDEMainProps> = ({
-  openDrawer,
+const SIDEAppBar: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = ({
   session,
-  setOpenDrawer,
   setTab,
   tab,
 }) => {
   return (
-    <Paper className="flex flex-row width-100" elevation={5} square>
-      <IconButton
-        aria-label="openDrawer drawer"
-        color="inherit"
-        onClick={() => setOpenDrawer(true)}
-        sx={{
-          flex: 0,
-          paddingX: 2,
-          borderRadius: 0.5,
-          ...(openDrawer && { display: 'none' }),
-        }}
-        size="small"
-      >
-        <MenuIcon />
-      </IconButton>
+    <Paper className="flex flex-row width-100" elevation={15} square>
       <AppBarTabs setTab={setTab} tab={tab} />
       <div className="flex flex-1" />
       <TabPanel index={TESTS_TAB} value={tab}>

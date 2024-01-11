@@ -110,6 +110,7 @@ body,
   display: block;
   text-overflow: ellipsis;
   overflow-x: hidden;
+  white-space: nowrap;
 }
 
 /**
@@ -174,6 +175,16 @@ body,
   margin-bottom: auto;
 }
 
+.m-0 {
+  margin: 0;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mx-2 {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
 .m-2 {
   margin: 0.5rem;
 }
@@ -208,9 +219,23 @@ body,
 .pt-4 {
   padding-top: 1rem;
 }
+.ps-3 {
+  padding-left: 0.5rem;
+}
+.ps-4 {
+  padding-left: 1rem;
+}
+.px-3 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
+}
+.py-2 {
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
 }
 .py-3 {
   padding-bottom: 0.5rem;
@@ -219,6 +244,13 @@ body,
 .py-4 {
   padding-bottom: 1rem;
   padding-top: 1rem;
+}
+
+/**
+ * Width
+ */
+.mw-200 {
+  max-width: 200px;
 }
 
 /**

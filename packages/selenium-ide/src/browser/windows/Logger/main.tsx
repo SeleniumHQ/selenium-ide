@@ -42,7 +42,7 @@ const SIDELogger: React.FC = () => {
         </Paper>
       </div>
       <pre
-        className="fill overflow-y"
+        className="fill m-0 overflow-y"
         ref={logContainer}
         style={consoleStyle}
       />

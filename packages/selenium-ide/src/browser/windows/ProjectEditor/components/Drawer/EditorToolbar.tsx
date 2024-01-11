@@ -14,32 +14,20 @@ export interface EditorToolbarIconsProps {
   disabled?: boolean
   onAdd?: () => void
   onEdit?: () => void
+  editText?: string
   onRemove?: () => void
   onView?: () => void
 }
 
 export const EditorToolbarIcons: FC<EditorToolbarIconsProps> = ({
   disabled = false,
+  editText = 'Edit',
   onAdd,
   onEdit,
   onRemove,
   onView,
 }) => (
   <>
-    {onAdd ? (
-      <Box sx={{ flex: 0 }}>
-        <Tooltip title="Add">
-          <IconButton
-            {...baseControlProps}
-            color="success"
-            disabled={disabled}
-            onClick={onAdd}
-          >
-            <AddIcon />
-          </IconButton>
-        </Tooltip>
-      </Box>
-    ) : null}
     {onRemove ? (
       <Box sx={{ flex: 0 }}>
         <Tooltip title="Remove">
@@ -56,7 +44,7 @@ export const EditorToolbarIcons: FC<EditorToolbarIconsProps> = ({
     ) : null}
     {onEdit ? (
       <Box sx={{ flex: 0 }}>
-        <Tooltip title="Edit">
+        <Tooltip title={editText}>
           <IconButton
             {...baseControlProps}
             color="info"
@@ -64,6 +52,20 @@ export const EditorToolbarIcons: FC<EditorToolbarIconsProps> = ({
             onClick={onEdit}
           >
             <EditIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ) : null}
+    {onAdd ? (
+      <Box sx={{ flex: 0 }}>
+        <Tooltip title="Add">
+          <IconButton
+            {...baseControlProps}
+            color="success"
+            disabled={disabled}
+            onClick={onAdd}
+          >
+            <AddIcon />
           </IconButton>
         </Tooltip>
       </Box>

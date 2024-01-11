@@ -15,8 +15,8 @@ const AvailableSuiteTestList: FC<AvailableSuiteTestListProps> = ({
   allTests,
 }) => (
   <Box className="flex flex-col flex-1">
-    <EditorToolbar className="flex-initial" elevation={0}>
-      <span className="ml-4">Available tests</span>
+    <EditorToolbar className="flex-initial" elevation={2}>
+      <span className="ml-4 py-2">Available tests</span>
     </EditorToolbar>
     <List
       className="flex flex-col flex-1 overflow-y pt-0"

@@ -30,8 +30,8 @@ const CurrentSuiteTestList: FC<CurrentSuiteTestListProps> = ({
   useKeyboundNav(tests, selectedIndexes)
   return (
     <Box className="flex flex-col flex-1">
-      <EditorToolbar className="flex-initial" elevation={0}>
-        <span className="ml-4">Tests in suite</span>
+      <EditorToolbar className="flex-initial" elevation={2}>
+        <span className="ml-4 py-2">Tests in suite</span>
       </EditorToolbar>
       <ReorderableList className="flex flex-col flex-1 overflow-y pt-0" dense>
         {preview.map(([id, origIndex], index) => {

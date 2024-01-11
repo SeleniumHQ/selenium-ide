@@ -7,11 +7,8 @@ import AppBar from '../../components/AppBar'
 import SuiteSelector from './SuiteSelector'
 
 const SuitesTab: React.FC<
-  Pick<
-    SIDEMainProps,
-    'openDrawer' | 'session' | 'setOpenDrawer' | 'setTab' | 'tab'
-  >
-> = ({ openDrawer, session, setOpenDrawer, setTab, tab }) => {
+  Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>
+> = ({ session, setTab, tab }) => {
   const Component =
     session.state.editor.suiteMode === 'editor' ? SuiteEditor : SuiteViewer
 
@@ -19,9 +16,7 @@ const SuitesTab: React.FC<
     <Box className="fill flex flex-col">
       <Box className="flex-initial">
         <AppBar
-          openDrawer={openDrawer}
           session={session}
-          setOpenDrawer={setOpenDrawer}
           setTab={setTab}
           tab={tab}
         />
