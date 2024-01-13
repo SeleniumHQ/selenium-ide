@@ -91,10 +91,10 @@ export default class Recorder {
     command: string,
     target: string | [string, string][],
     value: string | [string, string][],
-    insertBeforeLastCommand: boolean = false,
-    actualFrameLocation?: string
+    insertBeforeLastCommand = false,
+    actualFrameLocation: string | null = null,
+    overrideRecorder = false
   ) {
-    console.log('record', event, command, target, value, insertBeforeLastCommand)
     let newCommand: RecordNewCommandInput = {
       command,
       target,
@@ -115,7 +115,7 @@ export default class Recorder {
           newCommand = result.command
       }
     }
-    window.sideAPI.recorder.recordNewCommand(newCommand)
+    window.sideAPI.recorder.recordNewCommand(newCommand, overrideRecorder)
   }
 
   setWindowHandle(event: ExpandedMessageEvent) {

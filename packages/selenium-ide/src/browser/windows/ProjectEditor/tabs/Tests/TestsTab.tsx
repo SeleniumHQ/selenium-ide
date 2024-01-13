@@ -9,10 +9,10 @@ import React, { useRef } from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import CommandTable from './TestCommandTable'
-import MainHeader from '../../components/Main/Header'
+import MainHeader from '../../../../components/Main/Header'
 import { loadingID } from '@seleniumhq/side-api/dist/constants/loadingID'
-import { SIDEMainProps } from '../../components/types'
-import AppBar from '../../components/AppBar'
+import { SIDEMainProps } from '../../../../components/types'
+import AppBar from '../../../../components/AppBar'
 import TestSelector from './TestSelector'
 
 const sxCenter = { textAlign: 'center' }

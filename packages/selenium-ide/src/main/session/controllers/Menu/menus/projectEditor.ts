@@ -1,14 +1,13 @@
-import { Menu } from 'electron'
-import { MenuComponent, Session } from 'main/types'
+import { MenuComponent } from 'main/types'
+import { menuFactoryFromCommandFactory } from '../utils'
 
-export const projectEditorCommands: MenuComponent = (session) => async () =>
+export const commands: MenuComponent = (session) => () =>
   [
     {
       accelerator: 'CommandOrControl+N',
       label: 'New Project',
       click: async () => {
         await session.api.projects.new()
-
       },
     },
     { type: 'separator' },
@@ -27,7 +26,7 @@ export const projectEditorCommands: MenuComponent = (session) => async () =>
       click: async () => {
         await session.projects.showRecents()
       },
-      submenu: (await session.projects.getRecent()).map((project) => ({
+      submenu: (session.projects.getRecent()).map((project) => ({
         click: async () => {
           await session.api.projects.load(project)
         },
@@ -58,9 +57,4 @@ export const projectEditorCommands: MenuComponent = (session) => async () =>
     },
   ]
 
-const projectEditorMenu = (session: Session) => async () => {
-  const menuItems = await projectEditorCommands(session)()
-  return Menu.buildFromTemplate(menuItems)
-}
-
-export default projectEditorMenu
+export default menuFactoryFromCommandFactory(commands)

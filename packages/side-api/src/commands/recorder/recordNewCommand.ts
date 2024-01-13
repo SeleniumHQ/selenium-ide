@@ -16,7 +16,8 @@ import { mutator as updateStepSelection } from '../state/updateStepSelection'
  * Adds new commands to the current test at the current index
  */
 export type Shape = (
-  cmd: RecordNewCommandInput
+  cmd: RecordNewCommandInput,
+  overrideRecorder?: boolean
 ) => Promise<CommandShape[] | null>
 
 const traverseFrame = (target: string) =>

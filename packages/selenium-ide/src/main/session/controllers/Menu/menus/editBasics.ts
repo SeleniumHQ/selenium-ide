@@ -1,7 +1,7 @@
-import { Menu } from 'electron'
-import { MenuComponent, Session } from 'main/types'
+import { MenuComponent } from 'main/types'
+import { menuFactoryFromCommandFactory } from '../utils'
 
-export const editBasicsCommands: MenuComponent = () => async () =>
+export const commands: MenuComponent = () => () =>
   [
     { label: 'Undo', role: 'undo' },
     { label: 'Redo', role: 'redo' },
@@ -11,9 +11,4 @@ export const editBasicsCommands: MenuComponent = () => async () =>
     { label: 'Paste', role: 'paste' },
   ]
 
-const editBasicsMenu = (session: Session) => async () => {
-  const menuItems = await editBasicsCommands(session)()
-  return Menu.buildFromTemplate(menuItems)
-}
-
-export default editBasicsMenu
+export default menuFactoryFromCommandFactory(commands)

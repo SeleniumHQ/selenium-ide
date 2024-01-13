@@ -3,8 +3,8 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import React from 'react'
-import { SIDEMainProps } from '../../components/types'
-import EditorToolbar from '../../components/Drawer/EditorToolbar'
+import { SIDEMainProps } from '../../../../components/types'
+import EditorToolbar from '../../../../components/Drawer/EditorToolbar'
 import TestCreateDialog from './TestCreateDialog'
 import TestRenameDialog from './TestRenameDialog'
 import TestDeleteDialog from './TestDeleteDialog'
@@ -27,8 +27,11 @@ const TestSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
         className="py-3"
         disabled={disabled}
         onAdd={() => setConfirmCreate(true)}
+        addText="Add Test"
         onRemove={activeTestID ? async () => setConfirmDelete(true) : undefined}
+        removeText="Remove Test"
         onEdit={activeTestID ? async () => setConfirmRename(true) : undefined}
+        editText="Rename Test"
       >
         <FormControl className="flex flex-1">
           <InputLabel id="test-select-label">Selected Test</InputLabel>

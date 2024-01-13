@@ -3,10 +3,9 @@ import { getActiveSuite } from '@seleniumhq/side-api/dist/helpers/getActiveData'
 import React from 'react'
 import SuiteEditor from './SuiteEditor'
 import AvailableSuiteTestList from './AvailableSuiteTestList'
-import EditorToolbar from '../../../components/Drawer/EditorToolbar'
 import { TestShape } from '@seleniumhq/side-model'
 import CurrentSuiteTestList from './CurrentSuiteTestList'
-import { SIDEMainProps } from 'browser/windows/ProjectEditor/components/types'
+import { SIDEMainProps } from 'browser/components/types'
 import { Box } from '@mui/material'
 
 const SuiteCustomizer: React.FC<Pick<SIDEMainProps, 'session'>> = ({
@@ -23,12 +22,6 @@ const SuiteCustomizer: React.FC<Pick<SIDEMainProps, 'session'>> = ({
 
   return (
     <>
-      <EditorToolbar
-        elevation={4}
-        onView={() => window.sideAPI.state.toggleSuiteMode('viewer')}
-      >
-        <span className="ml-4">Suite Editor</span>
-      </EditorToolbar>
       <Box className="flex-1 flex-row no-overflow-y">
         <CurrentSuiteTestList
           activeSuite={activeSuiteID}

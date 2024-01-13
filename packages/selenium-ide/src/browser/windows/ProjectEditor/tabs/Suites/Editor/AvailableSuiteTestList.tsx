@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import List from '@mui/material/List'
 import React, { FC } from 'react'
 import AvailableSuiteTestRow from './AvailableSuiteTestRow'
-import EditorToolbar from 'browser/windows/ProjectEditor/components/Drawer/EditorToolbar'
+import EditorToolbar from 'browser/components/Drawer/EditorToolbar'
 
 export interface AvailableSuiteTestListProps {
   activeSuite: string

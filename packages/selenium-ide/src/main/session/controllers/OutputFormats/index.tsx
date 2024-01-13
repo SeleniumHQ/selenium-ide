@@ -23,7 +23,7 @@ const builtinFormats = [
  */
 export default class OutputFormatsController extends BaseController {
   customFormats: LanguageEmitter[] = []
-  async getFormats() {
+  getFormats() {
     return this.customFormats
       .concat(builtinFormats)
       .map((format) => format?.opts?.name)

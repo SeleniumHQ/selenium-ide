@@ -57,9 +57,10 @@ export default class RecorderController extends BaseController {
 
   async recordNewCommand(
     cmd: RecordNewCommandInput,
+    overrideRecorder = false
   ): Promise<CommandShape[] | null> {
     const session = await this.session.state.get()
-    if (session.state.status !== 'recording') {
+    if (session.state.status !== 'recording' && !overrideRecorder) {
       return null
     }
     const activeWindowHandleID = getActiveWindowHandleID(session) || 'root'

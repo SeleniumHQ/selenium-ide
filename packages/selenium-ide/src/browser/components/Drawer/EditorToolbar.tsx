@@ -13,24 +13,30 @@ import baseControlProps from '../Controls/BaseProps'
 export interface EditorToolbarIconsProps {
   disabled?: boolean
   onAdd?: () => void
+  addText?: string
   onEdit?: () => void
   editText?: string
   onRemove?: () => void
+  removeText?: string
   onView?: () => void
+  viewText?: string
 }
 
 export const EditorToolbarIcons: FC<EditorToolbarIconsProps> = ({
   disabled = false,
-  editText = 'Edit',
   onAdd,
+  addText = "Add",
   onEdit,
+  editText = 'Edit',
   onRemove,
+  removeText = 'Remove',
   onView,
+  viewText = 'View',
 }) => (
   <>
     {onRemove ? (
       <Box sx={{ flex: 0 }}>
-        <Tooltip title="Remove">
+        <Tooltip title={removeText}>
           <IconButton
             {...baseControlProps}
             color="warning"
@@ -56,23 +62,9 @@ export const EditorToolbarIcons: FC<EditorToolbarIconsProps> = ({
         </Tooltip>
       </Box>
     ) : null}
-    {onAdd ? (
-      <Box sx={{ flex: 0 }}>
-        <Tooltip title="Add">
-          <IconButton
-            {...baseControlProps}
-            color="success"
-            disabled={disabled}
-            onClick={onAdd}
-          >
-            <AddIcon />
-          </IconButton>
-        </Tooltip>
-      </Box>
-    ) : null}
     {onView ? (
       <Box sx={{ flex: 0 }}>
-        <Tooltip title="View Playback Results">
+        <Tooltip title={viewText}>
           <IconButton
             {...baseControlProps}
             color="info"
@@ -80,6 +72,20 @@ export const EditorToolbarIcons: FC<EditorToolbarIconsProps> = ({
             onClick={onView}
           >
             <VisibilityIcon />
+          </IconButton>
+        </Tooltip>
+      </Box>
+    ) : null}
+    {onAdd ? (
+      <Box sx={{ flex: 0 }}>
+        <Tooltip title={addText}>
+          <IconButton
+            {...baseControlProps}
+            color="success"
+            disabled={disabled}
+            onClick={onAdd}
+          >
+            <AddIcon />
           </IconButton>
         </Tooltip>
       </Box>
@@ -111,9 +117,13 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
   disabled = false,
   elevation = 7,
   onAdd,
+  addText = "Add",
   onEdit,
+  editText = 'Edit',
   onRemove,
+  removeText = 'Remove',
   onView,
+  viewText = 'View',
   ...props
 }) => (
   <DrawerHeader
@@ -126,9 +136,13 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
     <EditorToolbarIcons
       disabled={disabled}
       onAdd={onAdd}
+      addText={addText}
       onEdit={onEdit}
+      editText={editText}
       onRemove={onRemove}
+      removeText={removeText}
       onView={onView}
+      viewText={viewText}
     />
   </DrawerHeader>
 )

@@ -58,6 +58,9 @@ function injectRecorder() {
 preload(
   {
     channels: api.channels,
+    menus: {
+      openSync: () => api.menus.openSync('playback'),
+    },
     plugins: {
       addRecorderPreprocessor: (fn) => {
         recorderProcessors.push(fn)

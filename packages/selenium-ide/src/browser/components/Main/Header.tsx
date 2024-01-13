@@ -1,6 +1,7 @@
+import Box, {BoxProps} from '@mui/material/Box'
 import { styled } from '@mui/material/styles'
 
-const MainHeader = styled('div')(() => ({
+const MainHeader: React.FC<BoxProps> = styled(Box)(() => ({
   alignItems: 'center',
   display: 'flex',
   // necessary for content to be below app bar

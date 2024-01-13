@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack'
 import { CoreSessionData } from '@seleniumhq/side-api'
 import TextField from 'browser/components/UncontrolledTextField'
 import React, { FC } from 'react'
-import EditorToolbar from '../../components/Drawer/EditorToolbar'
+import EditorToolbar from '../../../../components/Drawer/EditorToolbar'
 
 export interface ProjectSettingsProps {
   project: CoreSessionData['project']
@@ -81,6 +81,7 @@ const ProjectSettings: FC<ProjectSettingsProps> = ({
       subheader={
         <EditorToolbar
           onAdd={() => projectCreate()}
+          addText='Add Plugin'
         >
           Project Plugins
         </EditorToolbar>

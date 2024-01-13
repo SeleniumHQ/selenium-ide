@@ -1,4 +1,5 @@
-import { MenuItemConstructorOptions } from 'electron'
+import { Menu, MenuItemConstructorOptions } from 'electron'
+import { Session } from 'main/types'
 
 export const multipleCommand = (
   accelerators: string[],
@@ -9,3 +10,13 @@ export const multipleCommand = (
     accelerator,
     visible: index === 0,
   }))
+
+export const menuFactoryFromCommandFactory =
+  (
+    commands: (
+      session: Session
+    ) => (...args: any[]) => MenuItemConstructorOptions[]
+  ) =>
+  (session: Session) =>
+  async (...args: any[]) =>
+    Menu.buildFromTemplate(commands(session)(...args))

@@ -1,9 +1,9 @@
 import { StateShape } from '@seleniumhq/side-api'
 import React, { FC } from 'react'
-import PlayButton from '../../components/Controls/PlayButton'
-import RecordButton from '../../components/Controls/RecordButton'
-import StopButton from '../../components/Controls/StopButton'
-import PauseButton from '../../components/Controls/PauseButton'
+import PlayButton from '../../../../components/Controls/PlayButton'
+import RecordButton from '../../../../components/Controls/RecordButton'
+import StopButton from '../../../../components/Controls/StopButton'
+import PauseButton from '../../../../components/Controls/PauseButton'
 
 export interface TestControlsProps {
   state: StateShape

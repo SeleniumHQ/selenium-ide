@@ -42,7 +42,13 @@ const TestDeleteDialog: React.FC<TestDeleteDialogProps> = ({
     }
   }, [])
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog
+      classes={{
+        container: 'justify-content-start'
+      }}
+      onClose={handleClose}
+      open={open}
+    >
       <DialogContent>
         <DialogContentText>
           Are you sure you want to delete test {testName}

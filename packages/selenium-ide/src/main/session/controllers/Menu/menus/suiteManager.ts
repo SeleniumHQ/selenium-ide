@@ -1,9 +1,9 @@
-import { Menu } from 'electron'
-import { MenuComponent, Session } from 'main/types'
+import { MenuComponent } from 'main/types'
+import { menuFactoryFromCommandFactory } from '../utils'
 
-export const suiteManagerCommands: MenuComponent<[string[]]> =
-  (session) => async (suiteIDs) => {
-    const outputFormats = await session.outputFormats.getFormats()
+export const commands: MenuComponent<[string[]]> =
+  (session) => (suiteIDs) => {
+    const outputFormats = session.outputFormats.getFormats()
     return [
       {
         accelerator: 'CommandOrControl+Shift+Delete',
@@ -28,9 +28,4 @@ export const suiteManagerCommands: MenuComponent<[string[]]> =
     ]
   }
 
-const suiteManagerMenu = (session: Session) => async (suiteIDs: string[]) => {
-  const menuItems = await suiteManagerCommands(session)(suiteIDs)
-  return Menu.buildFromTemplate(menuItems)
-}
-
-export default suiteManagerMenu
+export default menuFactoryFromCommandFactory(commands)

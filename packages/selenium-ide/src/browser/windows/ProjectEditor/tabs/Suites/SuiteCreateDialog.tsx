@@ -17,10 +17,7 @@ export interface SuiteNewDialogProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({
-  open,
-  setOpen,
-}) => {
+const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({ open, setOpen }) => {
   const [suiteName, setSuiteName] = React.useState('')
 
   const createSuite = async () => {
@@ -45,7 +42,13 @@ const SuiteNewDialog: React.FC<SuiteNewDialogProps> = ({
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog
+      classes={{
+        container: 'justify-content-start',
+      }}
+      onClose={handleClose}
+      open={open}
+    >
       <DialogContent>
         <DialogContentText>Please specify the new suite name</DialogContentText>
         <TextField

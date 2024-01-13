@@ -5,7 +5,7 @@ import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
 import useReorderPreview from 'browser/hooks/useReorderPreview'
 import React, { FC } from 'react'
 import CommandListItem from './TestCommandListItem'
-import EditorToolbar from '../../components/Drawer/EditorToolbar'
+import EditorToolbar from '../../../../components/Drawer/EditorToolbar'
 
 export interface CommandListProps {
   activeTest: string
@@ -40,6 +40,7 @@ const CommandList: FC<CommandListProps> = ({
             Math.max(selectedCommandIndexes.slice(-1)[0], 0)
           )
         }
+        addText='Add Command'
         onRemove={
           commands.length > 1
             ? () =>
@@ -49,6 +50,7 @@ const CommandList: FC<CommandListProps> = ({
                 )
             : undefined
         }
+        removeText='Remove Command'
       >
         <span className="ml-4">Commands</span>
       </EditorToolbar>

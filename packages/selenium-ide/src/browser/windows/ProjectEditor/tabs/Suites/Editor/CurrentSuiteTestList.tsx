@@ -6,7 +6,7 @@ import useReorderPreview from 'browser/hooks/useReorderPreview'
 import DropTargetListItem from 'browser/components/DropTargetListItem'
 import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
 import ReorderableList from 'browser/components/ReorderableList'
-import EditorToolbar from 'browser/windows/ProjectEditor/components/Drawer/EditorToolbar'
+import EditorToolbar from 'browser/components/Drawer/EditorToolbar'
 import CurrentSuiteTestRow from './CurrentSuiteTestRow'
 
 export interface CurrentSuiteTestListProps {

@@ -2,11 +2,12 @@ export type Type = 'Handler'
 export type MenuNames =
   | 'application'
   | 'editBasics'
+  | 'playback'
   | 'projectEditor'
-  | 'testEditor'
-  | 'testManager'
-  | 'projectView'
   | 'suiteManager'
+  | 'testEditor'
+  | 'projectView'
+  | 'testManager'
   | 'textField'
 /**
  * Opens one of our available menu types. Types are governed

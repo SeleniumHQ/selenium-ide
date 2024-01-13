@@ -1,7 +1,8 @@
-import { Menu } from 'electron'
+import { menuFactoryFromCommandFactory } from '../utils'
+import { MenuComponent } from 'main/types'
 
-const textFieldMenu = () => async () =>
-  Menu.buildFromTemplate([
+export const commands: MenuComponent = () => () =>
+  [
     {
       accelerator: 'CommandOrControl+X',
       label: 'Cut',
@@ -18,18 +19,18 @@ const textFieldMenu = () => async () =>
       role: 'paste',
     },
     {
-      type: 'separator'
+      type: 'separator',
     },
     {
       accelerator: 'CommandOrControl+Z',
       label: 'Undo',
-      role: 'undo'
+      role: 'undo',
     },
     {
       accelerator: 'Shift+CommandOrControl+Z',
       label: 'Redo',
-      role: 'redo'
-    }
-  ])
+      role: 'redo',
+    },
+  ]
 
-export default textFieldMenu
+export default menuFactoryFromCommandFactory(commands)

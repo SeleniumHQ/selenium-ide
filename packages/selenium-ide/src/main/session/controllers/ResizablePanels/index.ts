@@ -46,7 +46,7 @@ export default class ResizablePanelsController extends BaseController {
     this.recalculatePlaybackWindows()
   }
   async getPanelScreenPosition(id: string) {
-    const projectWindow = await this.session.windows.get('project-main-window')
+    const projectWindow = await this.session.windows.get('project-editor')
     const projectWindowBounds = await projectWindow.getBounds()
     const panelGroupPosition =
       (await projectWindow.webContents.executeJavaScript(

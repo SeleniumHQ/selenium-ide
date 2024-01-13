@@ -1,14 +1,14 @@
-import { Menu } from 'electron'
-import { Session } from 'main/types'
-import { editBasicsCommands } from './editBasics'
-import { projectEditorCommands } from './projectEditor'
-import { testEditorCommands } from './testEditor'
-import { projectViewCommands } from './projectView'
+import { MenuComponent, Session } from 'main/types'
+import { commands as editBasicsCommands } from './editBasics'
+import { commands as projectEditorCommands } from './projectEditor'
+import { commands as testEditorCommands } from './testEditor'
+import { commands as projectViewCommands } from './projectView'
 import { platform } from 'os'
-import helpMenu from './help'
+import { commands as helpMenuCommands } from './help'
+import { menuFactoryFromCommandFactory } from '../utils'
 
-const applicationMenu = (session: Session) => async () =>
-  Menu.buildFromTemplate([
+export const commands: MenuComponent = (session: Session) => () =>
+  [
     {
       label: 'Selenium IDE',
       submenu: [
@@ -31,23 +31,23 @@ const applicationMenu = (session: Session) => async () =>
     },
     {
       label: '&File',
-      submenu: await projectEditorCommands(session)(),
+      submenu: projectEditorCommands(session)(),
     },
     {
       label: '&Edit',
       submenu: [
-        ...(await editBasicsCommands(session)()),
-        ...(await testEditorCommands(session)()),
+        ...(editBasicsCommands(session)()),
+        ...(testEditorCommands(session)()),
       ],
     },
     {
       label: '&View',
-      submenu: await projectViewCommands(session)(),
+      submenu: projectViewCommands(session)(),
     },
     {
       label: '&Help',
-      submenu: await helpMenu(session)(),
+      submenu: helpMenuCommands(session)(),
     },
-  ])
+  ]
 
-export default applicationMenu
+export default menuFactoryFromCommandFactory(commands)

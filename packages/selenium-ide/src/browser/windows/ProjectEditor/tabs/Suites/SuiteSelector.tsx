@@ -3,10 +3,9 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import React from 'react'
-import { SIDEMainProps } from '../../components/types'
-import EditorToolbar from '../../components/Drawer/EditorToolbar'
+import { SIDEMainProps } from '../../../../components/types'
+import EditorToolbar from '../../../../components/Drawer/EditorToolbar'
 import SuiteCreateDialog from './SuiteCreateDialog'
-import SuiteRenameDialog from './SuiteRenameDialog'
 import SuiteDeleteDialog from './SuiteDeleteDialog'
 
 const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
@@ -18,7 +17,6 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
   } = session
   const [disabled /*, setDisabled*/] = React.useState(false)
   const [confirmDelete, setConfirmDelete] = React.useState(false)
-  const [confirmRename, setConfirmRename] = React.useState(false)
   const [confirmCreate, setConfirmCreate] = React.useState(false)
   const activeSuiteName = suites.find((t) => t.id === activeSuiteID)?.name ?? ''
   return (
@@ -27,8 +25,23 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
         className="py-3"
         disabled={disabled}
         onAdd={() => setConfirmCreate(true)}
-        onRemove={activeSuiteID ? async () => setConfirmDelete(true) : undefined}
-        onEdit={activeSuiteID ? async () => setConfirmRename(true) : undefined}
+        addText="Add Suite"
+        onEdit={
+          activeSuiteID && session.state.editor.suiteMode === 'viewer'
+            ? async () => window.sideAPI.state.toggleSuiteMode('editor')
+            : undefined
+        }
+        editText='Edit Suite'
+        onRemove={
+          activeSuiteID ? async () => setConfirmDelete(true) : undefined
+        }
+        removeText="Remove Suite"
+        onView={
+          activeSuiteID && session.state.editor.suiteMode === 'editor'
+            ? async () => window.sideAPI.state.toggleSuiteMode('viewer')
+            : undefined
+        }
+        viewText='View Suite Playback'
       >
         <FormControl className="flex flex-1">
           <InputLabel id="suite-select-label">Selected Suite</InputLabel>
@@ -61,17 +74,7 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
           suiteName={activeSuiteName}
         />
       )}
-      {confirmRename && (
-        <SuiteRenameDialog
-          open
-          setOpen={setConfirmRename}
-          suiteID={activeSuiteID}
-          suiteName={activeSuiteName}
-        />
-      )}
-      {confirmCreate && (
-        <SuiteCreateDialog open setOpen={setConfirmCreate} />
-      )}
+      {confirmCreate && <SuiteCreateDialog open setOpen={setConfirmCreate} />}
     </>
   )
 }

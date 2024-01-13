@@ -40,9 +40,17 @@ const TestRenameDialog: React.FC<TestRenameDialogProps> = ({
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog
+      classes={{
+        container: 'justify-content-start',
+      }}
+      onClose={handleClose}
+      open={open}
+    >
       <DialogContent>
-        <DialogContentText>Please specify the updated test name</DialogContentText>
+        <DialogContentText>
+          Please specify the updated test name
+        </DialogContentText>
         <TextField
           autoFocus
           fullWidth

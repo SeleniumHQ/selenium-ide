@@ -3,7 +3,7 @@ import { CommandsStateShape } from '@seleniumhq/side-api'
 import useReorderPreview from 'browser/hooks/useReorderPreview'
 import React, { FC } from 'react'
 import CommandRow from './TestCommandRow'
-import EditorToolbar from '../../components/Drawer/EditorToolbar'
+import EditorToolbar from '../../../../components/Drawer/EditorToolbar'
 import makeKeyboundNav from 'browser/hooks/useKeyboundNav'
 import ReorderableList from 'browser/components/ReorderableList'
 import { Box } from '@mui/material'
@@ -40,6 +40,7 @@ const CommandList: FC<CommandListProps> = ({
             Math.max(selectedCommandIndexes.slice(-1)[0], 0)
           )
         }
+        addText='Add Command'
         onRemove={
           commands.length > 1
             ? () =>
@@ -49,6 +50,7 @@ const CommandList: FC<CommandListProps> = ({
                 )
             : undefined
         }
+        removeText='Remove Command'
       >
         <Box sx={{ display: 'flex', flexDirection: 'row' }}>
           <Box className="flex" sx={{ flex: 0, flexBasis: 50 }}>&nbsp;</Box>

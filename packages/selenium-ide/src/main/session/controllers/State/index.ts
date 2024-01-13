@@ -18,7 +18,7 @@ export default class StateController extends BaseController {
 
   state: StateShape = clone(defaultState)
 
-  async get(): Promise<CoreSessionData> {
+  get(): CoreSessionData {
     return {
       project: this.session.projects.project,
       state: this.state,

@@ -25,7 +25,7 @@ const playbackWindowOptions = {
   },
 }
 
-const projectEditorWindowName = 'project-main-window'
+const projectEditorWindowName = 'project-editor'
 
 export type WindowLoader = (
   opts?: BrowserWindowConstructorOptions
@@ -233,16 +233,18 @@ export default class WindowsController extends BaseController {
 
   async closePlaybackWindow(id: number) {
     const window = BrowserWindow.fromId(id)
-    if (window) {
-      window.close()
-    }
+    window!.close()
   }
 
   async focusPlaybackWindow(id: number) {
     const window = await BrowserWindow.fromId(id)
-    if (window) {
-      window.focus()
-    }
+    this.playbackWindows.forEach((bw) => {
+      if (bw !== window) {
+        bw.hide()
+      } else {
+        bw.showInactive()
+      }
+    })
   }
 
   async openPlaybackWindow(opts: BrowserWindowConstructorOptions = {}) {
@@ -305,6 +307,7 @@ export default class WindowsController extends BaseController {
         this.playbackWindows.splice(windowIndex, 1)
         this.playbackWindows.push(window)
       }
+
       this.session.api.windows.onPlaybackWindowChanged.dispatchEvent(
         window.id,
         {

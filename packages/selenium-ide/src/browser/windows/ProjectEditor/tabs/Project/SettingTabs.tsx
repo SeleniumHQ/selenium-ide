@@ -1,7 +1,7 @@
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import React from 'react'
-import { SIDEMainProps } from '../../components/types'
+import { SIDEMainProps } from '../../../../components/types'
 
 function a11yProps(name: string) {
   return {

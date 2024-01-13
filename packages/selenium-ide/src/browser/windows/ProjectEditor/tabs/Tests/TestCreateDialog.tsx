@@ -17,10 +17,7 @@ export interface TestNewDialogProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const TestNewDialog: React.FC<TestNewDialogProps> = ({
-  open,
-  setOpen,
-}) => {
+const TestNewDialog: React.FC<TestNewDialogProps> = ({ open, setOpen }) => {
   const [testName, setTestName] = React.useState('')
 
   const createTest = async () => {
@@ -45,7 +42,13 @@ const TestNewDialog: React.FC<TestNewDialogProps> = ({
   }
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog
+      classes={{
+        container: 'justify-content-start'
+      }}
+      onClose={handleClose}
+      open={open}
+    >
       <DialogContent>
         <DialogContentText>Please specify the new test name</DialogContentText>
         <TextField

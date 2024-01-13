@@ -15,7 +15,6 @@ export const window: WindowConfig['window'] = () => ({
   maximizable: false,
   show: false,
   skipTaskbar: true,
-  alwaysOnTop: false,
   useContentSize: false,
   modal: true,
   title: 'Window Prompt Polyfill',

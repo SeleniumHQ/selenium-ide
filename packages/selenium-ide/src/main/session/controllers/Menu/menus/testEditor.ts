@@ -4,14 +4,14 @@ import {
   getActiveCommandIndex,
   getActiveTest,
 } from '@seleniumhq/side-api/dist/helpers/getActiveData'
-import { Menu } from 'electron'
 import { MenuComponent, Session } from 'main/types'
+import { menuFactoryFromCommandFactory } from '../utils'
 
 export const pluralize = (str: string, num: number) =>
   num < 2 ? str : `${str}s`
 
-export const commandList: MenuComponent = (session) => async () => {
-  const sessionData = await session.state.get()
+export const commandList: MenuComponent = (session) => () => {
+  const sessionData = session.state.get()
   const editorState = sessionData.state.editor
   const copiedCommandCount = editorState.copiedCommands.length
   const selectedCommandCount = editorState.selectedCommandIndexes.length
@@ -92,7 +92,7 @@ export const commandList: MenuComponent = (session) => async () => {
         await session.api.tests.addSteps(
           sessionData.state.activeTestID,
           Math.max(0, getActiveCommandIndex(sessionData)),
-          [{ command: 'click', target: '', value: '' }],
+          [{ command: 'click', target: '', value: '' }]
         )
       },
       enabled: true,
@@ -104,7 +104,7 @@ export const commandList: MenuComponent = (session) => async () => {
         await session.api.tests.addSteps(
           sessionData.state.activeTestID,
           Math.max(0, getActiveCommandIndex(sessionData) - 1),
-          [{ command: 'click', target: '', value: '' }],
+          [{ command: 'click', target: '', value: '' }]
         )
       },
       enabled: true,
@@ -113,10 +113,9 @@ export const commandList: MenuComponent = (session) => async () => {
   ]
 }
 
-export const recorderList = (session: Session) => async () => {
-  const sessionData = await session.state.get()
-  const editorState = sessionData.state.editor
-  const selectedCommandCount = editorState.selectedCommandIndexes.length
+export const recorderList = (session: Session) => () => {
+  const selectedCommandCount =
+    session.state.state.editor.selectedCommandIndexes.length
   return [
     {
       accelerator: 'CommandOrControl+R',
@@ -130,14 +129,15 @@ export const recorderList = (session: Session) => async () => {
 }
 
 export const playbackList: MenuComponent =
-  (session) => async (_commandID?: string) => {
-    const sessionData = await session.state.get()
-    const commandID: string = _commandID || getActiveCommand(sessionData).id
-    const editorState = sessionData.state.editor
-    const selectedCommandCount = editorState.selectedCommandIndexes.length
+  (session) => (_commandID?: string) => {
+    const selectedCommandCount =
+      session.state.state.editor.selectedCommandIndexes.length
     return [
       {
         click: async () => {
+          const sessionData = await session.state.get()
+          const commandID: string =
+            _commandID || getActiveCommand(sessionData).id
           const activeTest = getActiveTest(sessionData)
           await session.api.playback.play(sessionData.state.activeTestID, [
             0,
@@ -149,6 +149,9 @@ export const playbackList: MenuComponent =
       {
         accelerator: 'CommandOrControl+P',
         click: async () => {
+          const sessionData = await session.state.get()
+          const commandID: string =
+            _commandID || getActiveCommand(sessionData).id
           const activeTest = getActiveTest(sessionData)
           await session.api.playback.play(sessionData.state.activeTestID, [
             activeTest.commands.findIndex((cmd) => cmd.id === commandID),
@@ -160,6 +163,9 @@ export const playbackList: MenuComponent =
       },
       {
         click: async () => {
+          const sessionData = await session.state.get()
+          const commandID: string =
+            _commandID || getActiveCommand(sessionData).id
           const activeTest = getActiveTest(sessionData)
           const index = activeTest.commands.findIndex(hasID(commandID))
           await session.api.playback.play(sessionData.state.activeTestID, [
@@ -173,6 +179,7 @@ export const playbackList: MenuComponent =
       {
         accelerator: 'CommandOrControl+Shift+P',
         click: async () => {
+          const sessionData = await session.state.get()
           await session.api.playback.play(sessionData.state.activeTestID)
         },
         label: 'Play From Start',
@@ -180,10 +187,10 @@ export const playbackList: MenuComponent =
     ]
   }
 
-export const testEditorCommands: MenuComponent = (session) => async () => {
-  const commands = await commandList(session)()
-  const recorder = await recorderList(session)()
-  const playback = await playbackList(session)()
+export const commands: MenuComponent = (session) => () => {
+  const commands = commandList(session)()
+  const recorder = recorderList(session)()
+  const playback = playbackList(session)()
   return [
     ...commands,
     { type: 'separator' },
@@ -193,9 +200,4 @@ export const testEditorCommands: MenuComponent = (session) => async () => {
   ]
 }
 
-const testEditorMenu = (session: Session) => async () => {
-  const menuItems = await testEditorCommands(session)()
-  return Menu.buildFromTemplate(menuItems)
-}
-
-export default testEditorMenu
+export default menuFactoryFromCommandFactory(commands)

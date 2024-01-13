@@ -15,7 +15,6 @@ const SIDELogger: React.FC = () => {
     const handleLog = (level: LogLevel, log: string) => {
       const el = logContainer.current
       if (!el) return; 
-      console.info(el.scrollHeight)
       el.append(
         `${new Date().toLocaleTimeString()} [${level}] ${log}\n`
       )

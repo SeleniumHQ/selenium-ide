@@ -3,9 +3,9 @@ import { loadingID } from '@seleniumhq/side-api/dist/constants/loadingID'
 import React from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import Main from './components/Main'
-import { TAB, TESTS_TAB } from './enums/tab'
-import { SIDEMainProps } from './components/types'
+import Main from '../Main'
+import { TAB, TESTS_TAB } from '../../enums/tab'
+import { SIDEMainProps } from '../types'
 
 const ProjectEditor: React.FC<Pick<SIDEMainProps, 'session'>> = ({
   session,

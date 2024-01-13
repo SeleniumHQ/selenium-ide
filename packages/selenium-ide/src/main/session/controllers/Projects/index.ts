@@ -62,11 +62,11 @@ export default class ProjectsController {
     return confirm
   }
 
-  async getActive(): Promise<ProjectShape> {
+  getActive(): ProjectShape {
     return this.project as ProjectShape
   }
 
-  async getRecent(): Promise<string[]> {
+  getRecent(): string[] {
     return this.recentProjects.get()
   }
 

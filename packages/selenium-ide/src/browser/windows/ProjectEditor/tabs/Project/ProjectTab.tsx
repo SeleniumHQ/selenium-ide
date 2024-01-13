@@ -3,8 +3,8 @@ import Paper from '@mui/material/Paper'
 import React, { FC } from 'react'
 import ProjectSettings from './ProjectSettings'
 import SystemSettings from './SystemSettings'
-import { SIDEMainProps } from '../../components/types'
-import AppBar from '../../components/AppBar'
+import { SIDEMainProps } from '../../../../components/types'
+import AppBar from '../../../../components/AppBar'
 import SettingsTabs from './SettingTabs'
 
 export interface MiniProjectShape {

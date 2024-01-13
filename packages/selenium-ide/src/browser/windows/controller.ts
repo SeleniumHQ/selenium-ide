@@ -1,8 +1,6 @@
 export * as Alert from './Alert/controller'
 export * as Confirm from './Confirm/controller'
-export * as Logger from './Logger/controller'
 export * as PlaybackWindow from './PlaybackWindow/controller'
 export * as ProjectEditor from './ProjectEditor/controller'
-export * as ProjectMainWindow from './ProjectMainWindow/controller'
 export * as Prompt from './Prompt/controller'
 export * as Splash from './Splash/controller'

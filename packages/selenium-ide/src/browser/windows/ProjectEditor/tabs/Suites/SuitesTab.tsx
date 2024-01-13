@@ -2,8 +2,8 @@ import Box from '@mui/material/Box'
 import React from 'react'
 import SuiteEditor from './Editor'
 import SuiteViewer from './Viewer'
-import { SIDEMainProps } from '../../components/types'
-import AppBar from '../../components/AppBar'
+import { SIDEMainProps } from '../../../../components/types'
+import AppBar from '../../../../components/AppBar'
 import SuiteSelector from './SuiteSelector'
 
 const SuitesTab: React.FC<

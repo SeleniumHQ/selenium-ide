@@ -1,10 +1,9 @@
 import { BrowserWindow } from 'electron'
-import { Menu } from 'electron'
-import { MenuComponent, Session } from 'main/types'
+import { MenuComponent } from 'main/types'
 import { platform } from 'os'
-import { multipleCommand } from '../utils'
+import { menuFactoryFromCommandFactory, multipleCommand } from '../utils'
 
-export const projectViewCommands: MenuComponent = (session) => async () =>
+export const commands: MenuComponent = (session) => () =>
   [
     ...multipleCommand(
       platform() === 'win32'
@@ -28,9 +27,4 @@ export const projectViewCommands: MenuComponent = (session) => async () =>
     },
   ]
 
-const projectViewMenu = (session: Session) => async () => {
-  const menuItems = await projectViewCommands(session)()
-  return Menu.buildFromTemplate(menuItems)
-}
-
-export default projectViewMenu
+export default menuFactoryFromCommandFactory(commands)

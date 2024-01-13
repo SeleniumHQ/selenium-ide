@@ -408,3 +408,7 @@ body,
     -webkit-transform: rotate(360deg);
   }
 }
+
+.justify-content-start {
+  justify-content: flex-start !important;
+}

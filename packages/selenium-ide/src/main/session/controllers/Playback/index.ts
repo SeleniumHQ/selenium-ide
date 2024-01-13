@@ -127,11 +127,9 @@ export default class PlaybackController extends BaseController {
     }
   }
 
-  async getPlayback(testID?: string) {
+  async getPlayback(testID?: string, forceNewPlayback = false) {
     const browserInfo = this.session.store.get('browserInfo')
-    const allowMultiplePlaybacks =
-      (await this.isParallel()) && this.testQueue.length
-    const makeNewPlayback = !this.playbacks.length || allowMultiplePlaybacks
+    const makeNewPlayback = !this.playbacks.length || forceNewPlayback
     let playback: Playback
     if (makeNewPlayback) {
       playback = new Playback({
@@ -149,7 +147,7 @@ export default class PlaybackController extends BaseController {
       await playback.init()
       this.playbacks.push(playback)
       if (!browserInfo.useBidi) {
-        await this.claimPlaybackWindow(playback)
+        await this.claimPlaybackWindow(playback, forceNewPlayback)
       } else {
         await playback.executor.driver.switchTo().newWindow('window')
       }
@@ -167,13 +165,16 @@ export default class PlaybackController extends BaseController {
     return playback
   }
 
-  async claimPlaybackWindow(playback: Playback) {
+  async claimPlaybackWindow(playback: Playback, forceNewWindow = false) {
     const executor = playback.executor
     const driver = executor.driver
 
     // Confirm webdriver connection
     driver.executeScript('true')
     try {
+      if (forceNewWindow) {
+        throw new Error('Force new window')
+      }
       const existingWindow = await this.session.windows.getLastPlaybackWindow()
       if (existingWindow!.isVisible()) {
         const handle = await this.session.windows.getPlaybackWindowHandleByID(existingWindow.id)
@@ -220,11 +221,11 @@ export default class PlaybackController extends BaseController {
     }
   }
 
-  async play(testID: string, playRange = PlaybackController.defaultPlayRange) {
+  async play(testID: string, playRange = PlaybackController.defaultPlayRange, forceNewPlayback = false) {
     this.playingTest = testID
     this.playRange = playRange
     this.isPlaying = true
-    const playback = await this.getPlayback(testID)
+    const playback = await this.getPlayback(testID, forceNewPlayback)
     const EE = playback['event-emitter']
     const handlePlaybackStateChanged = this.handlePlaybackStateChanged(
       playback,
@@ -293,14 +294,14 @@ export default class PlaybackController extends BaseController {
     this.testQueue = suite?.tests.slice() ?? []
     if (suite?.parallel) {
       for (let i = 0; i < parallelExecutions; i++) {
-        this.playNextTest()
+        this.playNextTest(true)
       }
     } else {
       this.playNextTest()
     }
   }
 
-  async playNextTest() {
+  async playNextTest(forceNewPlayback: boolean = false) {
     const nextTest = this.testQueue.shift() 
     if (nextTest) {
       const {
@@ -314,7 +315,7 @@ export default class PlaybackController extends BaseController {
           storages: ['cookies', 'localstorage'],
         })
       }
-      await this.play(nextTest)
+      await this.play(nextTest, PlaybackController.defaultPlayRange, forceNewPlayback)
     }
   }
 

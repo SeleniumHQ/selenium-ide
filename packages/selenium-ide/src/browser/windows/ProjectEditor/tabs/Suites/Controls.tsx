@@ -1,8 +1,8 @@
 import { StateShape } from '@seleniumhq/side-api'
 import React, { FC } from 'react'
-import PauseButton from '../../components/Controls/PauseButton'
-import PlayListButton from '../../components/Controls/PlayListButton'
-import StopButton from '../../components/Controls/StopButton'
+import PauseButton from '../../../../components/Controls/PauseButton'
+import PlayListButton from '../../../../components/Controls/PlayListButton'
+import StopButton from '../../../../components/Controls/StopButton'
 
 export interface SuiteControlsProps {
   state: StateShape

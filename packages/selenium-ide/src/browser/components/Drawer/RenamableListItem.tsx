@@ -4,7 +4,7 @@ import ListItemText from '@mui/material/ListItemText'
 import TextField from '@mui/material/TextField'
 import { CommandState } from '@seleniumhq/side-runtime'
 import React, { FC } from 'react'
-import CommandOverlay from '../../tabs/Tests/TestCommandOverlay'
+import CommandOverlay from '../../windows/ProjectEditor/tabs/Tests/TestCommandOverlay'
 
 export interface TestListProps {
   id: string
