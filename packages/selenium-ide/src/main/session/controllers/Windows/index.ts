@@ -392,14 +392,14 @@ export default class WindowsController extends BaseController {
     positionKey: string
   ) {
     this.arrangeWindow(window, sizeKey, positionKey)
-    window.on('moved', () => {
+    const recalculateEverything = () => {
       const position = window.getPosition() as [number, number]
       this.session.store.set(positionKey as any, position)
-    })
-    window.on('resize', () => {
       const size = window.getSize() as [number, number]
       this.session.store.set(sizeKey as any, size)
-    })
+    };
+    window.on('moved', recalculateEverything)
+    window.on('resize', recalculateEverything)
   }
 
   async onProjectLoaded() {
