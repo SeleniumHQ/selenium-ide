@@ -360,14 +360,6 @@ export default class PlaybackController extends BaseController {
               this.playNextTest()
             }
           }
-          if (e.state === 'finished') {
-            await this.session.api.state.updateStepSelection(
-              0,
-              false,
-              false,
-              true
-            )
-          }
       }
       this.session.api.playback.onPlayUpdate.dispatchEvent(e)
     }

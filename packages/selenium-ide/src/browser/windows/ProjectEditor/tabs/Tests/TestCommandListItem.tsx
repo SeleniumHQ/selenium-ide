@@ -74,6 +74,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
     <ReorderableListItem
       className={mainClass}
       divider
+      data-command-id={id}
       dragType="COMMAND"
       id={id}
       index={index}

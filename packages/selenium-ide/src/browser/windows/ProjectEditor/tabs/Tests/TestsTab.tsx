@@ -64,15 +64,27 @@ const TestsTab: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = ({
   const CommandsComponent = isTableWidth ? CommandTable : CommandList
   const activeTest = getActiveTest(session)
   const activeCommand = getActiveCommand(session)
+  React.useEffect(() => {
+    if (activeCommand) {
+      setTimeout(() => {
+        const commandElement = document.querySelector(
+          `[data-command-id="${activeCommand.id}"]`
+        )
+        if (commandElement) {
+          commandElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'start',
+          })
+        }
+      }, 100)
+    }
+  }, [activeCommand])
   const disabled = ['playing', 'recording'].includes(session.state.status)
   return (
     <Box className="fill flex flex-col">
       <Box className="flex-initial">
-        <AppBar
-          session={session}
-          setTab={setTab}
-          tab={tab}
-        />
+        <AppBar session={session} setTab={setTab} tab={tab} />
       </Box>
       <Box className="flex-1 flex-col" ref={ref}>
         <TestSelector session={session} />
