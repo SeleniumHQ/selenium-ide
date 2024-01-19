@@ -1,4 +1,4 @@
-# Selenium IDE &middot; [![Build Status](https://api.travis-ci.com/SeleniumHQ/selenium-ide.svg?branch=trunk)](https://travis-ci.com/SeleniumHQ/selenium-ide)
+# Selenium IDE
 
 ![logo](https://www.seleniumhq.org/selenium-ide/img/selenium-ide128.png)
 
