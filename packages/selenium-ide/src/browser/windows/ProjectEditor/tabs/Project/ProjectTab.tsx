@@ -28,9 +28,9 @@ const ProjectTab: React.FC<
     <Box className="flex-initial">
       <AppBar session={session} setTab={setTab} tab={tab} />
     </Box>
-    <Box className="flex-initial">
+    <Paper className="flex-initial z-1" elevation={1} square>
       <SettingsTabs session={session} />
-    </Box>
+    </Paper>
     <Box className="flex-1 flex-col">
       <Paper elevation={1} id="project-editor" square>
         <SettingsWrapper session={session} />

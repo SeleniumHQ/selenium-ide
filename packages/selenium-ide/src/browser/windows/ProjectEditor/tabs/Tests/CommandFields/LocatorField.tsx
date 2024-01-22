@@ -82,7 +82,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         value={localValue || ''}
       />
       <IconButton
-        className="ml-4"
+        className="ms-4"
         disabled={disabled}
         onClick={() =>
           window.sideAPI.recorder.requestHighlightElement(fieldName)

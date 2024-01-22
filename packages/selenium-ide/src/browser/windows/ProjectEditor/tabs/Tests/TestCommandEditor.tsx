@@ -50,7 +50,7 @@ const CommandEditor: FC<CommandEditorProps> = ({
     )
   }
   return (
-    <Paper square>
+    <Paper className="z-4" elevation={5} square>
       <Stack className="flex-initial p-4" spacing={1}>
         <CommandSelector
           command={correctedCommand}

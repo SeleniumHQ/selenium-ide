@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import React from 'react'
@@ -11,11 +10,11 @@ const {
 
 const URLBar: React.FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
   return (
-    <Paper className="flex flex-initial flex-row px-3 py-2" elevation={15} square>
+    <>
       <Box className="flex flex-col flex-initial ps-4" justifyContent="center">
         <Typography>URL</Typography>
       </Box>
-      <Box className="flex-1 px-4">
+      <Box className="flex-1 px-3 py-2">
         <TextField
           className="width-100"
           onChange={(e: any) => {
@@ -28,7 +27,7 @@ const URLBar: React.FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
           value={session.project.url}
         />
       </Box>
-    </Paper>
+    </>
   )
 }
 

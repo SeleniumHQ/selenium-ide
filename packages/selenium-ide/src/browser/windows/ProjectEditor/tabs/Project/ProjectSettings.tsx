@@ -99,7 +99,7 @@ const ProjectSettings: FC<ProjectSettingsProps> = ({
             onBlur={(e) => projectEdit(index, e.target.value)}
             size="small"
           />
-          <IconButton className="ml-4" onClick={() => projectDelete(index)}>
+          <IconButton className="ms-4" onClick={() => projectDelete(index)}>
             <CloseIcon />
           </IconButton>
         </ListItem>

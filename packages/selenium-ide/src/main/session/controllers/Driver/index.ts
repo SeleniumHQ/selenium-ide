@@ -115,7 +115,8 @@ const electronPolyfills = (
       }
     },
     name: 'assertConfirmation',
-    description: 'Asserts that a confirmation has been shown with the given message',
+    description:
+      'Asserts that a confirmation has been shown with the given message',
   },
   dismissConfirmation: {
     execute: async () => {
@@ -153,24 +154,14 @@ const electronPolyfills = (
   },
   setWindowSize: {
     execute: async (command: CommandShape, executor: WebDriverExecutor) => {
-      const [width, height] = command.target!.split('x').map((v) => parseInt(v))
+      console.log('Setting window size?', command)
       const handle = await executor.driver.getWindowHandle()
       const window = await session.windows.getPlaybackWindowByHandle(handle)
       if (!window) {
         throw new Error('Failed to find playback window')
       }
-      const pbWinCount = session.windows.playbackWindows.length
-      const b = await window.getBounds()
-      const calcNewX = b.x + Math.floor(b.width / 2) - Math.floor(width / 2)
-      const calcNewY = b.y + Math.floor(b.height / 2) - Math.floor(height / 2)
-      const newX = calcNewX < 0 ? pbWinCount * 20 : calcNewX
-      const newY = calcNewY < 0 ? pbWinCount * 20 : calcNewY
-      await window.setBounds({
-        x: newX,
-        y: newY,
-        height,
-        width,
-      })
+      const [targetWidth, targetHeight] = command.target!.split('x').map((v) => parseInt(v))
+      await session.windows.resizePlaybackWindows(targetWidth, targetHeight)
     },
     name: 'setWindowSize',
     description: 'Sets the playback window size',

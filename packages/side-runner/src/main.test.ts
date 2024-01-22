@@ -15,12 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import each from 'jest-each'
-import fs from 'fs'
-import { globSync } from 'glob'
-import { createLogger, format, transports } from 'winston'
-import { Configuration, Project } from './types'
-import buildRun from './run'
 import { ProjectShape, SuiteShape, TestShape } from '@seleniumhq/side-model'
 import {
   correctPluginPaths,
@@ -28,6 +22,13 @@ import {
   PluginHooks,
   Variables,
 } from '@seleniumhq/side-runtime'
+import each from 'jest-each'
+import fs from 'fs'
+import { globSync } from 'glob'
+import { createLogger, format, transports } from 'winston'
+import { Configuration, Project } from './types'
+import testConnection from './connect'
+import buildRun from './run'
 
 const metadata = require('../package.json')
 
@@ -124,67 +125,77 @@ const getTestByID = (project: ProjectShape) => (testID: string) =>
 
 const run = buildRun(factoryParams)
 
-let plugins: Awaited<ReturnType<typeof loadPlugins>> | undefined
-each(projects).describe(projectTitle, (project: Project) => {
-  try {
-    const pluginPaths = correctPluginPaths(project.path, project?.plugins ?? [])
-    const runHook = (hookName: keyof PluginHooks) => async () => {
-      if (!plugins) {
-        plugins = await loadPlugins(pluginPaths)
-      }
-      await Promise.all(
-        plugins!.map(async (plugin) => {
-          const hook = plugin.hooks?.[hookName]
-          if (hook) {
-            await hook({ ...factoryParams, project })
-          }
-        })
+if (configuration.debugConnectionMode) {
+  test('Testing driver connection', async () => {
+    await testConnection(configuration)
+  })
+} else {
+  let plugins: Awaited<ReturnType<typeof loadPlugins>> | undefined
+  each(projects).describe(projectTitle, (project: Project) => {
+    try {
+      const pluginPaths = correctPluginPaths(
+        project.path,
+        project?.plugins ?? []
       )
-    }
-    beforeAll(runHook('onBeforePlayAll'))
-    afterAll(runHook('onAfterPlayAll'))
-    const suites = project.suites.filter(
-      (suite) =>
-        suite.tests.length && new RegExp(configuration.filter).test(suite.name)
-    )
-    if (suites.length) {
-      each(suites).describe(suiteTitle, (suite: SuiteShape) => {
-        const isParallel = suite.parallel
-        const suiteVariables = new Variables()
-        const tests = suite.tests.map(getTestByID(project))
-
-        const testExecutor = each(tests)
-        const testMethod = isParallel
-          ? testExecutor.test.concurrent
-          : testExecutor.test
-        testMethod(testTitle, async (test: TestShape) => {
-          await run(
-            project,
-            test,
-            suite.persistSession ? suiteVariables : new Variables()
-          )
-        })
-      })
-    } else {
-      console.info(`
-      Project ${project.name} doesn't have any suites matching filter ${configuration.filter},
-      attempting to iterate all tests in project
-    `)
-      const tests = project.tests.filter((test) =>
-        new RegExp(configuration.filter).test(test.name)
-      )
-      if (!tests.length) {
-        throw new Error(
-          `No suites or tests found in project ${project.name} matching filter ${configuration.filter}, unable to test!`
+      const runHook = (hookName: keyof PluginHooks) => async () => {
+        if (!plugins) {
+          plugins = await loadPlugins(pluginPaths)
+        }
+        await Promise.all(
+          plugins!.map(async (plugin) => {
+            const hook = plugin.hooks?.[hookName]
+            if (hook) {
+              await hook({ ...factoryParams, project })
+            }
+          })
         )
       }
-      const testExecutor = each(tests)
-      testExecutor.test(testTitle, async (test: TestShape) => {
-        await run(project, test, new Variables())
-      })
+      beforeAll(runHook('onBeforePlayAll'))
+      afterAll(runHook('onAfterPlayAll'))
+      const suites = project.suites.filter(
+        (suite) =>
+          suite.tests.length &&
+          new RegExp(configuration.filter).test(suite.name)
+      )
+      if (suites.length) {
+        each(suites).describe(suiteTitle, (suite: SuiteShape) => {
+          const isParallel = suite.parallel
+          const suiteVariables = new Variables()
+          const tests = suite.tests.map(getTestByID(project))
+
+          const testExecutor = each(tests)
+          const testMethod = isParallel
+            ? testExecutor.test.concurrent
+            : testExecutor.test
+          testMethod(testTitle, async (test: TestShape) => {
+            await run(
+              project,
+              test,
+              suite.persistSession ? suiteVariables : new Variables()
+            )
+          })
+        })
+      } else {
+        console.info(`
+          Project ${project.name} doesn't have any suites matching filter ${configuration.filter},
+          attempting to iterate all tests in project
+        `)
+        const tests = project.tests.filter((test) =>
+          new RegExp(configuration.filter).test(test.name)
+        )
+        if (!tests.length) {
+          throw new Error(
+            `No suites or tests found in project ${project.name} matching filter ${configuration.filter}, unable to test!`
+          )
+        }
+        const testExecutor = each(tests)
+        testExecutor.test(testTitle, async (test: TestShape) => {
+          await run(project, test, new Variables())
+        })
+      }
+    } catch (e) {
+      console.warn('Failed to run project ' + project.name)
+      console.error(e)
     }
-  } catch (e) {
-    console.warn('Failed to run project ' + project.name)
-    console.error(e)
-  }
-})
+  })
+}

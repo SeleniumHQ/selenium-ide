@@ -13,7 +13,7 @@ const SIDEAppBar: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = 
   tab,
 }) => {
   return (
-    <Paper className="flex flex-row width-100" elevation={15} square>
+    <Paper className="flex flex-row width-100 z-3" elevation={1} square>
       <AppBarTabs setTab={setTab} tab={tab} />
       <div className="flex flex-1" />
       <TabPanel index={TESTS_TAB} value={tab}>

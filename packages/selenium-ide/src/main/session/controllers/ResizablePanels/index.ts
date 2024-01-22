@@ -41,6 +41,7 @@ export default class ResizablePanelsController extends BaseController {
       )
     })
   }
+  
   async setPanelGroup(id: string, dimensions: number[]) {
     this.session.store.set(`panelGroup.${id}`, dimensions)
     this.recalculatePlaybackWindows()

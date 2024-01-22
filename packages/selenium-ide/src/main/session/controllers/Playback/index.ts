@@ -169,22 +169,27 @@ export default class PlaybackController extends BaseController {
     const executor = playback.executor
     const driver = executor.driver
 
+    let window: Electron.BrowserWindow
     // Confirm webdriver connection
     driver.executeScript('true')
     try {
       if (forceNewWindow) {
         throw new Error('Force new window')
       }
-      const existingWindow = await this.session.windows.getLastPlaybackWindow()
-      if (existingWindow!.isVisible()) {
-        const handle = await this.session.windows.getPlaybackWindowHandleByID(existingWindow.id)
-        await driver.switchTo().window(handle!)
-        return
+      window = await this.session.windows.getLastPlaybackWindow()
+      if (!window) {
+        throw new Error('No windows found')
       }
+      this.session.windows.focusPlaybackWindow(window.id)
+      const handle = await this.session.windows.getPlaybackWindowHandleByID(
+        window.id
+      )
+      await driver.switchTo().window(handle!)
+      return
     } catch (windowDoesNotExist) {
       let success = false
       const UUID = randomUUID()
-      const window = await this.session.windows.openPlaybackWindow({
+      window = await this.session.windows.openPlaybackWindow({
         title: UUID,
       })
       const handles = await driver.getAllWindowHandles()
@@ -204,7 +209,6 @@ export default class PlaybackController extends BaseController {
       if (!success) {
         throw new Error('Failed to switch to playback window')
       }
-    } finally {
       const state = await this.session.state.get()
       const currentTest = getActiveTest(state)
       const currentCommand = getActiveCommand(state)
@@ -217,11 +221,17 @@ export default class PlaybackController extends BaseController {
         currentCommand.command === 'open'
           ? new URL(currentCommand.target as string, state.project.url).href
           : firstURL.href
-      playback.executor.doOpen(url)
+      await playback.executor.doOpen(url)
+    } finally {
+      await this.session.windows.initPlaybackWindowSize(window!)
     }
   }
 
-  async play(testID: string, playRange = PlaybackController.defaultPlayRange, forceNewPlayback = false) {
+  async play(
+    testID: string,
+    playRange = PlaybackController.defaultPlayRange,
+    forceNewPlayback = false
+  ) {
     this.playingTest = testID
     this.playRange = playRange
     this.isPlaying = true
@@ -302,7 +312,7 @@ export default class PlaybackController extends BaseController {
   }
 
   async playNextTest(forceNewPlayback: boolean = false) {
-    const nextTest = this.testQueue.shift() 
+    const nextTest = this.testQueue.shift()
     if (nextTest) {
       const {
         project: { suites },
@@ -315,7 +325,11 @@ export default class PlaybackController extends BaseController {
           storages: ['cookies', 'localstorage'],
         })
       }
-      await this.play(nextTest, PlaybackController.defaultPlayRange, forceNewPlayback)
+      await this.play(
+        nextTest,
+        PlaybackController.defaultPlayRange,
+        forceNewPlayback
+      )
     }
   }
 

@@ -34,6 +34,8 @@ const CommandList: FC<CommandListProps> = ({
   return (
     <>
       <EditorToolbar
+        className='z-1'
+        elevation={2}
         onAdd={() =>
           window.sideAPI.tests.addSteps(
             activeTest,

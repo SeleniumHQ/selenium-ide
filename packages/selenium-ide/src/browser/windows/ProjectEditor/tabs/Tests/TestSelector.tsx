@@ -24,7 +24,7 @@ const TestSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
   return (
     <>
       <EditorToolbar
-        className="py-3"
+        className="py-3 z-2"
         disabled={disabled}
         onAdd={() => setConfirmCreate(true)}
         addText="Add Test"

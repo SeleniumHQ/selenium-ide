@@ -11,7 +11,11 @@ import {
   UserPrefs,
 } from '@seleniumhq/side-api'
 import clone from 'lodash/fp/clone'
+import merge from 'lodash/fp/merge'
 import BaseController from '../Base'
+import { loadingID } from '@seleniumhq/side-api/src/constants/loadingID'
+
+const queue = (op: () => void) => setTimeout(op, 0)
 
 export default class StateController extends BaseController {
   static pathFromID = (id: string) => id.replace(/\-/g, '_')
@@ -25,6 +29,22 @@ export default class StateController extends BaseController {
     }
   }
 
+  set(key: string, _data: any) {
+    if (key.includes('editor.overrideWindowSize')) {
+      queue(async () => {
+        const { active, height, width } = this.state.editor.overrideWindowSize
+        if (active) {
+          this.session.windows.resizePlaybackWindows(width, height)
+        }
+        const panelDims =
+          await this.session.resizablePanels.getPanelScreenPosition(
+            'playback-panel'
+          )
+        this.session.windows.resizePlaybackWindows(panelDims.width, panelDims.height)
+      })
+    }
+  }
+
   getStatePath() {
     const projectID = this.session.projects.project.id
     const projectIDPath = StateController.pathFromID(projectID)
@@ -34,18 +54,16 @@ export default class StateController extends BaseController {
   async onProjectLoaded() {
     // If this file has been saved, fetch state
     if (this.session.projects.filepath) {
+      console.log('Initializing state')
       const storageState: StateShape = this.session.store.get(
         this.getStatePath()
       )
-      const newState: StateShape = {
-        ...defaultState,
-        ...storageState,
-        commands: this.state.commands,
-        editor: {
-          ...defaultState.editor,
-          ...(storageState?.editor ?? {}),
-          selectedCommandIndexes: [0],
-        },
+      const newState: StateShape = merge(defaultState, storageState)
+      newState.commands = this.state.commands
+      newState.editor.selectedCommandIndexes = [0]
+      if (!newState.activeTestID || newState.activeTestID === loadingID) {
+        newState.activeTestID =
+          this.session.projects.project.tests?.[0]?.id ?? loadingID
       }
       this.state = newState
     }

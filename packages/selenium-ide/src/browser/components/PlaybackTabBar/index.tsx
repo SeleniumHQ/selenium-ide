@@ -36,8 +36,8 @@ const PlaybackTabBar: React.FC = () => {
   }, []);
   return (
     <Paper
-      className="flex flex-initial flex-row px-3 width-100"
-      elevation={5}
+      className="flex flex-initial flex-row px-3 width-100 z-1"
+      elevation={3}
       square
       sx={{
         height: 40,

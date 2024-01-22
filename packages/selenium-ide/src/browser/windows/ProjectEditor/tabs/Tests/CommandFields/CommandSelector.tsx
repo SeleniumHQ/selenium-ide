@@ -61,7 +61,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
         />
 
         <Tooltip
-          className="flex-initial ml-4 my-auto"
+          className="flex-initial ms-4 my-auto"
           title={`${
             command.opensWindow ? 'Opens' : 'Does not open'
           } a new window`}
@@ -75,7 +75,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
           </IconButton>
         </Tooltip>
         <Tooltip
-          className="flex-initial ml-4 my-auto"
+          className="flex-initial my-auto"
           title={`${isDisabled ? 'En' : 'Dis'}able this command`}
           placement="top-end"
         >
