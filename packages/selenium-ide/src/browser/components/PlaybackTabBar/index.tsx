@@ -9,7 +9,6 @@ const {
     onPlaybackWindowOpened,
   },
 } = window.sideAPI
-console.log(onPlaybackWindowChanged, onPlaybackWindowClosed, onPlaybackWindowOpened)
 
 const PlaybackTabBar: React.FC = () => {
   const [tabs, setTabs] = React.useState<TabShape[]>([])

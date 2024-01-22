@@ -180,11 +180,6 @@ export default class PlaybackController extends BaseController {
       if (!window) {
         throw new Error('No windows found')
       }
-      this.session.windows.focusPlaybackWindow(window.id)
-      const handle = await this.session.windows.getPlaybackWindowHandleByID(
-        window.id
-      )
-      await driver.switchTo().window(handle!)
       return
     } catch (windowDoesNotExist) {
       let success = false
@@ -221,7 +216,11 @@ export default class PlaybackController extends BaseController {
         currentCommand.command === 'open'
           ? new URL(currentCommand.target as string, state.project.url).href
           : firstURL.href
-      await playback.executor.doOpen(url)
+      try {
+        await playback.executor.doOpen(url)
+      } catch (e) {
+        console.warn('Open command failed:', e)
+      }
     } finally {
       await this.session.windows.initPlaybackWindowSize(window!)
     }
