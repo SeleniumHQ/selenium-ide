@@ -14,9 +14,9 @@ const fieldStyle = { width: 60 }
 const inputProps = {
   sx: {
     paddingLeft: 0.5,
-    paddingRight: 0.5
+    paddingRight: 0.5,
   },
-};
+}
 
 const PlaybackDimensionControls: React.FC<Pick<SIDEMainProps, 'session'>> = ({
   session,
@@ -43,7 +43,10 @@ const PlaybackDimensionControls: React.FC<Pick<SIDEMainProps, 'session'>> = ({
   }, [active])
   return (
     <>
-      <Tooltip title="Force panel window dimensions (will zoom out if larger than panel and crop if smaller)">
+      <Tooltip
+        placement="left"
+        title="Force panel window dimensions (will zoom out if larger than panel and crop if smaller)"
+      >
         <Box
           className="flex flex-row flex-initial ps-3"
           justifyContent="center"
