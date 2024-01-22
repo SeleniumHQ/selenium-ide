@@ -265,59 +265,58 @@ export default class WindowsController extends BaseController {
   }
 
   async initPlaybackWindowSize(window: Electron.BrowserWindow) {
-    const {
-      state: {
-        editor: { overrideWindowSize },
-      },
-    } = await this.session.state.get()
-    if (!overrideWindowSize.active) {
-      window.webContents.setZoomFactor(1)
-      return
-    }
-    const { width, height } =
-      await this.session.resizablePanels.getPanelScreenPosition(
-        'playback-panel'
-      )
-    const targetWidth = overrideWindowSize.width
-    const targetHeight = overrideWindowSize.height
-    if (targetWidth > width || targetHeight > height) {
-      const xZoom = width / targetWidth
-      const yZoom = height / targetHeight
-      window.setSize(width, height)
-      window.webContents.setZoomFactor(Math.max(0.1, Math.min(xZoom, yZoom)))
-    } else {
-      window.setSize(targetWidth, targetHeight)
-      window.webContents.setZoomFactor(1)
-    }
+    const panel = await this.session.resizablePanels.getPanelScreenPosition(
+      'playback-panel'
+    )
+    const { height, width, zoomFactor } = await this.calculateScaleAndZoom(
+      panel.width,
+      panel.height
+    )
+    window.setSize(width, height)
+    window.webContents.setZoomFactor(zoomFactor)
   }
 
-  async resizePlaybackWindows(_targetWidth: number, _targetHeight: number) {
+  async calculateScaleAndZoom(_targetWidth: number, _targetHeight: number) {
     const {
       state: {
         editor: { overrideWindowSize },
       },
     } = await this.session.state.get()
     const targetWidth = overrideWindowSize.active
-      ? overrideWindowSize.width
+      ? Math.max(overrideWindowSize.width, 150)
       : _targetWidth
     const targetHeight = overrideWindowSize.active
-      ? overrideWindowSize.height
+      ? Math.max(overrideWindowSize.height, 150)
       : _targetHeight
 
     const { width, height } =
       await this.session.resizablePanels.getPanelScreenPosition(
         'playback-panel'
       )
+    const xAspect = width / targetWidth
+    const yAspect = height / targetHeight
+    let resultWidth = targetWidth
+    let resultHeight = targetHeight
+    const zoomFactor = Math.min(xAspect, yAspect, 1)
+    if (xAspect < 1 || yAspect < 1) {
+      resultWidth = Math.round(targetWidth * zoomFactor)
+      resultHeight = Math.round(targetHeight * zoomFactor)
+    }
+    return {
+      width: resultWidth,
+      height: resultHeight,
+      zoomFactor,
+    }
+  }
+
+  async resizePlaybackWindows(_targetWidth: number, _targetHeight: number) {
+    const { width, height, zoomFactor } = await this.calculateScaleAndZoom(
+      _targetWidth,
+      _targetHeight
+    )
     this.playbackWindows.forEach((window) => {
-      if (targetWidth > width || targetHeight > height) {
-        const xZoom = width / targetWidth
-        const yZoom = height / targetHeight
-        window.setSize(width, height)
-        window.webContents.setZoomFactor(Math.max(0.1, Math.min(xZoom, yZoom)))
-      } else {
-        window.setSize(targetWidth, targetHeight)
-        window.webContents.setZoomFactor(1)
-      }
+      window.setSize(width, height)
+      window.webContents.setZoomFactor(zoomFactor)
     })
   }
 
@@ -380,7 +379,9 @@ export default class WindowsController extends BaseController {
       this.session.api.windows.onPlaybackWindowChanged.dispatchEvent(
         window.id,
         {
-          title: window.webContents.getURL(),
+          title: window.webContents
+            .getURL()
+            .replace(this.session.projects.project.url, ''),
         }
       )
     })

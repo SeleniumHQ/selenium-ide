@@ -8,10 +8,10 @@ import {
   PanelGroup,
   PanelResizeHandle,
 } from 'react-resizable-panels'
-import SIDELogger from '../../components/Logger'
-import PlaybackControls from '../../components/PlaybackControls'
-import ProjectPlaybackWindow from '../../components/PlaybackPanel'
-import ProjectEditor from '../../components/ProjectEditor'
+import SIDELogger from 'browser/components/Logger'
+import PlaybackControls from 'browser/components/PlaybackControls'
+import ProjectPlaybackWindow from 'browser/components/PlaybackPanel'
+import ProjectEditor from 'browser/components/ProjectEditor'
 
 const usePanelGroup = (id: string) => {
   const [ready, setReady] = React.useState(false)
