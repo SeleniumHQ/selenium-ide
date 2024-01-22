@@ -37,6 +37,11 @@ import {
   WindowAppearedHookInput,
   WindowSwitchedHookInput,
 } from './types'
+import { inspect } from 'util'
+
+const {
+  version: SeleniumWebdriverVersion,
+} = require('selenium-webdriver/package.json')
 
 const { By, Condition, until, Key, WebElementCondition } = webdriver
 
@@ -74,6 +79,7 @@ export interface WebDriverExecutorConstructorArgs {
 
 export interface WebDriverExecutorInitOptions {
   baseUrl: string
+  debug?: boolean
   logger: Console
   variables: Variables
 }
@@ -153,7 +159,12 @@ export default class WebDriverExecutor {
   logger?: Console;
   [state]?: any
 
-  async init({ baseUrl, logger, variables }: WebDriverExecutorInitOptions) {
+  async init({
+    baseUrl,
+    debug,
+    logger,
+    variables,
+  }: WebDriverExecutorInitOptions) {
     this.baseUrl = baseUrl
     this.logger = logger
     this.variables = variables
@@ -163,12 +174,58 @@ export default class WebDriverExecutor {
       const { browserName, ...capabilities } = this
         .capabilities as ExpandedCapabilities
       this.logger.info('Building driver for ' + browserName)
-      this.driver = await new webdriver.Builder()
-        .withCapabilities(capabilities)
-        .usingServer(this.server as string)
-        .forBrowser(browserName)
-        .build()
-      this.logger.info('Driver has been built for ' + browserName)
+      debug &&
+        this.logger.info(
+          'Driver attributes:' +
+            inspect({
+              capabilities,
+              server: this.server,
+              browserName,
+            })
+        )
+      let driver = new webdriver.Builder().withCapabilities(capabilities)
+      if (this.server) {
+        driver = driver.usingServer(this.server)
+      }
+      try {
+        this.driver = await driver.forBrowser(browserName).build()
+        this.logger.info('Driver has been built for ' + browserName)
+      } catch (e) {
+        if (debug) {
+          const driverCode =
+            'const driver = new webdriver.Builder()' +
+            `.withCapabilities(${JSON.stringify(capabilities)})` +
+            (this.server ? `.usingServer('${this.server}')` : '') +
+            `.forBrowser('${browserName}').build()`
+          console.error(`
+            Failed to build driver for ${browserName}
+            Supplied capabilities: ${JSON.stringify(capabilities)}
+            Server: ${this.server || 'none'}
+            Error: ${e}
+
+            OS: ${process.platform}
+            Node: ${process.version}
+            Selenium-Webdriver: ${SeleniumWebdriverVersion}
+
+            This is breaking at the boundary of the following code in selenium-webdriver:
+
+            // BEGIN SELENIUM-WEBDRIVER CODE
+            const webdriver = require('selenium-webdriver')
+            ${driverCode}
+            // END SELENIUM-WEBDRIVER CODE
+
+            To ensure the bug is in selenium IDE, please attempt to run the above code in a script or node REPL.
+            You may have to npm install selenium-webdriver first.
+
+            If you are unable to proceed further, please raise a bug here:
+            https://github.com/SeleniumHQ/selenium/issues/new?assignees=&labels=I-defect%2Cneeds-triaging&projects=&template=bug-report.yml&title=%5B%F0%9F%90%9B+Bug%5D%3A+
+
+            If this code works in selenium-webdriver, but not the IDE or side-runner, please raise a bug here:
+            https://github.com/SeleniumHQ/selenium-ide/issues/new?assignees=&labels=&projects=&template=bug.md
+          `)
+        }
+        throw e
+      }
     }
 
     this.initialized = true

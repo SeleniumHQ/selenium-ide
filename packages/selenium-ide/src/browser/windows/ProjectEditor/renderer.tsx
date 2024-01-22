@@ -8,11 +8,10 @@ import {
   PanelGroup,
   PanelResizeHandle,
 } from 'react-resizable-panels'
-import ProjectEditor from '../../components/ProjectEditor'
-import ProjectPlaybackWindow from '../../components/PlaybackPanel'
 import SIDELogger from '../../components/Logger'
-import URLBar from '../../components/URLBar'
-import PlaybackTabBar from '../../components/PlaybackTabBar'
+import PlaybackControls from '../../components/PlaybackControls'
+import ProjectPlaybackWindow from '../../components/PlaybackPanel'
+import ProjectEditor from '../../components/ProjectEditor'
 
 const usePanelGroup = (id: string) => {
   const [ready, setReady] = React.useState(false)
@@ -56,10 +55,7 @@ const ProjectMainWindow = () => {
             id="playback-logger"
             {...usePanelGroup('playback-logger')}
           >
-            <div className="flex flex-col flex-initial width-100">
-              <URLBar session={session} />
-              <PlaybackTabBar />
-            </div>
+            <PlaybackControls session={session} />
             <Panel id="playback-panel" order={4}>
               <ProjectPlaybackWindow />
             </Panel>

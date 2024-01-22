@@ -33,6 +33,8 @@ const CommandList: FC<CommandListProps> = ({
   return (
     <>
       <EditorToolbar
+        className="z-1"
+        elevation={2}
         disabled={disabled}
         onAdd={() =>
           window.sideAPI.tests.addSteps(
@@ -40,7 +42,7 @@ const CommandList: FC<CommandListProps> = ({
             Math.max(selectedCommandIndexes.slice(-1)[0], 0)
           )
         }
-        addText='Add Command'
+        addText="Add Command"
         onRemove={
           commands.length > 1
             ? () =>
@@ -50,9 +52,9 @@ const CommandList: FC<CommandListProps> = ({
                 )
             : undefined
         }
-        removeText='Remove Command'
+        removeText="Remove Command"
       >
-        <span className="ml-4">Commands</span>
+        <span className="ms-4">Commands</span>
       </EditorToolbar>
       <ReorderableList
         classes={{

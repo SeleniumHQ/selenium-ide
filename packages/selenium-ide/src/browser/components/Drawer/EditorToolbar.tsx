@@ -115,7 +115,7 @@ const EditorToolbar: FC<EditorToolbarProps> = ({
   children,
   className = '',
   disabled = false,
-  elevation = 7,
+  elevation = 0,
   onAdd,
   addText = "Add",
   onEdit,

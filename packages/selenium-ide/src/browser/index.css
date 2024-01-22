@@ -117,7 +117,7 @@ body,
  * Height
  */
 .height-100 {
-  height: 100%;
+  height: 100% !important;
 }
 
 /**
@@ -150,10 +150,10 @@ body,
  * Margin
  */
 
-.ml-4 {
+.ms-4 {
   margin-left: 1rem !important;
 }
-.ml-5 {
+.ms-5 {
   margin-left: 1.5rem !important;
 }
 
@@ -212,6 +212,12 @@ body,
 }
 .pb-0 {
   padding-bottom: 0 !important;
+}
+.pe-3 {
+  padding-right: 0.5rem;
+}
+.pe-4 {
+  padding-right: 1rem;
 }
 .pt-0 {
   padding-top: 0 !important;
@@ -411,4 +417,24 @@ body,
 
 .justify-content-start {
   justify-content: flex-start !important;
+}
+
+.z-1 {
+  z-index: 1;
+}
+
+.z-2 {
+  z-index: 2;
+}
+
+.z-3 {
+  z-index: 3;
+}
+
+.z-4 {
+  z-index: 4;
+}
+
+.z-5 {
+  z-index: 5;
 }

@@ -12,6 +12,11 @@ import { CommandsStateShape } from './command'
 export interface EditorStateShape {
   configSettingsGroup: ConfigSettingsGroup
   copiedCommands: Omit<CommandShape, 'id'>[]
+  overrideWindowSize: {
+    active: boolean
+    height: number
+    width: number
+  }
   selectedCommandIndexes: number[]
   selectedTestIndexes: number[]
   suiteMode: 'viewer' | 'editor'
@@ -20,6 +25,11 @@ export interface EditorStateShape {
 export const defaultEditorState: EditorStateShape = {
   configSettingsGroup: 'project',
   copiedCommands: [],
+  overrideWindowSize: {
+    active: false,
+    height: 600,
+    width: 800,
+  },
   selectedCommandIndexes: [],
   selectedTestIndexes: [],
   suiteMode: 'editor',

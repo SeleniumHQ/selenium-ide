@@ -81,6 +81,7 @@ export type Configuration = Required<
     'debugStartup' | 'debug' | 'force' | 'proxyType' | 'retries'
   > & {
     capabilities: Record<string, JSON>
+    debugConnectionMode: boolean
     projects: string[]
     proxyOptions: ProxyInputOptions
     runId: string

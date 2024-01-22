@@ -98,6 +98,7 @@ program
   )
   .option('-d, --debug', 'Print debug logs')
   .option('-D, --debug-startup', 'Print debug startup logs')
+  .option('-X, --debug-connection-mode', 'Debug driver connection mode')
 
 program.parse()
 
@@ -114,6 +115,7 @@ let configuration: Configuration = {
     browserName: 'chrome',
   },
   debug: options.debug,
+  debugConnectionMode: options.debugConnectionMode,
   debugStartup: options.debugStartup,
   filter: options.filter || '.*',
   force: options.force,

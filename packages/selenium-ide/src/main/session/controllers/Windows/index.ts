@@ -164,10 +164,6 @@ export default class WindowsController extends BaseController {
     return this.windows[name]
   }
 
-  /**
-   * We ignore the first window here as its more of a landing pad for the
-   * other windows
-   */
   getLastPlaybackWindow(): BrowserWindow {
     const windowCount = this.playbackWindows.length
     if (windowCount === 0) {
@@ -266,6 +262,63 @@ export default class WindowsController extends BaseController {
       window.webContents.executeJavaScript(`document.title = "${opts.title}";`)
     }
     return window
+  }
+
+  async initPlaybackWindowSize(window: Electron.BrowserWindow) {
+    const {
+      state: {
+        editor: { overrideWindowSize },
+      },
+    } = await this.session.state.get()
+    if (!overrideWindowSize.active) {
+      window.webContents.setZoomFactor(1)
+      return
+    }
+    const { width, height } =
+      await this.session.resizablePanels.getPanelScreenPosition(
+        'playback-panel'
+      )
+    const targetWidth = overrideWindowSize.width
+    const targetHeight = overrideWindowSize.height
+    if (targetWidth > width || targetHeight > height) {
+      const xZoom = width / targetWidth
+      const yZoom = height / targetHeight
+      window.setSize(width, height)
+      window.webContents.setZoomFactor(Math.max(0.1, Math.min(xZoom, yZoom)))
+    } else {
+      window.setSize(targetWidth, targetHeight)
+      window.webContents.setZoomFactor(1)
+    }
+  }
+
+  async resizePlaybackWindows(_targetWidth: number, _targetHeight: number) {
+    const {
+      state: {
+        editor: { overrideWindowSize },
+      },
+    } = await this.session.state.get()
+    const targetWidth = overrideWindowSize.active
+      ? overrideWindowSize.width
+      : _targetWidth
+    const targetHeight = overrideWindowSize.active
+      ? overrideWindowSize.height
+      : _targetHeight
+
+    const { width, height } =
+      await this.session.resizablePanels.getPanelScreenPosition(
+        'playback-panel'
+      )
+    this.playbackWindows.forEach((window) => {
+      if (targetWidth > width || targetHeight > height) {
+        const xZoom = width / targetWidth
+        const yZoom = height / targetHeight
+        window.setSize(width, height)
+        window.webContents.setZoomFactor(Math.max(0.1, Math.min(xZoom, yZoom)))
+      } else {
+        window.setSize(targetWidth, targetHeight)
+        window.webContents.setZoomFactor(1)
+      }
+    })
   }
 
   async registerPlaybackWindowHandle(handle: string, id: number) {
@@ -397,8 +450,8 @@ export default class WindowsController extends BaseController {
       this.session.store.set(positionKey as any, position)
       const size = window.getSize() as [number, number]
       this.session.store.set(sizeKey as any, size)
-    };
-    window.on('moved', recalculateEverything)
+    }
+    window.on('move', recalculateEverything)
     window.on('resize', recalculateEverything)
   }
 
@@ -409,6 +462,9 @@ export default class WindowsController extends BaseController {
     await this.open(projectEditorWindowName, { show: false })
     const projectWindow = await this.get(projectEditorWindowName)
     this.useWindowState(projectWindow, 'windowSize', 'windowPosition')
+    projectWindow.on('move', () => {
+      this.session.resizablePanels.recalculatePlaybackWindows()
+    })
     projectWindow.on('resize', () => {
       this.session.resizablePanels.recalculatePlaybackWindows()
     })
