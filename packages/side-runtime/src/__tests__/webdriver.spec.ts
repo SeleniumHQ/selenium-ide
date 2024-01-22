@@ -57,7 +57,7 @@ describe('webdriver executor', () => {
       await executor.init({ baseUrl: '', logger: console, variables })
     })
     afterAll(async () => {
-      await driver.quit()
+      await driver?.quit()
     })
     afterEach(async () => {
       try {
