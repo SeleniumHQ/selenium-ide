@@ -30,14 +30,15 @@ export default class ResizablePanelsController extends BaseController {
     const panelScreenPosition = await this.getPanelScreenPosition(
       'playback-panel'
     )
+    const isWindows = process.platform === 'win32'
     this.session.windows.playbackWindows.forEach((playbackWindow) => {
       playbackWindow.setSize(
         panelScreenPosition.width,
-        panelScreenPosition.height,
+        panelScreenPosition.height
       )
       playbackWindow.setPosition(
-        panelScreenPosition.x,
-        panelScreenPosition.y,
+        panelScreenPosition.x + (isWindows ? 12 : 0),
+        panelScreenPosition.y + (isWindows ? 21 : 0)
       )
     })
   }
