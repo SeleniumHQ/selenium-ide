@@ -453,7 +453,9 @@ export default class WindowsController extends BaseController {
       this.session.store.set(sizeKey as any, size)
     }
     window.on('move', recalculateEverything)
+    window.on('moved', recalculateEverything)
     window.on('resize', recalculateEverything)
+    window.on('resized', recalculateEverything)
   }
 
   async onProjectLoaded() {

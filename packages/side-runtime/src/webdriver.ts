@@ -1474,10 +1474,14 @@ export default class WebDriverExecutor {
     const visibleCondition = new WebElementCondition(
       'for element to be visible',
       this.withCancel(async () => {
-        const el = await this.elementIsLocated(locator, ...fallbacks)
-        if (!el) return null
-        if (!(await el.isDisplayed())) return null
-        return el
+        try {
+          const el = await this.elementIsLocated(locator, ...fallbacks)
+          if (!el) return null
+          if (!(await el.isDisplayed())) return null
+          return el
+        } catch (e) {
+          return null
+        }
       })
     )
     return await this.driver.wait<WebElementShape>(visibleCondition, timeout)
