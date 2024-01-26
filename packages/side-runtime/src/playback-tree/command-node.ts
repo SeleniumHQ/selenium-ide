@@ -127,47 +127,18 @@ export class CommandNode {
         ? () => customCommand.execute(command, commandExecutor)
         : // @ts-expect-error webdriver is too kludged by here
           () => commandExecutor[existingCommandName](target, value, command)
-      const cmdList = [
-        'click',
-        'check',
-        'select',
-        'type',
-        'sendKeys',
-        'uncheck',
-      ]
-      const ignoreRetry = !cmdList.includes(commandName)
-      if (ignoreRetry) {
+      try {
         return executor()
+      } catch (e) {
+        const err = e as Error
+        err.message += ` (cmd: ${commandName}|${target}|${value})`
+        throw err
       }
-      return this.retryCommand(
-        executor,
-        Date.now() + commandExecutor.implicitWait
-      )
     }
   }
 
   async pauseTimeout(timeout?: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, timeout))
-  }
-
-  async retryCommand(
-    execute: () => Promise<unknown>,
-    timeout: number
-  ): Promise<unknown> {
-    const timeLimit = timeout - Date.now()
-    const expirationTimer = setTimeout(() => {
-      throw new Error(
-        `Operation timed out running command ${this.command.command}:${this.command.target}:${this.command.value}`
-      )
-    }, timeLimit)
-    try {
-      const result = await execute()
-      clearTimeout(expirationTimer)
-      return result
-    } catch (e) {
-      clearTimeout(expirationTimer)
-      throw e
-    }
   }
 
   _executionResult(result: CommandExecutionResult = {}) {
