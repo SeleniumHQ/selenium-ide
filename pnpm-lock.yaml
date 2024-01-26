@@ -279,7 +279,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.35
+        specifier: ^4.0.0-alpha.36
         version: link:../side-runtime
       dnd-core:
         specifier: ^16.0.1
@@ -522,7 +522,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.35
+        specifier: ^4.0.0-alpha.36
         version: link:../side-runtime
       commander:
         specifier: ^11.0.0
