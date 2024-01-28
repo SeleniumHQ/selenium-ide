@@ -13,6 +13,33 @@ exports[`Playback Event emitting Control Flow forEach 1`] = `
     "iterator": "a",
     "type": "loop",
   },
+  {
+    "collection": [
+      "a",
+      "b",
+      "c",
+    ],
+    "commandId": "asdf0",
+    "index": 1,
+    "iterator": "b",
+    "type": "loop",
+  },
+  {
+    "collection": [
+      "a",
+      "b",
+      "c",
+    ],
+    "commandId": "asdf0",
+    "index": 2,
+    "iterator": "c",
+    "type": "loop",
+  },
+  {
+    "commandId": "asdf0",
+    "end": true,
+    "type": "loop",
+  },
 ]
 `;
 
@@ -362,31 +389,8 @@ exports[`Playback abort should abort a test after attempting to stop 1`] = `
       "target": "",
       "value": "",
     },
-    "id": "2",
-    "message": undefined,
-    "state": "passed",
-  },
-  {
-    "callstackIndex": 0,
-    "command": {
-      "command": "open",
-      "id": "3",
-      "target": "",
-      "value": "",
-    },
-    "id": "3",
-    "state": "executing",
-  },
-  {
-    "callstackIndex": 0,
-    "command": {
-      "command": "open",
-      "id": "3",
-      "target": "",
-      "value": "",
-    },
     "error": [Error: Playback stopped],
-    "id": "3",
+    "id": "2",
     "message": "Playback stopped",
     "state": "errored",
   },
