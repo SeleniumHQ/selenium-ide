@@ -407,13 +407,13 @@ describe('Playback', () => {
       }
       const executor = new FakeExecutor({})
       executor.doOpen.mockImplementation(async (_url: string) => {
-        await psetTimeout(2)
+        await psetTimeout(10)
       })
       const playback = new Playback({
         executor,
       } as unknown as any)
       await playback.play(test)
-      await psetTimeout(5)
+      await psetTimeout(15)
       await playback.pause()
       await playback.playSingleCommand({
         id: 'a',
@@ -422,7 +422,7 @@ describe('Playback', () => {
         value: '',
       })
       await playback.resume()
-      await psetTimeout(5)
+      await psetTimeout(50)
       expect(executor.doOpen).toHaveBeenCalledTimes(4)
     }, 10000)
 
