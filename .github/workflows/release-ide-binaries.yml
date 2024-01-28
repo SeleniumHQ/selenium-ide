@@ -48,35 +48,6 @@ jobs:
         env:
           NODE_ENV: "production"
       - name: Build selenium-ide binaries
-        run: npm run build:electron:${{ matrix.platform }}
-        working-directory: ./packages/selenium-ide
-      - name: Set env from current release
-        run: >
-          echo "SIDE_RELEASE_VERSION=$(node -pe "require('./package.json').version")" >> $GITHUB_ENV
-        if: matrix.platform != 'windows'
-        working-directory: ./packages/selenium-ide
-      - name: Set env from current release on Windows
-        run: |
-          $version = node -pe "require('./package.json').version"
-          echo "SIDE_RELEASE_VERSION=$version" | Out-File -Append -Encoding utf8 $Env:GITHUB_ENV
-        shell: pwsh
-        if: matrix.platform == 'windows'
-        working-directory: ./packages/selenium-ide
-      - name: Check env is there
-        run: echo "${{ env.SIDE_RELEASE_VERSION }}"
-      - name: Release latest selenium-ide on github
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest-${{ matrix.platform }}"
-          prerelease: true
-          title: "Nightly (Unstable)"
-          files: packages/selenium-ide/dist/Selenium*
-      - name: Release selenium-ide on github
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ env.SIDE_RELEASE_VERSION }}-${{ matrix.platform }}"
-          prerelease: false
-          files: packages/selenium-ide/dist/Selenium*
-        continue-on-error: true
+        run: npm run publish:electron:${{ matrix.platform }}
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
