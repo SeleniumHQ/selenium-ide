@@ -388,42 +388,41 @@ describe('Playback', () => {
           {
             id: 'a',
             command: 'open',
-            target: '',
+            target: '1',
             value: '',
           },
           {
             id: 'b',
             command: 'open',
-            target: '',
+            target: '2',
             value: '',
           },
           {
             id: 'c',
             command: 'open',
-            target: '',
+            target: '3',
             value: '',
           },
         ],
       }
       const executor = new FakeExecutor({})
       executor.doOpen.mockImplementation(async (_url: string) => {
-        await psetTimeout(1)
-        return
+        await psetTimeout(2)
       })
       const playback = new Playback({
         executor,
       } as unknown as any)
       await playback.play(test)
-      await psetTimeout(7)
+      await psetTimeout(5)
       await playback.pause()
       await playback.playSingleCommand({
         id: 'a',
         command: 'open',
-        target: '',
+        target: '4',
         value: '',
       })
       await playback.resume()
-      await psetTimeout(10)
+      await psetTimeout(5)
       expect(executor.doOpen).toHaveBeenCalledTimes(4)
     }, 10000)
 
