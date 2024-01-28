@@ -707,12 +707,9 @@ export default class Playback {
         }, DELAY_INTERVAL)
       })
     }
-    return new Promise((res, rej) => {
-      if (this[state].pausing || this[state].stopping || this[state].aborting) {
-        rej(new Error('delay cancelled due to playback being stopped/paused'))
-      }
-      setTimeout(res, 0)
-    })
+    if (this[state].pausing || this[state].stopping || this[state].aborting) {
+      throw new Error('delay cancelled due to playback being stopped/paused')
+    }
   }
 
   _unwind() {
