@@ -4,13 +4,13 @@ import React from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import Main from '../Main'
-import { TAB, TESTS_TAB } from '../../enums/tab'
 import { SIDEMainProps } from '../types'
 
-const ProjectEditor: React.FC<Pick<SIDEMainProps, 'session'>> = ({
+const ProjectEditor: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = ({
   session,
+  setTab,
+  tab
 }) => {
-  const [tab, setTab] = React.useState<TAB>(TESTS_TAB)
   if (session.project.id === loadingID) {
     return <div id="loading" />
   }

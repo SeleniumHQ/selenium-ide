@@ -164,12 +164,12 @@ export default class WindowsController extends BaseController {
     return this.windows[name]
   }
 
-  getLastPlaybackWindow(): BrowserWindow {
+  getLastPlaybackWindow(): BrowserWindow | null {
     const windowCount = this.playbackWindows.length
     if (windowCount === 0) {
-      return null as any
+      return null
     }
-    return this.playbackWindows[windowCount - 1]
+    return this.playbackWindows.find((win) => win.isVisible()) ?? null
   }
 
   async open(

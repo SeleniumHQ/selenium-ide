@@ -270,7 +270,7 @@ importers:
         specifier: ^4.0.0-alpha.3
         version: link:../get-driver
       '@seleniumhq/side-api':
-        specifier: ^4.0.0-alpha.45
+        specifier: ^4.0.0-alpha.46
         version: link:../side-api
       '@seleniumhq/side-commons':
         specifier: ^4.0.0-alpha.2
@@ -279,7 +279,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.37
+        specifier: ^4.0.0-alpha.38
         version: link:../side-runtime
       dnd-core:
         specifier: ^16.0.1
@@ -288,14 +288,17 @@ importers:
         specifier: ^28.0.0
         version: 28.0.0
       electron-log:
-        specifier: ^5.0.1
-        version: 5.0.1
+        specifier: ^5.1.0
+        version: 5.1.0
       electron-store:
         specifier: ^8.1.0
         version: 8.1.0
       electron-unhandled:
         specifier: ^4.0.1
         version: 4.0.1
+      electron-updater:
+        specifier: ^6.1.7
+        version: 6.1.7
       fs-extra:
         specifier: ^11.1.1
         version: 11.1.1
@@ -340,8 +343,8 @@ importers:
         specifier: 8.0.1
         version: 8.0.1(webpack-cli@5.1.4)
       '@types/electron-devtools-installer':
-        specifier: ^2.2.4
-        version: 2.2.4
+        specifier: ^2.2.5
+        version: 2.2.5
       '@types/fs-extra':
         specifier: ^11.0.1
         version: 11.0.1
@@ -367,8 +370,8 @@ importers:
         specifier: ^6.8.1
         version: 6.8.1(webpack@5.89.0)
       electron:
-        specifier: ^28.0.0
-        version: 28.0.0
+        specifier: ^28.2.0
+        version: 28.2.0
       electron-builder:
         specifier: ^24.9.1
         version: 24.9.1
@@ -427,7 +430,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.32
+        specifier: ^4.0.0-alpha.38
         version: link:../side-runtime
       lodash:
         specifier: ^4.17.21
@@ -471,7 +474,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.32
+        specifier: ^4.0.0-alpha.38
         version: link:../side-runtime
       commander:
         specifier: ^9.4.0
@@ -522,7 +525,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.37
+        specifier: ^4.0.0-alpha.38
         version: link:../side-runtime
       commander:
         specifier: ^11.0.0
@@ -3232,8 +3235,8 @@ packages:
     resolution: {integrity: sha512-+6SeXnd1MRqF1Fl1cVMGRJLbgKQeubuGoThiE2RaFYXxWQmAMzIk8aXOtTXXDxBhF9Stxns8u/LUzW0ZcbMjcQ==}
     dev: false
 
-  /@seleniumhq/side-runtime@4.0.0-alpha.35:
-    resolution: {integrity: sha512-wK7Wssrt7o3sd+dbJbqpjfJagnZl5MFMgksWmbsPFBees/u6KeOAR6bPq66QXGq0zRKOEBo9LKCVRJV+Die2+w==}
+  /@seleniumhq/side-runtime@4.0.0-alpha.37:
+    resolution: {integrity: sha512-PX2V5pxsD3v+2fhomiQNfCDD0Ic5gESAQ7dwXF6ia/pxPWMsOrtdPnmIws8qLmBGOSUc7nJ6QY43565PHURLSA==}
     dependencies:
       '@seleniumhq/side-commons': 4.0.0-alpha.2
       '@seleniumhq/side-model': 4.0.0-alpha.5
@@ -3369,8 +3372,8 @@ packages:
       '@types/ms': 0.7.31
     dev: true
 
-  /@types/electron-devtools-installer@2.2.4:
-    resolution: {integrity: sha512-SA7SjTduhf8KSytsFQP4oersLPRxlCZLyg318Lwb53kci7x3JLaUf9M1vcLcLuPAVfo6xgQEAmbyPN3O5br94g==}
+  /@types/electron-devtools-installer@2.2.5:
+    resolution: {integrity: sha512-DhH8z0dadKuDolvH4TiW40Vp7H3VyZbOoZv98hhBaUfnxmvvcXTjkZjzw/54xvAmuG4KFzExOGAiVLg3jM2ojQ==}
     dev: true
 
   /@types/eslint-scope@3.7.4:
@@ -4566,7 +4569,6 @@ packages:
       sax: 1.2.4
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /builder-util@24.8.1:
     resolution: {integrity: sha512-ibmQ4BnnqCnJTNrdmdNlnhF48kfqhNzSeqFMXHLIl+o9/yhn6QfOaVrloZ9YUu3m0k3rexvlT5wcki6LWpjTZw==}
@@ -5489,8 +5491,8 @@ packages:
     resolution: {integrity: sha512-3X99K852Yoqu9AcW50qz3ibYBWY79/pBhlMCab8ToEWS48R0T9tyxRiQhwylE7zQdXrMnx2JKqUJyMPmt5FBqA==}
     dev: false
 
-  /electron-log@5.0.1:
-    resolution: {integrity: sha512-x4wnwHg00h/onWQgjmvcdLV7Mrd9TZjxNs8LmXVpqvANDf4FsSs5wLlzOykWLcaFzR3+5hdVEQ8ctmrUxgHlPA==}
+  /electron-log@5.1.0:
+    resolution: {integrity: sha512-Qwl8J41jqps2ibE2WSolOyoGkZ/kbpenggxPTCyT/0jlMl1DfPXpjROIL7m85SOhRkuw56sFGRG0rAlmzgxZQA==}
     engines: {node: '>= 14'}
     dev: false
 
@@ -5528,8 +5530,36 @@ packages:
       serialize-error: 8.1.0
     dev: false
 
+  /electron-updater@6.1.7:
+    resolution: {integrity: sha512-SNOhYizjkm4ET+Y8ilJyUzcVsFJDtINzVN1TyHnZeMidZEG3YoBebMyXc/J6WSiXdUaOjC7ngekN6rNp6ardHA==}
+    dependencies:
+      builder-util-runtime: 9.2.3
+      fs-extra: 10.1.0
+      js-yaml: 4.1.0
+      lazy-val: 1.0.5
+      lodash.escaperegexp: 4.1.2
+      lodash.isequal: 4.5.0
+      semver: 7.5.3
+      tiny-typed-emitter: 2.1.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /electron@28.0.0:
     resolution: {integrity: sha512-eDhnCFBvG0PGFVEpNIEdBvyuGUBsFdlokd+CtuCe2ER3P+17qxaRfWRxMmksCOKgDHb5Wif5UxqOkZSlA4snlw==}
+    engines: {node: '>= 12.20.55'}
+    hasBin: true
+    requiresBuild: true
+    dependencies:
+      '@electron/get': 2.0.2
+      '@types/node': 18.16.19
+      extract-zip: 2.0.1
+    transitivePeerDependencies:
+      - supports-color
+    dev: true
+
+  /electron@28.2.0:
+    resolution: {integrity: sha512-22SylXQQ9IHtwLw4D+Z4Si7OUpeDtpHfJVTjy3yv53iLg5zJKKPOCWT4ZwgYGHQZ0eldyBrYBHF/P9FPd2CcVQ==}
     engines: {node: '>= 12.20.55'}
     hasBin: true
     requiresBuild: true
@@ -6424,7 +6454,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs-extra@11.1.1:
     resolution: {integrity: sha512-MGIE4HOvQCeUCzmlHs0vXpih4ysz4wg9qiSAu6cd42lVwPbTM1TjV7RusoyQqMmk/95gdQZX72u+YW+c3eEpFQ==}
@@ -8323,7 +8352,6 @@ packages:
 
   /lazy-val@1.0.5:
     resolution: {integrity: sha512-0/BnGCCfyUMkBpeDgWihanIAF9JmZhHBgUhEqzvf+adhNGLoP6TaiI5oF8oyb3I45P+PcnrqihSf01M0l0G5+Q==}
-    dev: true
 
   /leven@3.1.0:
     resolution: {integrity: sha512-qsda+H8jTaUaN/x5vzW2rzc+8Rw4TAQ/4KjB46IwK5VH+IlVeeeje/EoZRpiXvIqjFgK84QffqPztGI3VBLG1A==}
@@ -8387,6 +8415,10 @@ packages:
 
   /lodash.debounce@4.0.8:
     resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
+
+  /lodash.escaperegexp@4.1.2:
+    resolution: {integrity: sha512-TM9YBvyC84ZxE3rgfefxUWiQKLilstD6k7PTGt6wfbtXF8ixIJLOL3VYyV/z+ZiPLsVxAsKAFVwWlWeb2Y8Yyw==}
+    dev: false
 
   /lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
@@ -10021,7 +10053,7 @@ packages:
     hasBin: true
     dependencies:
       '@seleniumhq/side-model': 4.0.0-alpha.5
-      '@seleniumhq/side-runtime': 4.0.0-alpha.35
+      '@seleniumhq/side-runtime': 4.0.0-alpha.37
       commander: 9.4.1
     transitivePeerDependencies:
       - bufferutil
@@ -10592,6 +10624,10 @@ packages:
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
+
+  /tiny-typed-emitter@2.1.0:
+    resolution: {integrity: sha512-qVtvMxeXbVej0cQWKqVSSAHmKZEHAvxdF8HEUBFWts8h+xEo5m/lEiPakuyZ3BnCBjOD8i24kzNOiOLLgsSxhA==}
+    dev: false
 
   /titleize@3.0.0:
     resolution: {integrity: sha512-KxVu8EYHDPBdUYdKZdKtU2aj2XfEx9AfjXxE/Aj0vT06w2icA09Vus1rh6eSu1y01akYg6BjIK/hxyLJINoMLQ==}

@@ -1,6 +1,6 @@
 {
   "name": "selenium-ide",
-  "version": "4.0.1-alpha.83",
+  "version": "4.0.1-alpha.84",
   "private": false,
   "description": "Selenium IDE electron app",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -11,12 +11,13 @@
     "start": "electron build/main-bundle.js",
     "build": "run-s build:webpack build:electron",
     "build:electron": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl --publish never",
-    "build:electron:linux": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -l --publish never",
-    "build:electron:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -m --publish never",
-    "build:electron:windows": "electron-builder -w --publish never",
+    "build:electron:linux": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -l --publish always",
+    "build:electron:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -m --publish always",
+    "build:electron:windows": "electron-builder -w --publish always",
     "build:electron:dir": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
     "build:webpack": "webpack",
     "install-app-deps": "electron-builder install-app-deps",
+    "release": "electron-builder",
     "watch": "webpack --watch"
   },
   "bin": {
@@ -75,6 +76,13 @@
       ]
     },
     "win": {
+      "publish": [
+        {
+          "provider": "github",
+          "owner": "SeleniumHQ",
+          "repo": "selenium-ide"
+        }
+      ],
       "target": "nsis"
     },
     "nsis": {
@@ -113,15 +121,16 @@
     "@seleniumhq/code-export-python-pytest": "^4.0.0-alpha.4",
     "@seleniumhq/code-export-ruby-rspec": "^4.0.0-alpha.3",
     "@seleniumhq/get-driver": "^4.0.0-alpha.3",
-    "@seleniumhq/side-api": "^4.0.0-alpha.45",
+    "@seleniumhq/side-api": "^4.0.0-alpha.46",
     "@seleniumhq/side-commons": "^4.0.0-alpha.2",
     "@seleniumhq/side-model": "^4.0.0-alpha.5",
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.37",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.38",
     "dnd-core": "^16.0.1",
     "electron-chromedriver": "^28.0.0",
-    "electron-log": "^5.0.1",
+    "electron-log": "^5.1.0",
     "electron-store": "^8.1.0",
     "electron-unhandled": "^4.0.1",
+    "electron-updater": "^6.1.7",
     "fs-extra": "^11.1.1",
     "lodash": "4.17.21",
     "react": "^18.2.0",
@@ -138,7 +147,7 @@
     "@medv/finder": "^1.1.1",
     "@seleniumhq/browser-info": "^4.0.0-alpha.2",
     "@types/copy-webpack-plugin": "8.0.1",
-    "@types/electron-devtools-installer": "^2.2.4",
+    "@types/electron-devtools-installer": "^2.2.5",
     "@types/fs-extra": "^11.0.1",
     "@types/lodash": "^4.14.199",
     "@types/react": "^18.2.15",
@@ -147,7 +156,7 @@
     "@types/webpack-env": "^1.16.0",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.8.1",
-    "electron": "^28.0.0",
+    "electron": "^28.2.0",
     "electron-builder": "^24.9.1",
     "electron-devtools-installer": "^3.2.0",
     "fork-ts-checker-webpack-plugin": "^8.0.0",

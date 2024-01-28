@@ -1,6 +1,7 @@
 import 'v8-compile-cache'
 import 'source-map-support/register'
 import { app } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import { configureLogging, connectSessionLogging } from './log'
 import createSession from './session'
 import installReactDevtools from './install-react-devtools'
@@ -9,7 +10,9 @@ import { isAutomated } from './util'
 // whatever
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 // Configure logging
-configureLogging()
+const log = configureLogging()
+autoUpdater.logger = log
+
 
 // Capture and show unhandled exceptions
 process.on('unhandledRejection', function handleWarning(reason) {

@@ -7,6 +7,7 @@ const DrawerHeader: React.FC<PaperProps> = styled(Paper)(
     borderColor: theme.palette.action.focus,
     // necessary for content to be below app bar
     justifyContent: 'flex-end',
+    textOverflow: 'ellipsis',
   })
 )
 

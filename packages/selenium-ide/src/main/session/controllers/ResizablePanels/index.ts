@@ -9,7 +9,7 @@ type Rect = {
 }
 
 const resizablePanelDefaults: Record<string, number[]> = {
-  'editor-playback': [25, 75],
+  'editor-playback': [10, 20, 70],
   'playback-logger': [80, 20],
 }
 
@@ -21,11 +21,18 @@ export default class ResizablePanelsController extends BaseController {
     super(session)
   }
   async getPanelGroup(id: string) {
-    return this.session.store.get(
-      `panelGroup.${id}`,
-      resizablePanelDefaults?.[id] ?? [50, 50]
+    const currentValue = this.session.store.get<string, number[]>(
+      `panelGroup.${id}`
     )
+    const defaultValue = resizablePanelDefaults?.[id]
+    if (defaultValue) {
+      if (!currentValue || currentValue.length !== defaultValue.length) {
+        return defaultValue
+      }
+    }
+    return currentValue || [50, 50]
   }
+
   async recalculatePlaybackWindows() {
     const panelScreenPosition = await this.getPanelScreenPosition(
       'playback-panel'
@@ -42,7 +49,7 @@ export default class ResizablePanelsController extends BaseController {
       )
     })
   }
-  
+
   async setPanelGroup(id: string, dimensions: number[]) {
     this.session.store.set(`panelGroup.${id}`, dimensions)
     this.recalculatePlaybackWindows()

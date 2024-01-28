@@ -12,6 +12,8 @@ import SIDELogger from 'browser/components/Logger'
 import PlaybackControls from 'browser/components/PlaybackControls'
 import ProjectPlaybackWindow from 'browser/components/PlaybackPanel'
 import ProjectEditor from 'browser/components/ProjectEditor'
+import { TAB, TESTS_TAB } from 'browser/enums/tab'
+import SIDEDrawer from 'browser/components/Drawer'
 
 const usePanelGroup = (id: string) => {
   const [ready, setReady] = React.useState(false)
@@ -38,6 +40,7 @@ const usePanelGroup = (id: string) => {
 
 const ProjectMainWindow = () => {
   const session = subscribeToSession()
+  const [tab, setTab] = React.useState<TAB>(TESTS_TAB)
   return (
     <AppWrapper>
       <PanelGroup
@@ -45,11 +48,15 @@ const ProjectMainWindow = () => {
         id="editor-playback"
         {...usePanelGroup('editor-playback')}
       >
-        <Panel id="editor-panel" order={1}>
-          <ProjectEditor session={session} />
+        <Panel collapsible id="editor-drawer" order={1}>
+          <SIDEDrawer session={session} tab={tab} />
         </Panel>
-        <PanelResizeHandle className="resize-bar" id="h-resize" />
-        <Panel id="playback-logger-panel" order={2}>
+        <PanelResizeHandle className="resize-bar" id="h-resize-1" />
+        <Panel id="editor-panel" order={2}>
+          <ProjectEditor session={session} setTab={setTab} tab={tab} />
+        </Panel>
+        <PanelResizeHandle className="resize-bar" id="h-resize-2" />
+        <Panel id="playback-logger-panel" order={3}>
           <PanelGroup
             direction="vertical"
             id="playback-logger"

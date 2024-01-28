@@ -176,7 +176,7 @@ export default class PlaybackController extends BaseController {
       if (forceNewWindow) {
         throw new Error('Force new window')
       }
-      window = await this.session.windows.getLastPlaybackWindow()
+      window = await this.session.windows.getLastPlaybackWindow()!
       if (!window) {
         throw new Error('No windows found')
       }

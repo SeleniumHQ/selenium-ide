@@ -13,8 +13,9 @@ export const configureLogging = () => {
   if (!logFileExists) {
     writeFileSync(logPath, '')
   }
-  log.transports.file.resolvePath = () => join(app.getPath('logs'), logFile)
+  log.transports.file.resolvePathFn = () => join(app.getPath('logs'), logFile)
   Object.assign(console, log.functions)
+  return log
 }
 
 // Wire up logging to the frontend

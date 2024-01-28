@@ -213,6 +213,9 @@ body,
 .pb-0 {
   padding-bottom: 0 !important;
 }
+.pb-3 {
+  padding-bottom: 0.5rem;
+}
 .pe-3 {
   padding-right: 0.5rem;
 }
@@ -246,6 +249,14 @@ body,
 .py-3 {
   padding-bottom: 0.5rem;
   padding-top: 0.5rem;
+}
+.py-3-375 {
+  padding-top: 0.675rem;
+  padding-bottom: 0.675rem;
+}
+.py-3-5 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 .py-4 {
   padding-bottom: 1rem;
