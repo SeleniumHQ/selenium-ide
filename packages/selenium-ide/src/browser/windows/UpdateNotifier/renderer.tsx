@@ -5,8 +5,7 @@ import AppWrapper from 'browser/components/AppWrapper'
 import renderWhenReady from 'browser/helpers/renderWhenReady'
 import React from 'react'
 
-const completeStatus =
-  'Update has been installed and will be applied on restart.'
+const completeStatus = 'Update Downloaded'
 
 let lastStatus = ''
 // @ts-expect-error just whatever
@@ -22,8 +21,8 @@ const UpdateNotifier = () => {
     setStatus(lastStatus)
   }, [])
   // @ts-expect-error this exists
-  const completeUpdateNotifier = () => window.completeUpdateNotifier()
-  const closeUpdateNotifier = () => window.close()
+  const doRestart = () => window.doRestart()
+  const close = () => window.close()
 
   return (
     <AppWrapper>
@@ -31,27 +30,27 @@ const UpdateNotifier = () => {
         <Grid item xs={12}>
           <Typography variant="subtitle1">{status}</Typography>
         </Grid>
-      {status === completeStatus && (
-        <>
-          <Grid item xs={6}>
-            <Button onClick={closeUpdateNotifier} variant="outlined">
-              OK
-            </Button>
-          </Grid>
-          <Grid item xs={6}>
-            <Button onClick={completeUpdateNotifier} variant="contained">
-              Restart Now
-            </Button>
-          </Grid>
-        </>
-      )}
-      {status.startsWith('Error') && (
+        {status === completeStatus && (
+          <>
+            <Grid item xs={6}>
+              <Button onClick={close} variant="outlined">
+                OK
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Button onClick={doRestart} variant="contained">
+                Restart
+              </Button>
+            </Grid>
+          </>
+        )}
+        {status.startsWith('Error') && (
           <Grid item xs={12}>
-            <Button onClick={closeUpdateNotifier} variant="outlined">
+            <Button onClick={close} variant="outlined">
               OK
             </Button>
           </Grid>
-      )}
+        )}
       </Grid>
     </AppWrapper>
   )
