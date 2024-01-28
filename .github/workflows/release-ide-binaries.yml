@@ -50,6 +50,6 @@ jobs:
       - name: Build selenium-ide binaries
         run: npm run publish:electron:${{ matrix.platform }}
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ./packages/selenium-ide
         
