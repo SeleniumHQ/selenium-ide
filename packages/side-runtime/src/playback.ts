@@ -256,20 +256,6 @@ export default class Playback {
     }
   }
 
-  async pause({ graceful } = { graceful: false }) {
-    if (!this.currentExecutingNode) {
-      return
-    }
-    this[state].pausing = true
-    if (!graceful) {
-      await this.executor.cancel()
-    }
-    this[state].isPlaying = false
-    await new Promise((res) => {
-      this[state].pausingResolve = res
-    })
-  }
-
   resume() {
     this[state].steps = undefined
     this._resume()
@@ -641,16 +627,23 @@ export default class Playback {
     this[state].callstack = undefined
   }
 
+  async pause({ graceful } = { graceful: false }) {
+    if (!this.currentExecutingNode) {
+      return
+    }
+    this[state].pausing = true
+    if (!graceful) {
+      await this.executor.cancel()
+    }
+    this[state].isPlaying = false
+    await new Promise((res) => {
+      this[state].pausingResolve = res
+    })
+  }
+
   async _pause() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PAUSED,
-    })
-    await this.__pause()
-  }
-
-  async _break() {
-    this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
-      state: PlaybackStates.BREAKPOINT,
     })
     await this.__pause()
   }
@@ -675,6 +668,13 @@ export default class Playback {
     return new Promise((res) => {
       this[state].resumeResolve = res
     })
+  }
+
+  async _break() {
+    this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
+      state: PlaybackStates.BREAKPOINT,
+    })
+    await this.__pause()
   }
 
   async _handleException(unhandledBahaviorFn: Fn) {
