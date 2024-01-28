@@ -67,8 +67,9 @@ describe('Playback', () => {
         })
         const cb = jest.fn()
         playback['event-emitter'].on(PlaybackEvents.CONTROL_FLOW_CHANGED, cb)
-        const playPromise = await playback.play(test)
-        await playPromise()
+        await (
+          await playback.play(test)
+        )()
         const results = flat(cb.mock.calls)
         expect(results).toMatchSnapshot()
       })
