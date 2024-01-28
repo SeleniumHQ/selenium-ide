@@ -1,8 +1,8 @@
 import { WindowConfig } from 'browser/types'
 import Electron from 'electron'
 
-const WIDTH = 400
-const HEIGHT = 150
+const WIDTH = 300
+const HEIGHT = 120
 
 export const window: WindowConfig['window'] = () => {
   const display = Electron.screen.getPrimaryDisplay()
@@ -15,12 +15,11 @@ export const window: WindowConfig['window'] = () => {
     minimizable: false,
     fullscreenable: false,
     autoHideMenuBar: true,
+    frame: false,
     maximizable: false,
-    show: false,
     skipTaskbar: true,
     useContentSize: false,
-    modal: true,
-    title: 'Update checker',
+    title: 'Checking for updates',
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,

@@ -5,13 +5,21 @@ import AppWrapper from 'browser/components/AppWrapper'
 import renderWhenReady from 'browser/helpers/renderWhenReady'
 import React from 'react'
 
-const completeStatus = 'Update has been installed and will be applied on restart.'
+const completeStatus =
+  'Update has been installed and will be applied on restart.'
+
+let lastStatus = ''
+// @ts-expect-error just whatever
+window.setStatus = (status: string) => {
+  lastStatus = status
+}
 
 const UpdateNotifier = () => {
-  const [status, setStatus] = React.useState('Checking for updates...')
+  const [status, setStatus] = React.useState(lastStatus)
   React.useEffect(() => {
     // @ts-expect-error just whatever
     window.setStatus = setStatus
+    setStatus(lastStatus)
   }, [])
   // @ts-expect-error this exists
   const completeUpdateNotifier = () => window.completeUpdateNotifier()
@@ -23,9 +31,8 @@ const UpdateNotifier = () => {
         <Grid item xs={12}>
           <Typography variant="subtitle1">{status}</Typography>
         </Grid>
-      </Grid>
       {status === completeStatus && (
-        <Grid className="centered" container spacing={1}>
+        <>
           <Grid item xs={6}>
             <Button onClick={closeUpdateNotifier} variant="outlined">
               OK
@@ -36,17 +43,16 @@ const UpdateNotifier = () => {
               Restart Now
             </Button>
           </Grid>
-        </Grid>
+        </>
       )}
       {status.startsWith('Error') && (
-        <Grid className="centered" container spacing={1}>
-          <Grid item xs={6}>
+          <Grid item xs={12}>
             <Button onClick={closeUpdateNotifier} variant="outlined">
               OK
             </Button>
           </Grid>
-        </Grid>
       )}
+      </Grid>
     </AppWrapper>
   )
 }

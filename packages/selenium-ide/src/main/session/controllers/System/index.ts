@@ -49,6 +49,7 @@ export default class SystemController extends BaseController {
     if (this.isDown) {
       // If automated, assume we already have a chromedriver process running
       if (!isAutomated) {
+        this.checkForUpdates()
         const startupError = await this.session.driver.startProcess(
           this.session.store.get('browserInfo')
         )
@@ -76,7 +77,6 @@ export default class SystemController extends BaseController {
       await this.session.api.system.onLog.addListener(this.writeToLog)
       this.isDown = false
       firstTime = false
-      this.checkForUpdates()
     }
   }
 
@@ -118,7 +118,13 @@ export default class SystemController extends BaseController {
     ipcMain.once('do-restart', () => {
       autoUpdater.quitAndInstall()
     })
-    autoUpdater.checkForUpdatesAndNotify()
+    const promise = await autoUpdater.checkForUpdatesAndNotify()
+    if (promise === null) {
+      window.webContents.executeJavaScript(
+        'window.setStatus("No Update Available")'
+      )
+      setTimeout(() => window.close(), 5000)
+    }
   }
 
   async shutdown() {
