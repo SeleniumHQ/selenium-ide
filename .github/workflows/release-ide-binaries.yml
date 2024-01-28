@@ -51,3 +51,5 @@ jobs:
         run: npm run publish:electron:${{ matrix.platform }}
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        working-directory: ./packages/selenium-ide
+        
