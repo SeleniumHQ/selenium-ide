@@ -102,7 +102,7 @@ export default class RecorderController extends BaseController {
   }
 
   async requestSelectElement(activate: boolean, fieldName: LocatorFields) {
-    this.session.windows.getLastPlaybackWindow().focus()
+    this.session.windows.getLastPlaybackWindow()?.focus()
     this.session.api.recorder.onRequestSelectElement.dispatchEvent(
       activate,
       fieldName

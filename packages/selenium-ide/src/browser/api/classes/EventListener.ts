@@ -43,9 +43,13 @@ const baseListener = <ARGS extends VariadicArgs>(
 
 const wrappedListener = <ARGS extends VariadicArgs>(path: string) => {
   const api = baseListener<ARGS>(path)
-  ipcRenderer.on(path, (_event, ...args) =>
+  const handler = (_event: Electron.IpcRendererEvent, ...args: any[]) =>
     api.dispatchEvent(...(args as ARGS))
-  )
+
+  ipcRenderer.addListener(path, handler)
+  window.addEventListener('beforeunload', () => {
+    ipcRenderer.removeListener(path, handler)
+  })
   return api
 }
 

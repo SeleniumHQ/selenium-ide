@@ -121,17 +121,17 @@ const buildRun =
                     state === 'finished' ? 'Success' : 'Failure'
                   }`
                 )
-                if (state !== 'finished') {
-                  logger.info(
-                    'Last command:',
-                    playback['state'].lastSentCommandState?.command
-                  )
-                  return onComplete(
-                    playback['state'].lastSentCommandState?.error ||
-                      new Error('Unknown error')
-                  )
+                if (state === 'finished') {
+                  return onComplete(null)
                 }
-                return onComplete(null)
+                logger.info(
+                  'Last command:',
+                  playback['state'].lastSentCommandState?.command
+                )
+                return onComplete(
+                  playback['state'].lastSentCommandState?.error ||
+                    new Error('Unknown error')
+                )
             }
             return
           }

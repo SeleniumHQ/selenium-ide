@@ -1,4 +1,5 @@
-import { dialog } from 'electron'
+import { dialog, ipcMain } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import { isAutomated } from 'main/util'
 import { inspect } from 'util'
 import { writeFile } from 'fs/promises'
@@ -75,7 +76,49 @@ export default class SystemController extends BaseController {
       await this.session.api.system.onLog.addListener(this.writeToLog)
       this.isDown = false
       firstTime = false
+      this.checkForUpdates()
     }
+  }
+
+  async checkForUpdates() {
+    this.session.windows.open('update-notifier')
+    const window = await this.session.windows.get('update-notifier')
+    window.on('ready-to-show', () => {
+      autoUpdater.on('checking-for-update', () => {
+        window.webContents.executeJavaScript(
+          'window.setStatus("Checking for update...")'
+        )
+      })
+      autoUpdater.on('update-available', () => {
+        window.webContents.executeJavaScript(
+          'window.setStatus("Update Available, downloading...")'
+        )
+      })
+      autoUpdater.on('update-not-available', () => {
+        window.webContents.executeJavaScript(
+          'window.setStatus("No Update Available")'
+        )
+        setTimeout(() => window.close(), 5000)
+      })
+      autoUpdater.on('error', (err) => {
+        window.webContents.executeJavaScript(
+          `window.setStatus("Error in auto-updater. ${err.message}")`
+        )
+      })
+      autoUpdater.on('download-progress', (progressObj) => {
+        const message = `Download speed: ${progressObj.bytesPerSecond} - Downloaded ${progressObj.percent}% (${progressObj.transferred}/${progressObj.total})`
+        window.webContents.executeJavaScript(`window.setStatus("${message}")`)
+      })
+      autoUpdater.on('update-downloaded', () => {
+        window.webContents.executeJavaScript(
+          `window.setStatus("Update Downloaded")`
+        )
+      })
+    })
+    ipcMain.once('do-restart', () => {
+      autoUpdater.quitAndInstall()
+    })
+    autoUpdater.checkForUpdatesAndNotify()
   }
 
   async shutdown() {

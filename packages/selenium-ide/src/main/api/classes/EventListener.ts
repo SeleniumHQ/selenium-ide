@@ -50,7 +50,7 @@ const baseListener = <ARGS extends VariadicArgs, RESULT extends any>(
       const results: RESULT[][] = await Promise.all(
         listeners.map((fn) => fn(...args))
       )
-      return results;
+      return results
     },
     hasListener(listener) {
       return listeners.includes(listener)
@@ -67,6 +67,7 @@ const baseListener = <ARGS extends VariadicArgs, RESULT extends any>(
   }
 }
 
+const responsePaths = ['recorder.onRequestelementAt']
 const wrappedListener = <ARGS extends VariadicArgs>(
   path: string,
   session: Session,
@@ -99,17 +100,24 @@ const wrappedListener = <ARGS extends VariadicArgs>(
       senderCounts[index] += 1
       return
     }
-    const senderFn = (...args: ARGS): Promise<any> => new Promise((resolve) => {
-      try {
-        ipcMain.once(`${path}.response`, (_event, results) => {
-          resolve(results)
-        });
-        sender.send(path, ...args)
-      } catch (e) {
-        // Sender has expired
-        removeListener(event)
-      }
-    });
+    const senderFn = (...args: ARGS): Promise<any> =>
+      new Promise((resolve) => {
+        try {
+          const hasResponse = responsePaths.includes(path)
+          if (hasResponse) {
+            ipcMain.once(`${path}.response`, (_event, results) => {
+              resolve(results)
+            })
+          }
+          sender.send(path, ...args)
+          if (!hasResponse) {
+            resolve(null)
+          }
+        } catch (e) {
+          // Sender has expired
+          removeListener(event)
+        }
+      })
     api.addListener(senderFn)
     senders.push(sender)
     senderCounts.push(1)

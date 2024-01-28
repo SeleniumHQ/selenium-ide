@@ -1,6 +1,6 @@
 import HelpCenter from '@mui/icons-material/HelpCenter'
 import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen'
-import FindInPageIcon from '@mui/icons-material/FindInPage';
+import FindInPageIcon from '@mui/icons-material/FindInPage'
 import Autocomplete from '@mui/material/Autocomplete'
 import FormControl from '@mui/material/FormControl'
 import IconButton from '@mui/material/IconButton'
@@ -55,8 +55,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
             },
           },
         }}
-        onChange={(event: any, newValue: string | null) => {
-          console.log(event)
+        onChange={(_event: any, newValue: string | null) => {
           onChange(newValue)
         }}
         onContextMenu={() => {
