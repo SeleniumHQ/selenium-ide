@@ -1476,7 +1476,11 @@ export default class WebDriverExecutor {
       this.withCancel(async () => {
         const el = await this.elementIsLocated(locator, ...fallbacks)
         if (!el) return null
-        if (!(await el.isDisplayed())) return null
+        try {
+          if (!(await el.isDisplayed())) return null
+        } catch (e) {
+          return null
+        }
         return el
       })
     )
