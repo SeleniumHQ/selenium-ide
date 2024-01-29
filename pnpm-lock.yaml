@@ -279,7 +279,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.38
+        specifier: ^4.0.0-alpha.39
         version: link:../side-runtime
       dnd-core:
         specifier: ^16.0.1
@@ -525,7 +525,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.38
+        specifier: ^4.0.0-alpha.39
         version: link:../side-runtime
       commander:
         specifier: ^11.0.0
@@ -3235,8 +3235,8 @@ packages:
     resolution: {integrity: sha512-+6SeXnd1MRqF1Fl1cVMGRJLbgKQeubuGoThiE2RaFYXxWQmAMzIk8aXOtTXXDxBhF9Stxns8u/LUzW0ZcbMjcQ==}
     dev: false
 
-  /@seleniumhq/side-runtime@4.0.0-alpha.37:
-    resolution: {integrity: sha512-PX2V5pxsD3v+2fhomiQNfCDD0Ic5gESAQ7dwXF6ia/pxPWMsOrtdPnmIws8qLmBGOSUc7nJ6QY43565PHURLSA==}
+  /@seleniumhq/side-runtime@4.0.0-alpha.38:
+    resolution: {integrity: sha512-RFdzENhj695YlL0DokTj5uscxHEklaWjMRs9jtsA4fzBSwaOHkWrxJAZGY1XBfkVtryoY5xcLvCCWIq82PeV5Q==}
     dependencies:
       '@seleniumhq/side-commons': 4.0.0-alpha.2
       '@seleniumhq/side-model': 4.0.0-alpha.5
@@ -10053,7 +10053,7 @@ packages:
     hasBin: true
     dependencies:
       '@seleniumhq/side-model': 4.0.0-alpha.5
-      '@seleniumhq/side-runtime': 4.0.0-alpha.37
+      '@seleniumhq/side-runtime': 4.0.0-alpha.38
       commander: 9.4.1
     transitivePeerDependencies:
       - bufferutil
