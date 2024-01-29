@@ -4,6 +4,7 @@ import { isAutomated } from 'main/util'
 import { inspect } from 'util'
 import { writeFile } from 'fs/promises'
 import BaseController from '../Base'
+import { platform } from 'os'
 
 let firstTime = true
 export default class SystemController extends BaseController {
@@ -81,6 +82,10 @@ export default class SystemController extends BaseController {
   }
 
   async checkForUpdates() {
+    // Don't check for updates on mac
+    // This won't work until we have code signing certs
+    if (platform() === 'darwin') return
+
     this.session.windows.open('update-notifier')
     const window = await this.session.windows.get('update-notifier')
     window.on('ready-to-show', () => {

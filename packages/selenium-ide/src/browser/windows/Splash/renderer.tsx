@@ -17,7 +17,6 @@ const ProjectEditor = () => {
     window.sideAPI.projects.getRecent().then(setRecentProjects)
   }, [])
   const loadProject = async () => {
-    
     const response = await window.sideAPI.dialogs.open()
     if (response.canceled) return
     await window.sideAPI.projects.load(response.filePaths[0])
@@ -56,9 +55,9 @@ const ProjectEditor = () => {
                 disablePadding
                 key={index}
                 onClick={() => {
-                   window.sideAPI.projects.load(filepath).then(()=>{
+                  window.sideAPI.projects.load(filepath).then(() => {
                     window.sideAPI.projects.getRecent().then(setRecentProjects)
-                   })                 
+                  })
                 }}
               >
                 <ListItemButton>
