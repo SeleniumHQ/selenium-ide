@@ -55,7 +55,7 @@ if (configuration.retries > 0) {
 }
 // Jest timeout should be really far back, otherwise it will impede people
 // When working right, we should close shop and detonate on our own much sooner
-jest.setTimeout(60 * 60 * 1000) // 60 minutes before we just cut it off
+jest.setTimeout(configuration.jestTimeout)
 
 const logger = createLogger({
   level: configuration.debug ? 'debug' : 'info',

@@ -8,7 +8,6 @@
     "build": "run-s build:ts build:ide",
     "build:electron": "pnpm run --stream --filter selenium-ide build:electron",
     "build:ide": "pnpm run --stream --filter selenium-ide build:webpack",
-    "build:js": "pnpm run --stream --filter @seleniumhq/code-export-* build",
     "build:ts": "tsc --build --verbose",
     "clean:deps": "rimraf packages/*/node_modules node_modules",
     "clean": "rimraf packages/*/build packages/*/dist packages/*/node_modules packages/*/tsconfig.tsbuildinfo node_modules",

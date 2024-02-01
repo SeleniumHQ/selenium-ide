@@ -73,6 +73,12 @@ program
     DEFAULT_TIMEOUT
   )
   .option(
+    '-T, --jest-timeout [number]',
+    `The maximimum amount of time, in milliseconds, to wait for a test to finish. (default: 60000)`,
+    (str) => parseInt(str),
+    60000
+  )
+  .option(
     '-x, --proxy-type [type]',
     'Type of proxy to use (one of: direct, manual, pac, socks, system)'
   )
@@ -129,6 +135,7 @@ let configuration: Configuration = {
   runId: crypto.randomBytes(16).toString('hex'),
   path: path.join(__dirname, '../../'),
   server: '',
+  jestTimeout: options.jestTimeout,
   timeout: DEFAULT_TIMEOUT,
 }
 

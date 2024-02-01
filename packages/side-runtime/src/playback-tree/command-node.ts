@@ -156,6 +156,13 @@ export class CommandNode {
   ): Promise<unknown> {
     return new Promise((res, rej) => {
       const timeLimit = timeout - Date.now()
+      if (timeLimit <= 0) {
+        return rej(
+          new Error(
+            `Operation timed out running command ${this.command.command}:${this.command.target}:${this.command.value}`
+          )
+        )
+      }
       const expirationTimer = setTimeout(() => {
         rej(
           new Error(

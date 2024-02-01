@@ -87,4 +87,5 @@ export type Configuration = Required<
     runId: string
     path: string
     screenshotFailureDirectory?: string
+    jestTimeout: number
   }

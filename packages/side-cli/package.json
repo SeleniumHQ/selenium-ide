@@ -23,14 +23,14 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "devDependencies": {
-    "@types/react": "^17.0.14"
+    "@types/react": "^18.2.51"
   },
   "dependencies": {
-    "@seleniumhq/side-model": "^4.0.0-alpha.1",
-    "@seleniumhq/side-runtime": "^4.0.0-alpha.11",
-    "ink": "^3.2.0",
-    "ink-select-input": "^4.2.1",
-    "ink-spinner": "^4.0.3",
-    "react": "^17.0.2"
+    "@seleniumhq/side-model": "^4.0.0-alpha.5",
+    "@seleniumhq/side-runtime": "^4.0.0-alpha.41",
+    "ink": "^4.4.1",
+    "ink-select-input": "^5.0.0",
+    "ink-spinner": "^5.0.0",
+    "react": "^18.2.0"
   }
 }
