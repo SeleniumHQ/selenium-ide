@@ -9,7 +9,8 @@ type Rect = {
 }
 
 const resizablePanelDefaults: Record<string, number[]> = {
-  'editor-playback': [10, 20, 70],
+  'drawer-editor': [30, 70],
+  'editor-playback': [30, 70],
   'playback-logger': [80, 20],
 }
 

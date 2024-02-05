@@ -100,7 +100,10 @@ export default class Playback {
     this[EE] = new EventEmitter()
     this[EE].emitCommandStateChange = (payload) => {
       this[state].lastSentCommandState = payload
-      this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, payload)
+      this[EE].emit(PlaybackEvents.COMMAND_STATE_CHANGED, {
+        ...payload,
+        testID: this[state].testID,
+      })
     }
     this[EE].emitControlFlowChange = (payload) => {
       this[EE].emit(PlaybackEvents.CONTROL_FLOW_CHANGED, payload)
@@ -129,6 +132,7 @@ export default class Playback {
     steps?: number
     stepPromise?: VaguePromiseWrapper
     stopping: boolean
+    testID?: string
   };
   [EE]: ExtendedEventEmitter
   initialized?: boolean
@@ -149,6 +153,7 @@ export default class Playback {
     test: TestShape,
     { pauseImmediately, startingCommandIndex }: PlayOptions = {}
   ) {
+    this[state].testID = test.id
     await this._prepareToPlay()
     this.commands = test.commands
     this.playbackTree = createPlaybackTree(test.commands, {
@@ -176,6 +181,7 @@ export default class Playback {
     } else if (startIndex && !test.commands[startIndex]) {
       throw new Error('Command to start from not found in test')
     } else {
+      this[state].testID = test.id
       const playToPromise = new Promise((res, rej) => {
         this[state].playTo = {
           command: test.commands[stopIndex].id,
@@ -193,6 +199,7 @@ export default class Playback {
   }
 
   async playFrom(test: TestShape, commandToStart: CommandShape) {
+    this[state].testID = test.id
     const index = test.commands.indexOf(commandToStart)
     if (index === -1) {
       throw new Error('Command not found in test')
@@ -310,6 +317,7 @@ export default class Playback {
   async _prepareToPlay() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PREPARATION,
+      testID: this[state].testID,
     })
   }
 
@@ -329,6 +337,7 @@ export default class Playback {
   async _play() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PLAYING,
+      testID: this[state].testID,
     })
 
     let finishWasCalled = false
@@ -357,6 +366,7 @@ export default class Playback {
       r()
       this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
         state: PlaybackStates.PLAYING,
+        testID: this[state].testID,
       })
     }
   }
@@ -597,9 +607,9 @@ export default class Playback {
         id,
         callstackIndex,
         command: this[state].lastSentCommandState.command,
-        state: CommandStates.ERRORED,
-        message: 'Playback stopped',
         error: new Error('Playback stopped'),
+        message: 'Playback stopped',
+        state: CommandStates.ERRORED,
       })
     }
     const { playTo, steps, stepPromise } = this[state]
@@ -622,9 +632,11 @@ export default class Playback {
 
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: this[state].exitCondition || PlaybackStates.FINISHED,
+      testID: this[state].testID,
     })
     this[state].lastSentCommandState = undefined
     this[state].callstack = undefined
+    this[state].testID = undefined
   }
 
   async pause({ graceful } = { graceful: false }) {
@@ -644,6 +656,7 @@ export default class Playback {
   async _pause() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PAUSED,
+      testID: this[state].testID,
     })
     await this.__pause()
   }
@@ -673,6 +686,7 @@ export default class Playback {
   async _break() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.BREAKPOINT,
+      testID: this[state].testID,
     })
     await this.__pause()
   }
@@ -743,6 +757,7 @@ export default class Playback {
 export interface PlaybackEventShapes {
   COMMAND_STATE_CHANGED: {
     id: string
+    testID?: string
     callstackIndex?: number
     command: CommandShape
     state: typeof CommandStates[keyof typeof CommandStates]
@@ -751,6 +766,7 @@ export interface PlaybackEventShapes {
   }
   PLAYBACK_STATE_CHANGED: {
     state: typeof PlaybackStates[keyof typeof PlaybackStates]
+    testID?: string
   }
   CALL_STACK_CHANGED: {
     change: typeof CallstackChange[keyof typeof CallstackChange]
