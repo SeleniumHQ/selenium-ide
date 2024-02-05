@@ -154,14 +154,13 @@ const electronPolyfills = (
   },
   setWindowSize: {
     execute: async (command: CommandShape, executor: WebDriverExecutor) => {
-      console.log('Setting window size?', command)
       const handle = await executor.driver.getWindowHandle()
       const window = await session.windows.getPlaybackWindowByHandle(handle)
       if (!window) {
         throw new Error('Failed to find playback window')
       }
       const [targetWidth, targetHeight] = command.target!.split('x').map((v) => parseInt(v))
-      await session.windows.resizePlaybackWindows(targetWidth, targetHeight)
+      await session.windows.resizePlaybackWindow(window, targetWidth, targetHeight)
     },
     name: 'setWindowSize',
     description: 'Sets the playback window size',
@@ -184,6 +183,7 @@ export default class DriverController extends BaseController {
   }
 
   driverProcess?: ChildProcess
+  stopped = true
   scriptManager?: Awaited<ReturnType<typeof getScriptManager>>
   windowHandle?: string
 
@@ -273,6 +273,7 @@ export default class DriverController extends BaseController {
   async startProcess(
     info: BrowserInfo = ourElectronBrowserInfo
   ): Promise<null | string> {
+    this.stopped = false
     const results = await startDriver(this.session)(info)
     if (results.success) {
       this.driverProcess = results.driver
@@ -283,6 +284,7 @@ export default class DriverController extends BaseController {
   }
 
   async stopProcess(): Promise<null | string> {
+    this.stopped = true
     await this.session.recorder.stop()
     await Promise.all(
       this.session.playback.playbacks.map((playback) => playback.cleanup())

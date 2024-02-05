@@ -12,25 +12,18 @@ export interface CurrentSuiteTestListProps {
 const SuiteViewer: React.FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
   const tests = session.project.tests
   const testResults = session.state.playback.testResults
-  const commandResults = session.state.playback.commands
   const activeSuite = getActiveSuite(session)
   return (
     <>
       <List className="overflow-y pt-0" dense>
         {activeSuite.tests.map((testID) => {
           const test = tests.find(hasID(testID)) as TestShape
-          const lastCommand = testResults[test.id]?.lastCommand
-          const command = lastCommand
-            ? test.commands.find((t) => t.id === lastCommand) || null
-            : null
-          const result = lastCommand
-            ? commandResults[lastCommand] ?? null
-            : null
+          const command = testResults[test.id]?.lastCommand
           return (
             <SuiteViewerEntry
               key={test.id}
               command={command}
-              result={result}
+              result={testResults[test.id]}
               test={test}
             />
           )

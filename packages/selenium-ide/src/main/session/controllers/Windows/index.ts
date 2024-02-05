@@ -78,9 +78,11 @@ const makeWindowLoaders = (session: Session): WindowLoaderMap =>
     ])
   )
 
+let partition = 1
 export default class WindowsController extends BaseController {
   handlesToIDs: { [key: string]: number } = {}
   playbackWindows: BrowserWindow[] = []
+  claimedPlaybackWindows: BrowserWindow[] = []
   windowLoaders: WindowLoaderMap = makeWindowLoaders(this.session)
   windows: { [key: string]: BrowserWindow } = {}
 
@@ -164,7 +166,38 @@ export default class WindowsController extends BaseController {
     return this.windows[name]
   }
 
-  getLastPlaybackWindow(): BrowserWindow | null {
+  requestPlaybackWindow() {
+    let availableWindow: BrowserWindow | null = null
+    const activeWindow = this.getActivePlaybackWindow()
+    const claimedWindows = this.claimedPlaybackWindows
+    if (activeWindow && !claimedWindows.includes(activeWindow)) {
+      availableWindow = activeWindow
+    } else {
+      const window = this.playbackWindows.find(
+        (bw) => !claimedWindows.includes(bw)
+      )
+      if (window) {
+        availableWindow = window
+      }
+    }
+    if (availableWindow) {
+      claimedWindows.push(availableWindow)
+    }
+    return availableWindow
+  }
+
+  async claimPlaybackWindow(window: BrowserWindow) {
+    this.claimedPlaybackWindows.push(window)
+  }
+
+  async releasePlaybackWindow(window: BrowserWindow) {
+    const index = this.claimedPlaybackWindows.indexOf(window)
+    if (index !== -1) {
+      this.claimedPlaybackWindows.splice(index, 1)
+    }
+  }
+
+  getActivePlaybackWindow(): BrowserWindow | null {
     const windowCount = this.playbackWindows.length
     if (windowCount === 0) {
       return null
@@ -228,8 +261,17 @@ export default class WindowsController extends BaseController {
   }
 
   async closePlaybackWindow(id: number) {
+    const activePlaybackWindow = this.getActivePlaybackWindow()
     const window = BrowserWindow.fromId(id)
+    const isActive = window === activePlaybackWindow
     window!.close()
+
+    if (isActive) {
+      const newActiveWindow = this.playbackWindows.find((w) => w.id !== id)
+      if (newActiveWindow) {
+        this.session.api.windows.focusPlaybackWindow(newActiveWindow.id)
+      }
+    }
   }
 
   async focusPlaybackWindow(id: number) {
@@ -252,6 +294,9 @@ export default class WindowsController extends BaseController {
       ...opts,
       ...playbackScreenPosition,
       parent: await this.session.windows.get(projectEditorWindowName),
+      webPreferences: {
+        partition: `playback-${partition++}`,
+      },
     })
     this.session.api.windows.onPlaybackWindowOpened.dispatchEvent(window.id, {
       title: window.getTitle(),
@@ -307,6 +352,19 @@ export default class WindowsController extends BaseController {
       height: resultHeight,
       zoomFactor,
     }
+  }
+
+  async resizePlaybackWindow(
+    window: BrowserWindow,
+    _targetWidth: number,
+    _targetHeight: number
+  ) {
+    const { width, height, zoomFactor } = await this.calculateScaleAndZoom(
+      _targetWidth,
+      _targetHeight
+    )
+    window.setSize(width, height)
+    window.webContents.setZoomFactor(zoomFactor)
   }
 
   async resizePlaybackWindows(_targetWidth: number, _targetHeight: number) {
@@ -407,10 +465,6 @@ export default class WindowsController extends BaseController {
     })
   }
 
-  async getPlaybackWindow() {
-    return this.playbackWindows.slice(-1)[0]
-  }
-
   arrangeWindow(
     window: Electron.BrowserWindow,
     sizeKey: string,
@@ -418,7 +472,7 @@ export default class WindowsController extends BaseController {
   ) {
     const size = this.session.store.get(sizeKey) as number[]
     const position = this.session.store.get(positionKey) as number[]
-    if (size?.length) window.setSize(size[0], size[1], true)
+    if (size?.length) window.setSize(size[0], size[1])
 
     const screenElectron = electron.screen.getPrimaryDisplay()
 

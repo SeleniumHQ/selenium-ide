@@ -32,11 +32,7 @@ export const port = app.isPackaged ? 9516 : 9515
 
 const electronBinary = `chromedriver${os.platform() === 'win32' ? '.exe' : ''}`
 const ourElectronPath = __non_webpack_require__.resolve(
-  path.join(
-    'electron-chromedriver',
-    'bin',
-    electronBinary
-  )
+  path.join('electron-chromedriver', 'bin', electronBinary)
 )
 
 const getDriver = ({ browser, version }: BrowserInfo) =>
@@ -60,7 +56,7 @@ export type StartDriver = (
   session: Session
 ) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
 
-const startDriver: StartDriver = () => (info) =>
+const startDriver: StartDriver = (session: Session) => (info) =>
   new Promise((resolve) => {
     let initialized = false
     const args = ['--verbose', `--port=${port}`]
@@ -108,15 +104,32 @@ const startDriver: StartDriver = () => (info) =>
           resolve({ success: false, error: errStr })
         }
       })
+      driver.on('error', (err: Error) => {
+        err.message = 'Webdriver process error: ' + err.message
+        WebdriverDebugLogErr(err)
+        if (!initialized) {
+          return resolve({
+            success: false,
+            error: err.message,
+          })
+        }
+        if (!session.driver.stopped) {
+          startDriver(session)(info)
+        }
+      })
+
       driver.on('close', (code: number) => {
         if (code) {
           WebdriverDebugLogErr(`driver has exited with code ${code}`)
           if (!initialized) {
-            resolve({
+            return resolve({
               success: false,
               error: 'Process has exited before starting with code ' + code,
             })
           }
+        }
+        if (!session.driver.stopped) {
+          startDriver(session)(info)
         }
       })
     } else {

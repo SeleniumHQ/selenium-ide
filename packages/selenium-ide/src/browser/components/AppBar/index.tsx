@@ -6,6 +6,7 @@ import { SUITES_TAB, TESTS_TAB } from '../../enums/tab'
 import { SIDEMainProps } from '../types'
 import AppBarTabs from './AppBarTabs'
 import { Paper } from '@mui/material'
+import { getActiveTest } from '@seleniumhq/side-api'
 
 const SIDEAppBar: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = ({
   session,
@@ -17,7 +18,7 @@ const SIDEAppBar: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = 
       <AppBarTabs setTab={setTab} tab={tab} />
       <div className="flex flex-1" />
       <TabPanel index={TESTS_TAB} value={tab}>
-        <TestControls state={session.state} />
+        <TestControls state={session.state} test={getActiveTest(session)} />
       </TabPanel>
       <TabPanel index={SUITES_TAB} value={tab}>
         <SuiteControls state={session.state} />

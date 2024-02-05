@@ -102,7 +102,7 @@ export default class RecorderController extends BaseController {
   }
 
   async requestSelectElement(activate: boolean, fieldName: LocatorFields) {
-    this.session.windows.getLastPlaybackWindow()?.focus()
+    this.session.windows.getActivePlaybackWindow()?.focus()
     this.session.api.recorder.onRequestSelectElement.dispatchEvent(
       activate,
       fieldName
@@ -156,7 +156,7 @@ export default class RecorderController extends BaseController {
       return newStepID
     }
 
-    let playbackWindow = await this.session.windows.getLastPlaybackWindow()
+    let playbackWindow = await this.session.windows.getActivePlaybackWindow()
     if (playbackWindow) {
       playbackWindow.focus()
       return newStepID
@@ -179,6 +179,7 @@ export default class RecorderController extends BaseController {
     const currentCommand = getActiveCommand(state)
     if (currentCommand.command !== 'open') {
       playback.executor.doOpen(state.project.url)
+      return newStepID
     }
     const url = new URL(currentCommand.target as string, state.project.url)
     playback.executor.doOpen(url.toString())
