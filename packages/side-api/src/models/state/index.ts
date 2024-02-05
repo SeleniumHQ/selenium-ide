@@ -2,7 +2,7 @@ import { CommandShape } from '@seleniumhq/side-model'
 import { CommandTypes } from '@seleniumhq/side-model/dist/Commands'
 import { badIndex } from '../../constants/badIndex'
 import { loadingID } from '../../constants/loadingID'
-import { CommandsStateShape } from './command'
+import { CommandStateShape, CommandsStateShape } from './command'
 
 /**
  * State data is the data from the active IDE session that will not be persisted.
@@ -66,13 +66,20 @@ export const defaultUserPrefs: UserPrefs = {
   ignoreCertificateErrorsPref: 'No',
 }
 
+export type TestResultShape = Pick<
+  CommandStateShape,
+  'error' | 'message' | 'state'
+> & {
+  lastCommand: CommandShape | null
+}
+
 export interface PlaybackStateShape {
   commands: CommandsStateShape
   currentIndex: number
   currentTestIndex: number
   stopIndex: number
   tests: string[]
-  testResults: Record<string, { lastCommand: string }>
+  testResults: Record<string, TestResultShape>
 }
 
 export const defaultPlaybackState: PlaybackStateShape = {

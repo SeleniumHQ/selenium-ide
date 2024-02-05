@@ -21,7 +21,7 @@ const SuitesDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
   const [confirmNew, setConfirmNew] = React.useState(false)
 
   return (
-    <Drawer header="Select Suite">
+    <Drawer>
       <SuiteCreateDialog open={confirmNew} setOpen={setConfirmNew} />
       <EditorToolbar
         onAdd={() => setConfirmNew(true)}
