@@ -1,0 +1,238 @@
+{
+  "id": "38a83034-12c8-45b0-92da-c5c71c0b535c",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "03db209a-0cdf-4de9-add9-e8777fd385ef",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "0b7b91e5-91a2-45a2-a9ea-c26b9700f14a"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "0b7b91e5-91a2-45a2-a9ea-c26b9700f14a",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "8370d988-6a9d-4035-8a5b-f442aaebb16c",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "90507107-cf5f-4ac6-bc86-2083f1a97e10",
+      "name": "new test",
+      "commands": [
+        {
+          "id": "9d9ccee1-982b-43d0-a3af-636574c71fed",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "css=#L2AGLb > .QS5gu",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "d0fe8c25-8371-483e-8351-30b1caf9f5c1",
+          "targets": [
+            [
+              "css=#L2AGLb > .QS5gu",
+              "css:finder"
+            ],
+            [
+              "xpath=(//button[@id='L2AGLb']/div)[1]",
+              "xpath:idRelative"
+            ]
+          ],
+          "comment": "Jpetstore"
+        },
+        {
+          "command": "click",
+          "target": "id=APjFqb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "8a66ae64-f936-44b9-bd8a-7c612d74e64b",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwj92s6hjJSEAxV_RaQEHSWtDkgQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=APjFqb",
+          "value": "jpetsore",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "844906c0-be0e-4cb4-962a-c52e3a40d017",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwj92s6hjJSEAxV_RaQEHSWtDkgQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=#jZ2SBf b",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "1b7d138e-63ef-4c52-93a6-e40ce9ef5dff",
+          "targets": [
+            [
+              "css=#jZ2SBf b",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='jZ2SBf']/div/span/b)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//b[contains(.,'jpetstore')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "04d28cb0-0e6a-4242-a68f-71630e7aaf9e",
+      "name": "JpetStore test",
+      "commands": [
+        {
+          "id": "e98b3275-f96c-462a-8355-55fc6c7ecef3",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "id=APjFqb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "bab3569f-5e92-4c2c-b1d6-80d20d38400a",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwj5-q63qJSEAxXbTqQEHbhpBbYQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=APjFqb",
+          "value": "https://petstore.octoperf.com/actions/Catalog.action",
+          "id": "852ec140-8616-42ff-aa6d-edd83acb2732"
+        },
+        {
+          "command": "sendKeys",
+          "target": "id=APjFqb",
+          "value": "${KEY_ENTER}",
+          "id": "892dd6ca-1148-4eb0-bf93-c4b5170c88f1"
+        },
+        {
+          "command": "click",
+          "target": "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "055bf674-27d0-4c25-ab1e-1e13248c1f2e",
+          "targets": [
+            [
+              "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='rso']/div/div/div/div/div/div/span/a/h3)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//h3[contains(.,'JPetStore - Petstore Demo - OctoPerf')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}
