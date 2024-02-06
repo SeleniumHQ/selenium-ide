@@ -3,6 +3,7 @@
   "repository": "git@github.com:Dannynna/selenium-ide.git",
   "license": "Apache-2.0",
   "private": true,
+
   "scripts": {
     "start:test-site": "http-server -p 8080 ./packages/side-testkit/fixtures/static",
     "build": "run-s build:ts build:ide",
