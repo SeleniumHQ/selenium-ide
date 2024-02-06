@@ -20,7 +20,6 @@ jobs:
       security-events: read
       statuses: read
     runs-on: macos-11
-    if: github.repository == 'QuentinNguyen/selenium-ide'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
