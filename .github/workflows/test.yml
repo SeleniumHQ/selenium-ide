@@ -1,9 +1,7 @@
 name: 'Test Selenium IDE'
 
 on:
-  pull_request:
-    branches:
-      - trunk
+ workflow_dispatch:
 jobs:
   test:
     permissions:
@@ -20,7 +18,7 @@ jobs:
       security-events: read
       statuses: read
     runs-on: macos-11
-    if: github.repository == 'seleniumhq/selenium-ide'
+    if: github.repository == 'Dannynna/selenium-ide'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v2
