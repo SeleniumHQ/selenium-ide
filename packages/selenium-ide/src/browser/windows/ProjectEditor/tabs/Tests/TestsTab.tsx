@@ -9,11 +9,9 @@ import React, { useRef } from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import CommandTable from './TestCommandTable'
-import MainHeader from '../../../../components/Main/Header'
 import { loadingID } from '@seleniumhq/side-api/dist/constants/loadingID'
-import { SIDEMainProps } from '../../../../components/types'
-import AppBar from '../../../../components/AppBar'
-import TestSelector from './TestSelector'
+import MainHeader from 'browser/components/Main/Header'
+import { SIDEMainProps } from 'browser/components/types'
 
 const sxCenter = { textAlign: 'center' }
 const NoTestFound = () => (
@@ -27,8 +25,6 @@ const NoTestFound = () => (
 
 const TestsTab: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = ({
   session,
-  setTab,
-  tab,
 }) => {
   const {
     state: {
@@ -83,25 +79,17 @@ const TestsTab: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = ({
   const disabled = ['playing', 'recording'].includes(session.state.status)
   return (
     <Box className="fill flex flex-col">
-      <Box className="flex-initial">
-        <AppBar session={session} setTab={setTab} tab={tab} />
-      </Box>
-      <Box className="flex-1 flex-col" ref={ref}>
-        <TestSelector session={session} />
-        {activeTestID === loadingID ? (
-          <NoTestFound />
-        ) : (
-          <>
-            <CommandsComponent
-              activeTest={activeTestID}
-              commands={activeTest.commands}
-              commandStates={playback.commands}
-              disabled={disabled}
-              selectedCommandIndexes={selectedCommandIndexes}
-            />
-          </>
-        )}
-      </Box>
+      {activeTestID === loadingID ? (
+        <NoTestFound />
+      ) : (
+        <CommandsComponent
+          activeTest={activeTestID}
+          commands={activeTest.commands}
+          commandStates={playback.commands}
+          disabled={disabled}
+          selectedCommandIndexes={selectedCommandIndexes}
+        />
+      )}
       <CommandEditor
         commands={commands}
         command={activeCommand}

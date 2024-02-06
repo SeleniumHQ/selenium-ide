@@ -38,7 +38,7 @@ const ProjectDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({
     },
   },
 }) => (
-  <Drawer header="Config Group">
+  <Drawer header="Level">
     <List dense>
       <ProjectConfig value={configSettingsGroup} />
       <SystemConfig value={configSettingsGroup} />

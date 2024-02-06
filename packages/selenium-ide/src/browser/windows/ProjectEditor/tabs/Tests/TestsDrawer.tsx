@@ -21,7 +21,7 @@ const TestsDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
   const {
     project: { tests, suites },
     state: {
-      playback: { commands: commandResults, testResults },
+      playback: { commands: testResults },
     },
   } = session
   const [confirmNew, setConfirmNew] = React.useState(false)
@@ -33,7 +33,7 @@ const TestsDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
   const safeSuiteID = suites.find((s) => s.id === activeSuite)?.id ?? ''
 
   return (
-    <Drawer header="Select Test">
+    <Drawer>
       <TestCreateDialog open={confirmNew} setOpen={setConfirmNew} />
       <Stack>
         <EditorToolbar
@@ -82,7 +82,7 @@ const TestsDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
           .slice()
           .sort((a, b) => a.name.localeCompare(b.name))
           .map(({ id, name }) => {
-            const lastCommand = testResults[id]?.lastCommand
+            const testState = testResults[id]?.state
             return (
               <RenamableListItem
                 id={id}
@@ -94,7 +94,7 @@ const TestsDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
                 rename={rename}
                 selected={id === activeTest}
                 setSelected={setSelected}
-                state={commandResults[lastCommand]?.state}
+                state={testState}
               />
             )
           })}

@@ -1,4 +1,4 @@
-import { defaultPlaybackState } from '../../models'
+import omit from 'lodash/fp/omit'
 import { Mutator } from '../../types/base'
 
 /**
@@ -7,18 +7,33 @@ import { Mutator } from '../../types/base'
  */
 export type Shape = (
   testID: string,
-  playRange?: [number, number]
+  playRange?: [number, number],
+  forceNewPlayback?: boolean
 ) => Promise<void>
 
 export const mutator: Mutator<Shape> = (
   session,
-  { params: [_testID, playRange = [0, -1]] }
+  { params: [testID, playRange = [0, -1]] }
 ) => ({
   ...session,
   state: {
     ...session.state,
-    playback:
-      playRange[0] === 0 ? defaultPlaybackState : session.state.playback,
+    playback: {
+      ...session.state.playback,
+      commands:
+        playRange[0] === 0
+          ? omit(
+              session.project.tests
+                .find((t) => t.id === testID)
+                ?.commands.map((cmd) => cmd.id)
+                .slice(
+                  playRange[0],
+                  playRange[1] === -1 ? undefined : playRange[1]
+                ) ?? [],
+              session.state.playback.commands
+            )
+          : session.state.playback.commands,
+    },
     status: 'playing',
     stopIndex: playRange[1],
   },
