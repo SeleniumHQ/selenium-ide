@@ -13,14 +13,14 @@ import { Session } from 'main/types'
 import { isAutomated } from 'main/util'
 import { join } from 'node:path'
 import BaseController from '../Base'
+import { window as playbackWindowOpts } from 'browser/windows/PlaybackWindow/controller'
 
 const playbackWindowName = 'playback-window'
 const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
 const playbackWindowOptions = {
+  ...playbackWindowOpts(),
   webPreferences: {
     devTools: !isAutomated,
-    nodeIntegration: false,
-    nodeIntegrationInSubFrames: true,
     preload: join(__dirname, `playback-window-preload-bundle.js`),
   },
 }
@@ -53,13 +53,14 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
           const windowConfig = window()
           const options: Electron.BrowserWindowConstructorOptions = {
             ...windowConfig,
+            ..._options,
             webPreferences: {
               devTools: !isAutomated,
               ...(windowConfig?.webPreferences ?? {}),
               preload: hasPreload ? preloadPath : undefined,
               sandbox: true,
+              ...(_options.webPreferences ?? {})
             },
-            ..._options,
           }
           const win = new BrowserWindow(options)
           win.loadFile(join(__dirname, `${filename}.html`))
@@ -162,7 +163,7 @@ export default class WindowsController extends BaseController {
     this.playbackWindows = []
   }
 
-  async get(name: string): Promise<BrowserWindow> {
+  get(name: string): BrowserWindow {
     return this.windows[name]
   }
 
@@ -388,7 +389,10 @@ export default class WindowsController extends BaseController {
     window.webContents.setWindowOpenHandler(() => {
       return {
         action: 'allow',
-        overrideBrowserWindowOptions: playbackWindowOptions,
+        overrideBrowserWindowOptions: {
+          ...playbackWindowOptions,
+          parent: this.get(projectEditorWindowName),
+        },
       }
     })
 
