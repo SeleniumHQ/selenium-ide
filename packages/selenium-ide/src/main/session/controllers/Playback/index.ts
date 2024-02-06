@@ -13,7 +13,6 @@ import {
 } from '@seleniumhq/side-runtime'
 import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/src/webdriver'
 import { randomUUID } from 'crypto'
-import { session } from 'electron'
 import { Session } from 'main/types'
 import { cpus } from 'os'
 import BaseController from '../Base'
@@ -32,7 +31,7 @@ export default class PlaybackController extends BaseController {
     this.handleCommandStateChanged = this.handleCommandStateChanged.bind(this)
     this.handlePlaybackStateChanged = this.handlePlaybackStateChanged.bind(this)
   }
-  static defaultPlayRange = [0, -1]
+  static defaultPlayRange: [number, number] = [0, -1]
   currentStepIndex: null | number = null
   isPlaying = false
   playRange = [0, -1]
@@ -84,7 +83,7 @@ export default class PlaybackController extends BaseController {
     }
 
     if (!this.session.playback.playingSuite) {
-      const playbackWindow = await windows.getPlaybackWindow()
+      const playbackWindow = await windows.getActivePlaybackWindow()
       if (playbackWindow) {
         const handle = await windows.getPlaybackWindowHandleByID(
           playbackWindow.id
@@ -111,6 +110,7 @@ export default class PlaybackController extends BaseController {
     if (this.isPlaying) {
       await this.pause()
     }
+    this.playbacks.forEach((playback) => playback.stop())
     this.currentStepIndex = 0
     this.playRange = PlaybackController.defaultPlayRange
     this.playingSuite = ''
@@ -146,10 +146,10 @@ export default class PlaybackController extends BaseController {
       })
       await playback.init()
       this.playbacks.push(playback)
-      if (!browserInfo.useBidi) {
-        await this.claimPlaybackWindow(playback, forceNewPlayback)
-      } else {
+      if (browserInfo.useBidi) {
         await playback.executor.driver.switchTo().newWindow('window')
+      } else {
+        await this.claimPlaybackWindow(playback, forceNewPlayback)
       }
     } else {
       playback = this.playbacks[0]
@@ -169,6 +169,7 @@ export default class PlaybackController extends BaseController {
     const executor = playback.executor
     const driver = executor.driver
 
+    let targetHandle: string
     let window: Electron.BrowserWindow
     // Confirm webdriver connection
     driver.executeScript('true')
@@ -176,11 +177,10 @@ export default class PlaybackController extends BaseController {
       if (forceNewWindow) {
         throw new Error('Force new window')
       }
-      window = await this.session.windows.getLastPlaybackWindow()!
+      window = await this.session.windows.requestPlaybackWindow()!
       if (!window) {
         throw new Error('No windows found')
       }
-      return
     } catch (windowDoesNotExist) {
       let success = false
       const UUID = randomUUID()
@@ -188,17 +188,21 @@ export default class PlaybackController extends BaseController {
         title: UUID,
       })
       const handles = await driver.getAllWindowHandles()
+      this.session.windows.claimPlaybackWindow(window)
       for (let i = 0, ii = handles.length; i !== ii; i++) {
         const handle = handles[i]
-        await driver.switchTo().window(handle)
-        const title = await driver.getTitle()
-        if (title === UUID) {
-          await this.session.windows.registerPlaybackWindowHandle(
-            handle,
-            window.id
-          )
-          success = true
-          break
+        if (!this.session.windows.getPlaybackWindowByHandle(handle)) {
+          await driver.switchTo().window(handle)
+          const title = await driver.getTitle()
+          if (title === UUID) {
+            await this.session.windows.registerPlaybackWindowHandle(
+              handle,
+              window.id
+            )
+            targetHandle = handle
+            success = true
+            break
+          }
         }
       }
       if (!success) {
@@ -217,6 +221,13 @@ export default class PlaybackController extends BaseController {
           ? new URL(currentCommand.target as string, state.project.url).href
           : firstURL.href
       try {
+        const currentHandle = await driver.getWindowHandle()
+        if (targetHandle! !== currentHandle) {
+          // await driver.switchTo().window(targetHandle)
+          throw new Error(
+            'Window handle mismatch' + targetHandle! + ' ' + currentHandle
+          )
+        }
         await playback.executor.doOpen(url)
       } catch (e) {
         console.warn('Open command failed:', e)
@@ -224,6 +235,7 @@ export default class PlaybackController extends BaseController {
     } finally {
       await this.session.windows.initPlaybackWindowSize(window!)
     }
+    return window
   }
 
   async play(
@@ -306,25 +318,14 @@ export default class PlaybackController extends BaseController {
         this.playNextTest(true)
       }
     } else {
-      this.playNextTest()
+      this.playNextTest(true)
     }
   }
 
   async playNextTest(forceNewPlayback: boolean = false) {
     const nextTest = this.testQueue.shift()
     if (nextTest) {
-      const {
-        project: { suites },
-        state: { activeSuiteID },
-      } = await this.session.state.get()
-      const suite = suites.find(hasID(activeSuiteID))
-      const persistSession = suite?.persistSession ?? false
-      if (!persistSession) {
-        await session.defaultSession.clearStorageData({
-          storages: ['cookies', 'localstorage'],
-        })
-      }
-      await this.play(
+      await this.session.api.playback.play(
         nextTest,
         PlaybackController.defaultPlayRange,
         forceNewPlayback
@@ -346,23 +347,27 @@ export default class PlaybackController extends BaseController {
   }
 
   handlePlaybackStateChanged =
-    (playback: Playback, testID: string | null = null) =>
+    (playback: Playback, testID?: string) =>
     async (e: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
       const testName = this.session.tests.getByID(
         testID || this.session.state.state.activeTestID
       )?.name
-      console.debug(
-        `Playing state changed ${e.state} for test ${testName}`,
-        this.playingSuite
-      )
+      console.debug(`Playing state changed ${e.state} for test ${testName}`)
       switch (e.state) {
         case 'aborted':
         case 'errored':
         case 'failed':
         case 'finished':
         case 'stopped':
-          this.playbacks.splice(this.playbacks.indexOf(playback), 1)
-          await playback.cleanup()
+          const handle = await playback.executor.driver.getWindowHandle()
+          if (handle) {
+            const window = await this.session.windows.getPlaybackWindowByHandle(
+              handle
+            )
+            if (window) {
+              this.session.windows.releasePlaybackWindow(window)
+            }
+          }
           if (this.playingSuite) {
             if (!this.testQueue.length) {
               this.playingSuite = ''
@@ -370,10 +375,16 @@ export default class PlaybackController extends BaseController {
                 params: [],
               })
             } else {
-              this.playNextTest()
+              await playback.executor.driver.close()
+              this.playNextTest(true)
             }
           }
+          this.playbacks.splice(this.playbacks.indexOf(playback), 1)
+          await playback.cleanup()
       }
-      this.session.api.playback.onPlayUpdate.dispatchEvent(e)
+      this.session.api.playback.onPlayUpdate.dispatchEvent({
+        state: e.state,
+        testID,
+      })
     }
 }

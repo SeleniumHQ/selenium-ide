@@ -1,0 +1,1036 @@
+{
+  "id": "38a83034-12c8-45b0-92da-c5c71c0b535c",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "03db209a-0cdf-4de9-add9-e8777fd385ef",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "0b7b91e5-91a2-45a2-a9ea-c26b9700f14a"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "0b7b91e5-91a2-45a2-a9ea-c26b9700f14a",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "8370d988-6a9d-4035-8a5b-f442aaebb16c",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "90507107-cf5f-4ac6-bc86-2083f1a97e10",
+      "name": "new test",
+      "commands": [
+        {
+          "id": "9d9ccee1-982b-43d0-a3af-636574c71fed",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "css=#L2AGLb > .QS5gu",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "d0fe8c25-8371-483e-8351-30b1caf9f5c1",
+          "targets": [
+            [
+              "css=#L2AGLb > .QS5gu",
+              "css:finder"
+            ],
+            [
+              "xpath=(//button[@id='L2AGLb']/div)[1]",
+              "xpath:idRelative"
+            ]
+          ],
+          "comment": "Jpetstore"
+        },
+        {
+          "command": "click",
+          "target": "id=APjFqb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "8a66ae64-f936-44b9-bd8a-7c612d74e64b",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwj92s6hjJSEAxV_RaQEHSWtDkgQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=APjFqb",
+          "value": "jpetsore",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "844906c0-be0e-4cb4-962a-c52e3a40d017",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwj92s6hjJSEAxV_RaQEHSWtDkgQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=#jZ2SBf b",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "1b7d138e-63ef-4c52-93a6-e40ce9ef5dff",
+          "targets": [
+            [
+              "css=#jZ2SBf b",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='jZ2SBf']/div/span/b)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//b[contains(.,'jpetstore')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "04d28cb0-0e6a-4242-a68f-71630e7aaf9e",
+      "name": "JpetStore test",
+      "commands": [
+        {
+          "id": "e98b3275-f96c-462a-8355-55fc6c7ecef3",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "id=APjFqb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "bab3569f-5e92-4c2c-b1d6-80d20d38400a",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwj5-q63qJSEAxXbTqQEHbhpBbYQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=APjFqb",
+          "value": "https://petstore.octoperf.com/actions/Catalog.action",
+          "id": "852ec140-8616-42ff-aa6d-edd83acb2732"
+        },
+        {
+          "command": "sendKeys",
+          "target": "id=APjFqb",
+          "value": "${KEY_ENTER}",
+          "id": "892dd6ca-1148-4eb0-bf93-c4b5170c88f1"
+        },
+        {
+          "command": "click",
+          "target": "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "055bf674-27d0-4c25-ab1e-1e13248c1f2e",
+          "targets": [
+            [
+              "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='rso']/div/div/div/div/div/div/span/a/h3)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//h3[contains(.,'JPetStore - Petstore Demo - OctoPerf')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ea7ec752-44e3-436b-95c7-cd171db99402",
+      "name": "JpetStore account creation,",
+      "commands": [
+        {
+          "id": "c52af368-a204-443d-ad6c-ed22564b291b",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "id=APjFqb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "8d6fa491-f62c-4c82-97ae-b7abf1c1e5a0",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwiRka35rZSEAxVnUKQEHb8UBqsQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=APjFqb",
+          "value": "https://petstore.octoperf.com/actions/Catalog.action",
+          "id": "a78803d2-121d-4ecc-a0ff-464bdc4ac360"
+        },
+        {
+          "command": "sendKeys",
+          "target": "id=APjFqb",
+          "value": "${KEY_ENTER}",
+          "id": "95e0bb5b-dd15-46d1-93fe-8ac4a4e5eda3"
+        },
+        {
+          "command": "click",
+          "target": "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "fd82551b-75f5-4c31-b633-6fa5798dd8b8",
+          "targets": [
+            [
+              "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='rso']/div/div/div/div/div/div/span/a/h3)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//h3[contains(.,'JPetStore - Petstore Demo - OctoPerf')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=Sign In",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "dbd79732-4afb-4a23-9484-b5a5d73e4421",
+          "targets": [
+            [
+              "linkText=Sign In",
+              "linkText"
+            ],
+            [
+              "css=#MenuContent > a:nth-child(3)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Sign In')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='MenuContent']/a[2])[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Account.action?signonForm=')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Sign In')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=Register Now!",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "9e663def-a7d3-43ae-ba29-73f7eb8143b4",
+          "targets": [
+            [
+              "linkText=Register Now!",
+              "linkText"
+            ],
+            [
+              "css=a:nth-child(2)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Register Now!')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Account.action?newAccountForm=')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Register Now!')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=stripes--1861766302",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "6ae68a48-bb6b-4e7f-aa43-ee568e007ab6",
+          "targets": [
+            [
+              "id=stripes--1861766302",
+              "id"
+            ],
+            [
+              "name=username",
+              "name"
+            ],
+            [
+              "css=#stripes--1861766302",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='stripes--1861766302'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table/tbody/tr/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=stripes--1861766302",
+          "value": "Jpetstore",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "d5f486f9-77cb-44d2-888b-37e32ad3bd78",
+          "targets": [
+            [
+              "id=stripes--1861766302",
+              "id"
+            ],
+            [
+              "name=username",
+              "name"
+            ],
+            [
+              "css=#stripes--1861766302",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='stripes--1861766302'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table/tbody/tr/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=password",
+          "value": "azerty",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "218ac0c5-3a34-4174-8509-4fa716d27053",
+          "targets": [
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=table:nth-child(2) tr:nth-child(2) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='password'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table/tbody/tr[2]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=repeatedPassword",
+          "value": "azerty",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "76f61056-d70e-4c32-b70f-bcae4249001e",
+          "targets": [
+            [
+              "name=repeatedPassword",
+              "name"
+            ],
+            [
+              "css=table:nth-child(2) tr:nth-child(3) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='repeatedPassword'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table/tbody/tr[3]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "name=account.firstName",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "0eeb2a3b-291c-4b48-a492-37ab6fc4601c",
+          "targets": [
+            [
+              "name=account.firstName",
+              "name"
+            ],
+            [
+              "css=table:nth-child(4) tr:nth-child(1) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.firstName'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=account.firstName",
+          "value": "quentin",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "ec40a820-0afa-4d89-9dd5-9c34d836074f",
+          "targets": [
+            [
+              "name=account.firstName",
+              "name"
+            ],
+            [
+              "css=table:nth-child(4) tr:nth-child(1) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.firstName'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=account.lastName",
+          "value": "Nguyen",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "e451efb6-66a6-42d5-9a1d-8795db6bae27",
+          "targets": [
+            [
+              "name=account.lastName",
+              "name"
+            ],
+            [
+              "css=table:nth-child(4) tr:nth-child(2) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.lastName'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[2]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=account.email",
+          "value": "quentin@mail.com",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "4341c885-4fb2-4846-b422-76b3f5aa040e",
+          "targets": [
+            [
+              "name=account.email",
+              "name"
+            ],
+            [
+              "css=table:nth-child(4) tr:nth-child(3) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.email'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[3]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=account.phone",
+          "value": "0780011869",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "d50a90b0-d7eb-45cd-89a2-e024a1b7034d",
+          "targets": [
+            [
+              "name=account.phone",
+              "name"
+            ],
+            [
+              "css=table:nth-child(4) tr:nth-child(4) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.phone'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[4]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=account.address1",
+          "value": "16 chein sous lebois",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "20dea2c6-651c-4ccb-9f1a-9535ed07a490",
+          "targets": [
+            [
+              "name=account.address1",
+              "name"
+            ],
+            [
+              "css=tr:nth-child(5) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.address1'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[5]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "name=account.city",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "7ed6f4df-64f3-47b1-b9f4-78e9a8c6338f",
+          "targets": [
+            [
+              "name=account.city",
+              "name"
+            ],
+            [
+              "css=tr:nth-child(7) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.city'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[7]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=account.city",
+          "value": "Paris",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "1878babf-c702-46d4-8cb3-a08ce123552d",
+          "targets": [
+            [
+              "name=account.city",
+              "name"
+            ],
+            [
+              "css=tr:nth-child(7) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.city'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[7]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "name=account.state",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "bd3482ca-59be-469f-8767-d74702299461",
+          "targets": [
+            [
+              "name=account.state",
+              "name"
+            ],
+            [
+              "css=tr:nth-child(8) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.state'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[8]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=account.state",
+          "value": "Paris",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "7e9c2ae6-f758-49e0-b04d-89bf7045cd35",
+          "targets": [
+            [
+              "name=account.state",
+              "name"
+            ],
+            [
+              "css=tr:nth-child(8) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.state'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[8]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=account.zip",
+          "value": "75010",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "ffa16904-2377-4403-a124-b657f1b70af5",
+          "targets": [
+            [
+              "name=account.zip",
+              "name"
+            ],
+            [
+              "css=tr:nth-child(9) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.zip'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[9]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=account.country",
+          "value": "france",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "e78cef22-506b-455c-ab34-91d6788f3553",
+          "targets": [
+            [
+              "name=account.country",
+              "name"
+            ],
+            [
+              "css=tr:nth-child(10) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='account.country'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/table[2]/tbody/tr[10]/td[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ],
+          "isBreakpoint": false
+        },
+        {
+          "command": "click",
+          "target": "name=newAccount",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "91f45717-3680-4c86-b269-57e8484ddbe6",
+          "targets": [
+            [
+              "name=newAccount",
+              "name"
+            ],
+            [
+              "css=input:nth-child(7)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='newAccount'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ae23f302-c071-4ed0-917f-e8e7af4683c0",
+      "name": "JpetStore login",
+      "commands": [
+        {
+          "id": "22dddf3f-6d29-48c4-9729-7d092c94db0d",
+          "command": "open",
+          "target": "https://petstore.octoperf.com/actions/Catalog.action",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "linkText=Sign In",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "9265008e-4f0e-4e64-90f5-f28d846e12ef",
+          "targets": [
+            [
+              "linkText=Sign In",
+              "linkText"
+            ],
+            [
+              "css=#MenuContent > a:nth-child(3)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Sign In')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='MenuContent']/a[2])[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Account.action?signonForm=')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Sign In')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "id=stripes-152907072",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "76ef52b1-f43f-4a1c-a12e-8b2fae061c0d",
+          "targets": [
+            [
+              "id=stripes-152907072",
+              "id"
+            ],
+            [
+              "name=username",
+              "name"
+            ],
+            [
+              "css=#stripes-152907072",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='stripes-152907072'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/p[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=stripes-152907072",
+          "value": "Jpetstore",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "339eb614-03fd-4194-a249-19514a36a4a7",
+          "targets": [
+            [
+              "id=stripes-152907072",
+              "id"
+            ],
+            [
+              "name=username",
+              "name"
+            ],
+            [
+              "css=#stripes-152907072",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='stripes-152907072'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/p[2]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=p:nth-child(2)",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "15179574-7338-4e11-a869-a6918e99c5da",
+          "targets": [
+            [
+              "css=p:nth-child(2)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/p[2])[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "name=password",
+          "value": "azerty",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "ae0570c1-7bb6-45e0-be11-692bb3c63b89",
+          "targets": [
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=input:nth-child(4)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='password'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/p[2]/input[2])[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "sendKeys",
+          "target": "name=password",
+          "value": "${KEY_ENTER}",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "924b1b62-9609-4d7b-a6fa-d8bbd7389740",
+          "targets": [
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=input:nth-child(4)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='password'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/form/p[2]/input[2])[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}
