@@ -1,9 +1,7 @@
 name: 'Test Selenium IDE'
 
 on:
-  pull_request:
-    branches:
-      - trunk
+  workflow_dispatch:
 jobs:
   test:
     permissions:
