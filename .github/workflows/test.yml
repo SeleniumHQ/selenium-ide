@@ -2,6 +2,7 @@ name: 'Test Selenium IDE'
 
 on:
   workflow_dispatch:
+
 jobs:
   test:
     permissions:
