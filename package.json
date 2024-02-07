@@ -20,9 +20,9 @@
     "test:jest": "npm-run-bg -s 'http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080' 'npm run test:jest:core'",
     "lint": "pnpm run lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
-    "test:ide": "npm-run-bg -s 'http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080' 'node ./packages/selenium-ide/scripts/ide-runner.js -t 15000 ./tests/selenium-ide/*.side'",
-    "test:side-runner": "npm-run-bg -s 'http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080' 'node ./packages/side-runner/dist/bin.js -t 15000 ./tests/selenium-ide/*.side'",
-    "test:side-runner:ci": "npm-run-bg -s 'http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080' 'node ./packages/side-runner/dist/bin.js -c \"goog:chromeOptions.args=[headless,no-sandbox] browserName=chrome\" -t 15000 ./tests/examples/*.side'",
+    "test:ide": "npm-run-bg -s 'http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080' 'node ./packages/selenium-ide/scripts/ide-runner.js -t 15000 ./tests/*.side'",
+    "test:side-runner": "npm-run-bg -s 'http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080' 'node ./packages/side-runner/dist/bin.js -t 15000 ./tests/*.side'",
+    "test:side-runner:ci": "npm-run-bg -s 'http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080' 'node ./packages/side-runner/dist/bin.js -c \"goog:chromeOptions.args=[headless,no-sandbox] browserName=chrome\" -t 15000 ./tests/*.side'",
     "typecheck": "tsc --noEmit --composite false",
     "watch": "run-p watch:ts watch:webpack",
     "watch:webpack": "pnpm run --stream --filter selenium-ide watch",
@@ -30,7 +30,7 @@
     "watch:ts": "tsc --build --verbose --watch"
   },
   "engines": {
-    "node": ">=16"
+    "node": "20.x"
   },
   "workspaces": [
     "packages/*"

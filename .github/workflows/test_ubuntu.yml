@@ -1,0 +1,36 @@
+name: 'Test Selenium IDE Ubuntu'
+
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    permissions:
+      actions: read
+      checks: read
+      contents: write
+      deployments: read
+      issues: read
+      discussions: read
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      security-events: read
+      statuses: read
+    runs-on: ubuntu-latest
+    if: github.repository == 'Dannynna/selenium-ide'
+    steps:
+      - uses: actions/checkout@v4.1.1
+      - uses: pnpm/action-setup@v2.4.0
+        with:
+          version: 8
+      - uses: actions/setup-node@v4.0.1
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm -r i
+      - name: Build side-runner and selenium-ide
+        run: npm run build
+      - name: Run all tests
+        run: npm run tata
