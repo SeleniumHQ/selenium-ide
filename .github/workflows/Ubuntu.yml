@@ -1,0 +1,39 @@
+name: 'Test Selenium IDE on ubuntu '
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    permissions:
+      actions: read
+      checks: read
+      contents: write
+      deployments: read
+      issues: read
+      discussions: read
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      security-events: read
+      statuses: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: install de node
+      - run : curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - &&\ sudo apt-get install -y nodejs
+        name: Install pnpm
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8.11.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm -r i
+      - name: Build side-runner and selenium-ide
+        run: npm run build
+      - name: Run all tests
+        run: npm run test
