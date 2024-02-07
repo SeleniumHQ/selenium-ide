@@ -52,8 +52,11 @@ export const mutator: EventMutator<OnStepUpdatePlayback> = (
     stateUpdates.activeTestID = test.id
   }
   stateUpdates.playback.testResults = {
-    [stateUpdates.activeTestID]: {
-      lastCommand: data.id,
+    [data.testID || stateUpdates.activeTestID]: {
+      error: data.error,
+      lastCommand: data.command,
+      message: data.message,
+      state: data.state,
     },
   }
 

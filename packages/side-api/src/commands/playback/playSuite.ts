@@ -1,5 +1,7 @@
 import set from 'lodash/fp/set'
-import { defaultPlaybackState } from '../../models'
+import update from 'lodash/fp/update'
+import { getActiveSuite } from '../../helpers'
+import { TestResultShape } from '../../models'
 import { Mutator } from '../../types/base'
 
 /**
@@ -9,8 +11,13 @@ import { Mutator } from '../../types/base'
 export type Shape = () => Promise<void>
 
 export const mutator: Mutator = (session) =>
-  set(
-    'state.playback',
-    defaultPlaybackState,
+  update(
+    'state.playback.testResults',
+    (testResults: Record<string, TestResultShape>) => {
+      const { tests } = getActiveSuite(session)
+      return Object.fromEntries(
+        Object.entries(testResults).filter(([key]) => tests.indexOf(key) === -1)
+      )
+    },
     set('state.status', 'playing', session)
   )

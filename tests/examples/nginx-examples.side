@@ -656,7 +656,7 @@
       "id": "33487441-d469-4fe2-8f5e-893104aa2316",
       "name": "inputs",
       "persistSession": false,
-      "parallel": false,
+      "parallel": true,
       "timeout": 300,
       "tests": [
         "1f270ca5-5a7c-4067-8f67-b4fc0dcea00b",

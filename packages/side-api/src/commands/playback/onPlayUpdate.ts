@@ -15,7 +15,10 @@ export type Shape = BaseListener<OnPlayUpdatePlayback>
 export type TestID = string
 export type StepID = string
 export type OnPlayUpdatePlayback = [
-  PlaybackEventShapes['PLAYBACK_STATE_CHANGED']
+  {
+    state: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']['state']
+    testID?: string
+  }
 ]
 
 const playStatusFromPlaybackState: Record<
