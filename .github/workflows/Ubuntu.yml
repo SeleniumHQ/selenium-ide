@@ -22,7 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         name: install de node
-      - run : curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - &&\ sudo apt-get install -y nodejs
+      - run : curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs
         name: Install pnpm
       - uses: pnpm/action-setup@v2
         with:
