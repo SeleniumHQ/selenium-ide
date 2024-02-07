@@ -33,4 +33,4 @@ jobs:
       - name: Build side-runner and selenium-ide
         run: npm run build
       - name: Run all tests
-        run: npm run tata
+        run: npm run test
