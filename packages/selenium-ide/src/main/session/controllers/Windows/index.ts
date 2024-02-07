@@ -59,7 +59,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
               ...(windowConfig?.webPreferences ?? {}),
               preload: hasPreload ? preloadPath : undefined,
               sandbox: true,
-              ...(_options.webPreferences ?? {})
+              ...(_options.webPreferences ?? {}),
             },
           }
           const win = new BrowserWindow(options)
@@ -386,12 +386,25 @@ export default class WindowsController extends BaseController {
   handlePlaybackWindow(window: BrowserWindow) {
     this.playbackWindows.push(window)
     window.webContents.insertCSS(playbackCSS)
+    const windowDimensions =
+      this.session.resizablePanels.cachedPlaybackWindowDimensions
+    const dimensionOverrides = windowDimensions
+      ? {
+          x: windowDimensions.position[0],
+          y: windowDimensions.position[1],
+          width: windowDimensions.size[0],
+          height: windowDimensions.size[1],
+        }
+      : {}
+    console.log(dimensionOverrides)
     window.webContents.setWindowOpenHandler(() => {
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
           ...playbackWindowOptions,
+          ...dimensionOverrides,
           parent: this.get(projectEditorWindowName),
+          show: true,
         },
       }
     })
@@ -520,7 +533,12 @@ export default class WindowsController extends BaseController {
     await this.initializePlaybackWindow()
     await this.close('splash')
 
-    await this.open(projectEditorWindowName, { show: false })
+    await this.open(projectEditorWindowName, {
+      show: false,
+      title:
+        'Project Editor: ' + this.session.projects?.filepath ??
+        this.session.projects.project.name,
+    })
     const projectWindow = await this.get(projectEditorWindowName)
     this.useWindowState(projectWindow, 'windowSize', 'windowPosition')
     projectWindow.on('move', () => {

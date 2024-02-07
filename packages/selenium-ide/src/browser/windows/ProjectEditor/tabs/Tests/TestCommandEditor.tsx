@@ -35,16 +35,23 @@ const CommandEditor: FC<CommandEditorProps> = ({
     ...command,
     command: isDisabled ? command.command.slice(2) : command.command,
   }
+  if (selectedCommandIndexes.length > 1) {
+    return (
+      <Stack className="p-4" spacing={1}>
+        <Typography className="centered py-4" variant="body2">
+          {selectedCommandIndexes.length} commands selected
+        </Typography>
+      </Stack>
+    )
+  }
   if (
-    selectedCommandIndexes.length !== 1 ||
-    !commands[correctedCommand.command]
+    !commands[correctedCommand.command] ||
+    selectedCommandIndexes.length === 0
   ) {
     return (
-      <Stack className="p-4" spacing={1} style={{ height: 240 }}>
+      <Stack className="p-4" spacing={1}>
         <Typography className="centered py-4" variant="body2">
-          {selectedCommandIndexes.length === 0
-            ? 'No commands selected'
-            : `${selectedCommandIndexes.length} commands selected`}
+          No commands selected
         </Typography>
       </Stack>
     )

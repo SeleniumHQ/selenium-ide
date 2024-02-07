@@ -16,15 +16,20 @@ const {
 } = window.sideAPI
 
 const commandTextFormat = { color: 'primary.main', typography: 'body2' }
+const commentTextFormat = {
+  color: 'info.main',
+  ml: 2,
+  typography: 'subtitle2',
+}
 const argTextFormat = {
   color: 'secondary.main',
-  typography: 'subtitle2',
   ml: 2,
+  typography: 'subtitle2',
 }
 const errorTextFormat = {
   color: 'error.main',
-  typography: 'caption',
   ml: 2,
+  typography: 'caption',
 }
 
 interface CommandRowProps {
@@ -54,7 +59,7 @@ export const defaultCommandState =
 const CommandRow: React.FC<CommandRowProps> = ({
   activeTest,
   commandState = defaultCommandState,
-  command: { command, id, isBreakpoint, opensWindow, target, value },
+  command: { command, comment, id, isBreakpoint, opensWindow, target, value },
   disabled = false,
   index,
   reorderPreview,
@@ -75,6 +80,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
       className={mainClass}
       divider
       data-command-id={id}
+      data-command={commandText}
       dragType="COMMAND"
       id={id}
       index={index}
@@ -117,6 +123,10 @@ const CommandRow: React.FC<CommandRowProps> = ({
         }
         secondary={
           <>
+            <Box sx={errorTextFormat}>{commandState.message}</Box>
+            {comment && (
+              <Box sx={commentTextFormat}>// {comment}</Box>
+            )}
             <Box sx={argTextFormat}>{target}</Box>
             <Box sx={argTextFormat}>{value}</Box>
             <Box sx={errorTextFormat}>{commandState.message}</Box>

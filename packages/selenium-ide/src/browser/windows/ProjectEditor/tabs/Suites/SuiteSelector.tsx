@@ -18,7 +18,8 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
   const [disabled /*, setDisabled*/] = React.useState(false)
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const [confirmCreate, setConfirmCreate] = React.useState(false)
-  const activeSuiteName = suites.find((t) => t.id === activeSuiteID)?.name ?? ''
+  const matchingSuite = suites.find((t) => t.id === activeSuiteID)
+  const activeSuiteName = matchingSuite?.name ?? ''
   return (
     <>
       <EditorToolbar
@@ -31,7 +32,7 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
             ? async () => window.sideAPI.state.toggleSuiteMode('editor')
             : undefined
         }
-        editText='Edit Suite'
+        editText="Edit Suite"
         onRemove={
           activeSuiteID ? async () => setConfirmDelete(true) : undefined
         }
@@ -41,10 +42,12 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
             ? async () => window.sideAPI.state.toggleSuiteMode('viewer')
             : undefined
         }
-        viewText='View Suite Playback'
+        viewText="View Suite Playback"
       >
         <FormControl className="flex flex-1">
-          <InputLabel id="suite-select-label">Selected Suite</InputLabel>
+          <InputLabel id="suite-select-label" margin="dense" size='small'>
+            Selected Suite
+          </InputLabel>
           <Select
             label="suite-select-label"
             onChange={async (event) => {
@@ -56,7 +59,7 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
             margin="dense"
             placeholder={suites.length ? 'Select a suite' : 'No suites found'}
             size="small"
-            value={activeSuiteID}
+            value={matchingSuite?.id ?? ''}
           >
             {suites.map((t) => (
               <MenuItem key={t.id} value={t.id}>

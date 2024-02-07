@@ -34,6 +34,11 @@ export default class ResizablePanelsController extends BaseController {
     return currentValue || [50, 50]
   }
 
+  cachedPlaybackWindowDimensions: {
+    position: [number, number]
+    size: [number, number]
+  } | null = null
+  
   async getPlaybackWindowDimensions() {
     const panelScreenPosition = await this.getPanelScreenPosition(
       'playback-panel'

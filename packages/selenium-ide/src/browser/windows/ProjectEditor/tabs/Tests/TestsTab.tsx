@@ -78,7 +78,7 @@ const TestsTab: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = ({
   }, [activeCommand])
   const disabled = ['playing', 'recording'].includes(session.state.status)
   return (
-    <Box className="fill flex flex-col">
+    <Box className="fill flex flex-col" ref={ref}>
       {activeTestID === loadingID ? (
         <NoTestFound />
       ) : (
