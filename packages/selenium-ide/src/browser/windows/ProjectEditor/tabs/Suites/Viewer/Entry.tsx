@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
+import { TestResultShape } from '@seleniumhq/side-api'
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
-import { CommandStateShape } from '@seleniumhq/side-api/dist/models/state/command'
 import React, { FC } from 'react'
 import CommandOverlay from '../../Tests/TestCommandOverlay'
 
@@ -19,8 +19,8 @@ const errorTextFormat = {
 }
 
 interface SuiteViewerEntryProps {
-  command: CommandShape | null
-  result: CommandStateShape | null
+  command: Pick<CommandShape, 'command' | 'target' | 'value'> | null
+  result: TestResultShape | null
   test: TestShape
 }
 

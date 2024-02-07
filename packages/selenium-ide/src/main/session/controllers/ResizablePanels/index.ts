@@ -9,7 +9,8 @@ type Rect = {
 }
 
 const resizablePanelDefaults: Record<string, number[]> = {
-  'editor-playback': [10, 20, 70],
+  'drawer-editor': [30, 70],
+  'editor-playback': [30, 70],
   'playback-logger': [80, 20],
 }
 
@@ -33,20 +34,28 @@ export default class ResizablePanelsController extends BaseController {
     return currentValue || [50, 50]
   }
 
-  async recalculatePlaybackWindows() {
+  async getPlaybackWindowDimensions() {
     const panelScreenPosition = await this.getPanelScreenPosition(
       'playback-panel'
     )
     const isWindows = process.platform === 'win32'
-    this.session.windows.playbackWindows.forEach((playbackWindow) => {
-      playbackWindow.setSize(
-        panelScreenPosition.width,
-        panelScreenPosition.height
-      )
-      playbackWindow.setPosition(
+    return {
+      position: [
         panelScreenPosition.x + (isWindows ? 12 : 0),
-        panelScreenPosition.y + (isWindows ? 21 : 0)
-      )
+        panelScreenPosition.y + (isWindows ? 21 : 0),
+      ],
+      size: [panelScreenPosition.width, panelScreenPosition.height],
+    } as {
+      position: [number, number]
+      size: [number, number]
+    }
+  }
+
+  async recalculatePlaybackWindows() {
+    const panelDims = await this.getPlaybackWindowDimensions()
+    this.session.windows.playbackWindows.forEach((playbackWindow) => {
+      playbackWindow.setSize(...panelDims.size)
+      playbackWindow.setPosition(...panelDims.position)
     })
   }
 
@@ -54,6 +63,7 @@ export default class ResizablePanelsController extends BaseController {
     this.session.store.set(`panelGroup.${id}`, dimensions)
     this.recalculatePlaybackWindows()
   }
+
   async getPanelScreenPosition(id: string) {
     const projectWindow = await this.session.windows.get('project-editor')
     const projectWindowBounds = await projectWindow.getBounds()
@@ -61,6 +71,7 @@ export default class ResizablePanelsController extends BaseController {
       (await projectWindow.webContents.executeJavaScript(
         `JSON.parse(JSON.stringify(document.querySelector('[data-panel-id="${id}"]').getBoundingClientRect()))`
       )) as Rect
+    // Holy shit what are these numbers even related to :\
     return {
       x: Math.round(panelGroupPosition.x + projectWindowBounds.x) + 2,
       y: Math.round(panelGroupPosition.y + projectWindowBounds.y) + 30,

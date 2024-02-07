@@ -80,7 +80,7 @@
           "id": "2a912487-2f0d-4242-bf98-2020ef0194fb",
           "comment": "",
           "command": "assertTitle",
-          "target": "Elemental Selenium | Elemental Selenium",
+          "target": "Home | Elemental Selenium",
           "targets": [],
           "value": ""
         },

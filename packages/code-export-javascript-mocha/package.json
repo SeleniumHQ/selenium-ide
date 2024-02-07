@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export-javascript-mocha",
-  "version": "4.0.0-alpha.6",
+  "version": "4.0.0-alpha.7",
   "private": false,
   "description": "Export Selenium IDE project contents to JavaScript Mocha",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
@@ -17,7 +17,7 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "side-code-export": "^4.0.0-alpha.15"
+    "side-code-export": "^4.0.0-alpha.16"
   },
   "devDependencies": {
     "@seleniumhq/side-model": "^4.0.0-alpha.5"
