@@ -308,10 +308,10 @@ export default class Playback {
     }
   }
 
-  async cleanup() {
+  async cleanup(persistSession = false) {
     // await this.abort()
     this[EE].removeAllListeners()
-    await this.executor.cleanup()
+    await this.executor.cleanup(persistSession)
   }
 
   async _prepareToPlay() {

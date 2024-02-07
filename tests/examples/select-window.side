@@ -2,7 +2,7 @@
   "id": "b0eb1ebb-ea28-4dba-b86e-1e94a925fc6a",
   "version": "1.1",
   "name": "Select Window",
-  "url": "http://the-internet.herokuapp.com",
+  "url": "http://localhost:8080",
   "tests": [
     {
       "id": "c4bab89c-85a6-4b89-be6d-653dead81304",
@@ -12,7 +12,7 @@
           "id": "d2925ba0-55e8-41a5-aded-23f46ebc4852",
           "comment": "",
           "command": "open",
-          "target": "/",
+          "target": "/windows.html",
           "targets": [],
           "value": ""
         },
@@ -25,10 +25,16 @@
           "value": ""
         },
         {
+          "command": "executeScript",
+          "target": "document.title = 'old page'",
+          "value": "",
+          "id": "5e2e88b5-706e-471f-8fd7-cd60cd1c0dac"
+        },
+        {
           "id": "7b05843f-96f4-4520-bd6e-416131444cc0",
           "comment": "",
           "command": "click",
-          "target": "linkText=Elemental Selenium",
+          "target": "linkText=open new window",
           "targets": [
             [
               "linkText=Elemental Selenium",
@@ -58,7 +64,30 @@
           "value": "",
           "opensWindow": true,
           "windowHandleName": "win5336",
-          "windowTimeout": 2000
+          "windowTimeout": 2000,
+          "isBreakpoint": false,
+          "fallbackTargets": [
+            [
+              "linkText=open new window",
+              "linkText"
+            ],
+            [
+              "css=a",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'open new window')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//a[contains(@href, 'windows.html')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'open new window')]",
+              "xpath:innerText"
+            ]
+          ]
         },
         {
           "id": "b0caf001-3a6a-41b2-b470-c46084424c6b",
@@ -80,7 +109,7 @@
           "id": "2a912487-2f0d-4242-bf98-2020ef0194fb",
           "comment": "",
           "command": "assertTitle",
-          "target": "Home | Elemental Selenium",
+          "target": "",
           "targets": [],
           "value": ""
         },
@@ -104,7 +133,7 @@
           "id": "17065682-7c81-4906-b2dd-e8a933ad57f4",
           "comment": "",
           "command": "assertTitle",
-          "target": "The Internet",
+          "target": "old page",
           "targets": [],
           "value": ""
         }
@@ -124,7 +153,7 @@
     }
   ],
   "urls": [
-    "http://the-internet.herokuapp.com/"
+    "http://localhost:8080/"
   ],
   "plugins": []
 }

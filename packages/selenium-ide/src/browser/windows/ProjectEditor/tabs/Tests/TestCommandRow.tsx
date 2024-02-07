@@ -115,6 +115,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
         },
       }}
       divider
+      data-command={commandText}
       data-command-id={id}
       dragType="COMMAND"
       id={id}

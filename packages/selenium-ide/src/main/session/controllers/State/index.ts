@@ -37,10 +37,8 @@ export default class StateController extends BaseController {
           this.session.windows.resizePlaybackWindows(width, height)
         }
         const panelDims =
-          await this.session.resizablePanels.getPanelScreenPosition(
-            'playback-panel'
-          )
-        this.session.windows.resizePlaybackWindows(panelDims.width, panelDims.height)
+          await this.session.resizablePanels.getPlaybackWindowDimensions()
+        this.session.windows.resizePlaybackWindows(...panelDims.size)
       })
     }
   }
