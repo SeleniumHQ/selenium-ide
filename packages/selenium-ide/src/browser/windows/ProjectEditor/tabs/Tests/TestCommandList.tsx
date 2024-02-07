@@ -58,7 +58,7 @@ const CommandList: FC<CommandListProps> = ({
       </EditorToolbar>
       <ReorderableList
         classes={{
-          root: 'overflow-y pt-0',
+          root: 'flex-1 flex-col overflow-y pt-0',
         }}
         dense
         aria-disabled={disabled}

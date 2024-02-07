@@ -19,6 +19,7 @@ export interface EditorStateShape {
   }
   selectedCommandIndexes: number[]
   selectedTestIndexes: number[]
+  showDrawer: boolean
   suiteMode: 'viewer' | 'editor'
 }
 
@@ -32,6 +33,7 @@ export const defaultEditorState: EditorStateShape = {
   },
   selectedCommandIndexes: [],
   selectedTestIndexes: [],
+  showDrawer: true,
   suiteMode: 'editor',
 }
 

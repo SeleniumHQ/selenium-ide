@@ -69,7 +69,6 @@ export default async (api: NestedPartial<Api>, ...cbs: (() => void)[]) => {
     ...api,
     mutators: getApiSubset(mutators, api),
   } as ApiWithMutators
-  console.log(api, mutators, getApiSubset(mutators, api))
   if (cbs?.length) {
     for (const cb of cbs) {
       await cb()
