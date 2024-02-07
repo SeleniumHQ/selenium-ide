@@ -287,20 +287,24 @@ export default class WindowsController extends BaseController {
   }
 
   async openPlaybackWindow(opts: BrowserWindowConstructorOptions = {}) {
-    const playbackScreenPosition =
-      await this.session.resizablePanels.getPanelScreenPosition(
-        'playback-panel'
-      )
+    const playbackPanel =
+      await this.session.resizablePanels.getPlaybackWindowDimensions()
+    const playingSuite = this.session.playback.playingSuite
+    const persistSession = playingSuite ?
+      this.session.projects.project.suites.find(s => s.id === playingSuite)?.persistSession :
+      false
+    const correctedDims = await this.calculateScaleAndZoom(...playbackPanel.size)
     const window = this.windowLoaders[playbackWindowName]({
       ...opts,
-      ...playbackScreenPosition,
+      x: playbackPanel.position[0],
+      y: playbackPanel.position[1],
+      width: correctedDims.width,
+      height: correctedDims.height,
       parent: await this.session.windows.get(projectEditorWindowName),
       webPreferences: {
-        partition: `playback-${partition++}`,
+        partition: persistSession ? playingSuite : `playback-${partition++}`,
+        zoomFactor: correctedDims.zoomFactor
       },
-    })
-    this.session.api.windows.onPlaybackWindowOpened.dispatchEvent(window.id, {
-      title: window.getTitle(),
     })
     this.handlePlaybackWindow(window)
     window.showInactive()
@@ -308,18 +312,6 @@ export default class WindowsController extends BaseController {
       window.webContents.executeJavaScript(`document.title = "${opts.title}";`)
     }
     return window
-  }
-
-  async initPlaybackWindowSize(window: Electron.BrowserWindow) {
-    const panel = await this.session.resizablePanels.getPanelScreenPosition(
-      'playback-panel'
-    )
-    const { height, width, zoomFactor } = await this.calculateScaleAndZoom(
-      panel.width,
-      panel.height
-    )
-    window.setSize(width, height)
-    window.webContents.setZoomFactor(zoomFactor)
   }
 
   async calculateScaleAndZoom(_targetWidth: number, _targetHeight: number) {
@@ -335,10 +327,9 @@ export default class WindowsController extends BaseController {
       ? Math.max(overrideWindowSize.height, 150)
       : _targetHeight
 
-    const { width, height } =
-      await this.session.resizablePanels.getPanelScreenPosition(
-        'playback-panel'
-      )
+    const {
+      size: [width, height],
+    } = await this.session.resizablePanels.getPlaybackWindowDimensions()
     const xAspect = width / targetWidth
     const yAspect = height / targetHeight
     let resultWidth = targetWidth
@@ -396,8 +387,12 @@ export default class WindowsController extends BaseController {
           height: windowDimensions.size[1],
         }
       : {}
-    console.log(dimensionOverrides)
+    this.session.api.windows.onPlaybackWindowOpened.dispatchEvent(window.id, {
+      title: window.getTitle(),
+    })
     window.webContents.setWindowOpenHandler(() => {
+      const { position, size } =
+        this.session.resizablePanels.cachedPlaybackWindowDimensions!
       return {
         action: 'allow',
         overrideBrowserWindowOptions: {
@@ -405,6 +400,10 @@ export default class WindowsController extends BaseController {
           ...dimensionOverrides,
           parent: this.get(projectEditorWindowName),
           show: true,
+          x: position[0],
+          y: position[1],
+          width: size[0],
+          height: size[1],
         },
       }
     })

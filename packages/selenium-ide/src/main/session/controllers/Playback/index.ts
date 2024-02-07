@@ -127,6 +127,8 @@ export default class PlaybackController extends BaseController {
     }
   }
 
+
+
   async getPlayback(testID?: string, forceNewPlayback = false) {
     const browserInfo = this.session.store.get('browserInfo')
     const makeNewPlayback = !this.playbacks.length || forceNewPlayback
@@ -232,8 +234,6 @@ export default class PlaybackController extends BaseController {
       } catch (e) {
         console.warn('Open command failed:', e)
       }
-    } finally {
-      await this.session.windows.initPlaybackWindowSize(window!)
     }
     return window
   }

@@ -159,6 +159,70 @@ export default class WebDriverExecutor {
   logger?: Console;
   [state]?: any
 
+  async getDriver({
+    debug,
+    logger,
+  }: Pick<WebDriverExecutorInitOptions, 'debug' | 'logger'>) {
+    this[state] = {}
+
+    const { browserName, ...capabilities } = this
+      .capabilities as ExpandedCapabilities
+    logger.info('Building driver for ' + browserName)
+    debug &&
+      logger.info(
+        'Driver attributes:' +
+          inspect({
+            capabilities,
+            server: this.server,
+            browserName,
+          })
+      )
+    let builder = new webdriver.Builder().withCapabilities(capabilities)
+    if (this.server) {
+      builder = builder.usingServer(this.server)
+    }
+    try {
+      const driver = await builder.forBrowser(browserName).build()
+      logger.info('Driver has been built for ' + browserName)
+      return driver
+    } catch (e) {
+      if (debug) {
+        const driverCode =
+          'const driver = new webdriver.Builder()' +
+          `.withCapabilities(${JSON.stringify(capabilities)})` +
+          (this.server ? `.usingServer('${this.server}')` : '') +
+          `.forBrowser('${browserName}').build()`
+        console.error(`
+          Failed to build driver for ${browserName}
+          Supplied capabilities: ${JSON.stringify(capabilities)}
+          Server: ${this.server || 'none'}
+          Error: ${e}
+
+          OS: ${process.platform}
+          Node: ${process.version}
+          Selenium-Webdriver: ${SeleniumWebdriverVersion}
+
+          This is breaking at the boundary of the following code in selenium-webdriver:
+
+          // BEGIN SELENIUM-WEBDRIVER CODE
+          const webdriver = require('selenium-webdriver')
+          ${driverCode}
+          // END SELENIUM-WEBDRIVER CODE
+
+          To ensure the bug is in selenium IDE, please attempt to run the above code in a script or node REPL.
+          You may have to npm install selenium-webdriver first.
+
+          If you are unable to proceed further, please raise a bug here:
+          https://github.com/SeleniumHQ/selenium/issues/new?assignees=&labels=I-defect%2Cneeds-triaging&projects=&template=bug-report.yml&title=%5B%F0%9F%90%9B+Bug%5D%3A+
+
+          If this code works in selenium-webdriver, but not the IDE or side-runner, please raise a bug here:
+          https://github.com/SeleniumHQ/selenium-ide/issues/new?assignees=&labels=&projects=&template=bug.md
+        `)
+      }
+      throw e
+    }
+  }
+
   async init({
     baseUrl,
     debug,
@@ -171,63 +235,8 @@ export default class WebDriverExecutor {
     this[state] = {}
 
     if (!this.driver) {
-      const { browserName, ...capabilities } = this
-        .capabilities as ExpandedCapabilities
-      this.logger.info('Building driver for ' + browserName)
-      debug &&
-        this.logger.info(
-          'Driver attributes:' +
-            inspect({
-              capabilities,
-              server: this.server,
-              browserName,
-            })
-        )
-      let driver = new webdriver.Builder().withCapabilities(capabilities)
-      if (this.server) {
-        driver = driver.usingServer(this.server)
-      }
-      try {
-        this.driver = await driver.forBrowser(browserName).build()
-        this.logger.info('Driver has been built for ' + browserName)
-      } catch (e) {
-        if (debug) {
-          const driverCode =
-            'const driver = new webdriver.Builder()' +
-            `.withCapabilities(${JSON.stringify(capabilities)})` +
-            (this.server ? `.usingServer('${this.server}')` : '') +
-            `.forBrowser('${browserName}').build()`
-          console.error(`
-            Failed to build driver for ${browserName}
-            Supplied capabilities: ${JSON.stringify(capabilities)}
-            Server: ${this.server || 'none'}
-            Error: ${e}
-
-            OS: ${process.platform}
-            Node: ${process.version}
-            Selenium-Webdriver: ${SeleniumWebdriverVersion}
-
-            This is breaking at the boundary of the following code in selenium-webdriver:
-
-            // BEGIN SELENIUM-WEBDRIVER CODE
-            const webdriver = require('selenium-webdriver')
-            ${driverCode}
-            // END SELENIUM-WEBDRIVER CODE
-
-            To ensure the bug is in selenium IDE, please attempt to run the above code in a script or node REPL.
-            You may have to npm install selenium-webdriver first.
-
-            If you are unable to proceed further, please raise a bug here:
-            https://github.com/SeleniumHQ/selenium/issues/new?assignees=&labels=I-defect%2Cneeds-triaging&projects=&template=bug-report.yml&title=%5B%F0%9F%90%9B+Bug%5D%3A+
-
-            If this code works in selenium-webdriver, but not the IDE or side-runner, please raise a bug here:
-            https://github.com/SeleniumHQ/selenium-ide/issues/new?assignees=&labels=&projects=&template=bug.md
-          `)
-        }
-        throw e
-      }
+      this.driver = await this.getDriver({ debug, logger })
     }
-
     this.initialized = true
   }
 
@@ -237,10 +246,14 @@ export default class WebDriverExecutor {
     }
   }
 
-  async cleanup() {
+  async cleanup(persistSession = false) {
     // await this.cancel()
     if (this.driver) {
-      await this.driver.quit()
+      if (persistSession) {
+        await this.driver.close()
+      } else {
+        await this.driver.quit()
+      }
       // @ts-expect-error
       this.driver = undefined
       this.initialized = false

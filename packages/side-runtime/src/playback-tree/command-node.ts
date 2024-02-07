@@ -171,18 +171,20 @@ export class CommandNode {
         )
       }, timeLimit)
       execute()
+        .then((result) => {
+          clearTimeout(expirationTimer)
+          res(result)
+        })
         .catch((e) => {
           clearTimeout(expirationTimer)
           try {
             this.handleTransientError(e, timeout)
-            this.retryCommand(execute, timeout)
+            setTimeout(() =>
+              this.retryCommand(execute, timeout).then(res).catch(rej)
+            )
           } catch (e) {
             rej(e)
           }
-        })
-        .then((result) => {
-          clearTimeout(expirationTimer)
-          res(result)
         })
     })
   }

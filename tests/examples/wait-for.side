@@ -191,7 +191,9 @@
     "timeout": 3000,
     "tests": ["b2baf643-63af-4c47-820e-a215d79d6f2d","b2baf643-63af-4c47-820e-a215d79d6f2e","b2baf643-63af-4c47-820e-a215d79d6f2f","b2baf643-63af-4c47-820e-a215d79d6f2g","b2baf643-63af-4c47-820e-a215d79d6f2h"]
   }],
-  "urls": ["http://the-internet.herokuapp.com/"],
+  "urls": [
+    "http://localhost:8080/"
+  ],
   "plugins": [],
   "version": "1.0"
 }

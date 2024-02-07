@@ -36,25 +36,52 @@ export interface HoistedThings {
   logger: Console
 }
 
-const buildRun =
-  ({ configuration, logger }: HoistedThings) =>
-  async (project: Project, test: TestShape, variables = new Variables()) => {
+export interface TestRunner {
+  getDriver: () => Promise<WebDriverExecutor['driver']>
+  run: (
+    project: Project,
+    test: TestShape,
+    variables?: Variables,
+    persistedDriver?: WebDriverExecutor['driver']
+  ) => Promise<void>
+}
+
+const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
+  getDriver: async () => {
+    const executor = new WebDriverExecutor({
+      capabilities: JSON.parse(
+        JSON.stringify(configuration.capabilities)
+      ) as unknown as WebDriverExecutorConstructorArgs['capabilities'],
+      server: configuration.server,
+    })
+    return await executor.getDriver({
+      debug: configuration.debugConnectionMode,
+      logger,
+    })
+  },
+  run: async (
+    project: Project,
+    test: TestShape,
+    variables = new Variables(),
+    persistedDriver?: WebDriverExecutor['driver']
+  ) => {
     logger.info(`Running test ${test.name}`)
     const pluginPaths = correctPluginPaths(project.path, project?.plugins ?? [])
     const plugins = await loadPlugins(pluginPaths)
     const customCommands = getCustomCommands(plugins)
-    const driver = new WebDriverExecutor({
+    const executor = new WebDriverExecutor({
       capabilities: JSON.parse(
         JSON.stringify(configuration.capabilities)
       ) as unknown as WebDriverExecutorConstructorArgs['capabilities'],
       customCommands,
+      driver: persistedDriver,
       hooks: {
         onBeforePlay: async () => {
           await Promise.all(
             plugins.map((plugin) => {
               const onBeforePlay = plugin.hooks?.onBeforePlay
               if (onBeforePlay) {
-                return onBeforePlay({ driver })
+                return onBeforePlay({ driver: executor })
               }
             })
           )
@@ -69,7 +96,7 @@ const buildRun =
       return new Promise(async (resolve, reject) => {
         const playback = new Playback({
           baseUrl: configuration.baseUrl || project.url,
-          executor: driver,
+          executor,
           getTestByName: (name: string) =>
             project.tests.find((t) => t.name === name) as TestShape,
           logger,
@@ -83,7 +110,7 @@ const buildRun =
           // plugins.
           if (failure && configuration.screenshotFailureDirectory) {
             try {
-              const crashScreen = await driver.driver.takeScreenshot()
+              const crashScreen = await executor.driver.takeScreenshot()
               await fs.writeFile(
                 path.join(
                   configuration.screenshotFailureDirectory,
@@ -96,8 +123,7 @@ const buildRun =
               console.log('Failed to take screenshot', e)
             }
           }
-          await playback.cleanup()
-          await driver.cleanup()
+          await playback.cleanup(Boolean(persistedDriver))
           if (failure) {
             return reject(failure)
           } else {
@@ -158,11 +184,12 @@ const buildRun =
             startingCommandIndex: 0,
           })
         } catch (e) {
-          await playback.cleanup()
+          await playback.cleanup(Boolean(persistedDriver))
           return reject(e)
         }
       })
     }
-  }
+  },
+})
 
 export default buildRun

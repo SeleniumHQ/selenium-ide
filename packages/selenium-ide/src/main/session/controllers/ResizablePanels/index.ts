@@ -38,13 +38,13 @@ export default class ResizablePanelsController extends BaseController {
     position: [number, number]
     size: [number, number]
   } | null = null
-  
+
   async getPlaybackWindowDimensions() {
     const panelScreenPosition = await this.getPanelScreenPosition(
       'playback-panel'
     )
     const isWindows = process.platform === 'win32'
-    return {
+    this.cachedPlaybackWindowDimensions = {
       position: [
         panelScreenPosition.x + (isWindows ? 12 : 0),
         panelScreenPosition.y + (isWindows ? 21 : 0),
@@ -54,6 +54,7 @@ export default class ResizablePanelsController extends BaseController {
       position: [number, number]
       size: [number, number]
     }
+    return this.cachedPlaybackWindowDimensions!;
   }
 
   async recalculatePlaybackWindows() {

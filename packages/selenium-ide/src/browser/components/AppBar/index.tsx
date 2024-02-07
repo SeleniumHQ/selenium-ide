@@ -10,20 +10,20 @@ import AppBarTabs from './AppBarTabs'
 import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import { getActiveTest } from '@seleniumhq/side-api'
+import baseControlProps from '../Controls/BaseProps'
 
 type SIDEAppBarProps = Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>
 
-const SIDEAppBar: React.FC<SIDEAppBarProps> = ({
-  session,
-  setTab,
-  tab,
-}) => {
+const SIDEAppBar: React.FC<SIDEAppBarProps> = ({ session, setTab, tab }) => {
   const showDrawer = session.state.editor.showDrawer
   return (
     <Paper className="flex flex-row width-100 z-3" elevation={1} square>
       <IconButton
+        {...baseControlProps}
         aria-label={showDrawer ? 'Close drawer' : 'Open drawer'}
-        onClick={() => window.sideAPI.state.set('editor.showDrawer', !showDrawer)}
+        onClick={() =>
+          window.sideAPI.state.set('editor.showDrawer', !showDrawer)
+        }
       >
         {showDrawer ? <MenuOpenIcon /> : <MenuIcon />}
       </IconButton>

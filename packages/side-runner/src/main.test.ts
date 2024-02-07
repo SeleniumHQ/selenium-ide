@@ -123,7 +123,7 @@ const factoryParams = {
 const getTestByID = (project: ProjectShape) => (testID: string) =>
   project.tests.find((t) => t.id === testID) as TestShape
 
-const run = buildRun(factoryParams)
+const runner = buildRun(factoryParams)
 
 if (configuration.debugConnectionMode) {
   test('Testing driver connection', async () => {
@@ -158,7 +158,7 @@ if (configuration.debugConnectionMode) {
           new RegExp(configuration.filter).test(suite.name)
       )
       if (suites.length) {
-        each(suites).describe(suiteTitle, (suite: SuiteShape) => {
+        each(suites).describe(suiteTitle, async (suite: SuiteShape) => {
           const isParallel = suite.parallel
           const suiteVariables = new Variables()
           const tests = suite.tests.map(getTestByID(project))
@@ -167,11 +167,16 @@ if (configuration.debugConnectionMode) {
           const testMethod = isParallel
             ? testExecutor.test.concurrent
             : testExecutor.test
+
+          const persistedDriver = suite.persistSession
+            ? await runner.getDriver()
+            : undefined
           testMethod(testTitle, async (test: TestShape) => {
-            await run(
+            await runner.run(
               project,
               test,
-              suite.persistSession ? suiteVariables : new Variables()
+              suite.persistSession ? suiteVariables : new Variables(),
+              persistedDriver
             )
           })
         })
@@ -190,7 +195,7 @@ if (configuration.debugConnectionMode) {
         }
         const testExecutor = each(tests)
         testExecutor.test(testTitle, async (test: TestShape) => {
-          await run(project, test, new Variables())
+          await runner.run(project, test, new Variables())
         })
       }
     } catch (e) {

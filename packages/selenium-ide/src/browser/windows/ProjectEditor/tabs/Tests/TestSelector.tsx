@@ -35,25 +35,27 @@ const TestSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
       >
         <FormControl className="flex flex-1">
           <InputLabel id="test-select-label">Selected Test</InputLabel>
-          <Select
-            label="test-select-label"
-            onChange={async (event) => {
-              const test = tests.find((t) => t.id === event.target.value)
-              if (test) {
-                await window.sideAPI.state.setActiveTest(test.id)
-              }
-            }}
-            margin="dense"
-            placeholder={tests.length ? 'Select a test' : 'No tests found'}
-            size="small"
-            value={activeTestID}
-          >
-            {tests.map((t) => (
-              <MenuItem key={t.id} value={t.id}>
-                {t.name}
-              </MenuItem>
-            ))}
-          </Select>
+          {activeTestID && (
+            <Select
+              label="test-select-label"
+              onChange={async (event) => {
+                const test = tests.find((t) => t.id === event.target.value)
+                if (test) {
+                  await window.sideAPI.state.setActiveTest(test.id)
+                }
+              }}
+              margin="dense"
+              placeholder={tests.length ? 'Select a test' : 'No tests found'}
+              size="small"
+              value={activeTestID}
+            >
+              {tests.map((t) => (
+                <MenuItem key={t.id} value={t.id}>
+                  {t.name}
+                </MenuItem>
+              ))}
+            </Select>
+          )}
         </FormControl>
       </EditorToolbar>
       {confirmDelete && (
