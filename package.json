@@ -30,7 +30,7 @@
     "watch:ts": "tsc --build --verbose --watch"
   },
   "engines": {
-    "node": ">=16"
+    "node": "20.x"
   },
   "workspaces": [
     "packages/*"
