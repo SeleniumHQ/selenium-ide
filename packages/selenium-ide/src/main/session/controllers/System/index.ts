@@ -50,7 +50,8 @@ export default class SystemController extends BaseController {
     if (this.isDown) {
       // If automated, assume we already have a chromedriver process running
       if (!isAutomated) {
-        this.checkForUpdates()
+        // Just don't do this until we have CSC unfortunately
+        // this.checkForUpdates()
         const startupError = await this.session.driver.startProcess(
           this.session.store.get('browserInfo')
         )
