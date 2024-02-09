@@ -1,0 +1,163 @@
+{
+  "id": "6812dcda-7441-4277-b381-fdf4c75294eb",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "b10733b3-8a47-451b-abf5-12df6d074b1a",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "ee6cd26c-e13e-411a-b190-1432c0e6af32"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "ee6cd26c-e13e-411a-b190-1432c0e6af32",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "e02b30e1-d9fa-49dd-919e-f6c45ae2702b",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "id=APjFqb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "c57a2571-e26a-4709-8e06-a3a758647889",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwidmsC1rZSEAxWiRaQEHYxSDm4Q39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=APjFqb",
+          "value": "jpetstore",
+          "id": "a6f43e38-eb69-4159-8263-15cd5a303c9e"
+        },
+        {
+          "command": "sendKeys",
+          "target": "id=APjFqb",
+          "value": "${KEY_ENTER}",
+          "id": "f334e260-0959-49b4-b757-1a1f60ab73a0"
+        },
+        {
+          "command": "mouseOver",
+          "target": "linkText=Limiter cette recherche aux résultats en français",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "ae468f6a-6d19-4f06-a334-243ec67a3f5a",
+          "targets": [
+            [
+              "linkText=Limiter cette recherche aux résultats en français",
+              "linkText"
+            ],
+            [
+              "css=.Aysk6e > a:nth-child(1)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='oFNiHe']/div/div/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/search?q=jpetstore&sca_esv=30ba42da69d2c19f&lr=lang_fr&sa=X&ved=2ahUKEwirhaO5rZSEAxVnQ6QEHb1aAmoQuAF6BAgHEAI')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Limiter cette recherche aux résultats en français')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "mouseOver",
+          "target": "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "8fd0de91-17b9-4d98-8a2c-abf4c98c9794",
+          "targets": [
+            [
+              "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='rso']/div/div/div/div/div/div/span/a/h3)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//h3[contains(.,'JPetStore - Petstore Demo - OctoPerf')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "ce727d62-df32-467d-b47a-3ffe11ff46c8",
+          "targets": [
+            [
+              "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='rso']/div/div/div/div/div/div/span/a/h3)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//h3[contains(.,'JPetStore - Petstore Demo - OctoPerf')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}
