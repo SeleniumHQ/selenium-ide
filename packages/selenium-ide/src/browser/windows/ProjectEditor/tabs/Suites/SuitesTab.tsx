@@ -13,7 +13,7 @@ const SuitesTab: React.FC<
 
   return (
     <Box className="fill flex flex-col">
-      <SuiteSelector session={session} />
+      {!session.state.editor.showDrawer && <SuiteSelector session={session} />}
       <Component session={session} />
     </Box>
   )

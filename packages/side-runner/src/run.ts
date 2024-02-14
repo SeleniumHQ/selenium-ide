@@ -37,7 +37,9 @@ export interface HoistedThings {
 }
 
 export interface TestRunner {
-  getDriver: () => Promise<WebDriverExecutor['driver']>
+  getDriverSync: () => ReturnType<
+    typeof WebDriverExecutor.prototype.getDriverSync
+  >
   run: (
     project: Project,
     test: TestShape,
@@ -47,14 +49,14 @@ export interface TestRunner {
 }
 
 const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
-  getDriver: async () => {
+  getDriverSync: () => {
     const executor = new WebDriverExecutor({
       capabilities: JSON.parse(
         JSON.stringify(configuration.capabilities)
       ) as unknown as WebDriverExecutorConstructorArgs['capabilities'],
       server: configuration.server,
     })
-    return await executor.getDriver({
+    return executor.getDriverSync({
       debug: configuration.debugConnectionMode,
       logger,
     })

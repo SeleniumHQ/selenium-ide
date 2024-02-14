@@ -12,6 +12,7 @@ import CommandTable from './TestCommandTable'
 import { loadingID } from '@seleniumhq/side-api/dist/constants/loadingID'
 import MainHeader from 'browser/components/Main/Header'
 import { SIDEMainProps } from 'browser/components/types'
+import TestSelector from './TestSelector'
 
 const sxCenter = { textAlign: 'center' }
 const NoTestFound = () => (
@@ -79,6 +80,7 @@ const TestsTab: React.FC<Pick<SIDEMainProps, 'session' | 'setTab' | 'tab'>> = ({
   const disabled = ['playing', 'recording'].includes(session.state.status)
   return (
     <Box className="fill flex flex-col" ref={ref}>
+      {!session.state.editor.showDrawer && (<TestSelector session={session} />)}
       {activeTestID === loadingID ? (
         <NoTestFound />
       ) : (

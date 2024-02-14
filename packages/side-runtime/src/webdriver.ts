@@ -159,12 +159,13 @@ export default class WebDriverExecutor {
   logger?: Console;
   [state]?: any
 
-  async getDriver({
+  getDriverSync({
     debug,
     logger,
-  }: Pick<WebDriverExecutorInitOptions, 'debug' | 'logger'>) {
-    this[state] = {}
-
+  }: Pick<
+    WebDriverExecutorInitOptions,
+    'debug' | 'logger'
+  >): webdriver.ThenableWebDriver {
     const { browserName, ...capabilities } = this
       .capabilities as ExpandedCapabilities
     logger.info('Building driver for ' + browserName)
@@ -181,8 +182,16 @@ export default class WebDriverExecutor {
     if (this.server) {
       builder = builder.usingServer(this.server)
     }
+    return builder.forBrowser(browserName).build()
+  }
+  async getDriver({
+    debug,
+    logger,
+  }: Pick<WebDriverExecutorInitOptions, 'debug' | 'logger'>) {
+    const { browserName, ...capabilities } = this
+      .capabilities as ExpandedCapabilities
     try {
-      const driver = await builder.forBrowser(browserName).build()
+      const driver = await this.getDriverSync({ debug, logger })
       logger.info('Driver has been built for ' + browserName)
       return driver
     } catch (e) {

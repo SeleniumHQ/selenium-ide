@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+export * from './async'
 export * as events from './events'
 export * as string from './string'
 export * from './types'

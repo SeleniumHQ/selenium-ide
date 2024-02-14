@@ -14,6 +14,7 @@ import { isAutomated } from 'main/util'
 import { join } from 'node:path'
 import BaseController from '../Base'
 import { window as playbackWindowOpts } from 'browser/windows/PlaybackWindow/controller'
+import { Playback } from '@seleniumhq/side-runtime'
 
 const playbackWindowName = 'playback-window'
 const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
@@ -85,6 +86,7 @@ export default class WindowsController extends BaseController {
   playbackWindows: BrowserWindow[] = []
   claimedPlaybackWindows: BrowserWindow[] = []
   windowLoaders: WindowLoaderMap = makeWindowLoaders(this.session)
+  windowsByPlayback: Map<Playback, Electron.BrowserWindow[]> = new Map()
   windows: { [key: string]: BrowserWindow } = {}
 
   constructor(session: Session) {
@@ -141,6 +143,13 @@ export default class WindowsController extends BaseController {
     })
   }
 
+  getPlaybackForWindow(window: BrowserWindow) {
+    const playback = Array.from(this.windowsByPlayback.keys()).find((p) =>
+      this.windowsByPlayback.get(p)?.includes(window)
+    )
+    return playback
+  }
+
   async close(name: string): Promise<boolean> {
     const window = this.windows[name]
     if (!window) {
@@ -167,7 +176,7 @@ export default class WindowsController extends BaseController {
     return this.windows[name]
   }
 
-  requestPlaybackWindow() {
+  requestPlaybackWindow(playback: Playback) {
     let availableWindow: BrowserWindow | null = null
     const activeWindow = this.getActivePlaybackWindow()
     const claimedWindows = this.claimedPlaybackWindows
@@ -182,20 +191,62 @@ export default class WindowsController extends BaseController {
       }
     }
     if (availableWindow) {
-      claimedWindows.push(availableWindow)
+      this.claimPlaybackWindow(playback, availableWindow)
     }
     return availableWindow
   }
 
-  async claimPlaybackWindow(window: BrowserWindow) {
+  async claimPlaybackWindow(playback: Playback, window: BrowserWindow) {
     this.claimedPlaybackWindows.push(window)
+    if (this.windowsByPlayback.has(playback)) {
+      const windows = this.windowsByPlayback.get(playback)!
+      windows.push(window)
+    } else {
+      this.windowsByPlayback.set(playback, [window])
+    }
+
+    const testID = playback.state.testID
+    const test = this.session.projects.project.tests.find(
+      (t) => t.id === testID
+    )
+    this.session.api.windows.onPlaybackWindowOpened.dispatchEvent(window.id, {
+      title: test!.name,
+    })
   }
 
-  async releasePlaybackWindow(window: BrowserWindow) {
-    const index = this.claimedPlaybackWindows.indexOf(window)
-    if (index !== -1) {
-      this.claimedPlaybackWindows.splice(index, 1)
+  releasePlaybackWindow(
+    playback: Playback,
+    window: BrowserWindow,
+    close = false
+  ) {
+    const claimedWindowIndex = this.claimedPlaybackWindows.indexOf(window)
+    if (claimedWindowIndex !== -1) {
+      this.claimedPlaybackWindows.splice(claimedWindowIndex, 1)
     }
+    const playbackWindows = this.windowsByPlayback.get(playback) || []
+    const playbackWindowIndex = playbackWindows.indexOf(window)
+    if (playbackWindowIndex !== -1) {
+      playbackWindows.splice(playbackWindowIndex, 1)
+    }
+    if (!close) {
+      this.session.api.windows.onPlaybackWindowChanged.dispatchEvent(
+        window.id,
+        {
+          title: window?.isDestroyed() ? '' : window?.webContents.getTitle(),
+        }
+      )
+    } else {
+      this.session.api.windows.onPlaybackWindowClosed.dispatchEvent(window.id)
+      window.close()
+    }
+  }
+
+  releasePlaybackWindows(playback: Playback, close = false) {
+    const windows = this.windowsByPlayback.get(playback) || []
+    windows.forEach((window) =>
+      this.releasePlaybackWindow(playback, window, close)
+    )
+    this.windowsByPlayback.delete(playback)
   }
 
   getActivePlaybackWindow(): BrowserWindow | null {
@@ -265,7 +316,7 @@ export default class WindowsController extends BaseController {
     const activePlaybackWindow = this.getActivePlaybackWindow()
     const window = BrowserWindow.fromId(id)
     const isActive = window === activePlaybackWindow
-    window!.close()
+    window!.destroy()
 
     if (isActive) {
       const newActiveWindow = this.playbackWindows.find((w) => w.id !== id)
@@ -286,14 +337,20 @@ export default class WindowsController extends BaseController {
     })
   }
 
-  async openPlaybackWindow(opts: BrowserWindowConstructorOptions = {}) {
+  async openPlaybackWindow(
+    playback: Playback,
+    opts: BrowserWindowConstructorOptions = {}
+  ) {
     const playbackPanel =
       await this.session.resizablePanels.getPlaybackWindowDimensions()
     const playingSuite = this.session.playback.playingSuite
-    const persistSession = playingSuite ?
-      this.session.projects.project.suites.find(s => s.id === playingSuite)?.persistSession :
-      false
-    const correctedDims = await this.calculateScaleAndZoom(...playbackPanel.size)
+    const persistSession = playingSuite
+      ? this.session.projects.project.suites.find((s) => s.id === playingSuite)
+          ?.persistSession
+      : false
+    const correctedDims = await this.calculateScaleAndZoom(
+      ...playbackPanel.size
+    )
     const window = this.windowLoaders[playbackWindowName]({
       ...opts,
       x: playbackPanel.position[0],
@@ -303,10 +360,10 @@ export default class WindowsController extends BaseController {
       parent: await this.session.windows.get(projectEditorWindowName),
       webPreferences: {
         partition: persistSession ? playingSuite : `playback-${partition++}`,
-        zoomFactor: correctedDims.zoomFactor
+        zoomFactor: correctedDims.zoomFactor,
       },
     })
-    this.handlePlaybackWindow(window)
+    this.handlePlaybackWindow(playback, window)
     window.showInactive()
     if (opts.title) {
       window.webContents.executeJavaScript(`document.title = "${opts.title}";`)
@@ -374,7 +431,8 @@ export default class WindowsController extends BaseController {
     this.handlesToIDs[handle] = id
   }
 
-  handlePlaybackWindow(window: BrowserWindow) {
+  handlePlaybackWindow(playback: Playback, window: BrowserWindow) {
+    this.claimPlaybackWindow(playback, window)
     this.playbackWindows.push(window)
     window.webContents.insertCSS(playbackCSS)
     const windowDimensions =
@@ -387,9 +445,6 @@ export default class WindowsController extends BaseController {
           height: windowDimensions.size[1],
         }
       : {}
-    this.session.api.windows.onPlaybackWindowOpened.dispatchEvent(window.id, {
-      title: window.getTitle(),
-    })
     window.webContents.setWindowOpenHandler(() => {
       const { position, size } =
         this.session.resizablePanels.cachedPlaybackWindowDimensions!
@@ -408,9 +463,18 @@ export default class WindowsController extends BaseController {
       }
     })
 
-    window.webContents.on('did-create-window', (win) =>
-      this.handlePlaybackWindow(win)
-    )
+    // This block listens for downloads and sets the save path to the downloads folder
+    window.webContents.session.on('will-download', (_event, item) => {
+      const downloadPath = this.session.app.getPath('downloads')
+      // Set the save path, making Electron not to prompt a save dialog.
+      item.setSavePath(join(downloadPath, item.getFilename()))
+    })
+
+    window.webContents.on('did-create-window', (win) => {
+      const playback = this.getPlaybackForWindow(window)!
+      this.handlePlaybackWindow(playback, win)
+    })
+
     // This block listens for frames to be created
     // Upon being so, we check if our API is available
     // If not, we reload and check again until it is.
@@ -426,6 +490,7 @@ export default class WindowsController extends BaseController {
         await this.session.api.recorder.onFrameRecalculate.dispatchEvent()
       })
     })
+
     // Keeps playback window list ordered according to interactions
     window.on('focus', () => {
       const windowIndex = this.playbackWindows.indexOf(window)
@@ -441,6 +506,7 @@ export default class WindowsController extends BaseController {
         }
       )
     })
+
     window.on('blur', () => {
       this.session.api.windows.onPlaybackWindowChanged.dispatchEvent(
         window.id,
@@ -449,23 +515,33 @@ export default class WindowsController extends BaseController {
         }
       )
     })
-    window.webContents.on('did-navigate', () => {
+
+    window.on('hide', () => {
       this.session.api.windows.onPlaybackWindowChanged.dispatchEvent(
         window.id,
         {
-          title: window.webContents
-            .getURL()
-            .replace(this.session.projects.project.url, ''),
+          visible: false,
         }
       )
     })
+
+    window.on('show', () => {
+      this.session.api.windows.onPlaybackWindowChanged.dispatchEvent(
+        window.id,
+        {
+          visible: true,
+        }
+      )
+    })
+
     window.on('closed', () => {
+      this.releasePlaybackWindow(playback, window)
       this.session.api.windows.onPlaybackWindowClosed.dispatchEvent(window.id)
-      this.removePlaybackWIndow(window)
+      this.removePlaybackWindow(window)
     })
   }
 
-  async removePlaybackWIndow(window: Electron.BrowserWindow) {
+  async removePlaybackWindow(window: Electron.BrowserWindow) {
     this.playbackWindows.splice(this.playbackWindows.indexOf(window), 1)
     if (this.playbackWindows.length === 0) {
       if (this.session.state.state.status === 'recording') {
@@ -476,7 +552,7 @@ export default class WindowsController extends BaseController {
 
   async initializePlaybackWindow() {
     this.playbackWindows.forEach((bw) => {
-      this.removePlaybackWIndow(bw)
+      this.removePlaybackWindow(bw)
       bw.close()
     })
   }
@@ -534,16 +610,24 @@ export default class WindowsController extends BaseController {
 
     await this.open(projectEditorWindowName, {
       show: false,
-      title:
-        'Project Editor: ' + this.session.projects?.filepath ??
-        this.session.projects.project.name,
     })
     const projectWindow = await this.get(projectEditorWindowName)
+    const projectID =
+      this.session.projects?.filepath ??
+      this.session.projects.project.name ??
+      ''
+    projectWindow.title = `Project Editor${projectID ? `: ${projectID}` : ''}`
     this.useWindowState(projectWindow, 'windowSize', 'windowPosition')
     projectWindow.on('move', () => {
       this.session.resizablePanels.recalculatePlaybackWindows()
     })
+    projectWindow.on('moved', () => {
+      this.session.resizablePanels.recalculatePlaybackWindows()
+    })
     projectWindow.on('resize', () => {
+      this.session.resizablePanels.recalculatePlaybackWindows()
+    })
+    projectWindow.on('resized', () => {
       this.session.resizablePanels.recalculatePlaybackWindows()
     })
 

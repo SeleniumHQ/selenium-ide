@@ -10,6 +10,8 @@ import startDriver, { port, WebdriverDebugLog } from './start'
 import BaseController from '../Base'
 import { createBidiAPIBindings } from './bidi'
 import { CommandShape } from '@seleniumhq/side-model'
+import { absolutifyUrl } from '@seleniumhq/side-runtime/src/utils'
+import { retry } from '@seleniumhq/side-commons'
 
 // Escape hatch to avoid dealing with rootDir complexities in TS
 // https://stackoverflow.com/questions/50822310/how-to-import-package-json-in-typescript
@@ -152,6 +154,23 @@ const electronPolyfills = (
     name: 'dismissPrompt',
     description: 'Dismisses a prompt',
   },
+  open: {
+    execute: async (command: CommandShape, executor: WebDriverExecutor) => {
+      const url = command.target
+      const handle = await executor.driver.getWindowHandle()
+      const window = await session.windows.getPlaybackWindowByHandle(handle)
+      if (!window) {
+        throw new Error('Failed to find playback window')
+      }
+      await retry(
+        () => window.loadURL(absolutifyUrl(url!, session.projects.project.url)),
+        5,
+        100
+      )
+    },
+    name: 'doOpen',
+    description: 'Opens a URL',
+  },
   setWindowSize: {
     execute: async (command: CommandShape, executor: WebDriverExecutor) => {
       const handle = await executor.driver.getWindowHandle()
@@ -159,8 +178,14 @@ const electronPolyfills = (
       if (!window) {
         throw new Error('Failed to find playback window')
       }
-      const [targetWidth, targetHeight] = command.target!.split('x').map((v) => parseInt(v))
-      await session.windows.resizePlaybackWindow(window, targetWidth, targetHeight)
+      const [targetWidth, targetHeight] = command
+        .target!.split('x')
+        .map((v) => parseInt(v))
+      await session.windows.resizePlaybackWindow(
+        window,
+        targetWidth,
+        targetHeight
+      )
     },
     name: 'setWindowSize',
     description: 'Sets the playback window size',
@@ -213,7 +238,15 @@ export default class DriverController extends BaseController {
       .usingServer(server)
       .forBrowser(browserName)
     console.info('Building driver for ' + browser)
-    const driver = await driverBuilder.build()
+    const driver = await retry(
+      async () => {
+        const result = await driverBuilder.build()
+        console.info('Built driver for ' + browser)
+        return result
+      },
+      3,
+      100
+    )
     console.info('Built driver for ' + browser)
     const useBidi = await this.session.store.get('browserInfo.useBidi')
     if (useBidi) {

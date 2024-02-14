@@ -24,28 +24,25 @@ const ProjectEditor: React.FC<
           <SIDEAppBar session={session} setTab={setTab} tab={tab} />
         </div>
         <div className="flex-1">
-          {showDrawer && (
-            <PanelGroup
-              direction="horizontal"
-              id="drawer-editor"
-              {...usePanelGroup('drawer-editor')}
-            >
-              <Panel collapsible id="editor-drawer" order={1}>
-                <SIDEDrawer session={session} tab={tab} />
-              </Panel>
-              <PanelResizeHandle className="resize-bar" id="h-resize-1" />
-              <Panel id="editor-panel" order={2}>
-                <Box className="fill flex flex-col">
-                  <Main session={session} setTab={setTab} tab={tab} />
-                </Box>
-              </Panel>
-            </PanelGroup>
-          )}
-          {!showDrawer && (
-            <Box className="fill flex flex-col">
-              <Main session={session} setTab={setTab} tab={tab} />
-            </Box>
-          )}
+          <PanelGroup
+            direction="horizontal"
+            id="drawer-editor"
+            {...usePanelGroup('drawer-editor', !showDrawer)}
+          >
+            {showDrawer && (
+              <>
+                <Panel collapsible id="editor-drawer" defaultSize={25} order={1}>
+                  <SIDEDrawer session={session} tab={tab} />
+                </Panel>
+                <PanelResizeHandle className="resize-bar" id="h-resize-1" />
+              </>
+            )}
+            <Panel defaultSize={75} id="editor-panel" order={2}>
+              <Box className="fill flex flex-col">
+                <Main session={session} setTab={setTab} tab={tab} />
+              </Box>
+            </Panel>
+          </PanelGroup>
         </div>
       </div>
     </DndProvider>

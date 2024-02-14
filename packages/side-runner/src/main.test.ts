@@ -158,7 +158,7 @@ if (configuration.debugConnectionMode) {
           new RegExp(configuration.filter).test(suite.name)
       )
       if (suites.length) {
-        each(suites).describe(suiteTitle, async (suite: SuiteShape) => {
+        each(suites).describe(suiteTitle, (suite: SuiteShape) => {
           const isParallel = suite.parallel
           const suiteVariables = new Variables()
           const tests = suite.tests.map(getTestByID(project))
@@ -169,14 +169,14 @@ if (configuration.debugConnectionMode) {
             : testExecutor.test
 
           const persistedDriver = suite.persistSession
-            ? await runner.getDriver()
+            ? runner.getDriverSync()
             : undefined
           testMethod(testTitle, async (test: TestShape) => {
             await runner.run(
               project,
               test,
               suite.persistSession ? suiteVariables : new Variables(),
-              persistedDriver
+              await (persistedDriver || Promise.resolve(undefined))
             )
           })
         })

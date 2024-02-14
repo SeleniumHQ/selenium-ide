@@ -16,24 +16,25 @@ export type TestID = string
 export type StepID = string
 export type OnPlayUpdatePlayback = [
   {
+    intermediate?: boolean
     state: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']['state']
     testID?: string
   }
 ]
 
-const playStatusFromPlaybackState: Record<
+const testResultStatusFromPlaybackState: Record<
   PlaybackEventShapes['PLAYBACK_STATE_CHANGED']['state'],
-  CoreSessionData['state']['status']
+  CoreSessionData['state']['playback']['testResults'][string]['state']
 > = {
-  aborted: 'paused',
-  breakpoint: 'paused',
-  errored: 'paused',
-  failed: 'paused',
-  finished: 'idle',
-  paused: 'paused',
-  playing: 'playing',
-  prep: 'playing',
-  stopped: 'idle',
+  aborted: 'skipped',
+  breakpoint: 'pending',
+  errored: 'errored',
+  failed: 'failed',
+  finished: 'passed',
+  paused: 'skipped',
+  playing: 'executing',
+  prep: 'executing',
+  stopped: 'skipped',
 }
 
 export const mutator: EventMutator<OnPlayUpdatePlayback> = (
@@ -45,22 +46,32 @@ export const mutator: EventMutator<OnPlayUpdatePlayback> = (
     ...oldState,
     playback: {
       ...oldState.playback,
+      testResults: {
+        ...oldState.playback.testResults,
+      },
     },
-    status: playStatusFromPlaybackState[data.state],
   }
-  switch (data.state) {
-    case 'paused':
-    case 'breakpoint':
-      state.status = 'paused'
-      break
-    case 'aborted':
-    case 'errored':
-    case 'failed':
-    case 'finished':
-    case 'stopped':
-      state.status = 'idle'
-      state.playback.currentIndex = badIndex
-      break
+  if (data.testID) {
+    state.playback.testResults[data.testID] = {
+      ...state.playback.testResults[data.testID],
+      state: testResultStatusFromPlaybackState[data.state],
+    }
+  }
+  if (!data.intermediate) {
+    switch (data.state) {
+      case 'paused':
+      case 'breakpoint':
+        state.status = 'paused'
+        break
+      case 'aborted':
+      case 'errored':
+      case 'failed':
+      case 'finished':
+      case 'stopped':
+        state.status = 'idle'
+        state.playback.currentIndex = badIndex
+        break
+    }
   }
   return {
     ...session,

@@ -9,6 +9,7 @@ export type OnPlaybackWindowChanged = [
     focused: boolean
     state: 'idle' | 'playing' | 'recording' | 'paused'
     title: string
+    visible: boolean
   }>
 ]
 export type Shape = BaseListener<OnPlaybackWindowChanged>

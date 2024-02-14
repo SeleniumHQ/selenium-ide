@@ -273,13 +273,13 @@ importers:
         specifier: ^4.0.0-alpha.49
         version: link:../side-api
       '@seleniumhq/side-commons':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-commons
       '@seleniumhq/side-model':
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.43
+        specifier: ^4.0.0-alpha.44
         version: link:../side-runtime
       dnd-core:
         specifier: ^16.0.1
@@ -525,7 +525,7 @@ importers:
         specifier: ^4.0.0-alpha.5
         version: link:../side-model
       '@seleniumhq/side-runtime':
-        specifier: ^4.0.0-alpha.43
+        specifier: ^4.0.0-alpha.44
         version: link:../side-runtime
       commander:
         specifier: ^11.0.0
@@ -577,7 +577,7 @@ importers:
   packages/side-runtime:
     dependencies:
       '@seleniumhq/side-commons':
-        specifier: ^4.0.0-alpha.2
+        specifier: ^4.0.0-alpha.3
         version: link:../side-commons
       '@seleniumhq/side-model':
         specifier: ^4.0.0-alpha.5

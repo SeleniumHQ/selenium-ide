@@ -123,7 +123,6 @@ const CommandRow: React.FC<CommandRowProps> = ({
         }
         secondary={
           <>
-            <Box sx={errorTextFormat}>{commandState.message}</Box>
             {comment && (
               <Box sx={commentTextFormat}>// {comment}</Box>
             )}

@@ -16,6 +16,7 @@ import { randomUUID } from 'crypto'
 import { Session } from 'main/types'
 import { cpus } from 'os'
 import BaseController from '../Base'
+import { retry } from '@seleniumhq/side-commons'
 
 const parallelExecutions = Math.floor(cpus().length / 2)
 
@@ -102,7 +103,9 @@ export default class PlaybackController extends BaseController {
   }
 
   async performCommand(command: Omit<CommandShape, 'id'>) {
-    const playback = await this.getPlayback()
+    const playback = await this.getPlayback(
+      this.session.state.state.activeTestID
+    )
     await playback.playSingleCommand({ ...command, id: '-1' })
   }
 
@@ -127,8 +130,6 @@ export default class PlaybackController extends BaseController {
     }
   }
 
-
-
   async getPlayback(testID?: string, forceNewPlayback = false) {
     const browserInfo = this.session.store.get('browserInfo')
     const makeNewPlayback = !this.playbacks.length || forceNewPlayback
@@ -151,10 +152,16 @@ export default class PlaybackController extends BaseController {
       if (browserInfo.useBidi) {
         await playback.executor.driver.switchTo().newWindow('window')
       } else {
+        if (testID) {
+          playback.state.testID = testID
+        }
         await this.claimPlaybackWindow(playback, forceNewPlayback)
       }
     } else {
       playback = this.playbacks[0]
+      if (testID) {
+        playback.state.testID = testID
+      }
       try {
         await this.claimPlaybackWindow(playback)
       } catch (e) {
@@ -179,32 +186,33 @@ export default class PlaybackController extends BaseController {
       if (forceNewWindow) {
         throw new Error('Force new window')
       }
-      window = await this.session.windows.requestPlaybackWindow()!
+      window = await this.session.windows.requestPlaybackWindow(playback)!
       if (!window) {
         throw new Error('No windows found')
       }
     } catch (windowDoesNotExist) {
       let success = false
       const UUID = randomUUID()
-      window = await this.session.windows.openPlaybackWindow({
+      window = await this.session.windows.openPlaybackWindow(playback, {
         title: UUID,
       })
-      const handles = await driver.getAllWindowHandles()
-      this.session.windows.claimPlaybackWindow(window)
+      const handles = await retry(() => driver.getAllWindowHandles(), 3, 100)
       for (let i = 0, ii = handles.length; i !== ii; i++) {
         const handle = handles[i]
         if (!this.session.windows.getPlaybackWindowByHandle(handle)) {
-          await driver.switchTo().window(handle)
-          const title = await driver.getTitle()
-          if (title === UUID) {
-            await this.session.windows.registerPlaybackWindowHandle(
-              handle,
-              window.id
-            )
-            targetHandle = handle
-            success = true
-            break
-          }
+          try {
+            await driver.switchTo().window(handle)
+            const title = await driver.getTitle()
+            if (title === UUID) {
+              await this.session.windows.registerPlaybackWindowHandle(
+                handle,
+                window.id
+              )
+              targetHandle = handle
+              success = true
+              break
+            }
+          } catch (windowDNE) {}
         }
       }
       if (!success) {
@@ -230,7 +238,11 @@ export default class PlaybackController extends BaseController {
             'Window handle mismatch' + targetHandle! + ' ' + currentHandle
           )
         }
-        await playback.executor.doOpen(url)
+        await retry(
+          () => window.loadURL(url),
+          3,
+          500
+        )
       } catch (e) {
         console.warn('Open command failed:', e)
       }
@@ -316,6 +328,7 @@ export default class PlaybackController extends BaseController {
     if (suite?.parallel) {
       for (let i = 0; i < parallelExecutions; i++) {
         this.playNextTest(true)
+        await new Promise((res) => setTimeout(res))
       }
     } else {
       this.playNextTest(true)
@@ -325,6 +338,11 @@ export default class PlaybackController extends BaseController {
   async playNextTest(forceNewPlayback: boolean = false) {
     const nextTest = this.testQueue.shift()
     if (nextTest) {
+      console.log(
+        'Playing test?',
+        nextTest,
+        this.session.projects.project.tests.find(hasID(nextTest))?.name
+      )
       await this.session.api.playback.play(
         nextTest,
         PlaybackController.defaultPlayRange,
@@ -344,6 +362,9 @@ export default class PlaybackController extends BaseController {
       .filter((v) => !!v)
       .join('|')
     console.debug(`${e.state} ${niceString}`)
+    if (e.error) {
+      console.error(e.error)
+    }
   }
 
   handlePlaybackStateChanged =
@@ -353,38 +374,32 @@ export default class PlaybackController extends BaseController {
         testID || this.session.state.state.activeTestID
       )?.name
       console.debug(`Playing state changed ${e.state} for test ${testName}`)
+      let closeAll = false
       switch (e.state) {
         case 'aborted':
         case 'errored':
         case 'failed':
         case 'finished':
         case 'stopped':
-          const handle = await playback.executor.driver.getWindowHandle()
-          if (handle) {
-            const window = await this.session.windows.getPlaybackWindowByHandle(
-              handle
-            )
-            if (window) {
-              this.session.windows.releasePlaybackWindow(window)
-            }
-          }
           if (this.playingSuite) {
-            if (!this.testQueue.length) {
-              this.playingSuite = ''
-              this.session.api.state.onMutate.dispatchEvent('playback.stop', {
-                params: [],
-              })
-            } else {
-              await playback.executor.driver.close()
-              this.playNextTest(true)
+            closeAll = e.state === 'finished'
+            if (this.testQueue.length) {
+              setTimeout(() => this.playNextTest(true))
             }
           }
           this.playbacks.splice(this.playbacks.indexOf(playback), 1)
+          this.session.windows.releasePlaybackWindows(playback, closeAll)
           await playback.cleanup()
+      }
+      const fullyComplete =
+        this.playbacks.length === 0 || this.testQueue.length === 0
+      if (fullyComplete) {
+        this.playingSuite = ''
       }
       this.session.api.playback.onPlayUpdate.dispatchEvent({
         state: e.state,
         testID,
+        intermediate: !fullyComplete,
       })
     }
 }
