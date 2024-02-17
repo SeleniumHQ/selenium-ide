@@ -1,0 +1,444 @@
+{
+  "id": "62ff6787-603f-4be9-83a3-80250c366a39",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "0ba588bc-21e9-4fc4-a65d-116d0143f20f",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "21ba21ce-7b03-423b-9739-605be1438d29"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "21ba21ce-7b03-423b-9739-605be1438d29",
+      "name": "Test site ",
+      "commands": [
+        {
+          "id": "bbbbfe8c-56e8-401c-93b3-8f3cc813cdc1",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "id=APjFqb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "289b5e55-18eb-475a-a3dc-7b9ca5038eac",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwjdlNHdoJWEAxWmQ6QEHTKQBaEQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=APjFqb",
+          "value": "Jpetstore",
+          "id": "0ed92550-d0df-4347-89ea-e06ca73f2abd",
+          "fallbackTargets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwi21djsoJWEAxUiT6QEHZGEDakQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "sendKeys",
+          "target": "id=APjFqb",
+          "value": "${KEY_ENTER}",
+          "id": "167b205a-9aba-4db2-8350-87b509f521cb",
+          "fallbackTargets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwj1qe-HoZWEAxV1YKQEHec3DZgQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "47ed2d1b-1f71-4aa0-8b38-f9757685d77a",
+          "targets": [
+            [
+              "css=#rso > .MjjYud:nth-child(1) .LC20lb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='rso']/div/div/div/div/div/div/span/a/h3)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//h3[contains(.,'JPetStore - Petstore Demo - OctoPerf')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ee7785da-c7cb-474d-a4b4-4bfd6c578920",
+      "name": "Test modifier panier",
+      "commands": [
+        {
+          "command": "open",
+          "target": "https://petstore.octoperf.com/actions/Catalog.action",
+          "value": "",
+          "id": "d3885359-11f1-42a1-863a-f4952be3ce6e"
+        },
+        {
+          "command": "click",
+          "target": "css=#SidebarContent > a:nth-child(7) > img",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "c57f3f29-dc90-44f1-8260-dfe3dd680c81",
+          "targets": [
+            [
+              "css=#SidebarContent > a:nth-child(7) > img",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='SidebarContent']/a[3]/img)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=FL-DLH-02",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "b6f1398d-14e8-4597-8d2e-be26e6ff4dbe",
+          "targets": [
+            [
+              "linkText=FL-DLH-02",
+              "linkText"
+            ],
+            [
+              "css=tr:nth-child(3) a",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'FL-DLH-02')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/table/tbody/tr[3]/td/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Catalog.action?viewProduct=&productId=FL-DLH-02')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'FL-DLH-02')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=Add to Cart",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "49b8e215-f6fc-445e-a4a4-a4875eb146d1",
+          "targets": [
+            [
+              "linkText=Add to Cart",
+              "linkText"
+            ],
+            [
+              "css=tr:nth-child(2) .Button",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Add to Cart')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/table/tbody/tr[2]/td[5]/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Cart.action?addItemToCart=&workingItemId=EST-16')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Add to Cart')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "name=EST-8",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "c45fc491-add4-4e2e-aaec-99976b62ef88",
+          "targets": [
+            [
+              "name=EST-8",
+              "name"
+            ],
+            [
+              "css=tr:nth-child(3) input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='EST-8'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Cart']/form/table/tbody/tr[3]/td[5]/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "name=updateCartQuantities",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "b5ab2c70-85d2-4438-9be4-3c520ec50cb0",
+          "targets": [
+            [
+              "name=updateCartQuantities",
+              "name"
+            ],
+            [
+              "css=td:nth-child(1) > input",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='updateCartQuantities'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='Cart']/form/table/tbody/tr[5]/td/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "52bda977-64e7-4e88-a705-9fe0f928b089",
+      "name": "Test catalogue",
+      "commands": [
+        {
+          "id": "8156c454-8f71-4e4c-b1be-7a3b2a07d873",
+          "command": "open",
+          "target": "https://petstore.octoperf.com/actions/Catalog.action",
+          "value": ""
+        },
+        {
+          "command": "type",
+          "target": "name=keyword",
+          "value": "persian",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "2d5adb41-f9c6-40c6-96a9-afcda427ea8e",
+          "targets": [
+            [
+              "name=keyword",
+              "name"
+            ],
+            [
+              "css=form > input:nth-child(1)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='keyword'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='SearchContent']/form/input)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "name=searchProducts",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "2635f698-5000-4b91-9e4f-4490beb06210",
+          "targets": [
+            [
+              "name=searchProducts",
+              "name"
+            ],
+            [
+              "css=form > input:nth-child(2)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@name='searchProducts'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='SearchContent']/form/input[2])[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=Friendly house cat, doubles as a princess",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "48e31980-26d3-4cf1-bf04-ac9237a93ab7",
+          "targets": [
+            [
+              "linkText=Friendly house cat, doubles as a princess",
+              "linkText"
+            ],
+            [
+              "css=td > a",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Friendly house cat, doubles as a princess')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/table/tbody/tr[2]/td/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Catalog.action?viewProduct=&productId=FL-DLH-02')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Friendly house cat, doubles as a princess')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=EST-17",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "ff38f36a-d0cb-4400-8c53-daef63cb111c",
+          "targets": [
+            [
+              "linkText=EST-17",
+              "linkText"
+            ],
+            [
+              "css=tr:nth-child(3) > td:nth-child(1) > a",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'EST-17')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/table/tbody/tr[3]/td/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Catalog.action?viewItem=&itemId=EST-17')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'EST-17')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}

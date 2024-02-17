@@ -1,0 +1,105 @@
+{
+  "id": "183c4b30-6ae9-43e4-9d27-d5f9d54ece28",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "0e98309b-59bd-47ae-8ab6-42886737fff1",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "f3af6d82-6f81-48d0-8f4b-1dae7d1b182a"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "f3af6d82-6f81-48d0-8f4b-1dae7d1b182a",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "2ac33162-4972-499c-b495-44d72c4233b4",
+          "command": "open",
+          "target": "https://petstore.octoperf.com/actions/Catalog.action",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "name=img_cart",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "af1ede85-9093-4c0d-b087-9758ea3843b2",
+          "targets": [
+            [
+              "name=img_cart",
+              "name"
+            ],
+            [
+              "css=#MenuContent > a > img",
+              "css:finder"
+            ],
+            [
+              "xpath=(//img[@name='img_cart'])[1]",
+              "xpath:attributes"
+            ],
+            [
+              "xpath=(//div[@id='MenuContent']/a/img)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=Remove",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "5a4f9256-776e-492b-93b5-1209e35f9a1f",
+          "targets": [
+            [
+              "linkText=Remove",
+              "linkText"
+            ],
+            [
+              "css=tr:nth-child(2) .Button",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Remove')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='Cart']/form/table/tbody/tr[2]/td[8]/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Cart.action?removeItemFromCart=&workingItemId=EST-13')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Remove')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}
