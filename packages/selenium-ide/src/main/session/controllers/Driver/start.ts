@@ -5,7 +5,7 @@ import * as fs from 'fs-extra'
 import { BrowserInfo, Session } from 'main/types'
 import * as path from 'node:path'
 import * as os from 'os'
-import { COLOR_MAGENTA, COLOR_YELLOW, vdebuglog } from 'main/util'
+import { COLOR_MAGENTA, COLOR_YELLOW, isAutomated, vdebuglog } from 'main/util'
 
 const successMessage = 'was started successfully.'
 export interface DriverStartSuccess {
@@ -20,7 +20,7 @@ export interface DriverStartFailure {
 export const WebdriverDebugLog = vdebuglog('webdriver', COLOR_MAGENTA)
 export const WebdriverDebugLogErr = vdebuglog('webdriver-error', COLOR_YELLOW)
 
-export const port = app.isPackaged ? 9516 : 9515
+export const port = isAutomated ? 9518 : app.isPackaged ? 9516 : 9515
 
 /**
  * This module is just an async function that does the following:
@@ -61,9 +61,6 @@ const startDriver: StartDriver = (session: Session) => (info) =>
     let initialized = false
     const args = ['--verbose', `--port=${port}`]
     const driverPath = getDriver(info)
-    switch (info.browser) {
-      case 'electron':
-    }
     console.log(
       'Starting driver',
       info.browser,

@@ -13,6 +13,7 @@ const PlayListButton: FC<PlayListButtonProps> = () => (
   <Tooltip title="Play Suite" aria-label="play-suite">
     <IconButton
       {...baseControlProps}
+      data-play-suite
       onClick={() => window.sideAPI.playback.playSuite()}
     >
       <PlaylistPlayIcon />

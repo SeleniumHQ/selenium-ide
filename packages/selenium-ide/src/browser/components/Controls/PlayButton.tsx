@@ -14,6 +14,7 @@ const PlayButton: FC<PlayButtonProps> = ({ state }) => (
   <Tooltip title="Play" aria-label="play">
     <IconButton
       {...baseControlProps}
+      data-play
       onClick={() => {
         state.playback.currentIndex === badIndex
           ? window.sideAPI.playback.play(state.activeTestID)

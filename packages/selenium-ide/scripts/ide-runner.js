@@ -1,5 +1,3 @@
-const args = process.argv
-
 const { spawn } = require('child_process')
 const webdriver = require('selenium-webdriver')
 const fs = require('fs')
@@ -7,8 +5,6 @@ const path = require('path')
 const os = require('os')
 
 const WebdriverDebugLog = console.log // debuglog('webdriver')
-
-const appName = 'Electron'
 
 const driverPath = path.join(
   __dirname,
@@ -19,16 +15,25 @@ const driverPath = path.join(
   'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
 )
 
-const electronBinaryPath = path.join(
-  require.resolve('electron'),
-  '..',
-  'dist',
-  appName + '.app',
-  'Contents',
-  'MacOS',
-  appName
-)
+const getElectronPath = () => {
+  const basePath = path.join(require.resolve('electron'), '..', 'dist')
+  switch (os.platform()) {
+    case 'darwin':
+      return path.join(
+        basePath,
+        'Electron.app',
+        'Contents',
+        'MacOS',
+        'Electron'
+      )
+    case 'win32':
+      return path.join(basePath, 'electron.exe')
+    default:
+      return path.join(basePath, 'electron')
+  }
+}
 
+const electronBinaryPath = getElectronPath()
 const pathToSeleniumIDE = path.join(__dirname, '..', 'build', 'main-bundle.js')
 
 const port = 9518
@@ -40,28 +45,87 @@ async function main() {
   if (!success) {
     console.error('Failed to start webdriver backend')
     console.error(proc.error)
-    return
+    throw proc.error
   }
-  const sideFiles = args.filter((arg) => arg.endsWith('.side'))
-  for (const sideFile of [sideFiles[0]]) {
-    console.log('Starting driver for sidefile', sideFile)
-    const driver = await new webdriver.Builder()
+  let driver
+  try {
+    driver = await new webdriver.Builder()
       .usingServer(`http://localhost:${port}`)
       .withCapabilities({
         'goog:chromeOptions': {
           // Here is the path to your Electron binary.
           binary: electronBinaryPath,
-          args: ['app=' + pathToSeleniumIDE, `side-file=${sideFile}`],
+          args: ['app=' + pathToSeleniumIDE, 'enable-automation'],
           excludeSwitches: ['enable-logging'],
         },
       })
-      .forBrowser('chrome') // note: use .forBrowser('electron') for selenium-webdriver <= 3.6.0
+      .forBrowser('chrome')
       .build()
-    await driver.sleep(10000)
+    const newProject = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.css('[data-new-project]')),
+      5000
+    )
+    const firstHandle = await driver.getWindowHandle()
+    await newProject.click()
+    let handles = await driver.getAllWindowHandles()
+    while (handles.length < 1 || handles[0] === firstHandle) {
+      await driver.sleep(100)
+      try {
+        handles = await driver.getAllWindowHandles()
+      } catch (e) {}
+    }
+    await driver.switchTo().window(handles[0])
+    const url = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.css('[data-url]')),
+      5000
+    )
+    await url.click()
+    while ((await url.getAttribute('value')) !== '') {
+      await url.sendKeys(webdriver.Key.BACK_SPACE)
+    }
+    const host = 'http://localhost:8080'
+    for (const index in host) {
+      await url.sendKeys(host[index])
+      await driver.sleep(10)
+    }
+    const record = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.css('[data-record]')),
+      1000
+    )
+    await record.click()
+    let handles2 = await driver.getAllWindowHandles()
+    while (handles2.length < 2) {
+      await driver.sleep(100)
+      handles2 = await driver.getAllWindowHandles()
+    }
+    await driver.switchTo().window(handles2[1])
+    await driver.sleep(1000)
+    const link = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.linkText('windows.html')),
+      3000
+    )
+    await link.click()
+    await driver.switchTo().window(handles2[0])
+    const command = await driver.wait(
+      webdriver.until.elementLocated(
+        webdriver.By.css('[data-command-id]:nth-child(2)')
+      ),
+      1000
+    )
+    const text = (await command.getText()).replace(/\s+/g, ' ')
+    if (text !== 'Click linkText=windows.html') {
+      throw new Error('Unexpected command text: ' + text)
+    }
+    console.log('IDE is correctly recording commands!')
     await driver.quit()
-    return
+    proc.kill()
+  } catch (e) {
+    if (driver) {
+      await driver.quit()
+    }
+    proc.kill()
+    throw e
   }
-  proc.kill()
 }
 
 function startWebdriverBackend() {
@@ -76,7 +140,7 @@ function startWebdriverBackend() {
       })
       proc.stdout.on('data', (out) => {
         const outStr = `${out}`
-        WebdriverDebugLog(outStr)
+        // WebdriverDebugLog(outStr)
         const fullyStarted = outStr.includes(successMessage)
         if (fullyStarted) {
           initialized = true
@@ -86,7 +150,7 @@ function startWebdriverBackend() {
       })
       proc.stderr.on('data', (err) => {
         const errStr = `${err}`
-        WebdriverDebugLog(errStr)
+        // WebdriverDebugLog(errStr)
         if (!initialized) {
           resolve({ success: false, error: errStr })
         }
