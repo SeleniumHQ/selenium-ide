@@ -38,12 +38,12 @@ const ProjectEditor = () => {
           </Typography>
         </Grid>
         <Grid item xs={6}>
-          <Button onClick={loadProject} variant="contained">
+          <Button data-load-project onClick={loadProject} variant="contained">
             Load Project
           </Button>
         </Grid>
         <Grid item xs={6}>
-          <Button onClick={newProject} variant="outlined">
+          <Button data-new-project onClick={newProject} variant="outlined">
             New Project
           </Button>
         </Grid>

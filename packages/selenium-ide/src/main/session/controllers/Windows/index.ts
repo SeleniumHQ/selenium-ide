@@ -10,7 +10,6 @@ import electron, {
 import { existsSync, readFileSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
-import { isAutomated } from 'main/util'
 import { join } from 'node:path'
 import BaseController from '../Base'
 import { window as playbackWindowOpts } from 'browser/windows/PlaybackWindow/controller'
@@ -21,7 +20,7 @@ const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
 const playbackWindowOptions = {
   ...playbackWindowOpts(),
   webPreferences: {
-    devTools: !isAutomated,
+    devTools: true,
     preload: join(__dirname, `playback-window-preload-bundle.js`),
   },
 }
@@ -56,7 +55,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
             ...windowConfig,
             ..._options,
             webPreferences: {
-              devTools: !isAutomated,
+              devTools: true,
               ...(windowConfig?.webPreferences ?? {}),
               preload: hasPreload ? preloadPath : undefined,
               sandbox: true,

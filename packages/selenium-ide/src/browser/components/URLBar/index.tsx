@@ -17,6 +17,9 @@ const URLBar: React.FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
       <Box className="flex-1 px-3 py-2">
         <TextField
           className="width-100"
+          inputProps={{
+            ['data-url']: true,
+          }}
           onChange={(e: any) => {
             update({
               url: e.target.value,

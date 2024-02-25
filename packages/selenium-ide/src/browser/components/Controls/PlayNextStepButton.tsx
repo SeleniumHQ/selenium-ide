@@ -35,6 +35,7 @@ const PlayNextStepButton: FC<PlayNextStepButtonProps> = ({ state, test }) => {
     <Tooltip title="Play Next Step" aria-label="play-next-step">
       <IconButton
         {...baseControlProps}
+        data-play-next-step
         disabled={disabled}
         onClick={() => {
           window.sideAPI.playback.play(state.activeTestID, [

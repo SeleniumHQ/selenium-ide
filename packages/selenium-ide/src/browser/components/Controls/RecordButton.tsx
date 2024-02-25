@@ -8,6 +8,7 @@ const RecordButton: FC = () => (
   <Tooltip title="Record" aria-label="record">
     <IconButton
       {...baseControlProps}
+      data-record
       onClick={() => window.sideAPI.recorder.start()}
     >
       <RecordIcon color="error" />

@@ -8,6 +8,7 @@ const PauseButton: FC = () => (
   <Tooltip title="Pause" aria-label="pause">
     <IconButton
       {...baseControlProps}
+      data-pause
       onClick={() => window.sideAPI.playback.pause()}
     >
       <PauseIcon />

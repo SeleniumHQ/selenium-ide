@@ -1,17 +1,30 @@
 import { Chrome } from '@seleniumhq/browser-info'
+import { retry } from '@seleniumhq/side-commons'
+import { CommandShape } from '@seleniumhq/side-model'
 import { PluginRuntimeShape, WebDriverExecutor } from '@seleniumhq/side-runtime'
+import { absolutifyUrl } from '@seleniumhq/side-runtime/dist/utils'
+import { interpolateString } from '@seleniumhq/side-runtime/dist/preprocessors'
 import { ChildProcess } from 'child_process'
 import { BrowserInfo, Session } from 'main/types'
-import getScriptManager from 'selenium-webdriver/bidi/scriptManager'
+import { join } from 'path'
 import { Builder } from 'selenium-webdriver'
+import getScriptManager from 'selenium-webdriver/bidi/scriptManager'
 
 import downloadDriver from './download'
 import startDriver, { port, WebdriverDebugLog } from './start'
 import BaseController from '../Base'
 import { createBidiAPIBindings } from './bidi'
-import { CommandShape } from '@seleniumhq/side-model'
-import { absolutifyUrl } from '@seleniumhq/side-runtime/src/utils'
-import { retry } from '@seleniumhq/side-commons'
+
+const turtlesMode = Boolean(process.env.TURTLES)
+const pathToSeleniumIDE = join(__dirname, '..', 'build', 'main-bundle.js')
+const ideCapabilities = {
+  'goog:chromeOptions': {
+    // Here is the path to your Electron binary.
+    binary: process.execPath,
+    args: ['app=' + pathToSeleniumIDE],
+    excludeSwitches: ['enable-logging'],
+  },
+}
 
 // Escape hatch to avoid dealing with rootDir complexities in TS
 // https://stackoverflow.com/questions/50822310/how-to-import-package-json-in-typescript
@@ -163,7 +176,13 @@ const electronPolyfills = (
         throw new Error('Failed to find playback window')
       }
       await retry(
-        () => window.loadURL(absolutifyUrl(url!, session.projects.project.url)),
+        () =>
+          window.loadURL(
+            absolutifyUrl(
+              interpolateString(url!, executor.variables),
+              session.projects.project.url
+            )
+          ),
         5,
         100
       )
@@ -234,6 +253,7 @@ export default class DriverController extends BaseController {
         browserName,
         ...capabilities,
         ...(capabilities.webSocketUrl === false ? electronCapabilities : {}),
+        ...(turtlesMode ? ideCapabilities : {}),
       })
       .usingServer(server)
       .forBrowser(browserName)
