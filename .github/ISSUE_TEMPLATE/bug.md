@@ -31,11 +31,11 @@ Issues without a reproduction project are likely to stall.
 ## Environment
 
 OS: <!-- Windows 10? OSX? -->
-Selenium IDE Version:  <!-- e.g.: 3.0.3 -->
-Selenium SIDE Runner Version:  <!-- e.g.: 0.7.0
-Please note that selenium-side-runner supports Node.js 8 - 10
+Selenium IDE Version:  <!-- e.g.: 4.0.25 -->
+Selenium SIDE Runner Version:  <!-- e.g.: 4.0.25
+Please note that selenium-side-runner supports Node.js 16+
 -->
-Node version: <!-- e.g.: 10.4
+Node version: <!-- e.g.: 16.1
 Only required if using selenium-side-runner
 -->
 Browser:
