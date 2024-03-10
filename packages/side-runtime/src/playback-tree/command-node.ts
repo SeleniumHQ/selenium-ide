@@ -35,6 +35,17 @@ export interface CommandExecutionResult {
   value?: any
 }
 
+export const getCommandDisplayString = ({
+  comment,
+  command,
+  target,
+  value,
+}: CommandShape) => {
+  const paramsString = [command, target, value].filter((p) => p).join(' ')
+  const commentString = comment ? `(${comment})` : ''
+  return `${paramsString} ${commentString}`
+}
+
 export class CommandNode {
   constructor(
     command: CommandShape,
@@ -115,7 +126,7 @@ export class CommandNode {
       return
     } else {
       const { command } = this
-      const { target, value } = command
+      const { comment, target, value } = command
       const commandName = command.command
       const customCommand = commandExecutor.customCommands[commandName]
       const existingCommandName = commandExecutor.name(commandName)
@@ -137,7 +148,17 @@ export class CommandNode {
       ]
       const ignoreRetry = !cmdList.includes(commandName)
       if (ignoreRetry) {
-        return executor()
+        try {
+          return await executor()
+        } catch (e) {
+          const err = e as Error
+          err.message =
+            err.message +
+            ` during${
+              comment ? ` (${comment})` : ''
+            } ${commandName}:${target}:${value}`
+          throw err
+        }
       }
       return this.retryCommand(
         executor,
@@ -156,19 +177,14 @@ export class CommandNode {
   ): Promise<unknown> {
     return new Promise((res, rej) => {
       const timeLimit = timeout - Date.now()
+      const commandString = `during${
+        this.command.comment ? ` (${this.command.comment})` : ''
+      } ${this.command.command}:${this.command.target}:${this.command.value}`
       if (timeLimit <= 0) {
-        return rej(
-          new Error(
-            `Operation timed out running command ${this.command.command}:${this.command.target}:${this.command.value}`
-          )
-        )
+        return rej(new Error(`Operation timed out ${commandString}`))
       }
       const expirationTimer = setTimeout(() => {
-        rej(
-          new Error(
-            `Operation timed out running command ${this.command.command}:${this.command.target}:${this.command.value}`
-          )
-        )
+        rej(new Error(`Operation timed out ${commandString}`))
       }, timeLimit)
       execute()
         .then((result) => {
@@ -183,7 +199,9 @@ export class CommandNode {
               this.retryCommand(execute, timeout).then(res).catch(rej)
             )
           } catch (e) {
-            rej(e)
+            const err = e as Error
+            err.message = err.message + ` ${commandString}`
+            rej(err)
           }
         })
     })

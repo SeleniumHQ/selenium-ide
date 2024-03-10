@@ -257,7 +257,7 @@ export default class DriverController extends BaseController {
       })
       .usingServer(server)
       .forBrowser(browserName)
-    console.info('Building driver for ' + browser)
+    console.debug('Building driver for ' + browser)
     const driver = await retry(
       async () => {
         const result = await driverBuilder.build()
@@ -267,7 +267,7 @@ export default class DriverController extends BaseController {
       3,
       100
     )
-    console.info('Built driver for ' + browser)
+    console.debug('Built driver for ' + browser)
     const useBidi = await this.session.store.get('browserInfo.useBidi')
     if (useBidi) {
       createBidiAPIBindings(this.session, driver)

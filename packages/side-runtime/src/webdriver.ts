@@ -168,7 +168,7 @@ export default class WebDriverExecutor {
   >): webdriver.ThenableWebDriver {
     const { browserName, ...capabilities } = this
       .capabilities as ExpandedCapabilities
-    logger.info('Building driver for ' + browserName)
+    debug && logger.info('Building driver for ' + browserName)
     debug &&
       logger.info(
         'Driver attributes:' +
@@ -192,7 +192,7 @@ export default class WebDriverExecutor {
       .capabilities as ExpandedCapabilities
     try {
       const driver = await this.getDriverSync({ debug, logger })
-      logger.info('Driver has been built for ' + browserName)
+      debug && logger.info('Driver has been built for ' + browserName)
       return driver
     } catch (e) {
       if (debug) {

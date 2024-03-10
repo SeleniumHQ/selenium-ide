@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/browser-info",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "private": false,
   "description": "Get information about installed browsers",
   "author": "Tomer <tomer@corevo.io>",

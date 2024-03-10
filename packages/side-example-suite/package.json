@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-example-suite",
-  "version": "4.0.0-alpha.9",
+  "version": "4.0.1",
   "private": true,
   "description": "Selenium IDE example suite, with tests, plugin, and export format",
   "author": "Todd <tarsitodd@gmail.com>",
@@ -17,11 +17,11 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "side-code-export": "^4.0.0-alpha.17",
-    "@seleniumhq/code-export-python-pytest": "^4.0.0-alpha.6"
+    "side-code-export": "^4.0.0",
+    "@seleniumhq/code-export-python-pytest": "^4.0.1"
   },
   "devDependencies": {
-    "@seleniumhq/side-api": "^4.0.0-alpha.46"
+    "@seleniumhq/side-api": "^4.0.1"
   },
   "repository": {
     "type": "git",

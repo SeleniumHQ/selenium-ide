@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-testkit",
-  "version": "4.0.0-alpha.2",
+  "version": "4.0.1",
   "private": false,
   "description": "Selenium IDE test stuff",
   "author": "Tomer <tomer@corevo.io>",

@@ -152,7 +152,7 @@ const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
                 if (state === 'finished') {
                   return onComplete(null)
                 }
-                logger.info(
+                logger.debug(
                   'Last command:',
                   playback['state'].lastSentCommandState?.command
                 )
@@ -168,7 +168,6 @@ const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
           PlaybackEvents.COMMAND_STATE_CHANGED,
           ({
             command,
-            message,
             state,
           }: PlaybackEventShapes['COMMAND_STATE_CHANGED']) => {
             const cmd = command
@@ -176,9 +175,6 @@ const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
               .filter((v) => !!v)
               .join('|')
             logger.debug(`${state} ${niceString}`)
-            if (message) {
-              logger.error(message)
-            }
           }
         )
         try {

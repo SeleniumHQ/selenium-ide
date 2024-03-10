@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/code-export-java-junit",
-  "version": "4.0.0-alpha.6",
+  "version": "4.0.1",
   "private": false,
   "description": "Export Selenium IDE project contents to Java JUnit",
   "repository": "https://github.com/SeleniumHQ/selenium-ide",
@@ -17,10 +17,10 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "side-code-export": "^4.0.0-alpha.17"
+    "side-code-export": "^4.0.0"
   },
   "devDependencies": {
-    "@seleniumhq/side-model": "^4.0.0-alpha.5"
+    "@seleniumhq/side-model": "^4.0.1"
   },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"
 }
