@@ -1,0 +1,240 @@
+{
+  "id": "ee06c6d1-498e-4880-9bbf-bcdd77467368",
+  "version": "3.0",
+  "name": "New Project",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "357c3d78-e87b-42e6-a43e-1ea05498c9b2",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "c17995a7-5ef2-423c-940a-86dd9f561131"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "c17995a7-5ef2-423c-940a-86dd9f561131",
+      "name": "New Test",
+      "commands": [
+        {
+          "id": "3ac7da52-f3f4-43e4-8bd8-aeac8bc4ff2f",
+          "command": "open",
+          "target": "/",
+          "value": ""
+        },
+        {
+          "command": "click",
+          "target": "id=APjFqb",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "c762d59c-4f00-4236-b74c-2c0e2a0e471c",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwib9sXBrpmEAxUucKQEHQ8sAlcQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=APjFqb",
+          "value": "jpet",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "126c661c-fe23-45dd-8a3c-320525be2b4b",
+          "targets": [
+            [
+              "id=APjFqb",
+              "id"
+            ],
+            [
+              "name=q",
+              "name"
+            ],
+            [
+              "css=[data-ved=\"0ahUKEwib9sXBrpmEAxUucKQEHQ8sAlcQ39UDCAQ\"]",
+              "css:data-attr"
+            ],
+            [
+              "css=#APjFqb",
+              "css:finder"
+            ],
+            [
+              "xpath=(//textarea[@id='APjFqb'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=#jZ2SBf > .wM6W7d > span",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "2a7e3868-051e-4796-a911-c7025f6ed4ef",
+          "targets": [
+            [
+              "css=#jZ2SBf > .wM6W7d > span",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='jZ2SBf']/div/span)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//span[contains(.,'jpetstore')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.hlcw0c:nth-child(1) .LC20lb:nth-child(2)",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "f16a2cfa-814a-40db-afa7-dac707833cdb",
+          "targets": [
+            [
+              "css=.hlcw0c:nth-child(1) .LC20lb:nth-child(2)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='rso']/div/div/div/div/div/div/div/span/a/h3)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//h3[contains(.,'JPetStore - Petstore Demo - OctoPerf')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=a:nth-child(3) > img",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "71c3c5d2-f67c-4d01-a6d1-61063d6cb259",
+          "targets": [
+            [
+              "css=a:nth-child(3) > img",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='QuickLinks']/a[2]/img)[1]",
+              "xpath:idRelative"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=K9-DL-01",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "4c48bf3b-7bfc-4fa8-b220-5b71bdb96e9a",
+          "targets": [
+            [
+              "linkText=K9-DL-01",
+              "linkText"
+            ],
+            [
+              "css=tr:nth-child(4) a",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'K9-DL-01')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/table/tbody/tr[4]/td/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Catalog.action?viewProduct=&productId=K9-DL-01')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'K9-DL-01')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "linkText=Add to Cart",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "fecc8e71-b617-4d2a-beb0-c40d90bc5d13",
+          "targets": [
+            [
+              "linkText=Add to Cart",
+              "linkText"
+            ],
+            [
+              "css=tr:nth-child(2) .Button",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Add to Cart')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//div[@id='Catalog']/table/tbody/tr[2]/td[5]/a)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=(//a[contains(@href, '/actions/Cart.action?addItemToCart=&workingItemId=EST-9')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Add to Cart')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}
