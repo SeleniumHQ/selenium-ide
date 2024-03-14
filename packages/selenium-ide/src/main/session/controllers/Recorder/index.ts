@@ -77,9 +77,13 @@ export default class RecorderController extends BaseController {
     const mainCommand: CommandShape = {
       ...cmd,
       id: randomUUID(),
-      target: Array.isArray(cmd.target) ? cmd.target[0][0] : cmd.target,
+      target: Array.isArray(cmd.target)
+        ? cmd.target[cmd.target.length - 1][0]
+        : cmd.target,
       targets: Array.isArray(cmd.target) ? cmd.target : [[cmd.target, '']],
-      value: Array.isArray(cmd.value) ? cmd.value[0][0] : cmd.value,
+      value: Array.isArray(cmd.value)
+        ? cmd.value[cmd.target.length - 1][0]
+        : cmd.value,
     }
     const windows = BrowserWindow.getAllWindows()
     this.windowIDs = windows.map((window) => window.id)
