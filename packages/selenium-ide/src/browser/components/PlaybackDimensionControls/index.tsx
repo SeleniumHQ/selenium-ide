@@ -2,9 +2,9 @@ import TabUnselectedIcon from '@mui/icons-material/TabUnselected'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import React from 'react'
-import { SIDEMainProps } from '../types'
+import React, { useContext } from 'react'
 import { Checkbox, Tooltip } from '@mui/material'
+import { context } from 'browser/contexts/session'
 
 const {
   state: { set },
@@ -18,9 +18,8 @@ const inputProps = {
   },
 }
 
-const PlaybackDimensionControls: React.FC<Pick<SIDEMainProps, 'session'>> = ({
-  session,
-}) => {
+const PlaybackDimensionControls: React.FC = () => {
+  const session = useContext(context)
   const [panelWidth, setPanelWidth] = React.useState(0)
   const [panelHeight, setPanelHeight] = React.useState(0)
   const { active, width, height } = session.state.editor.overrideWindowSize
@@ -68,7 +67,7 @@ const PlaybackDimensionControls: React.FC<Pick<SIDEMainProps, 'session'>> = ({
       <Box className="flex flex-col flex-initial pe-3" justifyContent="center">
         <Typography>W</Typography>
       </Box>
-      <Box className="flex-initial py-2">
+      <Box className="flex-initial">
         <TextField
           disabled={!active}
           inputProps={inputProps}
@@ -87,7 +86,7 @@ const PlaybackDimensionControls: React.FC<Pick<SIDEMainProps, 'session'>> = ({
       <Box className="flex flex-col flex-initial px-3" justifyContent="center">
         <Typography>H</Typography>
       </Box>
-      <Box className="flex-initial pe-4 py-2">
+      <Box className="flex-initial pe-4">
         <TextField
           disabled={!active}
           inputProps={inputProps}

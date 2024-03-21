@@ -14,7 +14,7 @@ export default class SystemController extends BaseController {
   }
   isDown = true
   shuttingDown = false
-  logs = ''
+  logs: string[] = []
 
   async dumpSession() {
     const response = await this.session.dialogs.openSave()
@@ -43,7 +43,7 @@ export default class SystemController extends BaseController {
   }
 
   async writeToLog(...args: any[]) {
-    this.logs += args.map((arg) => inspect(arg)).join(' ') + '\n'
+    this.logs.push(args.map((arg) => inspect(arg)).join(' '))
   }
 
   async startup() {

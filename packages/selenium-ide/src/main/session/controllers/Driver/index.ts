@@ -227,6 +227,7 @@ export default class DriverController extends BaseController {
   }
 
   driverProcess?: ChildProcess
+  executor: WebDriverExecutor | null = null
   stopped = true
   scriptManager?: Awaited<ReturnType<typeof getScriptManager>>
   windowHandle?: string
@@ -289,6 +290,22 @@ export default class DriverController extends BaseController {
       },
     })
     return executor
+  }
+
+  async getExecutor(): Promise<WebDriverExecutor> {
+    if (this.executor) {
+      try {
+        await this.executor.driver.executeScript('return 1')
+      } catch (e) {
+        console.warn('Executor is dead. Rebuilding...')
+        await this.executor.cleanup(false)
+        this.executor = null
+      }
+    }
+    if (!this.executor) {
+      this.executor = await this.build()
+    }
+    return this.executor
   }
 
   async download(info: BrowserInfo) {

@@ -20,6 +20,13 @@ body,
   min-width: 4px;
 }
 
+.window-drag {
+  -webkit-app-region: drag;
+}
+.no-window-drag {
+  -webkit-app-region: no-drag;
+}
+
 @media (prefers-color-scheme: dark) {
   html, body, #root {
     background-color: #111;
@@ -150,6 +157,9 @@ body,
  * Margin
  */
 
+.ms-2 {
+  margin-left: 0.25rem !important;
+}
 .ms-4 {
   margin-left: 1rem !important;
 }
@@ -213,6 +223,9 @@ body,
 .pb-0 {
   padding-bottom: 0 !important;
 }
+.pb-1 {
+  padding-bottom: 0.125rem;
+}
 .pb-3 {
   padding-bottom: 0.5rem;
 }
@@ -225,8 +238,17 @@ body,
 .pt-0 {
   padding-top: 0 !important;
 }
+.pt-2 {
+  padding-top: 0.25rem;
+}
 .pt-4 {
   padding-top: 1rem;
+}
+.pt-5 {
+  padding-top: 1.6rem;
+}
+.ps-1 {
+  padding-left: 0.125rem;
 }
 .ps-3 {
   padding-left: 0.5rem;
@@ -428,6 +450,9 @@ body,
 
 .justify-content-start {
   justify-content: flex-start !important;
+}
+.justify-content-center {
+  justify-content: center !important;
 }
 
 .z-1 {

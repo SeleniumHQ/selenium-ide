@@ -8,7 +8,9 @@ export type OnPlaybackWindowChanged = [
   update: Partial<{
     focused: boolean
     state: 'idle' | 'playing' | 'recording' | 'paused'
+    test: string
     title: string
+    url: string
     visible: boolean
   }>
 ]

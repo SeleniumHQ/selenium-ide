@@ -32,7 +32,7 @@ async function onContextMenu(event: any) {
     case 'Record Wait For Element Text':
       recorder.record(
         event,
-        'waitForElementText',
+        'waitForText',
         targets,
         el.innerText,
         false,

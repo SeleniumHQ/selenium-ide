@@ -32,13 +32,7 @@ export default class StateController extends BaseController {
   set(key: string, _data: any) {
     if (key.includes('editor.overrideWindowSize')) {
       queue(async () => {
-        const { active, height, width } = this.state.editor.overrideWindowSize
-        if (active) {
-          this.session.windows.resizePlaybackWindows(width, height)
-        }
-        const panelDims =
-          await this.session.resizablePanels.getPlaybackWindowDimensions()
-        this.session.windows.resizePlaybackWindows(...panelDims.size)
+        await this.session.windows.recalculatePlaybackWindows()
       })
     }
   }

@@ -3,34 +3,33 @@ import FormControl from '@mui/material/FormControl'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import Drawer from 'browser/components/Drawer/Wrapper'
 import EditorToolbar from 'browser/components/Drawer/EditorToolbar'
 import RenamableListItem from 'browser/components/Drawer/RenamableListItem'
 import TestCreateDialog from './TestCreateDialog'
-import { SIDEMainProps } from 'browser/components/types'
+import { context as activeTestContext } from 'browser/contexts/active-test'
+import { context as suitesContext } from 'browser/contexts/suites'
+import { context as testsContext } from 'browser/contexts/tests'
+import { context as testResultsContext } from 'browser/contexts/playback-test-results'
 
 const {
   state: { setActiveTest: setSelected, setActiveSuite },
   tests: { rename },
 } = window.sideAPI
 
-const TestsDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
-  const activeSuite = session.state.activeSuiteID
-  const activeTest = session.state.activeTestID
-  const {
-    project: { tests, suites },
-    state: {
-      playback: { commands: testResults },
-    },
-  } = session
+const TestsDrawer: FC = () => {
+  const {activeSuiteID, activeTestID} = useContext(activeTestContext)
+  const suites = useContext(suitesContext)
+  const tests = useContext(testsContext)
+  const testResults = useContext(testResultsContext)
   const [confirmNew, setConfirmNew] = React.useState(false)
-  const testList = activeSuite
+  const testList = activeSuiteID
     ? suites
-        .find((s) => s.id === activeSuite)
+        .find((s) => s.id === activeSuiteID)
         ?.tests.map((id) => tests.find((t) => t.id === id)!) ?? tests
     : tests
-  const safeSuiteID = suites.find((s) => s.id === activeSuite)?.id ?? ''
+  const safeSuiteID = suites.find((s) => s.id === activeSuiteID)?.id ?? ''
 
   return (
     <Drawer>
@@ -43,7 +42,7 @@ const TestsDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
               ? () => {
                   const doDelete = window.confirm('Delete this test?')
                   if (doDelete) {
-                    window.sideAPI.tests.delete(activeTest)
+                    window.sideAPI.tests.delete(activeTestID)
                   }
                 }
               : undefined
@@ -92,7 +91,7 @@ const TestsDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
                   window.sideAPI.menus.open('testManager', [id])
                 }}
                 rename={rename}
-                selected={id === activeTest}
+                selected={id === activeTestID}
                 setSelected={setSelected}
                 state={testState}
               />

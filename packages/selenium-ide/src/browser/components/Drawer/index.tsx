@@ -6,25 +6,18 @@ import TestsDrawer from 'browser/windows/ProjectEditor/tabs/Tests/TestsDrawer'
 import SuitesDrawer from 'browser/windows/ProjectEditor/tabs/Suites/SuitesDrawer'
 import ProjectDrawer from 'browser/windows/ProjectEditor/tabs/Project/ProjectDrawer'
 
-const SIDEDrawer: React.FC<Pick<SIDEMainProps, 'session' | 'tab'>> = ({
-  session,
+const SIDEDrawer: React.FC<Pick<SIDEMainProps, 'tab'>> = ({
   tab,
 }) => (
   <>
     <TabPanel index={TESTS_TAB} value={tab}>
-      <TestsDrawer
-        session={session}
-      />
+      <TestsDrawer />
     </TabPanel>
     <TabPanel index={SUITES_TAB} value={tab}>
-      <SuitesDrawer
-        session={session}
-      />
+      <SuitesDrawer />
     </TabPanel>
     <TabPanel index={PROJECT_TAB} value={tab}>
-      <ProjectDrawer
-        session={session}
-      />
+      <ProjectDrawer />
     </TabPanel>
   </>
 )
