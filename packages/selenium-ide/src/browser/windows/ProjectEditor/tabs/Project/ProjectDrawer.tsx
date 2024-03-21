@@ -4,7 +4,7 @@ import ListItemText from '@mui/material/ListItemText'
 import { ConfigSettingsGroup } from '@seleniumhq/side-api'
 import React, { FC } from 'react'
 import Drawer from 'browser/components/Drawer/Wrapper'
-import { SIDEMainProps } from 'browser/components/types'
+import { context } from 'browser/contexts/config-settings-group'
 
 type ConfigGroupFactory = (
   group: ConfigSettingsGroup
@@ -31,19 +31,16 @@ const ConfigGroup: ConfigGroupFactory =
 const ProjectConfig = ConfigGroup('project')
 const SystemConfig = ConfigGroup('system')
 
-const ProjectDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({
-  session: {
-    state: {
-      editor: { configSettingsGroup },
-    },
-  },
-}) => (
-  <Drawer header="Level">
-    <List dense>
-      <ProjectConfig value={configSettingsGroup} />
-      <SystemConfig value={configSettingsGroup} />
-    </List>
-  </Drawer>
-)
+const ProjectDrawer: FC = () => {
+  const configSettingsGroup = React.useContext(context)
+  return (
+    <Drawer header="Level">
+      <List dense>
+        <ProjectConfig value={configSettingsGroup} />
+        <SystemConfig value={configSettingsGroup} />
+      </List>
+    </Drawer>
+  )
+}
 
 export default ProjectDrawer

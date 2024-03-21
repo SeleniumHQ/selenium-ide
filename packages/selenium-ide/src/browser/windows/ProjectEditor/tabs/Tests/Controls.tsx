@@ -1,22 +1,18 @@
-import { StateShape, TestShape } from '@seleniumhq/side-api'
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import PlayButton from 'browser/components/Controls/PlayButton'
 import RecordButton from 'browser/components/Controls/RecordButton'
 import StopButton from 'browser/components/Controls/StopButton'
 import PauseButton from 'browser/components/Controls/PauseButton'
+import { context } from 'browser/contexts/status'
 // import PlayNextStepButton from 'browser/components/Controls/PlayNextStepButton'
 
-export interface TestControlsProps {
-  state: StateShape
-  test: TestShape
-}
-
-const TestControls: FC<TestControlsProps> = ({ state/*, test*/ }) => {
-  switch (state.status) {
+const TestControls: FC = () => {
+  const status = useContext(context)
+  switch (status) {
     case 'idle':
       return (
         <>
-          <PlayButton state={state} />
+          <PlayButton />
           {/*<PlayNextStepButton state={state} test={test} />*/}
           <RecordButton />
         </>
@@ -25,7 +21,7 @@ const TestControls: FC<TestControlsProps> = ({ state/*, test*/ }) => {
       return (
         <>
           <StopButton />
-          <PlayButton state={state} />
+          <PlayButton />
           {/*<PlayNextStepButton state={state} test={test} />*/}
           <RecordButton />
         </>
@@ -41,7 +37,7 @@ const TestControls: FC<TestControlsProps> = ({ state/*, test*/ }) => {
     case 'recording':
       return (
         <>
-          <PlayButton state={state} />
+          <PlayButton />
           <StopButton />
         </>
       )

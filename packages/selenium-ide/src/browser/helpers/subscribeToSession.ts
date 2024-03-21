@@ -31,6 +31,11 @@ const performSubscription = async (
   }, [])
 }
 
+export const defaultSession = {
+  project: defaultProject,
+  state: defaultState,
+}
+
 export default () => {
   const [session, updateSession] = useState<CoreSessionData>({
     project: defaultProject,

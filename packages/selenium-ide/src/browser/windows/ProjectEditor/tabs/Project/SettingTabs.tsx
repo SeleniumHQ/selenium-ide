@@ -1,7 +1,7 @@
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import React from 'react'
-import { SIDEMainProps } from '../../../../components/types'
+import React, { useContext } from 'react'
+import { context } from 'browser/contexts/config-settings-group'
 
 function a11yProps(name: string) {
   return {
@@ -10,9 +10,7 @@ function a11yProps(name: string) {
   }
 }
 
-const SettingsTabs: React.FC<Pick<SIDEMainProps, 'session'>> = ({
-  session,
-}) => (
+const SettingsTabs: React.FC = () => (
   <Tabs
     aria-label="Selenium IDE workflows"
     className="not-draggable"
@@ -21,7 +19,7 @@ const SettingsTabs: React.FC<Pick<SIDEMainProps, 'session'>> = ({
       window.sideAPI.state.set('editor.configSettingsGroup', group)
     }}
     textColor="inherit"
-    value={session.state.editor.configSettingsGroup}
+    value={useContext(context)}
     variant='fullWidth'
   >
     <Tab label="Project" value="project" {...a11yProps('project')} />

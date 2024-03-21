@@ -1,10 +1,10 @@
 import List from '@mui/material/List'
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import Drawer from 'browser/components/Drawer/Wrapper'
-import EditorToolbar from 'browser/components/Drawer/EditorToolbar'
 import RenamableListItem from 'browser/components/Drawer/RenamableListItem'
-import SuiteCreateDialog from './SuiteCreateDialog'
-import { SIDEMainProps } from 'browser/components/types'
+import { context as activeTestContext } from 'browser/contexts/active-test'
+import { context } from 'browser/contexts/suites'
+import SuitesToolbar from './Toolbar'
 
 const {
   state: { setActiveSuite: setSelected },
@@ -13,29 +13,13 @@ const {
 
 const rename = (id: string, name: string) => update(id, { name })
 
-const SuitesDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
-  const {
-    project: { suites },
-    state: { activeSuiteID: activeSuite },
-  } = session
-  const [confirmNew, setConfirmNew] = React.useState(false)
+const SuitesDrawer: FC = () => {
+  const {activeSuiteID} = useContext(activeTestContext)
+  const suites = useContext(context)
 
   return (
     <Drawer>
-      <SuiteCreateDialog open={confirmNew} setOpen={setConfirmNew} />
-      <EditorToolbar
-        onAdd={() => setConfirmNew(true)}
-        onRemove={
-          suites.length > 1
-            ? () => {
-                const doDelete = window.confirm('Delete this suite?')
-                if (doDelete) {
-                  window.sideAPI.suites.delete(activeSuite)
-                }
-              }
-            : undefined
-        }
-      />
+      <SuitesToolbar />
       <List className='flex-col flex-1 overflow-y' dense>
         {suites
           .slice()
@@ -49,7 +33,7 @@ const SuitesDrawer: FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
                 window.sideAPI.menus.open('suiteManager', [id])
               }}
               rename={rename}
-              selected={id === activeSuite}
+              selected={id === activeSuiteID}
               setSelected={setSelected}
             />
           ))}

@@ -168,8 +168,8 @@ export default class WebDriverExecutor {
   >): webdriver.ThenableWebDriver {
     const { browserName, ...capabilities } = this
       .capabilities as ExpandedCapabilities
-    debug && logger.info('Building driver for ' + browserName)
-    debug &&
+    if (debug) {
+      logger.info('Building driver for ' + browserName)
       logger.info(
         'Driver attributes:' +
           inspect({
@@ -178,6 +178,7 @@ export default class WebDriverExecutor {
             browserName,
           })
       )
+    }
     let builder = new webdriver.Builder().withCapabilities(capabilities)
     if (this.server) {
       builder = builder.usingServer(this.server)

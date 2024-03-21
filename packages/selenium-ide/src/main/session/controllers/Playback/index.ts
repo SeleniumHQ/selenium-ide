@@ -11,7 +11,7 @@ import {
   RunningPromise,
   Variables,
 } from '@seleniumhq/side-runtime'
-import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/src/webdriver'
+import { WebDriverExecutorHooks } from '@seleniumhq/side-runtime/dist/webdriver'
 import { randomUUID } from 'crypto'
 import { Session } from 'main/types'
 import { cpus } from 'os'
@@ -178,46 +178,25 @@ export default class PlaybackController extends BaseController {
     const executor = playback.executor
     const driver = executor.driver
 
-    let targetHandle: string
-    let window: Electron.BrowserWindow
+    let window: Electron.BrowserWindow | null
     // Confirm webdriver connection
     driver.executeScript('true')
     try {
       if (forceNewWindow) {
         throw new Error('Force new window')
       }
-      window = await this.session.windows.requestPlaybackWindow(playback)!
+      window = await this.session.windows.requestWindowForPlayback(playback)!
       if (!window) {
         throw new Error('No windows found')
       }
     } catch (windowDoesNotExist) {
-      let success = false
       const UUID = randomUUID()
       window = await this.session.windows.openPlaybackWindow(playback, {
         title: UUID,
       })
-      const handles = await retry(() => driver.getAllWindowHandles(), 3, 100)
-      for (let i = 0, ii = handles.length; i !== ii; i++) {
-        const handle = handles[i]
-        if (!this.session.windows.getPlaybackWindowByHandle(handle)) {
-          try {
-            await driver.switchTo().window(handle)
-            const title = await driver.getTitle()
-            if (title === UUID) {
-              await this.session.windows.registerPlaybackWindowHandle(
-                handle,
-                window.id
-              )
-              targetHandle = handle
-              success = true
-              break
-            }
-          } catch (windowDNE) {}
-        }
-      }
-      if (!success) {
-        throw new Error('Failed to switch to playback window')
-      }
+      const handle = await this.session.windows.getPlaybackWindowHandleByID(
+        window.id
+      )!
       const state = await this.session.state.get()
       const currentTest = getActiveTest(state)
       const currentCommand = getActiveCommand(state)
@@ -231,23 +210,13 @@ export default class PlaybackController extends BaseController {
           ? new URL(currentCommand.target as string, state.project.url).href
           : firstURL.href
       try {
-        const currentHandle = await driver.getWindowHandle()
-        if (targetHandle! !== currentHandle) {
-          // await driver.switchTo().window(targetHandle)
-          throw new Error(
-            'Window handle mismatch' + targetHandle! + ' ' + currentHandle
-          )
-        }
-        await retry(
-          () => window.loadURL(url),
-          3,
-          500
-        )
+        await driver.switchTo().window(handle)
+        await retry(() => window!.loadURL(url), 3, 500)
       } catch (e) {
         console.warn('Open command failed:', e)
       }
     }
-    return window
+    return window!
   }
 
   async play(
@@ -357,6 +326,7 @@ export default class PlaybackController extends BaseController {
     if (e.id !== '-1') {
       this.session.api.playback.onStepUpdate.dispatchEvent(e)
     }
+    /*
     const cmd = e.command
     const niceString = [cmd.command, cmd.target, cmd.value]
       .filter((v) => !!v)
@@ -365,6 +335,7 @@ export default class PlaybackController extends BaseController {
     if (e.error) {
       console.error(e.error)
     }
+    */
   }
 
   handlePlaybackStateChanged =

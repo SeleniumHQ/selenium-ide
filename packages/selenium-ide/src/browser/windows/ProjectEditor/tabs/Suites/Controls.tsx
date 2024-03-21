@@ -1,28 +1,27 @@
-import { StateShape } from '@seleniumhq/side-api'
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import PauseButton from '../../../../components/Controls/PauseButton'
 import PlayListButton from '../../../../components/Controls/PlayListButton'
 import StopButton from '../../../../components/Controls/StopButton'
-
-export interface SuiteControlsProps {
-  state: StateShape
-}
+import { context } from 'browser/contexts/status'
 
 const activeStates = ['recording', 'playing']
 
-const SuiteControls: FC<SuiteControlsProps> = ({ state }) => (
-  <>
-    {activeStates.includes(state.status) ? (
-      <>
-        <PauseButton />
-        <StopButton />
-      </>
-    ) : (
-      <>
-        <PlayListButton state={state} />
-      </>
-    )}
-  </>
-)
+const SuiteControls: FC = () => {
+  const status = useContext(context)
+  return (
+    <>
+      {activeStates.includes(status) ? (
+        <>
+          <PauseButton />
+          <StopButton />
+        </>
+      ) : (
+        <>
+          <PlayListButton />
+        </>
+      )}
+    </>
+  )
+}
 
 export default SuiteControls
