@@ -6,12 +6,12 @@ import SIDELogger from 'browser/components/Logger'
 import PlaybackControls from 'browser/components/PlaybackControls'
 import ProjectPlaybackWindow from 'browser/components/PlaybackPanel'
 import ProjectEditor from 'browser/components/ProjectEditor'
-import { TAB, TESTS_TAB } from 'browser/enums/tab'
+import { PROJECT_TAB, TAB } from 'browser/enums/tab'
 import { usePanelGroup } from 'browser/hooks/usePanelGroup'
 import { SessionContextProviders } from 'browser/contexts/provider'
 
 const ProjectMainWindow = () => {
-  const [tab, setTab] = React.useState<TAB>(TESTS_TAB)
+  const [tab, setTab] = React.useState<TAB>(PROJECT_TAB)
   return (
     <AppWrapper>
       <SessionContextProviders>

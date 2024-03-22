@@ -32,7 +32,7 @@ export default class StateController extends BaseController {
   set(key: string, _data: any) {
     if (key.includes('editor.overrideWindowSize')) {
       queue(async () => {
-        await this.session.windows.recalculatePlaybackWindows()
+        await this.session.resizablePanels.recalculatePlaybackWindows()
       })
     }
   }
