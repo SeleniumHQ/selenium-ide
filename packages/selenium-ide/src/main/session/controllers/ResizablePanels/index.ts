@@ -46,8 +46,8 @@ export default class ResizablePanelsController extends BaseController {
     const offset = { x: 0, y: 0 }
     switch (process.platform) {
       case 'win32':
-        offset.x = 12
-        offset.y = 21
+        offset.x = 6
+        offset.y = 24
         break
       case 'darwin':
         offset.x = 0

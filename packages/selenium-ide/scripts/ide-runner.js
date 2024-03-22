@@ -102,6 +102,7 @@ async function main() {
       1000
     )
     await record.click()
+
     let handles2 = await driver.getAllWindowHandles()
     while (handles2.length < 2) {
       await driver.sleep(100)
