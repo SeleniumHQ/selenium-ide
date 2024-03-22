@@ -75,19 +75,28 @@ async function main() {
       } catch (e) {}
     }
     await driver.switchTo().window(handles[0])
-    const url = await driver.wait(
-      webdriver.until.elementLocated(webdriver.By.css('[data-url]')),
+
+    const projectTab = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.id('tab-2')),
       5000
     )
-    await url.click()
+    await projectTab.click()
+
+    const url = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.id('project-url')),
+      5000
+    )
     while ((await url.getAttribute('value')) !== '') {
       await url.sendKeys(webdriver.Key.BACK_SPACE)
     }
-    const host = 'http://localhost:8080'
-    for (const index in host) {
-      await url.sendKeys(host[index])
-      await driver.sleep(10)
-    }
+    await url.sendKeys('http://localhost:8080')
+  
+    const testTab = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.id('tab-0')),
+      5000
+    )
+    await testTab.click()
+
     const record = await driver.wait(
       webdriver.until.elementLocated(webdriver.By.css('[data-record]')),
       1000

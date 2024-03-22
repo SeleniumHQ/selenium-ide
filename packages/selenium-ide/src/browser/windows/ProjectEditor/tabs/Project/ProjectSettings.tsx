@@ -20,8 +20,11 @@ const {
 } = window.sideAPI
 const ProjectSettings: FC = () => {
   const {
-    project: { delay, name, plugins },
+    project: { delay, name, plugins, url },
   } = React.useContext(context)
+  if (url === 'http://loading') {
+    return null
+  }
   return (
     <>
       <Stack className="p-4" spacing={1}>
@@ -37,6 +40,20 @@ const ProjectSettings: FC = () => {
             }}
             size="small"
             value={name}
+          />
+        </FormControl>
+        <FormControl>
+          <TextField
+            id="project-url"
+            label="Project URL"
+            name="project-url"
+            onChange={(e: any) => {
+              update({
+                url: e.target.value,
+              })
+            }}
+            size="small"
+            value={url}
           />
         </FormControl>
         <FormControl>

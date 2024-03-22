@@ -352,6 +352,7 @@ export default class WindowsController extends BaseController {
     )
     const window = this.windowLoaders[playbackWindowName]({
       ...opts,
+      show: false,
       x: playbackPanel.position[0],
       y: playbackPanel.position[1],
       width: correctedDims.width,
@@ -414,7 +415,9 @@ export default class WindowsController extends BaseController {
   }
 
   async requestPlaybackWindow() {
-    await this.openPlaybackWindow(null)
+    const window = await this.openPlaybackWindow(null)
+    const projectURL = this.session.projects.project.url
+    window.loadURL(projectURL)
   }
 
   async calculateScaleAndZoom(_targetWidth: number, _targetHeight: number) {
@@ -460,17 +463,6 @@ export default class WindowsController extends BaseController {
     )
     window.setSize(width, height)
     window.webContents.setZoomFactor(zoomFactor)
-  }
-
-  async recalculatePlaybackWindows() {
-    const { active, height, width } =
-      this.session.state.state.editor.overrideWindowSize
-    if (active) {
-      return this.resizePlaybackWindows(width, height)
-    }
-    const panelDims =
-      await this.session.resizablePanels.getPlaybackWindowDimensions()
-    this.resizePlaybackWindows(...panelDims.size)
   }
 
   async resizePlaybackWindows(_targetWidth: number, _targetHeight: number) {
