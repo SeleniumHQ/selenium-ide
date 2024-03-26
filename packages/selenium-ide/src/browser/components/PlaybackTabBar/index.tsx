@@ -9,14 +9,18 @@ const {
   windows: { requestPlaybackWindow },
 } = window.sideAPI
 
+const tabBarSX = {
+  borderBottom: 1,
+  borderColor: 'grey.500',
+  height: 38,
+}
+
 const PlaybackTabBar: React.FC<{ tabs: TabShape[] }> = ({ tabs }) => (
   <Paper
     className="flex flex-initial flex-row pt-2 width-100 z-1"
     elevation={3}
     square
-    sx={{
-      height: 38,
-    }}
+    sx={tabBarSX}
   >
     {tabs.map((tab) => (
       <PlaybackTab key={tab.id} {...tab} />

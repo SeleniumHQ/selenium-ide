@@ -72,3 +72,9 @@ preload(
   ElectronInit(true),
   injectRecorder
 )
+
+// document.addEventListener('mouseleave', () => {
+//   if (document.activeElement === document.body) {
+//     api.windows.shiftFocus('editor')
+//   }
+// })
