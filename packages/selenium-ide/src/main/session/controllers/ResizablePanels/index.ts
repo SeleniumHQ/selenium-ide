@@ -73,11 +73,12 @@ export default class ResizablePanelsController extends BaseController {
   async recalculatePlaybackWindows() {
     const { active, height, width } =
       this.session.state.state.editor.overrideWindowSize
-    if (active) {
-      return this.session.windows.resizePlaybackWindows(width, height)
-    }
     const panelDims = await this.getPlaybackWindowDimensions()
-    this.session.windows.resizePlaybackWindows(...panelDims.size)
+    if (active) {
+      this.session.windows.resizePlaybackWindows(width, height)
+    } else {
+      this.session.windows.resizePlaybackWindows(...panelDims.size)
+    }
     this.session.windows.playbackWindows.forEach((playbackWindow) => {
       playbackWindow.setPosition(...panelDims.position)
     })

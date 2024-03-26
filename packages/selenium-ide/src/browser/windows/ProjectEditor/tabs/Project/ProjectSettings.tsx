@@ -78,7 +78,7 @@ const ProjectSettings: FC = () => {
         dense
         subheader={
           <EditorToolbar onAdd={() => projectCreate()} addText="Add Plugin">
-            Project Plugins
+            <span className="ps-4">Project Plugins</span>
           </EditorToolbar>
         }
         sx={{

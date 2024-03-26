@@ -13,6 +13,11 @@ const {
   },
 } = window.sideAPI
 
+const tabBarSX = {
+  borderBottom: 1,
+  borderColor: 'grey.500',
+}
+
 const PlaybackControls: React.FC = () => {
   const [tabs, setTabs] = React.useState<TabShape[]>([])
   React.useEffect(() => {
@@ -50,21 +55,20 @@ const PlaybackControls: React.FC = () => {
     })
   }, [])
   return (
-    <div className="flex flex-col flex-initial width-100 window-drag">
+    <Paper className="flex flex-col flex-initial width-100 window-drag">
       <PlaybackTabBar tabs={tabs} />
       <div className="flex flex-row flex-initial no-window-drag">
-        <Paper className="flex flex-1 height-100 ps-3 z-3" elevation={2} square>
+        <Paper
+          className="flex flex-1 height-100 py-2 ps-3 z-3"
+          elevation={2}
+          square
+          sx={tabBarSX}
+        >
           <URLBar tab={tabs.find((t) => t.visible) ?? null} />
-          <Paper
-            className="flex flex-initial height-100 flex-row"
-            elevation={0}
-            square
-          >
-            <PlaybackDimensionControls />
-          </Paper>
+          <PlaybackDimensionControls />
         </Paper>
       </div>
-    </div>
+    </Paper>
   )
 }
 

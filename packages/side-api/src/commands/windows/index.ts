@@ -7,7 +7,9 @@ import type { Shape as OnPlaybackWindowClosed } from './onPlaybackWindowClosed'
 import type { Shape as OnPlaybackWindowOpened } from './onPlaybackWindowOpened'
 import type { Shape as Open } from './open'
 import type { Shape as OpenCustom } from './openCustom'
+import type { Shape as RequestCustomEditorPanel } from './requestCustomEditorPanel'
 import type { Shape as RequestPlaybackWindow } from './requestPlaybackWindow'
+import type { Shape as ShiftFocus } from './shiftFocus'
 
 import * as close from './close'
 import * as closePlaybackWindow from './closePlaybackWindow'
@@ -18,7 +20,9 @@ import * as onPlaybackWindowClosed from './onPlaybackWindowClosed'
 import * as onPlaybackWindowOpened from './onPlaybackWindowOpened'
 import * as open from './open'
 import * as openCustom from './openCustom'
+import * as requestCustomEditorPanel from './requestCustomEditorPanel'
 import * as requestPlaybackWindow from './requestPlaybackWindow'
+import * as shiftFocus from './shiftFocus'
 
 export const commands = {
   close,
@@ -30,7 +34,9 @@ export const commands = {
   onPlaybackWindowOpened,
   open,
   openCustom,
+  requestCustomEditorPanel,
   requestPlaybackWindow,
+  shiftFocus,
 }
 
 export type Shape = {
@@ -43,5 +49,7 @@ export type Shape = {
   onPlaybackWindowOpened: OnPlaybackWindowOpened
   open: Open
   openCustom: OpenCustom
+  requestCustomEditorPanel: RequestCustomEditorPanel
   requestPlaybackWindow: RequestPlaybackWindow
+  shiftFocus: ShiftFocus
 }

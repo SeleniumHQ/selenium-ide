@@ -19,7 +19,15 @@ export type TabShape = {
   visible: boolean
 }
 
-const PlaybackTab: React.FC<TabShape> = ({ focused, id, test, title }) => {
+const playbackTabSX = { borderRadius: 0.5 }
+
+const PlaybackTab: React.FC<TabShape> = ({
+  focused,
+  id,
+  test,
+  title,
+  visible,
+}) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const colorSuffix = `.${prefersDarkMode ? 'dark' : 'light'}`
   return (
@@ -31,7 +39,8 @@ const PlaybackTab: React.FC<TabShape> = ({ focused, id, test, title }) => {
       }}
       square
       sx={{
-        backgroundColor: `${focused ? 'success' : 'info'}${colorSuffix}`,
+        backgroundColor: `${visible ? 'warning' : 'info'}${colorSuffix}`,
+        opacity: visible ? (focused ? 1 : 0.9) : 0.7,
         borderRadius: '12px 12px 0 0',
         marginLeft: '1px',
       }}
@@ -49,8 +58,8 @@ const PlaybackTab: React.FC<TabShape> = ({ focused, id, test, title }) => {
             e.stopPropagation()
             closePlaybackWindow(id)
           }}
-          size='small'
-          sx={{ borderRadius: 0.5 }}
+          size="small"
+          sx={playbackTabSX}
         >
           <Clear />
         </IconButton>

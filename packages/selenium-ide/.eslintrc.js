@@ -1,4 +1,4 @@
-const pkg = import('./package.json')
+const pkg = require('./package.json')
 
 module.exports = {
   extends: './../../.eslintrc.js',

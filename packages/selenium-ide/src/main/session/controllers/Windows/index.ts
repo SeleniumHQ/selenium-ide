@@ -1,21 +1,21 @@
-import { ipcMain } from 'electron'
+import { retry } from '@seleniumhq/side-commons'
 import Commands from '@seleniumhq/side-model/dist/Commands'
+import { Playback, WebDriverExecutor } from '@seleniumhq/side-runtime'
 import * as windowConfigs from 'browser/windows/controller'
 import { WindowConfig } from 'browser/types'
 import electron, {
   BrowserWindow,
   BrowserWindowConstructorOptions,
   Menu,
+  ipcMain,
 } from 'electron'
 import { existsSync, readFileSync } from 'fs'
 import kebabCase from 'lodash/fp/kebabCase'
 import { Session } from 'main/types'
 import { join } from 'node:path'
-import BaseController from '../Base'
 import { window as playbackWindowOpts } from 'browser/windows/PlaybackWindow/controller'
-import { Playback, WebDriverExecutor } from '@seleniumhq/side-runtime'
 import { randomUUID } from 'crypto'
-import { retry } from '@seleniumhq/side-commons'
+import BaseController from '../Base'
 
 const playbackWindowName = 'playback-window'
 const playbackCSS = readFileSync(join(__dirname, 'highlight.css'), 'utf-8')
@@ -64,6 +64,7 @@ const windowLoaderFactoryMap: WindowLoaderFactoryMap = Object.fromEntries(
               ...(_options.webPreferences ?? {}),
             },
           }
+
           const win = new BrowserWindow(options)
           win.loadFile(join(__dirname, `${filename}.html`))
           return win
@@ -274,6 +275,13 @@ export default class WindowsController extends BaseController {
     return true
   }
 
+  async requestCustomEditorPanel(name: string, url: string) {
+    await this.session.api.plugins.onRequestCustomEditorPanel.dispatchEvent(
+      name,
+      url
+    )
+  }
+
   async openCustom(
     name: string,
     filepath: string,
@@ -336,6 +344,25 @@ export default class WindowsController extends BaseController {
     })
   }
 
+  async shiftFocus(e: Electron.IpcMainEvent, target: 'editor' | 'playback') {
+    console.log(
+      'Maybe shifting focus to',
+      target,
+      e.senderFrame.top === e.senderFrame
+    )
+    if (e.senderFrame.top !== e.senderFrame) {
+      return
+    }
+    const window =
+      target === 'editor'
+        ? await this.get(projectEditorWindowName)
+        : this.getActivePlaybackWindow()
+    if (window && !window.isFocused() && window.isFocusable()) {
+      console.log('Shifting focus to window', window?.title)
+      window?.focus()
+    }
+  }
+
   async openPlaybackWindow(
     playback: Playback | null,
     opts: BrowserWindowConstructorOptions = {}
@@ -394,7 +421,8 @@ export default class WindowsController extends BaseController {
     const handles = await retry(() => driver.getAllWindowHandles(), 3, 100)
     for (let i = 0, ii = handles.length; i !== ii; i++) {
       const handle = handles[i]
-      const isRegistered = this.session.windows.getPlaybackWindowByHandle(handle)
+      const isRegistered =
+        this.session.windows.getPlaybackWindowByHandle(handle)
       if (!isRegistered) {
         try {
           await driver.switchTo().window(handle)
@@ -402,13 +430,12 @@ export default class WindowsController extends BaseController {
             `return window['${UUIDKey}']`
           )
           if (value === UUIDValue) {
-            await this.registerPlaybackWindowHandle(
-              handle,
-              window.id
-            )
+            await this.registerPlaybackWindowHandle(handle, window.id)
             return handle
           }
-        } catch (windowDNE) {}
+        } catch (windowDNE) {
+          // nothing to do here
+        }
       }
     }
     throw new Error('Failed to register playback window')

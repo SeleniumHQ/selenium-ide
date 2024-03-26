@@ -15,10 +15,32 @@ body,
 }
 
 .resize-bar {
-  background-color: #999;
-  min-height: 4px;
-  min-width: 4px;
+  position: relative;
+  background-color: #AAA;
+  min-height: 1px;
+  min-width: 1px;
+  z-index: 100;
 }
+
+.resize-handle {
+  height: 16px;
+  width: 16px;
+  position: absolute;
+  margin-left: -8px;
+  margin-top: -8px;
+  left: 50%;
+  top: 50%;
+  z-index: 150;
+}
+.resize-handle.x {
+  margin-left: -32px;
+  width: 64px;
+}
+.resize-handle.y {
+  margin-top: -32px;
+  height: 64px;
+}
+
 
 .window-drag {
   -webkit-app-region: drag;
@@ -28,11 +50,13 @@ body,
 }
 
 @media (prefers-color-scheme: dark) {
-  html, body, #root {
+  html,
+  body,
+  #root {
     background-color: #111;
   }
   .resize-bar {
-    background-color: #666;
+    background-color: #444;
   }
 }
 
@@ -63,7 +87,7 @@ body,
   opacity: 0.25;
 }
 .o-50 {
-  opacity: 0.5
+  opacity: 0.5;
 }
 .o-75 {
   opacity: 0.75;
@@ -246,6 +270,9 @@ body,
 }
 .pt-5 {
   padding-top: 1.6rem;
+}
+.pt-6 {
+  padding-top: 1.875rem;
 }
 .ps-1 {
   padding-left: 0.125rem;
