@@ -23,7 +23,7 @@
     "@seleniumhq/browser-info": "^4.0.1",
     "@seleniumhq/get-driver": "^4.0.1",
     "@seleniumhq/side-model": "^4.0.1",
-    "@seleniumhq/side-runtime": "^4.0.1",
+    "@seleniumhq/side-runtime": "^4.0.2",
     "lodash": "^4.17.21"
   },
   "devDependencies": {

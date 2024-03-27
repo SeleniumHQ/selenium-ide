@@ -1,3 +1,4 @@
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin'
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import fs from 'fs'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
@@ -5,13 +6,18 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import kebabCase from 'lodash/fp/kebabCase'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import path from 'path'
+// eslint-disable-next-line node/no-unpublished-import
+import ReactRefreshTypeScript from 'react-refresh-typescript'
 import {
   Configuration,
   SourceMapDevToolPlugin,
   WebpackPluginInstance,
 } from 'webpack'
+// eslint-disable-next-line node/no-unpublished-import
+import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
 
 const isProduction = process.env.NODE_ENV === 'production'
+const isDevelopment = !isProduction
 
 const commonPlugins: WebpackPluginInstance[] = [
   new ForkTsCheckerWebpackPlugin(),
@@ -22,11 +28,20 @@ const commonPlugins: WebpackPluginInstance[] = [
 if (isProduction) {
   commonPlugins.push(new MiniCssExtractPlugin())
 }
+if (isDevelopment) {
+  commonPlugins.push(new ReactRefreshWebpackPlugin())
+}
 
 const commonConfig: Pick<
   Configuration,
   'devtool' | 'externals' | 'mode' | 'module' | 'resolve' | 'output'
-> = {
+> & {
+  devServer?: DevServerConfiguration
+} = {
+  devServer: {
+    hot: isDevelopment,
+    port: 8081,
+  },
   devtool: 'source-map',
   externals: ['utf-8-validate', 'bufferutil'],
   mode: isProduction ? 'production' : 'development',
@@ -39,9 +54,13 @@ const commonConfig: Pick<
       },
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
         exclude: /node_modules/,
+        // eslint-disable-next-line node/no-unpublished-require
+        loader: require.resolve('ts-loader'),
         options: {
+          getCustomTransformers: () => ({
+            before: [isDevelopment && ReactRefreshTypeScript()].filter(Boolean),
+          }),
           transpileOnly: true,
         },
       },
@@ -96,6 +115,10 @@ const preloadEntries = windowData
 
 const preloadConfig: Configuration = {
   ...commonConfig,
+  devServer: {
+    ...commonConfig.devServer,
+    port: 8083,
+  },
   entry: Object.fromEntries(preloadEntries),
   plugins: commonPlugins,
   target: 'electron-preload',
@@ -111,6 +134,10 @@ const rendererEntries = windowData
 
 const rendererConfig: Configuration = {
   ...commonConfig,
+  devServer: {
+    ...commonConfig.devServer,
+    port: 8084,
+  },
   entry: Object.fromEntries(rendererEntries),
   plugins: commonPlugins.concat(
     Object.values(rendererEntries).map(
@@ -123,6 +150,10 @@ const rendererConfig: Configuration = {
 
 const playbackPreloadBidiConfig: Configuration = {
   ...commonConfig,
+  devServer: {
+    ...commonConfig.devServer,
+    port: 8085,
+  },
   entry: {
     'playback-window-bidi-preload': path.join(
       __dirname,
@@ -139,6 +170,10 @@ const playbackPreloadBidiConfig: Configuration = {
 
 const playbackRendererBidiConfig: Configuration = {
   ...commonConfig,
+  devServer: {
+    ...commonConfig.devServer,
+    port: 8086,
+  },
   entry: {
     'playback-window-bidi-renderer': path.join(
       __dirname,
@@ -149,23 +184,31 @@ const playbackRendererBidiConfig: Configuration = {
       'renderer.tsx'
     ),
   },
-  plugins: commonPlugins.concat(
-    getBrowserPlugin('playback-window-bidi') as unknown as WebpackPluginInstance
-  ).concat(
-    new CopyWebpackPlugin({
-      patterns: [
-        {
-          from: 'src/browser/*.css',
-          to: '[name].css',
-        },
-      ],
-    })
-  ),
+  plugins: commonPlugins
+    .concat(
+      getBrowserPlugin(
+        'playback-window-bidi'
+      ) as unknown as WebpackPluginInstance
+    )
+    .concat(
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: 'src/browser/*.css',
+            to: '[name].css',
+          },
+        ],
+      })
+    ),
   target: 'web',
 }
 
 const mainConfig: Configuration = {
   ...commonConfig,
+  devServer: {
+    ...commonConfig.devServer,
+    port: 8087,
+  },
   entry: {
     main: path.join(__dirname, 'src', 'main', 'index.ts'),
   },

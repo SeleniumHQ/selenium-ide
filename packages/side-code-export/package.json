@@ -21,7 +21,7 @@
   "types": "dist/index.d.ts",
   "dependencies": {
     "@seleniumhq/side-model": "^4.0.1",
-    "@seleniumhq/side-runtime": "^4.0.1",
+    "@seleniumhq/side-runtime": "^4.0.2",
     "commander": "^9.4.0"
   },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"
