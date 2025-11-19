@@ -26,7 +26,7 @@
     "@seleniumhq/side-model": "4.0.13",
     "@seleniumhq/side-runtime": "4.0.13",
     "commander": "^11.0.0",
-    "glob": "^10.3.1",
+    "glob": "^10.5.0",
     "jest": "^29.6.0",
     "jest-cli": "^29.6.0",
     "jest-each": "^29.6.0",
