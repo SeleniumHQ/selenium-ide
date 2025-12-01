@@ -23,7 +23,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "dependencies": {
-    "express": "^4.19.2"
+    "express": "^4.22.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.13"
