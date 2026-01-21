@@ -24,7 +24,7 @@
     "@seleniumhq/get-driver": "4.0.13",
     "@seleniumhq/side-model": "4.0.13",
     "@seleniumhq/side-runtime": "4.0.13",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.23"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.199",
