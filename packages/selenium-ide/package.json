@@ -161,7 +161,7 @@
     "@types/webpack-env": "^1.16.0",
     "copy-webpack-plugin": "^10.2.4",
     "css-loader": "^6.8.1",
-    "electron": "^28.2.0",
+    "electron": "^35.7.5",
     "electron-builder": "^24.9.1",
     "electron-devtools-installer": "^3.2.0",
     "fork-ts-checker-webpack-plugin": "^8.0.0",
