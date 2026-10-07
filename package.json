@@ -19,6 +19,7 @@
     "test:jest:core": "jest",
     "test": "npm run test:jest && npm run test:side-runner && npm run test:ide && npm run test:code-export",
     "test:ci": "npm-run-bg -s 'http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080' 'npm run pretest && npm run test:jest:core && npm run test:side-runner:ci'",
+    "test:ci:windows": "npm-run-bg -s \"http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080\" \"npm run pretest && npm run test:jest:core && npm run test:side-runner:ci\"",
     "test:jest": "npm-run-bg -s 'http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080' 'npm run test:jest:core'",
     "lint": "pnpm run lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",

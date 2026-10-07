@@ -55,6 +55,16 @@ const CHROME_BETA_LINUX_INSTALL_LOCATIONS = [
   '/opt/google/chrome-beta/google-chrome-beta',
 ]
 
+const CHROME_STABLE_WINDOWS_INSTALL_LOCATIONS = [
+  'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+  'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+]
+
+const CHROME_BETA_WINDOWS_INSTALL_LOCATIONS = [
+  'C:\\Program Files (x86)\\Google\\Chrome Beta\\Application\\chrome.exe',
+  'C:\\Program Files\\Google\\Chrome Beta\\Application\\chrome.exe',
+]
+
 export namespace Chrome {
   export async function getBrowserInfo(channel?: ChromeChannel) {
     const platform = os.platform()
@@ -103,7 +113,30 @@ export namespace Chrome {
           ].map((p) => p.catch(() => {}))
         )
       ).filter(Boolean) as BrowserInfo[]
-    } else {
+    } else if (platform === 'win32') {
+      if (channel) {
+        switch (channel) {
+          case ChromeChannel.stable: {
+            return await getChromeInfo(CHROME_STABLE_WINDOWS_INSTALL_LOCATIONS)
+          }
+          case ChromeChannel.beta: {
+            return await getChromeInfo(CHROME_BETA_WINDOWS_INSTALL_LOCATIONS)
+          }
+          default: {
+            throw new Error(`Unsupported channel ${channel}`)
+          }
+        }
+      }
+      return (
+        await Promise.all(
+          [
+            getChromeInfo(CHROME_STABLE_WINDOWS_INSTALL_LOCATIONS),
+            getChromeInfo(CHROME_BETA_WINDOWS_INSTALL_LOCATIONS),
+          ].map((p) => p.catch(() => {}))
+        )
+      ).filter(Boolean) as BrowserInfo[]
+    }
+    else {
       throw new Error('Unsupported platform')
     }
   }
