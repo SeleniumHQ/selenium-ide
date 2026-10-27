@@ -33,7 +33,12 @@ jobs:
           sudo apt-get update -y && sudo apt-get install -y libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
           Xvfb -ac :99 -screen 0 1280x1024x16 > /dev/null 2>&1 &
           echo "DISPLAY=:99" >> "$GITHUB_ENV"
-      - name: Run unit and side-runner tests
-        run: npm run test:ci
+      - name: Start the test site
+        shell: bash
+        run: npx http-server -p 8080 ./packages/side-testkit/fixtures/static > /dev/null 2>&1 &
+      - name: Run unit tests
+        run: npm run test:jest:core
+      - name: Run side-runner tests
+        run: npm run test:side-runner:ci
       - name: Run the IDE smoke test
-        run: npm run test:ide
+        run: npm run test:ide:ci
