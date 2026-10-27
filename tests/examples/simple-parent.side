@@ -2,9 +2,9 @@
   "id": "5ae78ac5-a1c2-441b-9c01-5aa9f15f7b21",
   "version": "3.0",
   "name": "Simple Parent",
-  "url": "http://www.google.com",
+  "url": "http://localhost:8080",
   "urls": [
-    "http://www.google.com"
+    "http://localhost:8080"
   ],
   "plugins": [],
   "suites": [
@@ -29,7 +29,7 @@
         {
           "id": "ab250350-7dd3-4428-b19a-6358f5b6891d",
           "command": "open",
-          "target": "/",
+          "target": "/success.html",
           "value": ""
         }
       ]
@@ -52,25 +52,17 @@
         },
         {
           "command": "assertElementPresent",
-          "target": "css=.lnXdpd",
+          "target": "css=h1",
           "value": "",
           "id": "c3a7876e-3202-4cf2-8cbb-f2561d14fca3",
           "fallbackTargets": [
             [
-              "css=[data-iml=\"1681129024592\"]",
-              "css:data-attr"
-            ],
-            [
-              "css=.lnXdpd",
+              "css=h1",
               "css:finder"
             ],
             [
-              "xpath=(//img[@alt='Google'])[1]",
-              "xpath:img"
-            ],
-            [
-              "xpath=(//img[@id='hplogo'])[1]",
-              "xpath:attributes"
+              "xpath=//h1",
+              "xpath:position"
             ]
           ]
         },
