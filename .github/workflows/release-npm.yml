@@ -2,7 +2,8 @@ name: 'Release npm packages'
 
 on:
   push:
-    branches: [trunk]
+    tags: ['v*']
+  workflow_dispatch:
 
 jobs:
   release:
@@ -22,13 +23,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install pnpm
-        run: npm i -g pnpm
       - name: Install dependencies
         run: pnpm -r i
       - name: Build all JS
