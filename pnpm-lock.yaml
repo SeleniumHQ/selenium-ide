@@ -41,6 +41,9 @@ importers:
       '@testing-library/jest-dom':
         specifier: ^5.16.5
         version: 5.16.5
+      '@types/jest':
+        specifier: ^29.5.2
+        version: 29.5.2
       '@types/node':
         specifier: ^16.11.26
         version: 16.11.64
@@ -8234,7 +8237,7 @@ packages:
     resolution: {integrity: sha512-mkCp56cETbpoNtsaeWVy6SKzk228mMi9FPHSObaRIhbR2Ujw9PqjW/yqVHD2tN1bHbC8ol6h3UEo7dOPmIYwIA==}
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
-      '@babel/code-frame': 7.22.5
+      '@babel/code-frame': 7.22.13
       '@jest/types': 29.6.0
       '@types/stack-utils': 2.0.1
       chalk: 4.1.2
@@ -8242,7 +8245,7 @@ packages:
       micromatch: 4.0.5
       pretty-format: 29.6.0
       slash: 3.0.0
-      stack-utils: 2.0.5
+      stack-utils: 2.0.6
 
   /jest-mock@29.6.0:
     resolution: {integrity: sha512-2Pb7R2w24Q0aUVn+2/vdRDL6CqGqpheDZy7zrXav8FotOpSGw/4bS2hyVoKHMEx4xzOn6EyCAGwc5czWxXeN7w==}
@@ -10837,7 +10840,6 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       escape-string-regexp: 2.0.0
-    dev: false
 
   /stat-mode@1.0.0:
     resolution: {integrity: sha512-jH9EhtKIjuXZ2cWxmXS8ZP80XyC3iasQxMDV8jzhNJpfDb7VbQLVW4Wvsxz9QZvzV+G4YoSfBUVKDOyxLzi/sg==}

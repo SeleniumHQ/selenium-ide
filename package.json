@@ -53,6 +53,7 @@
     "@bazel/ibazel": "^0.16.2",
     "@bazel/typescript": "^5.8.1",
     "@testing-library/jest-dom": "^5.16.5",
+    "@types/jest": "^29.5.2",
     "@types/node": "^16.11.26",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
