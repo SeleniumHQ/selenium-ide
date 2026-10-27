@@ -40,6 +40,15 @@ jobs:
         with:
           node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
+      - name: Check the tag matches the app version
+        if: github.ref_type == 'tag'
+        shell: bash
+        run: |
+          version=$(node -p "require('./packages/selenium-ide/package.json').version")
+          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match selenium-ide version $version"
+            exit 1
+          fi
       - name: Install dependencies
         run: pnpm -r i
       - name: Install dependencies
