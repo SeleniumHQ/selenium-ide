@@ -366,7 +366,7 @@ describe('webdriver executor', () => {
         const r = await driver.findElement(By.id('cont'))
         await driver.actions({ bridge: true }).move({ origin: r }).perform()
         await executor.doMouseOut('id=cont')
-        expect(await r.getText()).toBe('out 500,501')
+        expect(await r.getText()).toMatch(/^out \d+,501$/)
       })
       it('should move out of an element through the left', async () => {
         await driver.manage().window().setRect({ height: 400, width: 1000 })

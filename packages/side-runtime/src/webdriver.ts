@@ -699,37 +699,35 @@ export default class WebDriverExecutor {
         element
       )
 
+    // Pointer moves are relative to the center of the visible part of the
+    // element, which differs from its center when it is larger than the viewport
+    const centerX = Math.floor(
+      (Math.max(rect.left, 0) + Math.min(rect.right, vp.width)) / 2
+    )
+    const centerY = Math.floor(
+      (Math.max(rect.top, 0) + Math.min(rect.bottom, vp.height)) / 2
+    )
+    const moveBy = async (x: number, y: number) =>
+      await this.driver
+        .actions({ bridge: true })
+        .move({ origin: element, x: Math.round(x), y: Math.round(y) })
+        .perform()
+
     // try top
     if (rect.top > 0) {
-      const y = Math.round(-(rect.height / 2 + 1))
-      return await this.driver
-        .actions({ bridge: true })
-        .move({ origin: element, y })
-        .perform()
+      return await moveBy(0, rect.top - 1 - centerY)
     }
     // try right
     else if (vp.width > rect.right) {
-      const x = Math.round(rect.right / 2 + 1)
-      return await this.driver
-        .actions({ bridge: true })
-        .move({ origin: element, x })
-        .perform()
+      return await moveBy(rect.right + 1 - centerX, 0)
     }
     // try bottom
     else if (vp.height > rect.bottom) {
-      const y = Math.round(rect.height / 2 + 1)
-      return await this.driver
-        .actions({ bridge: true })
-        .move({ origin: element, y })
-        .perform()
+      return await moveBy(0, rect.bottom + 1 - centerY)
     }
     // try left
     else if (rect.left > 0) {
-      const x = Math.round(-rect.right / 2)
-      return await this.driver
-        .actions({ bridge: true })
-        .move({ origin: element, x })
-        .perform()
+      return await moveBy(rect.left - 1 - centerX, 0)
     }
 
     throw new Error(
