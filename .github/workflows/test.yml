@@ -22,11 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8.11.0
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           node-version: '20.x'
           cache: 'pnpm'
@@ -35,7 +33,7 @@ jobs:
       - name: Build side-runner and selenium-ide
         run: npm run build
       - name: Install xvfb
-        run: sudo apt-get update -y && sudo apt-get install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+        run: sudo apt-get update -y && sudo apt-get install -y libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
       - name: Run all tests and also use xvfb
         run: |
           Xvfb -ac :99 -screen 0 1280x1024x16 > /dev/null 2>&1 &
