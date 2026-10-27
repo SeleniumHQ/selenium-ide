@@ -1,6 +1,9 @@
+name: 'Release Selenium IDE binaries'
+
 on:
   push:
-    branches: [trunk]
+    tags: ['v*']
+  workflow_dispatch:
 
 jobs:
   release:
@@ -31,13 +34,21 @@ jobs:
       statuses: read
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
-          node-version: '18.x'
+          node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: Install pnpm
-        run: npm i -g pnpm
+      - name: Check the tag matches the app version
+        if: github.ref_type == 'tag'
+        shell: bash
+        run: |
+          version=$(node -p "require('./packages/selenium-ide/package.json').version")
+          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match selenium-ide version $version"
+            exit 1
+          fi
       - name: Install dependencies
         run: pnpm -r i
       - name: Install dependencies
