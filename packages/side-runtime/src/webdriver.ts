@@ -195,14 +195,16 @@ export default class WebDriverExecutor {
       const driver = await new Promise<
         Awaited<ReturnType<typeof this.getDriverSync>>
       >((resolve, reject) => {
-        setTimeout(() => {
+        const buildTimeout = setTimeout(() => {
           reject(
             new Error(
               'Driver took too long to build. This is likely an issue with the browser or driver.'
             )
           )
         }, 30000)
-        this.getDriverSync({ debug, logger }).then(resolve, reject)
+        this.getDriverSync({ debug, logger })
+          .then(resolve, reject)
+          .finally(() => clearTimeout(buildTimeout))
       })
       debug && logger.info('Driver has been built for ' + browserName)
       return driver
