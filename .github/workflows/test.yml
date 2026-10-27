@@ -4,22 +4,17 @@ on:
   pull_request:
     branches:
       - trunk
+  workflow_dispatch:
 jobs:
   test:
+    name: Test on ${{ matrix.os }}
     permissions:
-      actions: read
-      checks: read
-      contents: write
-      deployments: read
-      issues: read
-      discussions: read
-      packages: read
-      pages: read
-      pull-requests: read
-      repository-projects: read
-      security-events: read
-      statuses: read
-    runs-on: ubuntu-latest
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, ubuntu-26.04, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
       - uses: actions/checkout@v7
@@ -32,11 +27,13 @@ jobs:
         run: pnpm -r i
       - name: Build side-runner and selenium-ide
         run: npm run build
-      - name: Install xvfb
-        run: sudo apt-get update -y && sudo apt-get install -y libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
-      - name: Run all tests and also use xvfb
+      - name: Install and start xvfb
+        if: runner.os == 'Linux'
         run: |
+          sudo apt-get update -y && sudo apt-get install -y libgtk-3-0t64 libgbm-dev libnotify-dev libnss3 libxss1 libasound2t64 libxtst6 xauth xvfb
           Xvfb -ac :99 -screen 0 1280x1024x16 > /dev/null 2>&1 &
-          export DISPLAY=:99
-          npm run test:ci
-
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
+      - name: Run unit and side-runner tests
+        run: npm run test:ci
+      - name: Run the IDE smoke test
+        run: npm run test:ide
