@@ -303,8 +303,8 @@ importers:
         specifier: ^11.1.1
         version: 11.1.1
       lodash:
-        specifier: 4.17.21
-        version: 4.17.21
+        specifier: 4.18.1
+        version: 4.18.1
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -439,8 +439,8 @@ importers:
         specifier: 4.0.13
         version: link:../side-runtime
       lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: ^4.18.1
+        version: 4.18.1
     devDependencies:
       '@types/lodash':
         specifier: ^4.14.199
@@ -552,8 +552,8 @@ importers:
         specifier: ^4.3.2
         version: 4.3.2
       lodash:
-        specifier: ^4.17.21
-        version: 4.17.21
+        specifier: ^4.18.1
+        version: 4.18.1
       resolve-bin:
         specifier: ^1.0.1
         version: 1.0.1
@@ -3065,7 +3065,7 @@ packages:
     dependencies:
       debug: 4.4.3
       fs-extra: 9.1.0
-      lodash: 4.17.21
+      lodash: 4.18.1
       tmp-promise: 3.0.3
     transitivePeerDependencies:
       - supports-color
@@ -3355,7 +3355,7 @@ packages:
       chalk: 3.0.0
       css.escape: 1.5.1
       dom-accessibility-api: 0.5.14
-      lodash: 4.17.21
+      lodash: 4.18.1
       redent: 3.0.0
     dev: true
 
@@ -4474,7 +4474,7 @@ packages:
   /async@2.6.4:
     resolution: {integrity: sha512-mzo5dfJYwAn29PeiJ0zvwTo04zj8HDJj0Mn8TD7sno7q12prdbnasKJHhkm2c1LgrhlJ0teaea8860oxi51mGA==}
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.18.1
     dev: true
 
   /async@3.2.4:
@@ -7345,7 +7345,7 @@ packages:
     dependencies:
       '@types/html-minifier-terser': 6.1.0
       html-minifier-terser: 6.1.0
-      lodash: 4.17.21
+      lodash: 4.18.1
       pretty-error: 4.0.0
       tapable: 2.2.1
       webpack: 5.89.0(webpack-cli@5.1.4)
@@ -7655,7 +7655,7 @@ packages:
       is-ci: 3.0.1
       is-lower-case: 2.0.2
       is-upper-case: 2.0.2
-      lodash: 4.17.21
+      lodash: 4.18.1
       patch-console: 2.0.0
       react: 18.2.0
       react-reconciler: 0.29.0(react@18.2.0)
@@ -9057,8 +9057,8 @@ packages:
     resolution: {integrity: sha512-jttmRe7bRse52OsWIMDLaXxWqRAmtIUccAQ3garviCqJjafXOfNMO0yMfNpdD6zbGaTU0P5Nz7e7gAT6cKmJRw==}
     dev: true
 
-  /lodash@4.17.21:
-    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+  /lodash@4.18.1:
+    resolution: {integrity: sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==}
 
   /logform@2.4.2:
     resolution: {integrity: sha512-W4c9himeAwXEdZ05dQNerhFz2XG80P9Oj0loPUMV23VC2it0orMHQhJm4hdnnor3rd1HsGf6a2lPwBM1zeXHGw==}
@@ -9421,7 +9421,7 @@ packages:
     dependencies:
       debug: 4.3.4
       json-stringify-safe: 5.0.1
-      lodash: 4.17.21
+      lodash: 4.18.1
       mkdirp: 0.5.6
       propagate: 2.0.1
     transitivePeerDependencies:
@@ -9989,7 +9989,7 @@ packages:
   /pretty-error@4.0.0:
     resolution: {integrity: sha512-AoJ5YMAcXKYxKhuJGdcvse+Voc6v1RgnsR3nWcYU7q4t6z0Q6T86sv5Zq8VIRbOWWFpvdGE83LtdSMNd+6Y0xw==}
     dependencies:
-      lodash: 4.17.21
+      lodash: 4.18.1
       renderkid: 3.0.0
     dev: true
 
@@ -10414,7 +10414,7 @@ packages:
       css-select: 4.3.0
       dom-converter: 0.2.0
       htmlparser2: 6.1.0
-      lodash: 4.17.21
+      lodash: 4.18.1
       strip-ansi: 6.0.1
     dev: true
 
