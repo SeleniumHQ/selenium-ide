@@ -20,7 +20,7 @@ To build manually, you must have the below prerequisites installed and follow th
 #### Prerequisites
 
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
-- [NodeJS v16](https://nodejs.org/en/download/)
+- [Node.js](https://nodejs.org/en/download/) 22.12 or later (CI uses 24)
 - [Pnpm](https://pnpm.io/installation)
 
 #### Building

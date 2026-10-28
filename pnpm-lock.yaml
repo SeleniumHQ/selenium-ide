@@ -315,8 +315,8 @@ importers:
         specifier: ^3.0.10
         version: 3.0.10
       selenium-webdriver:
-        specifier: ^4.25.0
-        version: 4.26.0
+        specifier: ^4.51.0
+        version: 4.51.0
       side-code-export:
         specifier: ^4.0.11
         version: link:../side-code-export
@@ -349,8 +349,8 @@ importers:
         specifier: ^18.2.7
         version: 18.2.7
       '@types/selenium-webdriver':
-        specifier: ^4.1.26
-        version: 4.1.27
+        specifier: ^4.35.7
+        version: 4.35.7
       '@types/webpack-env':
         specifier: ^1.16.0
         version: 1.18.0
@@ -580,11 +580,11 @@ importers:
         specifier: 4.0.13
         version: link:../side-model
       '@types/selenium-webdriver':
-        specifier: ^4.1.26
-        version: 4.1.27
+        specifier: ^4.35.7
+        version: 4.35.7
       selenium-webdriver:
-        specifier: ^4.25.0
-        version: 4.26.0
+        specifier: ^4.51.0
+        version: 4.51.0
     devDependencies:
       '@seleniumhq/get-driver':
         specifier: 4.0.13
@@ -624,11 +624,11 @@ importers:
         specifier: ^8.0.1
         version: 8.1.2
       '@types/selenium-webdriver':
-        specifier: ^4.1.26
-        version: 4.1.27
+        specifier: ^4.35.7
+        version: 4.35.7
       selenium-webdriver:
-        specifier: ^4.25.0
-        version: 4.26.0
+        specifier: ^4.51.0
+        version: 4.51.0
 
 packages:
 
@@ -2083,8 +2083,8 @@ packages:
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
 
-  /@bazel/runfiles@6.3.1:
-    resolution: {integrity: sha512-1uLNT5NZsUVIGS4syuHwTzZ8HycMPyr6POA3FCE4GbMtc4rhoJk8aZKtNIRthJYfL+iioppi+rTfH3olMPr9nA==}
+  /@bazel/runfiles@6.5.0:
+    resolution: {integrity: sha512-RzahvqTkfpY2jsDxo8YItPX+/iZ6hbiikw1YhE0bA9EKBR5Og8Pa6FHn9PO9M0zaXRVsr0GFQLKbB/0rzy9SzA==}
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -2151,17 +2151,6 @@ packages:
   /@electron-internal/extract-zip@1.0.6:
     resolution: {integrity: sha512-/aQLgFDdCSnwChfUwqekSmE1q2dCTzhUy5saIHBb5vyYn5LzWaKPaIz1wM0lDMCZYBoIG4svJNvAJb6vkI8BuA==}
     engines: {node: '>=22.12.0'}
-    dev: true
-
-  /@electron/asar@3.2.4:
-    resolution: {integrity: sha512-lykfY3TJRRWFeTxccEKdf1I6BLl2Plw81H0bbp4Fc5iEc67foDCa5pjJQULVgo0wF+Dli75f3xVcdb/67FFZ/g==}
-    engines: {node: '>=10.12.0'}
-    hasBin: true
-    dependencies:
-      chromium-pickle-js: 0.2.0
-      commander: 5.1.0
-      glob: 7.2.3
-      minimatch: 3.1.5
     dev: true
 
   /@electron/asar@3.4.1:
@@ -2297,7 +2286,7 @@ packages:
     dependencies:
       cross-dirname: 0.1.0
       debug: 4.4.3
-      fs-extra: 11.1.1
+      fs-extra: 11.3.1
       minimist: 1.2.8
       postject: 1.0.0-alpha.6
     transitivePeerDependencies:
@@ -3764,8 +3753,8 @@ packages:
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
-  /@types/selenium-webdriver@4.1.27:
-    resolution: {integrity: sha512-ALqsj8D7Swb6MnBQuAQ58J3KC3yh6fLGtAmpBmnZX8j+0kmP7NaLt56CuzBw2W2bXPrvHFTgn8iekOQFUKXEQA==}
+  /@types/selenium-webdriver@4.35.7:
+    resolution: {integrity: sha512-TVduvRhQrIdjPWEC6YJLxwZWegWLD3uDOsqMuWk2U9+TiXw6wAH9RlKEtuHO8kioZkJ5MWGC9pQDY0nXvgi0nA==}
     dependencies:
       '@types/node': 16.11.64
       '@types/ws': 8.5.10
@@ -5996,7 +5985,7 @@ packages:
     engines: {node: '>=8.0.0'}
     requiresBuild: true
     dependencies:
-      '@electron/asar': 3.2.4
+      '@electron/asar': 3.4.1
       debug: 4.4.3
       fs-extra: 7.0.1
       lodash: 4.18.1
@@ -9078,6 +9067,15 @@ packages:
       pako: 1.0.11
       readable-stream: 2.3.7
       setimmediate: 1.0.5
+    dev: true
+
+  /jszip@3.10.2:
+    resolution: {integrity: sha512-3l+rb15IOWtUhU0H5MFqES/T6Kh7abYwjosBey/vD6hDt8zoEffkSC5Ws5SGtgVw3gBx2NEbhTeSW1+kWkpyTQ==}
+    dependencies:
+      lie: 3.3.0
+      pako: 1.0.11
+      readable-stream: 2.3.7
+      setimmediate: 1.0.5
 
   /keyv@4.5.2:
     resolution: {integrity: sha512-5MHbFaKn8cNSmVW7BYnijeAVlE4cYA/SVkifVgrh7yotnfhKmjuXpDKjrABLnT0SfHWV21P8ow07OGfRrNDg8g==}
@@ -10966,14 +10964,14 @@ packages:
     resolution: {integrity: sha512-mEugaLK+YfkijB4fx0e6kImuJdCIt2LxCRcbEYPqRGCs4F2ogyfZU5IAZRdjCP8JPq2AtdNoC/Dux63d9Kiryg==}
     dev: true
 
-  /selenium-webdriver@4.26.0:
-    resolution: {integrity: sha512-nA7jMRIPV17mJmAiTDBWN96Sy0Uxrz5CCLb7bLVV6PpL417SyBMPc2Zo/uoREc2EOHlzHwHwAlFtgmSngSY4WQ==}
-    engines: {node: '>= 14.21.0'}
+  /selenium-webdriver@4.51.0:
+    resolution: {integrity: sha512-2FY/x+THHk9uWj+WLBib0r+53D1G0pidox796H5AfbRHhJdPc7CVQPNJi31ip1Tb9duBYRw0zX0wJovnbwSDHg==}
+    engines: {node: '>= 22.0.0'}
     dependencies:
-      '@bazel/runfiles': 6.3.1
-      jszip: 3.10.1
-      tmp: 0.2.3
-      ws: 8.18.0
+      '@bazel/runfiles': 6.5.0
+      jszip: 3.10.2
+      tmp: 0.2.7
+      ws: 8.22.0
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -11821,6 +11819,11 @@ packages:
 
   /tmp@0.2.3:
     resolution: {integrity: sha512-nZD7m9iCPC5g0pYmcaxogYKggSfLsdxl8of3Q/oIbqCqLLIO9IAF0GWjX1z9NZRHPiXv8Wex4yDCaZsgEw0Y8w==}
+    engines: {node: '>=14.14'}
+    dev: true
+
+  /tmp@0.2.7:
+    resolution: {integrity: sha512-e0votIpp4Uo2AJYSzVHV6xCcawuiez3DzqDAbrTc3YxBkplN6e+dM13ZeIcZnDg/QpSuU2zfZ3rzwY8ukEnaXw==}
     engines: {node: '>=14.14'}
 
   /tmpl@1.0.5:
@@ -12681,8 +12684,8 @@ packages:
         optional: true
     dev: true
 
-  /ws@8.18.0:
-    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
+  /ws@8.22.0:
+    resolution: {integrity: sha512-Ydggc987+RO0AnWtZ/7Wq9FtNvcrL1b/RO0ud9mWjUPgDrsAAwQSF51sm2hm1XofbU/4jkpGEsLFsZZxU+1DOg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
