@@ -14,7 +14,9 @@ const addToBeginning = (prevList: string[], entry: string) => {
   return list
 }
 
-const removeOne=(list: string[], entry: string)=>{
+// The store returns frozen values, so change a copy
+const removeOne = (prevList: string[], entry: string) => {
+  const list = prevList.slice()
   const entryIndex = list.indexOf(entry)
   const entryIsIndexed = entryIndex !== -1
   if (entryIsIndexed) {

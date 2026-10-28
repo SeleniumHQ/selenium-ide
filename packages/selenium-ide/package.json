@@ -132,7 +132,7 @@
     "dnd-core": "^16.0.1",
     "electron-chromedriver": "^45.0.0",
     "electron-log": "^5.1.0",
-    "electron-store": "^8.1.0",
+    "electron-store": "^12.0.0",
     "electron-unhandled": "^4.0.1",
     "electron-updater": "^6.8.11",
     "fs-extra": "^11.1.1",
