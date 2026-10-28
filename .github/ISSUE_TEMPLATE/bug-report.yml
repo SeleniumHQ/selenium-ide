@@ -62,6 +62,12 @@ body:
     validations:
       required: true
   - type: input
+    id: browser
+    attributes:
+      label: Browser and version (if the problem is in a browser)
+      description: For example, the browser used by selenium-side-runner, or a site that only fails in one browser
+      placeholder: e.g., Chrome 156
+  - type: input
     id: node-version
     attributes:
       label: Node.js version (only for selenium-side-runner)

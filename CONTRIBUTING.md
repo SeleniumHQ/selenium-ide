@@ -47,7 +47,8 @@ Start the app:
 npm start
 ```
 
-`npm run dev` starts it with development tools turned on.
+`npm run dev` starts it with development tools turned on (macOS and Linux;
+on Windows, set `SIDE_DEV=1` yourself and run `npm start`).
 
 ### Testing
 
@@ -60,7 +61,9 @@ an IDE smoke test that records a click, and a code export check. The tests use a
 small local site on port 8080, which the scripts start for you.
 Chrome and Firefox must be installed. Selenium Manager downloads the drivers.
 
-CI runs the same tests on Linux, Windows and macOS for every pull request.
+CI runs the unit tests, the `selenium-side-runner` tests and the IDE smoke test
+on Linux, Windows and macOS for every pull request. The code export check
+only runs with `npm test`.
 
 ## Sending a pull request
 

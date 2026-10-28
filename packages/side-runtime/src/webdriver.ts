@@ -239,7 +239,7 @@ export default class WebDriverExecutor {
           https://github.com/SeleniumHQ/selenium/issues/new?assignees=&labels=I-defect%2Cneeds-triaging&projects=&template=bug-report.yml&title=%5B%F0%9F%90%9B+Bug%5D%3A+
 
           If this code works in selenium-webdriver, but not the IDE or side-runner, please raise a bug here:
-          https://github.com/SeleniumHQ/selenium-ide/issues/new?assignees=&labels=&projects=&template=bug.md
+          https://github.com/SeleniumHQ/selenium-ide/issues/new?template=bug-report.yml
         `)
       }
       throw e
