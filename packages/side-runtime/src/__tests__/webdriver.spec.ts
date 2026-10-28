@@ -366,7 +366,12 @@ describe('webdriver executor', () => {
         const r = await driver.findElement(By.id('cont'))
         await driver.actions({ bridge: true }).move({ origin: r }).perform()
         await executor.doMouseOut('id=cont')
-        expect(await r.getText()).toBe('out 500,501')
+        // The pointer stays at the center of the visible part of the element
+        const viewportWidth: number = await driver.executeScript(
+          'return window.innerWidth'
+        )
+        const x = Math.floor(Math.min(1000, viewportWidth) / 2)
+        expect(await r.getText()).toBe(`out ${x},501`)
       })
       it('should move out of an element through the left', async () => {
         await driver.manage().window().setRect({ height: 400, width: 1000 })
