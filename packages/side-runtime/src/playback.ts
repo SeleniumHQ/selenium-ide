@@ -153,6 +153,7 @@ export default class Playback {
     test: TestShape,
     { pauseImmediately, startingCommandIndex }: PlayOptions = {}
   ) {
+    this._clearPreviousCancellation()
     this[state].testID = test.id
     await this._prepareToPlay()
     this.commands = test.commands
@@ -209,6 +210,9 @@ export default class Playback {
   }
 
   async playSingleCommand(command: CommandShape) {
+    if (!this[state].callstack) {
+      this._clearPreviousCancellation()
+    }
     await this._prepareToPlay()
     if (!this[state].initialized) await this.init()
     if (this[state].callstack) {
@@ -314,6 +318,20 @@ export default class Playback {
     await this.executor.cleanup(persistSession)
   }
 
+  /**
+   * A playback can be played again after stop or abort. Clear those requests
+   * before anything is awaited, so a stop sent while the new playback starts
+   * still counts. Does nothing while a playback is running.
+   */
+  _clearPreviousCancellation() {
+    if (this[state].isPlaying) {
+      return
+    }
+    this[state].stopping = false
+    this[state].aborting = false
+    this[state].exitCondition = undefined
+  }
+
   async _prepareToPlay() {
     this[EE].emit(PlaybackEvents.PLAYBACK_STATE_CHANGED, {
       state: PlaybackStates.PREPARATION,
@@ -331,10 +349,6 @@ export default class Playback {
         driver: this.executor,
       })
       this[state].isPlaying = true
-      // A playback can be played again after stop or abort, so clear them
-      this[state].stopping = false
-      this[state].aborting = false
-      this[state].exitCondition = undefined
     }
   }
 

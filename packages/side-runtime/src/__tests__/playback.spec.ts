@@ -1230,6 +1230,49 @@ describe('Playback', () => {
       expect(lastState()).toBe(PlaybackStates.FINISHED)
     })
 
+    it('should honor a stop sent while the playback starts', async () => {
+      const test = {
+        id: '1',
+        name: 'Test',
+        commands: [
+          {
+            id: '1',
+            command: 'open',
+            target: '',
+            value: '',
+          },
+        ],
+      }
+      const executor = new FakeExecutor({})
+      executor.doOpen.mockImplementation(async () => {})
+      // Hold the onBeforePlay hook until the stop has been sent
+      let releaseHook: (() => void) | undefined
+      executor.executeHook = jest.fn(
+        () => new Promise<void>((res) => (releaseHook = res))
+      )
+      const playback = new Playback({
+        executor,
+      } as unknown as any)
+      const cb = jest.fn()
+      playback['event-emitter'].on(PlaybackEvents.PLAYBACK_STATE_CHANGED, cb)
+
+      const starting = playback.play(test)
+      while (!releaseHook) {
+        await psetTimeout(1)
+      }
+      const stopping = playback.stop()
+      releaseHook()
+      await (
+        await starting
+      )()
+      await stopping
+
+      expect(executor.doOpen).not.toHaveBeenCalled()
+      expect(flat(cb.mock.calls).slice(-1)[0].state).toBe(
+        PlaybackStates.STOPPED
+      )
+    })
+
     it('should stop a paused test', async () => {
       const test = {
         id: '1',
