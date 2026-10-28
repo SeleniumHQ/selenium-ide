@@ -94,7 +94,13 @@ async function main() {
       webdriver.until.elementLocated(webdriver.By.id('tab-0')),
       5000
     )
-    await testTab.click()
+    await driver.wait(webdriver.until.elementIsVisible(testTab), 5000)
+    try {
+      await testTab.click()
+    } catch (e) {
+      // On Windows the tab can be covered while the window is still laying out
+      await driver.executeScript('arguments[0].click()', testTab)
+    }
 
     const record = await driver.wait(
       webdriver.until.elementLocated(webdriver.By.css('[data-record]')),
