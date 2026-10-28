@@ -72,7 +72,7 @@ const testTitle = 'Running test $name'
 
 const allMatchingProjects: Project[] = [
   ...configuration.projects.reduce((projects, project) => {
-    globSync(project).forEach((p) => {
+    globSync(project, { windowsPathsNoEscape: true }).forEach((p) => {
       projects.add(p)
     })
     return projects
