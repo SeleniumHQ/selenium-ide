@@ -15,23 +15,9 @@ const driverPath = path.join(
   'chromedriver' + (os.platform() === 'win32' ? '.exe' : '')
 )
 
-const getElectronPath = () => {
-  const basePath = path.join(require.resolve('electron'), '..', 'dist')
-  switch (os.platform()) {
-    case 'darwin':
-      return path.join(
-        basePath,
-        'Electron.app',
-        'Contents',
-        'MacOS',
-        'Electron'
-      )
-    case 'win32':
-      return path.join(basePath, 'electron.exe')
-    default:
-      return path.join(basePath, 'electron')
-  }
-}
+// Requiring electron returns the path to its executable and downloads it on
+// first use
+const getElectronPath = () => require('electron')
 
 // Set IDE_BINARY to the executable of a packaged build to test it instead of
 // the unpackaged app
