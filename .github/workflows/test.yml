@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, ubuntu-26.04, windows-latest, macos-latest]
+        os: [ubuntu-24.04, ubuntu-26.04, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
@@ -35,7 +35,15 @@ jobs:
           echo "DISPLAY=:99" >> "$GITHUB_ENV"
       - name: Start the test site
         shell: bash
-        run: npx http-server -p 8080 ./packages/side-testkit/fixtures/static > /dev/null 2>&1 &
+        run: |
+          npx http-server -p 8080 ./packages/side-testkit/fixtures/static > http-server.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf http://localhost:8080/ > /dev/null && exit 0
+            sleep 1
+          done
+          echo "The test site did not start"
+          cat http-server.log
+          exit 1
       - name: Download browser drivers
         run: npm run pretest
       - name: Run unit tests
