@@ -72,7 +72,10 @@ const testTitle = 'Running test $name'
 
 const allMatchingProjects: Project[] = [
   ...configuration.projects.reduce((projects, project) => {
-    globSync(project, { windowsPathsNoEscape: true }).forEach((p) => {
+    // Absolute paths on Windows use backslashes, which glob treats as escapes
+    globSync(project, {
+      windowsPathsNoEscape: process.platform === 'win32',
+    }).forEach((p) => {
       projects.add(p)
     })
     return projects
