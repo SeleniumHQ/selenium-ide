@@ -1,8 +1,0 @@
-load("@npm//@babel/cli:index.bzl", "babel")
-
-babel(
-    name = "build",
-    args = [
-       '--root-mode upward -d dist src --extensions ".js,.jsx,.ts,.tsx" --source-maps true'
-    ]
-)

@@ -26,18 +26,6 @@ importers:
       '@babel/preset-typescript':
         specifier: ^7.22.5
         version: 7.22.5(@babel/core@7.22.6)
-      '@bazel/bazel':
-        specifier: ^2.1.0
-        version: 2.1.0
-      '@bazel/buildifier':
-        specifier: ^6.1.2
-        version: 6.1.2
-      '@bazel/ibazel':
-        specifier: ^0.16.2
-        version: 0.16.2
-      '@bazel/typescript':
-        specifier: ^5.8.1
-        version: 5.8.1(typescript@5.1.6)
       '@testing-library/jest-dom':
         specifier: ^5.16.5
         version: 5.16.5
@@ -2096,81 +2084,8 @@ packages:
       '@babel/helper-validator-identifier': 7.22.20
       to-fast-properties: 2.0.0
 
-  /@bazel/bazel-darwin_x64@2.1.0:
-    resolution: {integrity: sha512-9waB/6UT6JmQh8qxlRK9IfSY4Ef+4iGwy5eYK2hoc1zXYDnnZoZoC4eXiq68cWTpyCcT7SNGEb9B3wL5Y5rA9A==}
-    os: [darwin]
-    hasBin: true
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@bazel/bazel-linux_x64@2.1.0:
-    resolution: {integrity: sha512-ag6ZwYMJblf1YuPhNRAMyCYf164mY8jhdIwPSVFI1CMiBRnSDJBkSg7rVIczPh+8Gp7TDqAno9MMTnfUXzxogA==}
-    os: [linux]
-    hasBin: true
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@bazel/bazel-win32_x64@2.1.0:
-    resolution: {integrity: sha512-Y6cs3frmCqoAsrDmEp0msyS8VYE13JvjVoyvdIXTOh5Cc4fOeWzSPb02VS08asaV1jCnOQbv15Ud286hcxAvxg==}
-    os: [win32]
-    hasBin: true
-    requiresBuild: true
-    dev: true
-    optional: true
-
-  /@bazel/bazel@2.1.0:
-    resolution: {integrity: sha512-3Dhs0uJ69ImqC+VIRcifnptPXytxCNWHqyTMFYf0F5AJCVHHW7uRE0tt3Vhm5BseFpdOsjqcghgxGzR/yo10qw==}
-    deprecated: '@bazel/bazel is deprecated, please use @bazel/bazelisk instead'
-    hasBin: true
-    dependencies:
-      '@bazel/hide-bazel-files': 1.7.0
-    optionalDependencies:
-      '@bazel/bazel-darwin_x64': 2.1.0
-      '@bazel/bazel-linux_x64': 2.1.0
-      '@bazel/bazel-win32_x64': 2.1.0
-    dev: true
-
-  /@bazel/buildifier@6.1.2:
-    resolution: {integrity: sha512-psKePmRkP6acwyePOhXP67R/wdwN7BGJxHqp1j5myaO24feMsaXyyiO+oW49x8YAwOpKVSCujVzkTwX2auAc0A==}
-    hasBin: true
-    dev: true
-
-  /@bazel/hide-bazel-files@1.7.0:
-    resolution: {integrity: sha512-pvdyRX/EsU8n+oElFb+OZ9i5M48HNFR+Z4D3vc0qDGiJ8oly9fZcUb2gbw4CzyeovJz0IzjSxjqMS6cp5gKoeg==}
-    hasBin: true
-    requiresBuild: true
-    dev: true
-
-  /@bazel/ibazel@0.16.2:
-    resolution: {integrity: sha512-KgqAWMH0emL6f3xH6nqyTryoBMqlJ627LBIe9PT1PRRQPz2FtHib3FIHJPukp1slzF3hJYZvdiVwgPnHbaSOOA==}
-    hasBin: true
-    dev: true
-
   /@bazel/runfiles@6.3.1:
     resolution: {integrity: sha512-1uLNT5NZsUVIGS4syuHwTzZ8HycMPyr6POA3FCE4GbMtc4rhoJk8aZKtNIRthJYfL+iioppi+rTfH3olMPr9nA==}
-
-  /@bazel/typescript@5.8.1(typescript@5.1.6):
-    resolution: {integrity: sha512-NAJ8WQHZL1WE1YmRoCrq/1hhG15Mvy/viWh6TkvFnBeEhNUiQUsA5GYyhU1ztnBIYW03nATO3vwhAEfO7Q0U5g==}
-    deprecated: No longer maintained, https://github.com/aspect-build/rules_ts is the recommended replacement
-    hasBin: true
-    requiresBuild: true
-    peerDependencies:
-      typescript: '>=3.0.0'
-    dependencies:
-      '@bazel/worker': 5.8.1
-      semver: 5.6.0
-      source-map-support: 0.5.9
-      tsutils: 3.21.0(typescript@5.1.6)
-      typescript: 5.1.6
-    dev: true
-
-  /@bazel/worker@5.8.1:
-    resolution: {integrity: sha512-GMyZSNW3F34f9GjbJqvs1aHyed5BNrNeiDzNJhC1fIizo/UeBM21oBBONIYLBDoBtq936U85VyPZ76JaP/83hw==}
-    dependencies:
-      google-protobuf: 3.21.0
-    dev: true
 
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
@@ -7184,10 +7099,6 @@ packages:
     resolution: {integrity: sha512-xYfnw62CKG8nLkZBfWbhWwDw02CHty86jfPcc2cr3ZfeuK9ysoVPPEUxf21bAD/rWAgk52SuBrLJlefNy8mvFg==}
     dev: true
 
-  /google-protobuf@3.21.0:
-    resolution: {integrity: sha512-byR7MBTK4tZ5PZEb+u5ZTzpt4SfrTxv5682MjPlHN16XeqgZE2/8HOIWeiXe8JKnT9OVbtBGhbq8mtvkK8cd5g==}
-    dev: true
-
   /gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
@@ -10680,11 +10591,6 @@ packages:
     requiresBuild: true
     optional: true
 
-  /semver@5.6.0:
-    resolution: {integrity: sha512-RS9R6R35NYgQn++fkDWaOmqGoj4Ek9gGs+DPxNUZKuwE183xjJroKvyo1IzVFeXvUrvmALy6FWD5xrdJT25gMg==}
-    hasBin: true
-    dev: true
-
   /semver@5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
     hasBin: true
@@ -11000,13 +10906,6 @@ packages:
 
   /source-map-support@0.5.21:
     resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
-    dependencies:
-      buffer-from: 1.1.2
-      source-map: 0.6.1
-    dev: true
-
-  /source-map-support@0.5.9:
-    resolution: {integrity: sha512-gR6Rw4MvUlYy83vP0vxoVNzM6t8MUXqNuRsuBmBHQDu1Fh6X015FrLdgoDKcNdkwGubozq0P4N0Q37UyFVr1EA==}
     dependencies:
       buffer-from: 1.1.2
       source-map: 0.6.1
