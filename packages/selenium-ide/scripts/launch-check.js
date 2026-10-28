@@ -4,7 +4,7 @@
 //
 // Set IDE_BINARY to the executable of a packaged build to check it instead of
 // the unpackaged app.
-const { spawn } = require('child_process')
+const { execFileSync, spawn } = require('child_process')
 const os = require('os')
 const path = require('path')
 
@@ -28,12 +28,44 @@ const app = spawn(command, args, {
 })
 
 let output = ''
+let finished = false
 const finish = (code, message) => {
+  if (finished) {
+    return
+  }
+  finished = true
   clearTimeout(timer)
   console.log(message)
-  app.kill()
-  process.exit(code)
+  stopApp().then(() => process.exit(code))
 }
+
+// Stop the app and the processes it started, so the next check can use the
+// same ports. SIGTERM lets Electron quit normally, which also stops the
+// playback driver. Windows has no SIGTERM, so end the whole process tree.
+const stopApp = () =>
+  new Promise((resolve) => {
+    if (app.exitCode !== null || app.signalCode !== null) {
+      return resolve()
+    }
+    const forceTimer = setTimeout(() => {
+      app.kill('SIGKILL')
+      resolve()
+    }, 10000)
+    app.once('exit', () => {
+      clearTimeout(forceTimer)
+      resolve()
+    })
+    if (os.platform() === 'win32') {
+      try {
+        execFileSync('taskkill', ['/pid', String(app.pid), '/T', '/F'])
+      } catch (e) {
+        // The app may have exited already
+      }
+    } else {
+      app.kill('SIGTERM')
+    }
+  })
+
 const onData = (data) => {
   output += data
   if (output.includes(readyMessage)) {
@@ -43,8 +75,10 @@ const onData = (data) => {
 app.stdout.on('data', onData)
 app.stderr.on('data', onData)
 app.on('exit', (code) => {
-  console.log(output)
-  finish(1, `The IDE exited with code ${code} before the driver started`)
+  if (!finished) {
+    console.log(output)
+    finish(1, `The IDE exited with code ${code} before the driver started`)
+  }
 })
 const timer = setTimeout(() => {
   console.log(output)
