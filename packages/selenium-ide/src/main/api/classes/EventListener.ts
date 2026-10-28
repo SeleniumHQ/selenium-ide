@@ -133,7 +133,8 @@ const wrappedListener = <ARGS extends VariadicArgs>(
   return api
 }
 
-interface EventListenerConfig {}
+// No options yet
+type EventListenerConfig = Record<string, never>
 
 const EventListener =
   <ARGS extends VariadicArgs>(_config?: EventListenerConfig) =>

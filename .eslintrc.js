@@ -28,10 +28,13 @@ module.exports = {
       rules: {
         'import/no-unresolved': 'error',
         '@typescript-eslint/array-type': ['error', { default: 'array' }],
-        '@typescript-eslint/ban-types': 'error',
+        '@typescript-eslint/no-empty-object-type': 'error',
+        '@typescript-eslint/no-unsafe-function-type': 'error',
+        '@typescript-eslint/no-wrapper-object-types': 'error',
         '@typescript-eslint/no-unused-vars': [
           'error',
-          { argsIgnorePattern: '^_' },
+          // caughtErrors: 'none' was the default before typescript-eslint 8
+          { argsIgnorePattern: '^_', caughtErrors: 'none' },
         ],
         'no-dupe-class-members': 'off',
         'no-undef': 'off',
