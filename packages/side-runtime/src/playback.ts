@@ -331,6 +331,10 @@ export default class Playback {
         driver: this.executor,
       })
       this[state].isPlaying = true
+      // A playback can be played again after stop or abort, so clear them
+      this[state].stopping = false
+      this[state].aborting = false
+      this[state].exitCondition = undefined
     }
   }
 
