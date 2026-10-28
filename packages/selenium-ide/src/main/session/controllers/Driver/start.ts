@@ -7,7 +7,8 @@ import * as path from 'node:path'
 import * as os from 'os'
 import { COLOR_MAGENTA, COLOR_YELLOW, isAutomated, vdebuglog } from 'main/util'
 
-const successMessage = 'was started successfully.'
+// ChromeDriver 152+ adds the port: "was started successfully on port 9516."
+const successMessage = 'was started successfully'
 export interface DriverStartSuccess {
   driver: ChildProcess
   success: true
@@ -25,7 +26,7 @@ export const port = isAutomated ? 9518 : app.isPackaged ? 9516 : 9515
 /**
  * This module is just an async function that does the following:
  *   1. Grab driver from the node_modules, as fetched by electron-driver
- *   2. Spawn a process of it and waits for `driver was started successfully.`
+ *   2. Spawn a process of it and waits for `driver was started successfully`
  *   3. Return successfully if this occurs, or promote the failure if it doesn't work
  *   4. When Electron is quitting, close the child driver process
  */
