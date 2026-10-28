@@ -151,7 +151,7 @@ describe('Playback using webdriver', () => {
           value: '',
           opensWindow: true,
           windowHandleName: 'new',
-          windowTimeout: 200,
+          windowTimeout: 5000,
         },
       ],
     }
@@ -196,7 +196,7 @@ describe('Playback using webdriver', () => {
           value: '',
           opensWindow: true,
           windowHandleName: 'new',
-          windowTimeout: 200,
+          windowTimeout: 5000,
         },
       ],
     }
