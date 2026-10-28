@@ -109,19 +109,30 @@ async function main() {
       const url = await driver.getCurrentUrl()
       return !url.startsWith('file:') && url !== 'about:blank'
     }, 15000)
-    // Open the test site from the IDE's URL bar, like a user would
-    await driver.switchTo().window(handles2[0])
-    const urlBar = await driver.wait(
-      webdriver.until.elementLocated(webdriver.By.css('input[data-url]')),
-      5000
-    )
-    await urlBar.clear()
-    await urlBar.sendKeys('http://localhost:8080/', webdriver.Key.ENTER)
-    await driver.switchTo().window(handles2[1])
-    await driver.wait(
-      webdriver.until.elementLocated(webdriver.By.linkText('windows.html')),
-      10000
-    )
+    // Open the test site from the IDE's URL bar, like a user would. Retry,
+    // since a late redirect of the project URL can replace the test site.
+    for (let attempt = 1; ; attempt++) {
+      await driver.switchTo().window(handles2[0])
+      const urlBar = await driver.wait(
+        webdriver.until.elementLocated(webdriver.By.css('input[data-url]')),
+        5000
+      )
+      await urlBar.clear()
+      await urlBar.sendKeys('http://localhost:8080/', webdriver.Key.ENTER)
+      await driver.switchTo().window(handles2[1])
+      try {
+        await driver.wait(
+          webdriver.until.elementLocated(webdriver.By.linkText('windows.html')),
+          10000
+        )
+        break
+      } catch (e) {
+        if (attempt === 3) {
+          throw e
+        }
+        console.log('The test site did not load, trying again')
+      }
+    }
     // The recorder attaches its listeners shortly after the page loads
     await driver.sleep(2000)
     await driver.wait(async () => {
