@@ -17,7 +17,8 @@
 
 import { createHeadlessChrome, createHeadlessFirefox } from '../src/driver'
 
-jest.setTimeout(30000)
+// A browser can take more than 30 seconds to start on a busy CI runner
+jest.setTimeout(120000)
 
 describe('driver testkit', () => {
   it('should create headless chrome', async () => {
