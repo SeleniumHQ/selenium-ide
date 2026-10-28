@@ -45,7 +45,7 @@ describe('file classifier', () => {
   it('should throw when another file is given', () => {
     expect(() => {
       verifyFile('something is wrong here')
-    }).toThrowError('Unknown file was received')
+    }).toThrow('Unknown file was received')
   })
 })
 
