@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Questions and support
+    url: https://www.selenium.dev/support/
+    about: Ask questions in the Selenium chat rooms. This issue tracker is for bugs and feature proposals.

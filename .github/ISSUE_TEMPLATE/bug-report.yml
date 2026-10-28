@@ -1,0 +1,85 @@
+name: 🐛 Bug Report
+description: Report a problem with the Selenium IDE app, selenium-side-runner or code export
+title: "[🐛 Bug]: "
+labels: [I-defect, needs-triaging]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      placeholder: |
+        - What you were trying to do
+        - What you expected to happen
+        - What actually happened
+        - Error messages, if any
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open ...
+        2. Record ...
+        3. Play back ...
+
+        We can't fix what we can't reproduce. Attach a .side project file that shows the problem if you can.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: The IDE logs are in the log window. For selenium-side-runner, run it with `--debug`.
+      render: shell
+  - type: dropdown
+    id: component
+    attributes:
+      label: Which part of Selenium IDE?
+      options:
+        - Selenium IDE app (Windows, macOS or Linux)
+        - selenium-side-runner
+        - Code export
+        - Browser extension (v3)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: Selenium IDE app or selenium-side-runner version
+      placeholder: e.g., 4.0.1-beta.14
+    validations:
+      required: true
+  - type: dropdown
+    id: operating-system
+    attributes:
+      label: Operating System
+      options:
+        - Windows
+        - macOS
+        - Linux (specify in the description)
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version (only for selenium-side-runner)
+      placeholder: e.g., 24.11.0
+  - type: dropdown
+    id: regression
+    attributes:
+      label: Did this work before?
+      options:
+        - Not sure
+        - "Yes, this is a regression (add the last working version in the description)"
+        - "No"
+    validations:
+      required: true
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: The following statements are true
+      options:
+        - label: I searched the existing issues and didn't find this one
+          required: true
