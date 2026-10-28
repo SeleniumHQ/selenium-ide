@@ -1332,9 +1332,15 @@ describe('Playback', () => {
         ],
       }
       const executor = new FakeExecutor({})
+      // The second command waits until the test releases it, so stop and
+      // abort both happen while it runs, whatever the timer resolution
+      let releaseSecondCommand: (() => void) | undefined
+      let openCalls = 0
       executor.doOpen.mockImplementation(async () => {
-        await psetTimeout(10)
-        return
+        openCalls++
+        if (openCalls === 2) {
+          await new Promise<void>((res) => (releaseSecondCommand = res))
+        }
       })
       const playback = new Playback({
         executor,
@@ -1350,10 +1356,13 @@ describe('Playback', () => {
         expect((err as Error).message).toBe('playback is dead')
       })
 
-      await psetTimeout(15)
+      while (!releaseSecondCommand) {
+        await psetTimeout(1)
+      }
       playback.stop()
-      await psetTimeout(2)
-      await playback.abort()
+      const aborted = playback.abort()
+      releaseSecondCommand()
+      await aborted
       await playbackPromise()
       await psetTimeout(2)
 

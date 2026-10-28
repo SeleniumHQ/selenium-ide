@@ -35,8 +35,10 @@ jobs:
           echo "DISPLAY=:99" >> "$GITHUB_ENV"
       - name: Start the test site
         shell: bash
+        # Listen on IPv6 too: Chrome tries ::1 first for localhost, and on
+        # Windows a refused connection takes seconds before it falls back
         run: |
-          npx http-server -p 8080 ./packages/side-testkit/fixtures/static > http-server.log 2>&1 &
+          npx http-server -p 8080 -a :: ./packages/side-testkit/fixtures/static > http-server.log 2>&1 &
           for i in $(seq 1 30); do
             curl -sf http://localhost:8080/ > /dev/null && exit 0
             sleep 1
@@ -47,8 +49,6 @@ jobs:
       - name: Download browser drivers
         run: npm run pretest
       - name: Run unit tests
-        # The webdriver tests time out on Windows; they don't block until fixed
-        continue-on-error: ${{ runner.os == 'Windows' }}
         run: npm run test:jest:core
       - name: Run side-runner tests
         run: npm run test:side-runner:ci

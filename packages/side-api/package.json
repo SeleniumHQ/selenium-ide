@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.199",
-    "electron": "^44.10.0"
+    "electron": "^45.0.0"
   },
   "repository": {
     "type": "git",
