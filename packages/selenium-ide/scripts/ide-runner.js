@@ -33,7 +33,10 @@ const getElectronPath = () => {
   }
 }
 
-const electronBinaryPath = getElectronPath()
+// Set IDE_BINARY to the executable of a packaged build to test it instead of
+// the unpackaged app
+const packagedBinaryPath = process.env.IDE_BINARY
+const electronBinaryPath = packagedBinaryPath || getElectronPath()
 const pathToSeleniumIDE = path.join(__dirname, '..', 'build', 'main-bundle.js')
 
 const port = 9518
@@ -58,7 +61,7 @@ async function main() {
           // Here is the path to your Electron binary.
           binary: electronBinaryPath,
           args: [
-            'app=' + pathToSeleniumIDE,
+            ...(packagedBinaryPath ? [] : ['app=' + pathToSeleniumIDE]),
             'enable-automation',
             // Ubuntu 24.04 and later block the Chromium sandbox for Electron
             ...(os.platform() === 'linux' ? ['no-sandbox'] : []),
