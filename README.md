@@ -39,6 +39,18 @@ Here's a draft of the general tasks ahead. Feel free to pitch in and announce wh
 - Intelligent editing
 - Export to selenium code in different languages
 
+## Security
+
+While Selenium IDE is running, it keeps a Chrome DevTools port open on
+`localhost:8315`. Playback uses it to control the IDE's browser windows.
+Any program on the same computer can connect to that port and control
+those windows, including pages you are logged in to while recording.
+
+Run Selenium IDE only on a computer you trust, and don't record with
+accounts or data that other local users or programs must not reach.
+Port 8315 only listens on `localhost`, so it is not reachable from other
+computers unless you forward it.
+
 ## Contributing
 
 If you'd like to contribute to the codebase, start by building manually using the above commands. The below tips are meant to assist you as well.

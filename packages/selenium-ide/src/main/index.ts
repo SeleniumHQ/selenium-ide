@@ -7,8 +7,11 @@ import createSession from './session'
 import installReactDevtools from './install-react-devtools'
 import { isAutomated } from './util'
 
-// whatever
+// Playback attaches chromedriver to this port to control the IDE's windows.
+// Any local process can use it too; the README explains this to users.
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
+// Only when a test tool drives the IDE itself (e.g. scripts/ide-runner.js).
+// CI containers and Ubuntu 24.04+ block Chromium's sandbox there.
 if (isAutomated) {
   app.commandLine.appendSwitch('disable-gpu');
   app.commandLine.appendSwitch('no-sandbox');
