@@ -159,7 +159,8 @@ async function main() {
         )
         for (const command of commands) {
           text = (await command.getText()).replace(/\s+/g, ' ')
-          if (text === expected) {
+          // The row text can start with the command number
+          if (text === expected || text.endsWith(' ' + expected)) {
             return true
           }
         }

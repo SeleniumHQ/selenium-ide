@@ -273,8 +273,8 @@ importers:
         specifier: ^16.0.1
         version: 16.0.1
       electron-chromedriver:
-        specifier: ^44.10.0
-        version: 44.10.0
+        specifier: ^45.0.0
+        version: 45.1.0
       electron-log:
         specifier: ^5.1.0
         version: 5.1.0
@@ -364,8 +364,8 @@ importers:
         specifier: ^6.8.1
         version: 6.8.1(webpack@5.112.2)
       electron:
-        specifier: ^44.10.0
-        version: 44.10.0
+        specifier: ^45.0.0
+        version: 45.1.0
       electron-builder:
         specifier: ^26.18.0
         version: 26.18.0(electron-builder-squirrel-windows@26.18.0)
@@ -437,8 +437,8 @@ importers:
         specifier: ^4.14.199
         version: 4.14.199
       electron:
-        specifier: ^44.10.0
-        version: 44.10.0
+        specifier: ^45.0.0
+        version: 45.1.0
 
   packages/side-cli:
     dependencies:
@@ -2271,7 +2271,7 @@ packages:
       '@malept/cross-spawn-promise': 2.0.0
       debug: 4.4.3
       dir-compare: 4.2.0
-      fs-extra: 11.1.1
+      fs-extra: 11.3.1
       minimatch: 9.0.9
       plist: 3.1.1
     transitivePeerDependencies:
@@ -3947,7 +3947,7 @@ packages:
       debug: 4.4.3
       globby: 11.1.0
       is-glob: 4.0.3
-      semver: 7.5.3
+      semver: 7.8.5
       tsutils: 3.21.0(typescript@5.1.6)
       typescript: 5.1.6
     transitivePeerDependencies:
@@ -3968,7 +3968,7 @@ packages:
       '@typescript-eslint/typescript-estree': 5.61.0(typescript@5.1.6)
       eslint: 8.44.0
       eslint-scope: 5.1.1
-      semver: 7.5.3
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
       - typescript
@@ -5895,8 +5895,8 @@ packages:
       - supports-color
     dev: true
 
-  /electron-chromedriver@44.10.0:
-    resolution: {integrity: sha512-9qg6ZdUFMn6hpSkEXdfc8O0J4zwGSzCkzYgsRhVpFvpOq/0eT9fB96XyEHjlPNinXDG27k8dTKar1IzGYnNYlQ==}
+  /electron-chromedriver@45.1.0:
+    resolution: {integrity: sha512-i7dWmvAlff0JYLR8iYRNHdUVRvKd3Yc0vtFAbRHwhYw2sltfODKw5Y7+d5EfZh54rMEVYacn+ke54vq6WT0Qhw==}
     engines: {node: '>=10.12.0'}
     hasBin: true
     requiresBuild: true
@@ -5996,8 +5996,8 @@ packages:
       - supports-color
     dev: true
 
-  /electron@44.10.0:
-    resolution: {integrity: sha512-ss4pCfrQKV4TWkuVYtWB4HmeysPZgB96cSYNKYZv1UVCRP4vQMGNW5oopFbvx6Bbfce1XtP5pm5RDuKehp0svQ==}
+  /electron@45.1.0:
+    resolution: {integrity: sha512-i7qKVAh/KR5v1pf56NhGGX2QYHcdjvLgS7koL6ui50c+zUDGLRunR95nXcTpHPURKOQ4GDBG8BmXiDgOQ8DD0A==}
     engines: {node: '>= 22.12.0'}
     hasBin: true
     dependencies:
@@ -7034,12 +7034,13 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
+    dev: false
 
   /fs-extra@11.3.1:
     resolution: {integrity: sha512-eXvGGwZ5CL17ZSwHWd3bbgk7UUpF6IFHtP57NYYakPvHOs8GDgDe5KJI36jIJzDkJ6eJjuzRA8eBQb6SkKue0g==}
     engines: {node: '>=14.14'}
     dependencies:
-      graceful-fs: 4.2.11
+      graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
     dev: true
@@ -7216,7 +7217,7 @@ packages:
       es6-error: 4.1.1
       matcher: 3.0.0
       roarr: 2.15.4
-      semver: 7.5.3
+      semver: 7.8.5
       serialize-error: 7.0.1
     optional: true
 
@@ -8753,7 +8754,7 @@ packages:
       jest-util: 29.6.0
       natural-compare: 1.4.0
       pretty-format: 29.6.0
-      semver: 7.5.3
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -8782,7 +8783,7 @@ packages:
       jest-util: 29.6.0
       natural-compare: 1.4.0
       pretty-format: 29.6.0
-      semver: 7.5.3
+      semver: 7.8.5
     transitivePeerDependencies:
       - supports-color
 
@@ -9602,7 +9603,7 @@ packages:
     resolution: {integrity: sha512-GuvqvtrOk+AC27RidBxBsMzVNkwNl7PjHgc4NXbmdvSVLgIUjpaqcG1FjNRYnt2Yn9Ytq+Ln37XsBaglUcte/w==}
     engines: {node: '>=22.12.0'}
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
     dev: true
 
   /node-abort-controller@3.1.1:
@@ -9612,7 +9613,7 @@ packages:
   /node-api-version@0.2.1:
     resolution: {integrity: sha512-2xP/IGGMmmSQpI1+O/k72jF/ykvZ89JeuKX3TLJAYPDVLUalrshrLHkeVcCCZqG/eEa635cr8IBYzgnDvM2O8Q==}
     dependencies:
-      semver: 7.7.4
+      semver: 7.8.5
     dev: true
 
   /node-fetch@2.6.7:
@@ -9642,7 +9643,7 @@ packages:
       graceful-fs: 4.2.11
       nopt: 9.0.0
       proc-log: 6.1.0
-      semver: 7.7.4
+      semver: 7.8.5
       tar: 7.5.22
       tinyglobby: 0.2.17
       undici: 6.29.1
@@ -9683,7 +9684,7 @@ packages:
     dependencies:
       hosted-git-info: 4.1.0
       is-core-module: 2.12.1
-      semver: 7.5.3
+      semver: 7.8.5
       validate-npm-package-license: 3.0.4
     dev: true
 
@@ -11014,7 +11015,6 @@ packages:
     resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
     engines: {node: '>=10'}
     hasBin: true
-    dev: true
 
   /send@0.18.0:
     resolution: {integrity: sha512-qqWzuOjSFOuqPjFe4NOsMLafToQQwBSOEpS+FwEt3A2V3vKubTquT3vmLTQpFgMXp8AlFWFuP1qKaJZOtPpVXg==}
