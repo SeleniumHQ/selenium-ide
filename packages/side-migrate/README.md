@@ -10,7 +10,7 @@ Honestly, just do something like this:
 
 After that, your project json should be upgraded to v4. If that doesn't work
 right for ya, please raise an issue [here](
-  https://github.com/SeleniumHQ/selenium-ide/issues/new?assignees=&labels=&projects=&template=bug.md
+  https://github.com/SeleniumHQ/selenium-ide/issues/new?template=bug-report.yml
 )
 
 Thanks!
@@ -18,5 +18,5 @@ Thanks!
 ## Contributing
 
 Oh gee golly! Oh gee willikers batman! What a generous offer! <3 I'd start in contributing [here](
-  https://github.com/SeleniumHQ/selenium-ide/issues/new?assignees=&labels=&projects=&template=bug.md
+  https://github.com/SeleniumHQ/selenium-ide/issues/new?template=bug-report.yml
 ) and you can just go where the flow takes you!

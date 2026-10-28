@@ -1,0 +1,17 @@
+name: 🚀 Feature Proposal
+description: Suggest a new feature or an improvement
+title: "[🚀 Feature]: "
+labels: [enhancement, needs-triaging]
+body:
+  - type: textarea
+    id: feature
+    attributes:
+      label: Feature and motivation
+      description: What should Selenium IDE do, and why do you need it?
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example
+      description: How would you use it?

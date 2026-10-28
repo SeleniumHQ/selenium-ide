@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rimraf build dist files node_modules tsconfig.tsbuildinfo",
     "start": "electron build/main-bundle.js",
-    "dev": "SIDE_DEV=1 electron build/main-bundle.js",
+    "dev": "cross-env SIDE_DEV=1 electron build/main-bundle.js",
     "build": "run-s build:webpack build:electron",
     "build:electron": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -mwl --publish never",
     "build:electron:dir": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --dir",
@@ -20,7 +20,7 @@
     "publish:electron:mac": "CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder -m --publish always",
     "publish:electron:windows": "electron-builder -w --publish always",
     "release": "electron-builder",
-    "serve": "SIDE_DEV=1 webpack serve",
+    "serve": "cross-env SIDE_DEV=1 webpack serve",
     "watch": "webpack watch"
   },
   "bin": {
@@ -52,7 +52,7 @@
     ],
     "directories": {
       "buildResources": "resources"
-    }, 
+    },
     "productName": "Selenium IDE",
     "mac": {
       "target": {
@@ -160,6 +160,7 @@
     "@types/selenium-webdriver": "^4.1.26",
     "@types/webpack-env": "^1.16.0",
     "copy-webpack-plugin": "^10.2.4",
+    "cross-env": "^7.0.3",
     "css-loader": "^6.8.1",
     "electron": "^28.2.0",
     "electron-builder": "^24.9.1",
