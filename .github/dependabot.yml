@@ -3,10 +3,8 @@ updates:
   # Electron ships a new major about every 8 weeks. Keep electron and
   # electron-chromedriver on the same version.
   - package-ecosystem: npm
-    # side-api uses electron for its types
-    directories:
-      - /packages/selenium-ide
-      - /packages/side-api
+    # The root covers every workspace package and the pnpm lockfile
+    directory: /
     schedule:
       interval: weekly
     allow:
