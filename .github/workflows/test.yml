@@ -54,3 +54,16 @@ jobs:
         run: npm run test:side-runner:ci
       - name: Run the IDE smoke test
         run: npm run test:ide:ci
+      - name: Package the app
+        run: npm run build:electron:dir
+        working-directory: ./packages/selenium-ide
+      - name: Run the IDE smoke test on the packaged app
+        shell: bash
+        run: |
+          case "$RUNNER_OS" in
+            macOS) bin="$(ls -d "$PWD"/packages/selenium-ide/dist/mac*/"Selenium IDE.app")/Contents/MacOS/Selenium IDE" ;;
+            Windows) bin="$(cygpath -w "$PWD/packages/selenium-ide/dist/win-unpacked/Selenium IDE.exe")" ;;
+            Linux) bin="$PWD/packages/selenium-ide/dist/linux-unpacked/selenium-ide" ;;
+          esac
+          echo "Testing $bin"
+          IDE_BINARY="$bin" npm run test:ide:ci
