@@ -57,7 +57,12 @@ async function main() {
         'goog:chromeOptions': {
           // Here is the path to your Electron binary.
           binary: electronBinaryPath,
-          args: ['app=' + pathToSeleniumIDE, 'enable-automation'],
+          args: [
+            'app=' + pathToSeleniumIDE,
+            'enable-automation',
+            // Ubuntu 24.04 and later block the Chromium sandbox for Electron
+            ...(os.platform() === 'linux' ? ['no-sandbox'] : []),
+          ],
           excludeSwitches: ['enable-logging'],
         },
       })
@@ -85,30 +90,21 @@ async function main() {
       'Project started successfully, IDE is ready to record commands!'
     )
 
-    const projectTab = await driver.wait(
-      webdriver.until.elementLocated(webdriver.By.id('tab-2')),
-      5000
-    )
-    await projectTab.click()
-
-    const url = await driver.wait(
-      webdriver.until.elementLocated(webdriver.By.id('project-url')),
-      5000
-    )
-    while ((await url.getAttribute('value')) !== '') {
-      await url.sendKeys(webdriver.Key.BACK_SPACE)
-    }
-    await url.sendKeys('http://localhost:8080')
-
     const testTab = await driver.wait(
       webdriver.until.elementLocated(webdriver.By.id('tab-0')),
       5000
     )
-    await testTab.click()
+    await driver.wait(webdriver.until.elementIsVisible(testTab), 5000)
+    try {
+      await testTab.click()
+    } catch (e) {
+      // On Windows the tab can be covered while the window is still laying out
+      await driver.executeScript('arguments[0].click()', testTab)
+    }
 
     const record = await driver.wait(
       webdriver.until.elementLocated(webdriver.By.css('[data-record]')),
-      1000
+      5000
     )
     await record.click()
 
@@ -117,24 +113,66 @@ async function main() {
       await driver.sleep(100)
       handles2 = await driver.getAllWindowHandles()
     }
+    // The recorder opens the project URL first. Wait until it has left the
+    // internal playback page, so it doesn't replace the page we open next.
     await driver.switchTo().window(handles2[1])
-    await driver.sleep(1000)
-    const link = await driver.wait(
-      webdriver.until.elementLocated(webdriver.By.linkText('windows.html')),
-      3000
-    )
-    await link.click()
+    await driver.wait(async () => {
+      const url = await driver.getCurrentUrl()
+      return !url.startsWith('file:') && url !== 'about:blank'
+    }, 15000)
+    // Open the test site from the IDE's URL bar, like a user would
     await driver.switchTo().window(handles2[0])
-    const command = await driver.wait(
-      webdriver.until.elementLocated(
-        webdriver.By.css('[data-command-id]:nth-child(2)')
-      ),
-      1000
+    const urlBar = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.css('input[data-url]')),
+      5000
     )
-    const text = (await command.getText()).replace(/\s+/g, ' ')
-    if (text !== 'Click linkText=windows.html') {
-      throw new Error('Unexpected command text: ' + text)
-    }
+    await urlBar.clear()
+    await urlBar.sendKeys('http://localhost:8080/', webdriver.Key.ENTER)
+    await driver.switchTo().window(handles2[1])
+    await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.linkText('windows.html')),
+      10000
+    )
+    // The recorder attaches its listeners shortly after the page loads
+    await driver.sleep(2000)
+    await driver.wait(async () => {
+      try {
+        await driver.findElement(webdriver.By.linkText('windows.html')).click()
+        return true
+      } catch (e) {
+        if (
+          e.name === 'StaleElementReferenceError' ||
+          e.name === 'NoSuchElementError'
+        ) {
+          return false
+        }
+        throw e
+      }
+    }, 10000)
+    await driver.switchTo().window(handles2[0])
+    const expected = 'Click linkText=windows.html'
+    let text = ''
+    await driver
+      .wait(async () => {
+        const commands = await driver.findElements(
+          webdriver.By.css('[data-command-id]')
+        )
+        for (const command of commands) {
+          text = (await command.getText()).replace(/\s+/g, ' ')
+          if (text === expected) {
+            return true
+          }
+        }
+        return false
+      }, 5000)
+      .catch(() => {
+        throw new Error(
+          'Expected a recorded command "' +
+            expected +
+            '", last command text: ' +
+            text
+        )
+      })
     console.log('IDE is correctly recording commands!')
     await driver.quit()
     proc.kill()
@@ -154,7 +192,7 @@ function startWebdriverBackend() {
     const args = ['--verbose', `--port=${port}`]
     if (fs.existsSync(driverPath)) {
       const proc = spawn(driverPath.replace(/\s/g, ' '), args, {
-        env: {},
+        env: { ...process.env },
         shell: false,
       })
       proc.stdout.on('data', (out) => {

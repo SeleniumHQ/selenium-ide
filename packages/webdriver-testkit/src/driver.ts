@@ -15,24 +15,14 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import * as os from 'os'
-import * as path from 'path'
 import { Builder, Capabilities } from 'selenium-webdriver'
-import * as chrome from 'selenium-webdriver/chrome'
-import * as firefox from 'selenium-webdriver/firefox'
-import { CACHE_PATH } from './cache'
 
 export async function createDriver({
   capabilities,
 }: {
   capabilities: Record<string, unknown> | Capabilities
 }) {
-  const { chromeService, firefoxService } = createServices()
-  return await new Builder()
-    .setChromeService(chromeService)
-    .setFirefoxService(firefoxService)
-    .withCapabilities(capabilities)
-    .build()
+  return await new Builder().withCapabilities(capabilities).build()
 }
 
 export async function createHeadlessChrome() {
@@ -53,21 +43,4 @@ export async function createHeadlessFirefox() {
       'moz:firefoxOptions': { args: ['-headless'] },
     },
   })
-}
-
-function createServices() {
-  return {
-    chromeService: new chrome.ServiceBuilder(
-      path.join(
-        CACHE_PATH,
-        `chromedriver${os.platform() === 'win32' ? '.exe' : ''}`
-      )
-    ),
-    firefoxService: new firefox.ServiceBuilder(
-      path.join(
-        CACHE_PATH,
-        `geckodriver${os.platform() === 'win32' ? '.exe' : ''}`
-      )
-    ),
-  }
 }
