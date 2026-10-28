@@ -54,6 +54,8 @@ jobs:
         run: npm run test:side-runner:ci
       - name: Run the IDE smoke test
         run: npm run test:ide:ci
+      - name: Check a normal launch starts the playback driver
+        run: node packages/selenium-ide/scripts/launch-check.js
       - name: Package the app
         run: npm run build:electron:dir
         working-directory: ./packages/selenium-ide
@@ -67,3 +69,4 @@ jobs:
           esac
           echo "Testing $bin"
           IDE_BINARY="$bin" npm run test:ide:ci
+          IDE_BINARY="$bin" node packages/selenium-ide/scripts/launch-check.js

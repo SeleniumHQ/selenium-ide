@@ -48,14 +48,17 @@ describe('webdriver executor', () => {
   describe.each([
     ['chrome', createHeadlessChrome],
     ['firefox', createHeadlessFirefox],
-  ])('commands on %s', (_browserName, createDriver) => {
+  ])('commands on %s', (browserName, createDriver) => {
     let driver: WebDriver, executor: WebDriverExecutor, variables: Variables
+    // A browser can take more than 30 seconds to start on a busy CI runner
     beforeAll(async () => {
       variables = new Variables()
+      const start = Date.now()
       driver = await createDriver()
+      console.log(`${browserName} started in ${Date.now() - start} ms`)
       executor = new WebDriverExecutor({ driver })
       await executor.init({ baseUrl: '', logger: console, variables })
-    })
+    }, 120000)
     afterAll(async () => {
       await driver?.quit()
     })
