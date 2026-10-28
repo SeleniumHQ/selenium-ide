@@ -47,7 +47,6 @@ type KeyObject = Record<string, string | Record<string, string>>
 function assignStringKey(key: string, value: string, keyObject: KeyObject) {
   keyObject = keyObject || {}
 
-  // @ts-expect-error
   key.split('.').reduce((objectKey, currKey, index, keys) => {
     const ref =
       !objectKey[currKey] || typeof objectKey[currKey] !== 'object'
