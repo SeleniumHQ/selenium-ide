@@ -17,22 +17,17 @@
 
 // Ask Selenium Manager for the Chrome and Firefox drivers ahead of the tests,
 // so the first test doesn't time out while the drivers download.
-const { execFileSync } = require('child_process')
-const path = require('path')
-
-const seleniumDir = path.dirname(
-  require.resolve('selenium-webdriver/package.json')
-)
-const folder = { darwin: 'macos', linux: 'linux', win32: 'windows' }[
-  process.platform
-]
-const binary = path.join(
-  seleniumDir,
-  'bin',
-  folder,
-  'selenium-manager' + (process.platform === 'win32' ? '.exe' : '')
-)
+// selenium-webdriver picks the Selenium Manager binary for this OS and CPU.
+const { binaryPaths } = require('selenium-webdriver/common/seleniumManager')
 
 for (const browser of ['chrome', 'firefox']) {
-  execFileSync(binary, ['--browser', browser], { stdio: 'inherit' })
+  const { driverPath, browserPath } = binaryPaths([
+    '--browser',
+    browser,
+    '--language-binding',
+    'javascript',
+    '--output',
+    'json',
+  ])
+  console.log(`${browser}: driver ${driverPath}, browser ${browserPath}`)
 }
