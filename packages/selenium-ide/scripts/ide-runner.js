@@ -189,7 +189,7 @@ async function main() {
 }
 
 function startWebdriverBackend() {
-  const successMessage = 'was started successfully.'
+  const successMessage = 'was started successfully'
   return new Promise((resolve) => {
     let initialized = false
     const args = ['--verbose', `--port=${port}`]
