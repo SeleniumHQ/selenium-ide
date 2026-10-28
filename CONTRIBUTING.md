@@ -47,8 +47,7 @@ Start the app:
 npm start
 ```
 
-`npm run dev` starts it with development tools turned on (macOS and Linux;
-on Windows, set `SIDE_DEV=1` yourself and run `npm start`).
+`npm run dev` starts it with development tools turned on.
 
 ### Testing
 
