@@ -151,7 +151,6 @@
   "devDependencies": {
     "@medv/finder": "^1.1.1",
     "@seleniumhq/browser-info": "4.0.13",
-    "@types/copy-webpack-plugin": "8.0.1",
     "@types/electron-devtools-installer": "^2.2.5",
     "@types/fs-extra": "^11.0.1",
     "@types/lodash": "^4.14.199",
@@ -159,9 +158,9 @@
     "@types/react-dom": "^18.2.7",
     "@types/selenium-webdriver": "^4.35.7",
     "@types/webpack-env": "^1.16.0",
-    "copy-webpack-plugin": "^10.2.4",
+    "copy-webpack-plugin": "^14.0.0",
     "cross-env": "^7.0.3",
-    "css-loader": "^6.8.1",
+    "css-loader": "^7.1.5",
     "electron": "^45.0.0",
     "electron-builder": "^26.18.0",
     "electron-devtools-installer": "^3.2.0",
@@ -178,6 +177,6 @@
     "typescript": "^5.2.2",
     "webpack": "^5.112.2",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.4"
+    "webpack-dev-server": "^5.2.7"
   }
 }
