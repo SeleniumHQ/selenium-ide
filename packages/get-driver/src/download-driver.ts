@@ -68,12 +68,14 @@ const processDownloadResonse = (
       )
     } else {
       response?.body?.pipe(
+        // tar's Parser is a writable stream, but its end() returns the parser
+        // instead of void, so the Node.js types don't match
         tar.t({
           filter: (path, _stat) => path === 'geckodriver',
           onentry: (entry) => {
             entry.pipe(fs.createWriteStream(destination)).on('close', resolve)
           },
-        })
+        }) as unknown as NodeJS.WritableStream
       )
     }
   })
