@@ -23,7 +23,7 @@ export interface WindowConfig {
   window: () => BrowserWindowConstructorOptions
 }
 
-export interface BrowserState extends CoreSessionData {}
+export type BrowserState = CoreSessionData
 
 export type EventFunction = (
   message: MessageEvent<any> & Record<string, any>,

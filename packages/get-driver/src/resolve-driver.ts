@@ -210,4 +210,4 @@ function getGeckodriverVersion(version: string) {
 }
 
 type MappedBrowserNames = { [key in Browser]: string }
-interface BrowserToDriver extends MappedBrowserNames {}
+type BrowserToDriver = MappedBrowserNames

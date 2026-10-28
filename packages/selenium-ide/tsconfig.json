@@ -1,8 +1,19 @@
 {
   "extends": "../../tsconfig.base.json",
+  // webpack-cli loads webpack.config.ts with ts-node, which needs CommonJS
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node"
+    }
+  },
   "include": ["src/**/*"],
   "compilerOptions": {
     "jsx": "react",
+    // webpack bundles the app, so resolve modules the way it does. This also
+    // reads package "exports", which ESM-only packages like electron-store need.
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "paths": {
       "api/*": ["./src/api/*"],
       "browser/*": ["./src/browser/*"],
