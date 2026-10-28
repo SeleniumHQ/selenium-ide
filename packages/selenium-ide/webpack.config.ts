@@ -33,7 +33,8 @@ const commonConfig: Pick<
 > & {
   devServer?: DevServerConfiguration
 } = {
-  devtool: 'source-map',
+  // Source maps come from SourceMapDevToolPlugin above
+  devtool: false,
   externals: ['utf-8-validate', 'bufferutil'],
   mode: isProduction ? 'production' : 'development',
   module: {
