@@ -10,8 +10,9 @@ import { isAutomated } from './util'
 // Playback attaches chromedriver to this port to control the IDE's windows.
 // Any local process can use it too; the README explains this to users.
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
-// Only when a test tool drives the IDE itself (e.g. scripts/ide-runner.js).
-// CI containers and Ubuntu 24.04+ block Chromium's sandbox there.
+// When the app is started with --enable-automation (as chromedriver does in
+// scripts/ide-runner.js), turn off the GPU and the Chromium sandbox on every
+// platform. CI runners and Ubuntu 24.04+ don't allow the sandbox.
 if (isAutomated) {
   app.commandLine.appendSwitch('disable-gpu');
   app.commandLine.appendSwitch('no-sandbox');
