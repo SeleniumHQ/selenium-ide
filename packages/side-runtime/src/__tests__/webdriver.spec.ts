@@ -147,18 +147,18 @@ describe('webdriver executor', () => {
       it('should answer prompt', async () => {
         await driver.get(`http://localhost:${port}/popup/prompt.html`)
         const element = await driver.findElement(By.css('button'))
+        // The page sets its title after the prompt closes
+        const waitForTitle = (title: string) =>
+          driver.wait(async () => (await driver.getTitle()) === title, 5000)
         await element.click()
         await executor.doAnswerPrompt('hello')
-        await driver.sleep(10)
-        expect(await driver.getTitle()).toBe('hello')
+        await waitForTitle('hello')
         await element.click()
         await executor.doAnswerPrompt('world')
-        await driver.sleep(10)
-        expect(await driver.getTitle()).toBe('world')
+        await waitForTitle('world')
         await element.click()
         await executor.doAnswerPrompt('')
-        await driver.sleep(10)
-        expect(await driver.getTitle()).toBe('empty')
+        await waitForTitle('empty')
       })
     })
     describe('assert alert', () => {

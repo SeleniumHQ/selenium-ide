@@ -27,11 +27,12 @@ jest.setTimeout(30000)
 const port = 8080
 describe('Playback using webdriver', () => {
   let driver: WebDriver, executor: WebDriverExecutor, variables: Variables
+  // A browser can take more than 30 seconds to start on a busy CI runner
   beforeAll(async () => {
     variables = new Variables()
     driver = await createHeadlessChrome()
     executor = new WebDriverExecutor({ driver, implicitWait: 5000 })
-  })
+  }, 120000)
   afterEach(() => {
     executor.hooks = {}
   })

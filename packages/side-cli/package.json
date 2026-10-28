@@ -23,7 +23,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "devDependencies": {
-    "@types/react": "^18.2.51"
+    "@types/react": "^18.3.31"
   },
   "dependencies": {
     "@seleniumhq/side-model": "^4.0.0-alpha.5",
