@@ -28,6 +28,9 @@ const pathToSeleniumIDE = path.join(__dirname, '..', 'build', 'main-bundle.js')
 const port = 9518
 main()
 
+// Reads the project and app state from the IDE window
+let getSession
+
 async function main() {
   console.log('Starting webdriver backend')
   console.log(`Using display [${process.env.DISPLAY || 'none'}] specified`)
@@ -58,6 +61,10 @@ async function main() {
       .forBrowser('chrome')
       .build()
     console.log('IDE instantiated successfully!')
+    getSession = () =>
+      driver.executeAsyncScript(
+        'const done = arguments[arguments.length - 1]; window.sideAPI.state.get().then(done)'
+      )
     console.log('Starting new project...')
     const newProject = await driver.wait(
       webdriver.until.elementLocated(webdriver.By.css('[data-new-project]')),
@@ -91,6 +98,30 @@ async function main() {
       await driver.executeScript('arguments[0].click()', testTab)
     }
 
+    // Recording and playback both start from the test's first command, an
+    // open command. Point it at the test site, like a user would.
+    const firstCommand = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.css('[data-command-id]')),
+      5000
+    )
+    await firstCommand.click()
+    const openTarget = await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.css('input[id^="target-"]')),
+      5000
+    )
+    const selectAll = webdriver.Key.chord(
+      os.platform() === 'darwin'
+        ? webdriver.Key.COMMAND
+        : webdriver.Key.CONTROL,
+      'a'
+    )
+    await openTarget.sendKeys(selectAll, 'http://localhost:8080/')
+    await driver.wait(async () => {
+      const { project, state } = await getSession()
+      const test = project.tests.find((t) => t.id === state.activeTestID)
+      return test.commands[0].target === 'http://localhost:8080/'
+    }, 5000)
+
     const record = await driver.wait(
       webdriver.until.elementLocated(webdriver.By.css('[data-record]')),
       5000
@@ -102,37 +133,11 @@ async function main() {
       await driver.sleep(100)
       handles2 = await driver.getAllWindowHandles()
     }
-    // The recorder opens the project URL first. Wait until it has left the
-    // internal playback page, so it doesn't replace the page we open next.
     await driver.switchTo().window(handles2[1])
-    await driver.wait(async () => {
-      const url = await driver.getCurrentUrl()
-      return !url.startsWith('file:') && url !== 'about:blank'
-    }, 15000)
-    // Open the test site from the IDE's URL bar, like a user would. Retry,
-    // since a late redirect of the project URL can replace the test site.
-    for (let attempt = 1; ; attempt++) {
-      await driver.switchTo().window(handles2[0])
-      const urlBar = await driver.wait(
-        webdriver.until.elementLocated(webdriver.By.css('input[data-url]')),
-        5000
-      )
-      await urlBar.clear()
-      await urlBar.sendKeys('http://localhost:8080/', webdriver.Key.ENTER)
-      await driver.switchTo().window(handles2[1])
-      try {
-        await driver.wait(
-          webdriver.until.elementLocated(webdriver.By.linkText('windows.html')),
-          10000
-        )
-        break
-      } catch (e) {
-        if (attempt === 3) {
-          throw e
-        }
-        console.log('The test site did not load, trying again')
-      }
-    }
+    await driver.wait(
+      webdriver.until.elementLocated(webdriver.By.linkText('windows.html')),
+      20000
+    )
     // The recorder attaches its listeners shortly after the page loads
     await driver.sleep(2000)
     await driver.wait(async () => {
@@ -175,6 +180,34 @@ async function main() {
         )
       })
     console.log('IDE is correctly recording commands!')
+
+    // Stop recording and play the recorded test back
+    await (
+      await driver.findElement(webdriver.By.css('button[aria-label="stop"]'))
+    ).click()
+    await driver.wait(
+      async () => (await getSession()).state.status === 'idle',
+      10000
+    )
+    await (await driver.findElement(webdriver.By.css('[data-play]'))).click()
+    let results = []
+    await driver
+      .wait(async () => {
+        const { project, state } = await getSession()
+        const test = project.tests.find((t) => t.id === state.activeTestID)
+        results = test.commands.map((c) => [
+          c.command + ' ' + c.target,
+          (state.playback.commands[c.id] || {}).state,
+        ])
+        return (
+          state.status === 'idle' &&
+          results.every(([, result]) => result === 'passed')
+        )
+      }, 30000)
+      .catch(() => {
+        throw new Error('Playback did not pass: ' + JSON.stringify(results))
+      })
+    console.log('IDE is correctly playing back commands!')
     await driver.quit()
     proc.kill()
   } catch (e) {
