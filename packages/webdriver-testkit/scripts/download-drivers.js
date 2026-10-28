@@ -15,6 +15,24 @@
 // specific language governing permissions and limitations
 // under the License.
 
-const { updateDrivers } = require('../')
+// Ask Selenium Manager for the Chrome and Firefox drivers ahead of the tests,
+// so the first test doesn't time out while the drivers download.
+const { execFileSync } = require('child_process')
+const path = require('path')
 
-updateDrivers()
+const seleniumDir = path.dirname(
+  require.resolve('selenium-webdriver/package.json')
+)
+const folder = { darwin: 'macos', linux: 'linux', win32: 'windows' }[
+  process.platform
+]
+const binary = path.join(
+  seleniumDir,
+  'bin',
+  folder,
+  'selenium-manager' + (process.platform === 'win32' ? '.exe' : '')
+)
+
+for (const browser of ['chrome', 'firefox']) {
+  execFileSync(binary, ['--browser', browser], { stdio: 'inherit' })
+}

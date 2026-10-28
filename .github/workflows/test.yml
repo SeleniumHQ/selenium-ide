@@ -36,6 +36,8 @@ jobs:
       - name: Start the test site
         shell: bash
         run: npx http-server -p 8080 ./packages/side-testkit/fixtures/static > /dev/null 2>&1 &
+      - name: Download browser drivers
+        run: npm run pretest
       - name: Run unit tests
         run: npm run test:jest:core
       - name: Run side-runner tests

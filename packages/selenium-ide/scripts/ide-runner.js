@@ -186,7 +186,7 @@ function startWebdriverBackend() {
     const args = ['--verbose', `--port=${port}`]
     if (fs.existsSync(driverPath)) {
       const proc = spawn(driverPath.replace(/\s/g, ' '), args, {
-        env: {},
+        env: { ...process.env },
         shell: false,
       })
       proc.stdout.on('data', (out) => {
