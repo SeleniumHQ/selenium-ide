@@ -87,6 +87,33 @@ describe('Render', () => {
     const result = render(commandPrefixPadding, input, { startingLevel: 1 })
     expect(result).toMatch(commandPrefixPadding)
   })
+  it('should render the commands of a block given to renderCommands', () => {
+    const result = renderCommands(
+      { commands: ['blah', 'andblah'] },
+      { startingLevel: 1, commandPrefixPadding }
+    )
+    expect(result).toBe('  blah\n  andblah\n')
+  })
+  it('should render origin tracing for a block', () => {
+    const test = {
+      name: 'Untitled Test',
+      commands: [{ command: 'a', target: '', value: '', comment: '' }],
+    }
+    const originTracing = emitOriginTracing(
+      test,
+      { commentPrefix },
+      true,
+      false
+    )
+    const result = render(
+      commandPrefixPadding,
+      { commands: ['blah'] },
+      { startingLevel: 0, originTracing, enableOriginTracing: true }
+    )
+    expect(result).toBe(
+      `${commentPrefix} Test name: Untitled Test\n${commentPrefix} Step # | name | target | value | comment\n${commentPrefix} 1 | a |  |  | \nblah\n`
+    )
+  })
   it('should indent the commands inside a block', () => {
     const commands = [
       'first',

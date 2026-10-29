@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { ExportCommandsShape } from '../types'
 import type { ExportFlexCommandShape } from './emit'
 import prettify, { PrettifyOutput } from './prettify'
 
@@ -48,8 +49,13 @@ export const renderCommand: RenderCommand = (
     enableOriginTracing = false,
   } = {}
 ) => {
-  if (Array.isArray(input)) {
-    // e.g., the emitted commands of a test, to be stitched together
+  // A list of commands (e.g., the emitted commands of a test), or a block
+  // with origin tracing, is stitched together one command at a time
+  const hasOriginTracing = enableOriginTracing || originTracing.length > 0
+  if (
+    Array.isArray(input) ||
+    (hasOriginTracing && typeof input !== 'string' && 'commands' in input)
+  ) {
     return renderCommands(input, {
       startingLevel,
       commandPrefixPadding,
@@ -75,7 +81,7 @@ export type RenderCommandsOptions = Pick<
 }
 
 export type RenderCommandsParameters = [
-  ExportFlexCommandShape[],
+  ExportFlexCommandShape[] | ExportCommandsShape,
   RenderCommandsOptions
 ]
 
@@ -99,8 +105,9 @@ export const renderCommands: RenderCommands = (
       startingLevel: endingLevel,
     })
   }
+  const commandList = Array.isArray(commands) ? commands : commands.commands
   // Each command starts at the level the previous one ended at
-  commands.forEach((command, index) => {
+  commandList.forEach((command, index) => {
     if (command) {
       if (originTracing && originTracing[index]) {
         let rows = originTracing[index].split('\n')
