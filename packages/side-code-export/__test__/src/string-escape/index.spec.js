@@ -1,4 +1,4 @@
-const stringEscape = require('../../../src/string-escape')
+const stringEscape = require('../../../src/string-escape').default
 
 describe('String escape', () => {
   it('should return an empty string on undefined input', () => {

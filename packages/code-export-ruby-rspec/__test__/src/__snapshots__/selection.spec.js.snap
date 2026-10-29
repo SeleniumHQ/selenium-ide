@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`selection location code emitter should emit id locator 1`] = `":css, \\"*[id='someId']\\""`;
 

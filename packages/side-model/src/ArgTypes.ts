@@ -89,6 +89,8 @@ const argTypes = {
   },
   loopLimit: {
     name: 'loop limit',
+    // Playback defaults to 1000 when it's empty
+    isOptional: true,
     description: `Maximum number of times a looping control flow command can execute to protect against infinite loops`,
   },
   message: {
