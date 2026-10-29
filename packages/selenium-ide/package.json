@@ -36,7 +36,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "engines": {
-    "node": ">=22.12"
+    "node": ">=22.15"
   },
   "build": {
     "appId": "org.seleniumhq.selenium-ide",
@@ -177,6 +177,6 @@
     "typescript": "^5.9.3",
     "webpack": "^5.112.2",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.2.7"
+    "webpack-dev-server": "^6.1.0"
   }
 }
