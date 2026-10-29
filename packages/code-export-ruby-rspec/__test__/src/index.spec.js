@@ -47,7 +47,7 @@ const options = (project) => ({
   beforeEachOptions: {},
 })
 
-// Checks that the exported code compiles, with the first checker found
+// Checks that the exported code compiles, with the first checker installed
 const checkers = [['ruby', '-c']]
 function expectValidSyntax(body) {
   const file = path.join(
@@ -57,7 +57,9 @@ function expectValidSyntax(body) {
   fs.writeFileSync(file, body)
   for (const [command, ...args] of checkers) {
     const result = spawnSync(command, [...args, file], { encoding: 'utf8' })
-    if (result.error) continue
+    // Skip a checker that isn't installed, and fail on any other error
+    if (result.error?.code === 'ENOENT') continue
+    if (result.error) throw result.error
     expect(result.stderr).toBe('')
     expect(result.status).toBe(0)
     return
