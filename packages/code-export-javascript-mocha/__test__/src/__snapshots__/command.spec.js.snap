@@ -333,6 +333,11 @@ exports[`command code emitter should emit \`times\` command 1`] = `
 for(let i = 0; i < times; i++) {"
 `;
 
+exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
+"const times = Number(vars[\\"count\\"])
+for(let i = 0; i < times; i++) {"
+`;
+
 exports[`command code emitter should emit \`type\` command 1`] = `"await driver.findElement(By.id(\\"input\\")).sendKeys(\\"example input\\")"`;
 
 exports[`command code emitter should emit \`uncheck\` command 1`] = `

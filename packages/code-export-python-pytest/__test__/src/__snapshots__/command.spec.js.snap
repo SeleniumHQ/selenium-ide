@@ -291,6 +291,13 @@ Object {
 }
 `;
 
+exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
+Object {
+  "body": "for i in range(0, int(self.vars[\\"count\\"])):",
+  "endingLevel": 1,
+}
+`;
+
 exports[`command code emitter should emit \`type\` command 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(\\"example input\\")"`;
 
 exports[`command code emitter should emit \`uncheck\` command 1`] = `

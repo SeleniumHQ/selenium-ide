@@ -283,6 +283,13 @@ Object {
 }
 `;
 
+exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
+Object {
+  "body": "@vars['count'].to_i.times do",
+  "endingLevel": 1,
+}
+`;
+
 exports[`command code emitter should emit \`type\` command 1`] = `"@driver.find_element(:id, 'input').send_keys('example input')"`;
 
 exports[`command code emitter should emit \`uncheck\` command 1`] = `

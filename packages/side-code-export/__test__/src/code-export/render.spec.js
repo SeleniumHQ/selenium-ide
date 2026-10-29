@@ -114,6 +114,56 @@ describe('Render', () => {
       `${commentPrefix} Test name: Untitled Test\n${commentPrefix} Step # | name | target | value | comment\n${commentPrefix} 1 | a |  |  | \nblah\n`
     )
   })
+  describe('empty blocks', () => {
+    const open = (statement) => ({
+      commands: [{ level: 0, statement }],
+      endingLevelAdjustment: 1,
+    })
+    const middle = (statement) => ({
+      commands: [{ level: 0, statement }],
+      startingLevelAdjustment: -1,
+      endingLevelAdjustment: 1,
+    })
+    const end = {
+      commands: [{ level: 0, statement: '' }],
+      skipEmitting: true,
+      endingLevelAdjustment: -1,
+    }
+    const renderPython = (commands) =>
+      renderCommands(commands, {
+        startingLevel: 0,
+        commandPrefixPadding,
+        emptyBlockStatement: 'pass',
+      })
+    it('should fill a block with no commands', () => {
+      expect(renderPython([open('for i in x:'), end, 'last'])).toBe(
+        'for i in x:\n  pass\nlast\n'
+      )
+    })
+    it('should fill each empty branch', () => {
+      expect(
+        renderPython([open('if a:'), middle('else:'), 'inside', end])
+      ).toBe('if a:\n  pass\nelse:\n  inside\n')
+    })
+    it('should fill a block at the end of the commands', () => {
+      expect(renderPython(['first', open('if a:')])).toBe(
+        'first\nif a:\n  pass\n'
+      )
+    })
+    it('should not fill a block with commands', () => {
+      expect(renderPython([open('if a:'), 'inside', end])).toBe(
+        'if a:\n  inside\n'
+      )
+    })
+    it('should not fill anything without an empty block statement', () => {
+      expect(
+        renderCommands([open('if a {'), end], {
+          startingLevel: 0,
+          commandPrefixPadding,
+        })
+      ).toBe('if a {\n')
+    })
+  })
   it('should indent the commands inside a block', () => {
     const commands = [
       'first',

@@ -664,6 +664,14 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
+  it('should emit `times` command with a variable count', () => {
+    const command = {
+      command: ControlFlowCommandNames.times,
+      target: '${count}',
+      value: '',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
   it('should emit `type` command', () => {
     const command = {
       command: 'type',
