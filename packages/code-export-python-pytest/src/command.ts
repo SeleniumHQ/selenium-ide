@@ -140,8 +140,15 @@ function emit(command: CommandShape, context: EmitterContext) {
   return exporter.emit.command(command, emitters[command.command], {
     context,
     variableLookup,
+    variableInString,
     emitNewWindowHandling,
   })
+}
+
+// How a variable is joined with a string literal, e.g. "Hi " + name
+const variableInString = {
+  quotes: ['"', "'"],
+  toString: (lookup: string) => `str(${lookup})`,
 }
 
 function variableLookup(varName: string) {
@@ -394,21 +401,8 @@ async function emitDragAndDrop(dragged: string, dropped: string) {
   return Promise.resolve({ commands })
 }
 
-function translateToPythonString(str: string) {
-  const regExp = /self.vars\["\w+"]/
-  const vars = str.match(regExp)
-
-  if (vars && vars.length > 0) {
-    const fmtStr = str.replace(regExp, '{}')
-    return `"${fmtStr}".format(${vars.join(', ')})`
-  }
-
-  return `"${str}"`
-}
-
 async function emitEcho(message: string) {
-  const _message = translateToPythonString(message)
-  return Promise.resolve(`print(${_message})`)
+  return Promise.resolve(`print("${message}")`)
 }
 
 async function emitEditContent(locator: string, content: string) {
@@ -616,9 +610,7 @@ function generateSendKeysInput(value: string | string[]) {
   if (typeof value === 'object') {
     return value
       .map((s) => {
-        if (s.startsWith('self.vars[')) {
-          return s
-        } else if (s.startsWith('Key[')) {
+        if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)?.[1]
           return `Keys.${key}`
         } else {

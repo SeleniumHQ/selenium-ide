@@ -19,6 +19,8 @@ import stringEscape from '../string-escape'
 import {
   Preprocessor,
   preprocessParameter,
+  resolveVariables,
+  VariableInStringOptions,
   VariableLookup,
 } from './preprocessor'
 import doRender, { PartialRenderParameters } from './render'
@@ -95,6 +97,34 @@ export interface EmitCommandContext {
     context: EmitterContext
   ) => Promise<ExportFlexCommandShape>
   variableLookup: VariableLookup
+  // How the language puts a variable in a string literal
+  variableInString?: VariableInStringOptions
+}
+
+// Replaces the variable marks left by the preprocessors in emitted code
+function resolveEmittedVariables(
+  result: ExportFlexCommandShape,
+  variableLookup: VariableLookup,
+  variableInString?: VariableInStringOptions
+): ExportFlexCommandShape {
+  const resolve = (code: string) =>
+    resolveVariables(code, variableLookup, variableInString)
+  if (!result) return result
+  if (typeof result === 'string') return resolve(result)
+  if ('statement' in result) {
+    return { ...result, statement: resolve(result.statement) }
+  }
+  return {
+    ...result,
+    commands: result.commands.map(
+      (command) =>
+        resolveEmittedVariables(
+          command,
+          variableLookup,
+          variableInString
+        ) as ExportCommandShape
+    ),
+  }
 }
 
 export interface ProcessedCommandEmitter {
@@ -110,7 +140,11 @@ export interface ProcessedCommandEmitter {
 export function baseEmitFactory(
   command: CommandShape,
   emitter: ProcessedCommandEmitter,
-  { variableLookup, emitNewWindowHandling }: EmitCommandContext
+  {
+    variableLookup,
+    emitNewWindowHandling,
+    variableInString,
+  }: EmitCommandContext
 ) {
   return async function emit(
     target: any | undefined,
@@ -126,7 +160,11 @@ export function baseEmitFactory(
     if (emitter.valuePreprocessor) {
       _value = await emitter.valuePreprocessor(value, variableLookup)
     }
-    const result = await emitter(_target, _value, context)
+    const result = resolveEmittedVariables(
+      await emitter(_target, _value, context),
+      variableLookup,
+      variableInString
+    )
     return emitNewWindowHandling(command, result, context)
   }
 }
@@ -134,12 +172,17 @@ export function baseEmitFactory(
 export async function emitCommand(
   command: CommandShape,
   emitter: ProcessedCommandEmitter,
-  { context, emitNewWindowHandling, variableLookup }: EmitCommandContext
+  {
+    context,
+    emitNewWindowHandling,
+    variableLookup,
+    variableInString,
+  }: EmitCommandContext
 ) {
   validateCommand(command)
   if (emitter) {
     const ignoreEscaping = command.command === 'storeJson'
-    let result = await emitter(
+    const emitted = await emitter(
       preprocessParameter(
         command.target as string,
         emitter.targetPreprocessor,
@@ -153,6 +196,11 @@ export async function emitCommand(
         { ignoreEscaping }
       ),
       context
+    )
+    const result = resolveEmittedVariables(
+      emitted,
+      variableLookup,
+      variableInString
     )
     if (command.opensWindow) {
       return await emitNewWindowHandling(command, result, context)

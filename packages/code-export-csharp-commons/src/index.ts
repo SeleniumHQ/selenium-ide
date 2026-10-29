@@ -15,7 +15,6 @@
 // specific language governing permissions and limitations
 // under the License.
 
-
 import Command from './command'
 import location from './location'
 
@@ -30,6 +29,6 @@ const exportFormat = {
   },
 } as const
 
-export default exportFormat;
-export {default as Command} from './command'
-export {default as location} from './location'
+export default exportFormat
+export { default as Command } from './command'
+export { default as location } from './location'

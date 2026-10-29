@@ -139,8 +139,15 @@ function emit(command: CommandShape, context: EmitterContext) {
   return exporter.emit.command(command, emitters[command.command], {
     context,
     variableLookup,
+    variableInString,
     emitNewWindowHandling,
   })
+}
+
+// How a variable is joined with a string literal, e.g. "Hi " + name
+const variableInString = {
+  quotes: ['"', "'"],
+  toString: (lookup: string) => `${lookup}.to_s`,
 }
 
 function variableLookup(varName: string) {
@@ -387,8 +394,7 @@ async function emitDragAndDrop(dragged: string, dropped: string) {
 }
 
 async function emitEcho(message: string) {
-  const _message = message.startsWith('@vars[') ? message : `'${message}'`
-  return Promise.resolve(`puts(${_message})`)
+  return Promise.resolve(`puts('${message}')`)
 }
 
 async function emitEditContent(locator: string, content: string) {
@@ -592,9 +598,7 @@ function generateSendKeysInput(value: string | string[]) {
   if (typeof value === 'object') {
     return value
       .map((s) => {
-        if (s.startsWith('@vars[')) {
-          return s
-        } else if (s.startsWith('Key[')) {
+        if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)?.[1]
           return `:${key?.toLowerCase()}`
         } else {

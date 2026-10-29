@@ -125,7 +125,7 @@ actions.drag_and_drop(dragged, dropped).perform()"
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"print(\\"blah\\")"`;
 
-exports[`command code emitter should emit \`echo\` command with variables 1`] = `"print(\\"blah = {}\\".format(self.vars[\\"blah\\"]))"`;
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"print(\\"blah = \\" + str(self.vars[\\"blah\\"]))"`;
 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
 "element = self.driver.find_element(By.ID, \\"contentEditable\\")
@@ -257,7 +257,7 @@ exports[`command code emitter should emit \`send keys\` command 1`] = `"self.dri
 
 exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(\\"SuperSecretPassword!\\", Keys.ENTER)"`;
 
-exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(self.vars[\\"blah\\"])"`;
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"self.driver.find_element(By.ID, \\"input\\").send_keys(str(self.vars[\\"blah\\"]))"`;
 
 exports[`command code emitter should emit \`set speed\` 1`] = `"print(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\")"`;
 
