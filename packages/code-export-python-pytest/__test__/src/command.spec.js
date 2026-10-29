@@ -186,6 +186,14 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
+  it('should emit `assert title` command with an empty title', () => {
+    const command = {
+      command: 'assertTitle',
+      target: '',
+      value: '',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
   it('should emit `assert value` command', () => {
     const command = {
       command: 'assertValue',
