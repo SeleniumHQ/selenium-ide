@@ -16,24 +16,24 @@ type ConfigGroupFactory = (
 // const itemMap = { project: "项目配置", system: "系统配置", "outPut": "导出配置" };
 /*************以上是我新增****************/
 
-const ConfigGroup: ConfigGroupFactory =
-  (group) =>
-  ({ value }: { value: ConfigSettingsGroup }) =>
-    (
-      <ListItemButton
-        disableRipple
-        id={group}
-        onClick={() =>
-          window.sideAPI.state.set('editor.configSettingsGroup', group)
-        }
-        selected={value === group}
-      >
-        <ListItemText>
-          <FormattedMessage id={languageMap.configTab[group]} />
-          {/*{group === "outPut" ? "导出" : group.slice(0, 1).toUpperCase().concat(group.slice(1))}*/}
-        </ListItemText>
-      </ListItemButton>
-    )
+const ConfigGroup: ConfigGroupFactory = (group) => {
+  const ConfigGroupItem = ({ value }: { value: ConfigSettingsGroup }) => (
+    <ListItemButton
+      disableRipple
+      id={group}
+      onClick={() =>
+        window.sideAPI.state.set('editor.configSettingsGroup', group)
+      }
+      selected={value === group}
+    >
+      <ListItemText>
+        <FormattedMessage id={languageMap.configTab[group]} />
+        {/*{group === "outPut" ? "导出" : group.slice(0, 1).toUpperCase().concat(group.slice(1))}*/}
+      </ListItemText>
+    </ListItemButton>
+  )
+  return ConfigGroupItem
+}
 
 const ProjectConfig = ConfigGroup('project')
 const SystemConfig = ConfigGroup('system')

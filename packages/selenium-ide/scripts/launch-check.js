@@ -36,6 +36,8 @@ const finish = (code, message) => {
   finished = true
   clearTimeout(timer)
   console.log(message)
+  // Exit even if the app left something open, so CI doesn't hang
+  // eslint-disable-next-line no-process-exit
   stopApp().then(() => process.exit(code))
 }
 

@@ -109,6 +109,7 @@ const TestsDrawer: FC = () => {
             const testState = testResults[id]?.state
             return (
               <RenamableListItem
+                key={id}
                 id={id}
                 name={name}
                 onContextMenu={() => {

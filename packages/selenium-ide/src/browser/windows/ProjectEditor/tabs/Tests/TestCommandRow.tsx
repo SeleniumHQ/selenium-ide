@@ -166,7 +166,8 @@ const CommandRow: React.FC<CommandRowProps> = ({
               ...commentTextFormat,
             }}
           >
-            // {comment}
+            {'// '}
+            {comment}
           </Box>
         </Box>
       )}

@@ -12,13 +12,6 @@ const doAPI = async <HANDLER extends ApiPromiseHandler>(
   ...args: Parameters<HANDLER>
 ): Promise<ThenArg<ReturnType<HANDLER>>> =>
   new Promise((resolve) => {
-    const handler = (event: MessageEvent<Awaited<ReturnType<HANDLER>>>) => {
-      console.log('event', event)
-      if (event.data.path === `${path}.complete`) {
-        window.removeEventListener('message', handler)
-        resolve(event.data)
-      }
-    }
     console.debug('Emitting to server', path, 'with args', args)
     const id = sendMessage({ path, args })
     resolversByID[id] = resolve

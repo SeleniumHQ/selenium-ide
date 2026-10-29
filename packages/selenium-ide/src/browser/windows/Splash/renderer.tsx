@@ -36,7 +36,8 @@ const ProjectEditor = () => {
             <FormattedMessage id={languageMap.splash.present} />
           </Typography>
           <Typography variant="caption">
-            <FormattedMessage id={languageMap.splash.logPath} /> "{logPath}"
+            <FormattedMessage id={languageMap.splash.logPath} /> &quot;{logPath}
+            &quot;
           </Typography>
           <Typography variant="subtitle1">
             <FormattedMessage id={languageMap.splash.openNotice} />

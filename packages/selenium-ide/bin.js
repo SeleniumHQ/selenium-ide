@@ -34,7 +34,9 @@ const main = async () => {
   const electronProcess = spawn(electronPath, [appPath])
   electronProcess.stdout.on('data', (data) => process.stdout.write(data))
   electronProcess.stderr.on('data', (data) => process.stderr.write(data))
-  electronProcess.on('close', (code) => process.exit(code))
+  electronProcess.on('close', (code) => {
+    process.exitCode = code ?? 0
+  })
 }
 
 main()

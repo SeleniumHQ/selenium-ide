@@ -27,7 +27,9 @@ const performSubscription = async (
     const removeHandler = () => {
       try {
         window.sideAPI.state.onMutate.removeListener(handler)
-      } catch (e) {}
+      } catch (e) {
+        // The API may already be gone when the window closes
+      }
     }
     // window.addEventListener('beforeunload', removeHandler)
     return removeHandler
