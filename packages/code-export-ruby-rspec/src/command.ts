@@ -344,16 +344,14 @@ function emitControlFlowRepeatIf(script: ScriptShape) {
   })
 }
 
-// Converts a loop count to a number, unless it's already a number
-function toNumber(count: string, convert: (count: string) => string) {
-  return /^\d+$/.test(count.trim()) ? count : convert(count)
-}
-
 function emitControlFlowTimes(target: string) {
   const commands = [
     {
       level: 0,
-      statement: `${toNumber(target, (count) => `${count}.to_i`)}.times do`,
+      statement: `${exporter.parsers.loopCount(
+        target,
+        (count) => `Float(${count}).floor`
+      )}.times do`,
     },
   ]
   return Promise.resolve({ commands, endingLevelAdjustment: 1 })

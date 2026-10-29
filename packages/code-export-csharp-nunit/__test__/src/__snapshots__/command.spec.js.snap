@@ -352,7 +352,7 @@ for(int i = 0; i < times; i++) {",
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "var times = Convert.ToInt32(vars[\\"count\\"].ToString());
+  "body": "var times = (int)Math.Floor(Convert.ToDouble(vars[\\"count\\"].ToString(), System.Globalization.CultureInfo.InvariantCulture));
 for(int i = 0; i < times; i++) {",
   "endingLevel": 1,
 }

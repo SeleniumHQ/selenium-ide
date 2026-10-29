@@ -356,25 +356,20 @@ function emitControlFlowRepeatIf(script: ScriptShape) {
   })
 }
 
-// Converts a loop count to a number, unless it's already a number
-function toNumber(count: string, convert: (count: string) => string) {
-  return /^\d+$/.test(count.trim()) ? count : convert(count)
-}
-
 function emitControlFlowTimes(target: string) {
-  const commands = [
-    {
+  const times = exporter.parsers.loopCount(
+    target,
+    (count) => `Math.floor(Number(${count}))`
+  )
+  const commands = [{ level: 0, statement: `const times = ${times}` }]
+  if (times !== target) {
+    commands.push({
       level: 0,
-      statement: `const times = ${toNumber(
-        target,
-        (count) => `Number(${count})`
-      )}`,
-    },
-    {
-      level: 0,
-      statement: `for(let i = 0; i < times; i++) {`,
-    },
-  ]
+      statement:
+        "if (isNaN(times)) throw new Error('Invalid number provided as a target.')",
+    })
+  }
+  commands.push({ level: 0, statement: 'for(let i = 0; i < times; i++) {' })
   return Promise.resolve({ commands, endingLevelAdjustment: 1 })
 }
 

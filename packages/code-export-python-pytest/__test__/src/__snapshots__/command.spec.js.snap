@@ -293,7 +293,7 @@ Object {
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "for i in range(0, int(self.vars[\\"count\\"])):",
+  "body": "for i in range(0, int(float(self.vars[\\"count\\"]) // 1)):",
   "endingLevel": 1,
 }
 `;

@@ -285,7 +285,7 @@ Object {
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "@vars['count'].to_i.times do",
+  "body": "Float(@vars['count']).floor.times do",
   "endingLevel": 1,
 }
 `;

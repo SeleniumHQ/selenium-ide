@@ -365,7 +365,7 @@ for(int i = 0; i < times; i++) {",
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "Integer times = Integer.valueOf(vars.get(\\"count\\").toString());
+  "body": "Integer times = (int) Math.floor(Double.parseDouble(String.valueOf(vars.get(\\"count\\").toString())));
 for(int i = 0; i < times; i++) {",
   "endingLevel": 1,
 }

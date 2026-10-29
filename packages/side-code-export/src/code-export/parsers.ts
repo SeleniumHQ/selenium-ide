@@ -26,3 +26,12 @@ export function capitalize(input: string) {
 export function uncapitalize(input: string) {
   return input.charAt(0).toLowerCase() + input.slice(1)
 }
+
+/**
+ * Returns a loop count as code. A whole number is used as it is. Anything
+ * else (e.g., a variable) goes through `convert`, which should round it down
+ * like playback does, and fail on a value that isn't a number.
+ */
+export function loopCount(count: string, convert: (count: string) => string) {
+  return /^\d+$/.test(count.trim()) ? count : convert(count)
+}

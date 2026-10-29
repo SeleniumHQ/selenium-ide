@@ -334,7 +334,8 @@ for(let i = 0; i < times; i++) {"
 `;
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
-"const times = Number(vars[\\"count\\"])
+"const times = Math.floor(Number(vars[\\"count\\"]))
+if (isNaN(times)) throw new Error('Invalid number provided as a target.')
 for(let i = 0; i < times; i++) {"
 `;
 
