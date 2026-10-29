@@ -39,6 +39,17 @@ describe('command code emitter', () => {
     // storeJson can't be exported to Java yet
     expect(missing).toEqual(['storeJson'])
   })
+  it('should keep a command with no emitter inside a comment', async () => {
+    // storeJson has no Java emitter
+    const command = {
+      command: 'storeJson',
+      target: '\\u000aSystem.exit(1);//',
+      value: 'x',
+    }
+    expect(await Command.emit(command, opts)).toBe(
+      "// Can't export command: storeJson | \\\\u000aSystem.exit(1);// | x"
+    )
+  })
   it('should emit `add selection` command', () => {
     const command = {
       command: 'addSelection',
