@@ -62,14 +62,12 @@ export default class SystemController extends BaseController {
       this.languageMap = langFile.default
     } catch (e) {
       // lang DNE, stay en
-    } finally {
-      if (frontend) {
-        // React intl uses a flat dict so we convert it here
-        const frontendMap = flattenNestedObject(this.languageMap)
-        return frontendMap
-      }
-      return this.languageMap
     }
+    if (frontend) {
+      // React intl uses a flat dict so we convert it here
+      return flattenNestedObject(this.languageMap)
+    }
+    return this.languageMap
   }
 
   /***以上是我新增***/

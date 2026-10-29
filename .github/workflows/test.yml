@@ -27,6 +27,9 @@ jobs:
         run: pnpm -r i
       - name: Build side-runner and selenium-ide
         run: npm run build
+      - name: Lint
+        if: matrix.os == 'ubuntu-24.04'
+        run: npm run lint
       - name: Install and start xvfb
         if: runner.os == 'Linux'
         run: |

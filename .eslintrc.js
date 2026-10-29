@@ -27,6 +27,9 @@ module.exports = {
       parser: '@typescript-eslint/parser',
       rules: {
         'import/no-unresolved': 'error',
+        // import/no-unresolved checks imports in TypeScript; eslint-plugin-node
+        // can't resolve packages that only have "exports", such as ink
+        'node/no-missing-import': 'off',
         '@typescript-eslint/array-type': ['error', { default: 'array' }],
         '@typescript-eslint/no-empty-object-type': 'error',
         '@typescript-eslint/no-unsafe-function-type': 'error',
@@ -34,7 +37,11 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': [
           'error',
           // caughtErrors: 'none' was the default before typescript-eslint 8
-          { argsIgnorePattern: '^_', caughtErrors: 'none' },
+          {
+            argsIgnorePattern: '^_',
+            caughtErrors: 'none',
+            ignoreRestSiblings: true,
+          },
         ],
         'no-dupe-class-members': 'off',
         'no-undef': 'off',
@@ -108,7 +115,8 @@ module.exports = {
       },
     },
     react: {
-      version: 'detect',
+      // React is only installed in the packages that use it
+      version: '18',
     },
   },
   root: true,

@@ -49,10 +49,11 @@ npm start
 
 `npm run dev` starts it with development tools turned on.
 
-### Testing
+### Testing and linting
 
 ```
 npm test
+npm run lint
 ```
 
 `npm test` runs the unit tests, the `selenium-side-runner` tests against `tests/examples/*.side`,
@@ -60,9 +61,9 @@ an IDE smoke test that records a click, and a code export check. The tests use a
 small local site on port 8080, which the scripts start for you.
 Chrome and Firefox must be installed. Selenium Manager downloads the drivers.
 
-CI runs the unit tests, the `selenium-side-runner` tests and the IDE smoke test
-on Linux, Windows and macOS for every pull request. The code export check
-only runs with `npm test`.
+For every pull request, CI runs lint once, and runs the unit tests, the
+`selenium-side-runner` tests and the IDE smoke test on Linux, Windows and macOS.
+The code export check only runs with `npm test`.
 
 ## Sending a pull request
 
@@ -71,7 +72,7 @@ For small fixes, a pull request is fine.
 
 1. Create a branch from `trunk`.
 2. Keep the pull request to one topic.
-3. Make sure the build and tests pass.
+3. Make sure the build, tests and lint pass.
 4. Fill in the pull request template and reference the issues it fixes.
 
 Thank you for contributing!

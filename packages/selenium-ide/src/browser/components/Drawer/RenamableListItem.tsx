@@ -60,4 +60,6 @@ const RenamableListItem = React.forwardRef<
   }
 )
 
+RenamableListItem.displayName = 'RenamableListItem'
+
 export default RenamableListItem
