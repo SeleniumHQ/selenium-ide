@@ -14,8 +14,8 @@ app.commandLine.appendSwitch('remote-debugging-port', '8315')
 // scripts/ide-runner.js), turn off the GPU and the Chromium sandbox on every
 // platform. CI runners and Ubuntu 24.04+ don't allow the sandbox.
 if (isAutomated) {
-  app.commandLine.appendSwitch('disable-gpu');
-  app.commandLine.appendSwitch('no-sandbox');
+  app.commandLine.appendSwitch('disable-gpu')
+  app.commandLine.appendSwitch('no-sandbox')
 }
 // Configure logging
 const log = configureLogging()

@@ -4,7 +4,7 @@ export const useHeightFromElement = (id: string): number => {
   const [bottomOffset, setBottomOffset] = React.useState(0)
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) return
     const element = document.getElementById(id) as HTMLElement
     const observer = new MutationObserver(() => {
       console.log('Mutating?', element.clientHeight)

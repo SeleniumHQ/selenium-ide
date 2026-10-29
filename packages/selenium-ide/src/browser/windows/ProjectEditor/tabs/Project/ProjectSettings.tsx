@@ -47,8 +47,14 @@ const ProjectSettings: FC = () => {
         <FormControl>
           <TextField
             id="timeout"
-            label={<FormattedMessage id={languageMap.projectConfig.stepTimeout} />}
-            helperText={<FormattedMessage id={languageMap.projectConfig.stepTimeoutHelper} />}
+            label={
+              <FormattedMessage id={languageMap.projectConfig.stepTimeout} />
+            }
+            helperText={
+              <FormattedMessage
+                id={languageMap.projectConfig.stepTimeoutHelper}
+              />
+            }
             name="timeout"
             type="number"
             inputProps={{ min: 0, step: 1000 }}
@@ -66,8 +72,14 @@ const ProjectSettings: FC = () => {
         <FormControl>
           <TextField
             id="delay"
-            label={<FormattedMessage id={languageMap.projectConfig.stepDelay} />}
-            helperText={<FormattedMessage id={languageMap.projectConfig.stepDelayHelper} />}
+            label={
+              <FormattedMessage id={languageMap.projectConfig.stepDelay} />
+            }
+            helperText={
+              <FormattedMessage
+                id={languageMap.projectConfig.stepDelayHelper}
+              />
+            }
             name="delay"
             type="number"
             inputProps={{ min: 0, step: 1000 }}

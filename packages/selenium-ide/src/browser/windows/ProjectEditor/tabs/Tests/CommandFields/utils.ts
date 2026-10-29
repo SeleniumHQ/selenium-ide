@@ -1,5 +1,7 @@
 export const setField =
-  <T = string>(name: string) => (testID: string, commandID: string) => (value: T) => {
+  <T = string>(name: string) =>
+  (testID: string, commandID: string) =>
+  (value: T) => {
     window.sideAPI.tests.updateStep(testID, commandID, {
       [name]: value,
     })
@@ -17,7 +19,7 @@ export const updateACField =
 export const updateField =
   (name: string) => (testID: string, commandID: string) => (e: any) => {
     window.sideAPI.tests.updateStep(testID, commandID, {
-      [name]: e?.target?.value ?? "",
+      [name]: e?.target?.value ?? '',
     })
   }
 

@@ -33,7 +33,7 @@ describe('Normalize Project', () => {
       suite: project.suites[0],
       tests: project.tests,
     })
-    const testNames = project.tests.map(test => test.name)
+    const testNames = project.tests.map((test) => test.name)
     expect(testNames).toEqual(normalizedSuite.tests)
   })
   describe('save', () => {

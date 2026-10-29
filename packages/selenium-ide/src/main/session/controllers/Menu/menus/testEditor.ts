@@ -7,13 +7,11 @@ import {
 import { MenuComponent, Session } from 'main/types'
 import { menuFactoryFromCommandFactory } from '../utils'
 
-
-
 export const commandList: MenuComponent = (session) => () => {
-  const language = session.store.get("language");
+  const language = session.store.get('language')
   const pluralize = (str: string, num: number) => {
-    const suffix=language==='en'?'s':''
-    return num < 2 ? str : str+suffix;
+    const suffix = language === 'en' ? 's' : ''
+    return num < 2 ? str : str + suffix
   }
   const sessionData = session.state.get()
   const editorState = sessionData.state.editor

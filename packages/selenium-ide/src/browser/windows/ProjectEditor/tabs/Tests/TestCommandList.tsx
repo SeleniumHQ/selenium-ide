@@ -55,7 +55,9 @@ const CommandList: FC<CommandListProps> = ({
                 )
             : undefined
         }
-        removeText={intl.formatMessage({ id: languageMap.testCore.removeCommand })}
+        removeText={intl.formatMessage({
+          id: languageMap.testCore.removeCommand,
+        })}
       >
         <span className="ms-4">
           <FormattedMessage id={languageMap.testCore.commands} />

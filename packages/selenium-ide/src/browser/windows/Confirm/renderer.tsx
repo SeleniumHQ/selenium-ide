@@ -9,7 +9,7 @@ const Confirm = () => {
   // @ts-expect-error this exists
   const dismissConfirmation = () => window.dismissConfirmation()
   // @ts-expect-error this exists
-  const acceptConfirmation = () => window.acceptConfirmation();
+  const acceptConfirmation = () => window.acceptConfirmation()
 
   React.useEffect(() => {
     window.addEventListener('error', (e) => {

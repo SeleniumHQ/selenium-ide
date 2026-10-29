@@ -12,7 +12,7 @@ const Prompt = () => {
   // @ts-expect-error this exists
   const dismissPrompt = () => window.dismissPrompt()
   // @ts-expect-error this exists
-  const answerPrompt = () => window.answerPrompt(answerRef.current!.value);
+  const answerPrompt = () => window.answerPrompt(answerRef.current!.value)
 
   React.useEffect(() => {
     answerRef.current!.focus()

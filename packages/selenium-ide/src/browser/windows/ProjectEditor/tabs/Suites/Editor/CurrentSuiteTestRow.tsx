@@ -39,12 +39,7 @@ const CurrentSuiteTestRow: FC<CurrentSuiteTestRowProps> = ({
     id={test.id}
     index={index}
     onContextMenu={async () => {
-      await window.sideAPI.state.updateTestSelection(
-        index,
-        false,
-        true,
-        false
-      )
+      await window.sideAPI.state.updateTestSelection(index, false, true, false)
       await window.sideAPI.menus.open('testEditor', test.id)
     }}
     onClick={async (e) => {
@@ -67,20 +62,28 @@ const CurrentSuiteTestRow: FC<CurrentSuiteTestRowProps> = ({
     }}
     reorderReset={reorderReset}
     secondaryAction={
-        <IconButton
-          edge="end"
-          onClick={() => window.sideAPI.suites.removeTests(activeSuite, [test.id])}
-          size="small"
-        >
-          <Close />
-        </IconButton>
+      <IconButton
+        edge="end"
+        onClick={() =>
+          window.sideAPI.suites.removeTests(activeSuite, [test.id])
+        }
+        size="small"
+      >
+        <Close />
+      </IconButton>
     }
     selected={selected}
     select={window.sideAPI.state.updateTestSelection}
   >
     <ListItemText
       disableTypography
-      primary={<Box sx={commandTextFormat}>{state.userPrefs.camelCaseNamesPref === "Yes" ? camelToTitleCase(test.name) : test.name }</Box>}
+      primary={
+        <Box sx={commandTextFormat}>
+          {state.userPrefs.camelCaseNamesPref === 'Yes'
+            ? camelToTitleCase(test.name)
+            : test.name}
+        </Box>
+      }
     />
   </ReorderableListItem>
 )

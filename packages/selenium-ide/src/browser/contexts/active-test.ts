@@ -12,6 +12,4 @@ export const transform = (data: CoreSessionData): ActiveTestContext => ({
   activeTestID: data.state.activeTestID,
 })
 
-export const context = React.createContext(
-  transform(defaultSession)
-)
+export const context = React.createContext(transform(defaultSession))

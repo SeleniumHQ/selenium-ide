@@ -6,7 +6,11 @@ interface TabPanelMultiProps {
   value: number
 }
 
-const TabPanelMulti = ({ children, indexes, value }: TabPanelMultiProps): React.ReactElement | null =>
+const TabPanelMulti = ({
+  children,
+  indexes,
+  value,
+}: TabPanelMultiProps): React.ReactElement | null =>
   indexes.includes(value) ? (children as React.ReactElement) : null
 
 export default TabPanelMulti

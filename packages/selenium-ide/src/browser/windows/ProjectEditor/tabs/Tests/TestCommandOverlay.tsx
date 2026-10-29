@@ -31,9 +31,7 @@ interface CommandOverlayProps {
   state: PlaybackEventShapes['COMMAND_STATE_CHANGED']['state'] | null
 }
 
-const CommandOverlay: React.FC<CommandOverlayProps> = ({
-  state = null,
-}) => {
+const CommandOverlay: React.FC<CommandOverlayProps> = ({ state = null }) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
     ? 'dark'
     : 'light'
@@ -47,7 +45,7 @@ const CommandOverlay: React.FC<CommandOverlayProps> = ({
         pointerEvents: 'none',
         zIndex: 75,
         top: 0,
-        left: 0
+        left: 0,
       }}
     />
   )

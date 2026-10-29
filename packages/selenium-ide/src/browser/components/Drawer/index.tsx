@@ -6,9 +6,7 @@ import TestsDrawer from 'browser/windows/ProjectEditor/tabs/Tests/TestsDrawer'
 import SuitesDrawer from 'browser/windows/ProjectEditor/tabs/Suites/SuitesDrawer'
 import ProjectDrawer from 'browser/windows/ProjectEditor/tabs/Project/ProjectDrawer'
 
-const SIDEDrawer: React.FC<Pick<SIDEMainProps, 'tab'>> = ({
-  tab,
-}) => (
+const SIDEDrawer: React.FC<Pick<SIDEMainProps, 'tab'>> = ({ tab }) => (
   <>
     <TabPanel index={TESTS_TAB} value={tab}>
       <TestsDrawer />

@@ -32,7 +32,7 @@ preload({
 window.sideAPI.resolveAPI = (id: string, ...args: any[]) => {
   const resolver = resolversByID[id]
   if (resolver) {
-    resolver(...args);
+    resolver(...args)
   }
 }
 window.addEventListener('DOMContentLoaded', async () => {

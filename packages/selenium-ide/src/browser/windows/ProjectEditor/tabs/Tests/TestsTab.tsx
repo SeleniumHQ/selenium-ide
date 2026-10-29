@@ -18,15 +18,15 @@ import languageMap from 'browser/I18N/keys'
 
 const sxCenter = { textAlign: 'center' }
 const NoTestFound = () => (
-    <>
-      <MainHeader />
-      <Paper className="p-4" elevation={1} id="command-editor" square>
-        <Typography sx={sxCenter}>
-          <FormattedMessage id={languageMap.testsTab.noTestSelected} />
-        </Typography>
-      </Paper>
-    </>
-  )
+  <>
+    <MainHeader />
+    <Paper className="p-4" elevation={1} id="command-editor" square>
+      <Typography sx={sxCenter}>
+        <FormattedMessage id={languageMap.testsTab.noTestSelected} />
+      </Typography>
+    </Paper>
+  </>
+)
 
 const TestsTab: React.FC = () => {
   const session = useContext(context)

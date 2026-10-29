@@ -73,4 +73,3 @@ export type SessionApiHandler = (
 export type MenuComponent<Args extends any[] = any[]> = (
   session: Session
 ) => (...args: Args) => Electron.MenuItemConstructorOptions[]
-
