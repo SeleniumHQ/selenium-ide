@@ -209,16 +209,14 @@ async function main() {
       })
     console.log('IDE is correctly playing back commands!')
 
-    // The IDE finds an installed Chrome and its driver with Selenium Manager
-    const { browsers } = await driver.executeAsyncScript(
-      'const done = arguments[arguments.length - 1]; window.sideAPI.driver.listBrowsers().then(done)'
+    // The IDE gets Chrome and its driver with Selenium Manager
+    const download = await driver.executeAsyncScript(
+      "const done = arguments[arguments.length - 1]; window.sideAPI.driver.download({ browser: 'chrome', version: '' }).then(() => done(null), (e) => done(String(e)))"
     )
-    if (!browsers.some((b) => b.browser === 'chrome')) {
-      throw new Error(
-        'Expected to find Chrome, got ' + JSON.stringify(browsers)
-      )
+    if (download) {
+      throw new Error('Selenium Manager could not get Chrome: ' + download)
     }
-    console.log('IDE found Chrome with Selenium Manager')
+    console.log('IDE got Chrome and its driver with Selenium Manager')
     await driver.quit()
     proc.kill()
   } catch (e) {

@@ -43,10 +43,27 @@ const DriverSelector = () => {
     browser = browser.useBidi ? browser : ourElectronBrowserInfo
     /****************以上为我新增*****************/
     console.log('Setting browser', browser)
+    const previous = browserInfo.selected ?? ourElectronBrowserInfo
     setBrowserInfo((info) => ({ browsers: info!.browsers, selected: null }))
-    await window.sideAPI.driver.download(browser)
+    const keepPrevious = (reason: unknown) => {
+      console.error('Could not switch to', browser, reason)
+      setBrowserInfo((info) => ({
+        browsers: info!.browsers,
+        selected: previous,
+      }))
+    }
+    try {
+      await window.sideAPI.driver.download(browser)
+    } catch (e) {
+      return keepPrevious(e)
+    }
     await window.sideAPI.driver.stopProcess()
-    await window.sideAPI.driver.startProcess(browser)
+    const error = await window.sideAPI.driver.startProcess(browser)
+    if (error) {
+      // Go back to the driver that was running
+      await window.sideAPI.driver.startProcess(previous)
+      return keepPrevious(error)
+    }
     await window.sideAPI.driver.selectBrowser(browser)
     setBrowserInfo((info) => ({
       browsers: info!.browsers,

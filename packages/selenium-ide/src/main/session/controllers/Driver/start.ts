@@ -5,7 +5,7 @@ import { BrowserInfo, Session } from 'main/types'
 import * as path from 'node:path'
 import * as os from 'os'
 import { COLOR_MAGENTA, COLOR_YELLOW, isAutomated, vdebuglog } from 'main/util'
-import { findChromeDriver } from './selenium-manager'
+import { findChrome } from './selenium-manager'
 
 // ChromeDriver 152+ adds the port: "was started successfully on port 9516."
 const successMessage = 'was started successfully'
@@ -37,17 +37,32 @@ const ourElectronPath = __non_webpack_require__.resolve(
   path.join('electron-chromedriver', 'bin', electronBinary)
 )
 
-const getDriver = ({ browser }: BrowserInfo) =>
-  browser === 'electron'
-    ? ourElectronPath.replace('app.asar', 'app.asar.unpacked')
-    : findChromeDriver() ?? ''
+// Returns the driver path, or an error message
+const getDriver = ({
+  browser,
+}: BrowserInfo): { path?: string; error?: string } => {
+  if (browser === 'electron') {
+    return { path: ourElectronPath.replace('app.asar', 'app.asar.unpacked') }
+  }
+  if (browser !== 'chrome') {
+    return { error: `Only Electron and Chrome are supported, got ${browser}` }
+  }
+  try {
+    return { path: findChrome().driverPath }
+  } catch (e) {
+    return { error: `Selenium Manager could not get chromedriver: ${e}` }
+  }
+}
 
 export type StartDriver = (
   session: Session
 ) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
 
 const startDriver: StartDriver = (session: Session) => async (info) => {
-  const driverPath = getDriver(info)
+  const { path: driverPath = '', error } = getDriver(info)
+  if (error) {
+    return { success: false, error }
+  }
   return new Promise((resolve) => {
     let initialized = false
     const args = ['--verbose', `--port=${port}`]

@@ -1,43 +1,21 @@
-import * as os from 'os'
-import * as path from 'node:path'
 import { Capabilities } from 'selenium-webdriver'
-import { getBinaryPaths } from 'selenium-webdriver/common/driverFinder'
+import type * as DriverFinder from 'selenium-webdriver/common/driverFinder'
 
 /**
- * selenium-webdriver looks for Selenium Manager next to its own files, which
- * moves when webpack bundles it, and the packaged app can't run a binary
- * from inside app.asar. Point it at the unpacked binary instead.
+ * selenium-webdriver finds Selenium Manager next to its own files. Load its
+ * wrapper from node_modules instead of the webpack bundle, so that lookup
+ * works. In the packaged app, load the copy unpacked from app.asar, because a
+ * binary can't run from inside it.
  */
-const useUnpackedSeleniumManager = () => {
-  if (process.env.SE_MANAGER_PATH) return
-  const folder =
-    os.platform() === 'win32'
-      ? 'windows'
-      : os.platform() === 'darwin'
-      ? 'macos'
-      : os.arch() === 'arm64'
-      ? 'linux-arm64'
-      : 'linux-x86_64'
-  const binary =
-    os.platform() === 'win32' ? 'selenium-manager.exe' : 'selenium-manager'
-  const seleniumDir = path.dirname(
-    __non_webpack_require__.resolve('selenium-webdriver/package.json')
-  )
-  process.env.SE_MANAGER_PATH = path
-    .join(seleniumDir, 'bin', folder, binary)
+const { getBinaryPaths }: typeof DriverFinder = __non_webpack_require__(
+  __non_webpack_require__
+    .resolve('selenium-webdriver/common/driverFinder')
     .replace('app.asar', 'app.asar.unpacked')
-}
+)
 
 /**
- * Path to a chromedriver for the installed Chrome. Selenium Manager downloads
- * it if needed. Returns null if Chrome isn't installed.
+ * Paths to Chrome and a matching chromedriver. Selenium Manager downloads the
+ * driver, and Chrome for Testing if Chrome isn't installed. Throws if it fails.
  */
-export const findChromeDriver = (): string | null => {
-  useUnpackedSeleniumManager()
-  try {
-    return getBinaryPaths(Capabilities.chrome()).driverPath
-  } catch (e) {
-    console.warn('Selenium Manager could not find Chrome', e)
-    return null
-  }
-}
+export const findChrome = (): { browserPath: string; driverPath: string } =>
+  getBinaryPaths(Capabilities.chrome())

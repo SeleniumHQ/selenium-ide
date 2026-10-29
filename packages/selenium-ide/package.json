@@ -43,7 +43,9 @@
     "asarUnpack": [
       "node_modules/electron-chromedriver/bin/chromedriver",
       "node_modules/electron-chromedriver/bin/chromedriver.exe",
-      "node_modules/selenium-webdriver/bin/**"
+      "node_modules/selenium-webdriver/bin/**",
+      "node_modules/selenium-webdriver/common/**",
+      "node_modules/selenium-webdriver/lib/logging.js"
     ],
     "files": [
       "**/build/**/*",

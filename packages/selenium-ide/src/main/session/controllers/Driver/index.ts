@@ -9,7 +9,7 @@ import { join } from 'path'
 import { Builder } from 'selenium-webdriver'
 import getScriptManager from 'selenium-webdriver/bidi/scriptManager'
 
-import { findChromeDriver } from './selenium-manager'
+import { findChrome } from './selenium-manager'
 import startDriver, { port, WebdriverDebugLog } from './start'
 import BaseController from '../Base'
 import { createBidiAPIBindings } from './bidi'
@@ -253,6 +253,10 @@ export default class DriverController extends BaseController {
         browserName,
         ...capabilities,
         ...(capabilities.webSocketUrl === false ? electronCapabilities : {}),
+        // Chrome may be Chrome for Testing that Selenium Manager downloaded
+        ...(browser === 'chrome'
+          ? { 'goog:chromeOptions': { binary: findChrome().browserPath } }
+          : {}),
         ...(turtlesMode ? ideCapabilities : {}),
       })
       .usingServer(server)
@@ -314,20 +318,17 @@ export default class DriverController extends BaseController {
     // Electron's driver is bundled. For Chrome, Selenium Manager downloads
     // a matching chromedriver if needed.
     if (info.browser !== 'electron') {
-      findChromeDriver()
+      // Throws if Selenium Manager fails, so the selection isn't saved
+      findChrome()
     }
   }
 
   async listBrowsers(): Promise<BrowsersInfo> {
-    /*
-     * Note: This is shelved for optimization but could be unearthed
-     * if using browsers other than electron is valuable to people
-     */
-    // Selenium Manager picks the driver for the installed Chrome, so the
-    // version isn't needed
-    const ourChromeBrowserInfo: BrowserInfo[] = findChromeDriver()
-      ? [{ browser: 'chrome', version: '' }]
-      : []
+    // Chrome is always offered: Selenium Manager gets the driver, and Chrome
+    // for Testing if Chrome isn't installed, once Chrome is selected
+    const ourChromeBrowserInfo: BrowserInfo[] = [
+      { browser: 'chrome', version: '' },
+    ]
     return {
       browsers: [ourElectronBrowserInfo].concat(ourChromeBrowserInfo),
       selected: this.session.store.get('browserInfo') || ourElectronBrowserInfo,
