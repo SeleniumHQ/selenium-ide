@@ -13,12 +13,12 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-namespace Login
-{
+
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
+  
   public SuiteTests()
   {
     driver = new ChromeDriver();
@@ -48,7 +48,7 @@ public class SuiteTests : IDisposable {
     Assert.Equal(driver.FindElement(By.Id(\\"flash\\")).Text, \\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\");
   }
 }
-}"
+"
 `;
 
 exports[`Code Export C# xUnit should export a suite that uses control flow commands 1`] = `
@@ -64,12 +64,12 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-namespace Controlflow
-{
+
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
+  
   public SuiteTests()
   {
     driver = new ChromeDriver();
@@ -142,7 +142,7 @@ public class SuiteTests : IDisposable {
     Assert.Equal(vars[\\"check\\"].ToString(), \\"3\\");
   }
 }
-}"
+"
 `;
 
 exports[`Code Export C# xUnit should export a suite with a reused test method 1`] = `
@@ -158,12 +158,12 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-namespace Reusedmethods
-{
+
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
+  
   public SuiteTests()
   {
     driver = new ChromeDriver();
@@ -188,6 +188,7 @@ public class SuiteTests : IDisposable {
   {
     vars[\\"value\\"] = \\"field\\";
   }
+  
   [Fact]
   public void Invalidcredentials() {
     vars[\\"username\\"] = \\"blah\\";
@@ -208,7 +209,7 @@ public class SuiteTests : IDisposable {
     tinymethod();
   }
 }
-}"
+"
 `;
 
 exports[`Code Export C# xUnit should export a suite with commands that open a new window inside of a reused test method 1`] = `
@@ -224,12 +225,12 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-namespace DefaultSuite
-{
+
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
+  
   public SuiteTests()
   {
     driver = new ChromeDriver();
@@ -263,12 +264,13 @@ public class SuiteTests : IDisposable {
     driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
     Assert.Equal(driver.Title, \\"New Window\\");
   }
+  
   [Fact]
   public void Reuse() {
     selectwindow();
   }
 }
-}"
+"
 `;
 
 exports[`Code Export C# xUnit should export a suite with just one new window util method when there are multiple commands that open a new window 1`] = `
@@ -284,12 +286,12 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
-namespace DefaultSuite
-{
+
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
+  
   public SuiteTests()
   {
     driver = new ChromeDriver();
@@ -323,6 +325,7 @@ public class SuiteTests : IDisposable {
     driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
     Assert.Equal(driver.Title, \\"New Window\\");
   }
+  
   [Fact]
   public void Reuse() {
     selectwindow();
@@ -337,7 +340,7 @@ public class SuiteTests : IDisposable {
     Assert.Equal(driver.Title, \\"New Window\\");
   }
 }
-}"
+"
 `;
 
 exports[`Code Export C# xUnit should export a test 1`] = `
@@ -353,10 +356,12 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
+
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
+  
   public SuiteTests()
   {
     driver = new ChromeDriver();
@@ -393,10 +398,12 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
+
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
+  
   public SuiteTests()
   {
     driver = new ChromeDriver();
@@ -417,6 +424,7 @@ public class SuiteTests : IDisposable {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
   }
+  
   [Fact]
   public void Validcredentials() {
     vars[\\"username\\"] = \\"tomsmith\\";
@@ -440,10 +448,12 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
+
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
+  
   public SuiteTests()
   {
     driver = new ChromeDriver();
@@ -468,6 +478,7 @@ public class SuiteTests : IDisposable {
       return whNow.First().ToString();
     }
   }
+  
   [Fact]
   public void Selectwindow() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/\\");
@@ -499,10 +510,12 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
+
 public class SuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
+  
   public SuiteTests()
   {
     driver = new RemoteWebDriver(new Uri(\\"http://localhost:4444/wd/hub\\"), new FirefoxOptions().ToCapabilities());

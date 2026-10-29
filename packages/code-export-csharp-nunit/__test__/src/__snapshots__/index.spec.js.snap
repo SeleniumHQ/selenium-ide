@@ -14,11 +14,13 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+
 [TestFixture]
 public class LoginTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
+  
   [SetUp]
   public void SetUp() {
     driver = new ChromeDriver();
@@ -65,11 +67,13 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+
 [TestFixture]
 public class ControlflowTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
+  
   [SetUp]
   public void SetUp() {
     driver = new ChromeDriver();
@@ -159,11 +163,13 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+
 [TestFixture]
 public class ReusedmethodsTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
+  
   [SetUp]
   public void SetUp() {
     driver = new ChromeDriver();
@@ -186,6 +192,7 @@ public class ReusedmethodsTest {
   public void tinymethod() {
     vars[\\"value\\"] = \\"field\\";
   }
+  
   [Test]
   public void invalidcredentials() {
     vars[\\"username\\"] = \\"blah\\";
@@ -223,11 +230,13 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+
 [TestFixture]
 public class DefaultSuiteTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
+  
   [SetUp]
   public void SetUp() {
     driver = new ChromeDriver();
@@ -260,6 +269,7 @@ public class DefaultSuiteTest {
     driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
     Assert.That(driver.Title, Is.EqualTo(\\"New Window\\"));
   }
+  
   [Test]
   public void reuse() {
     selectwindow();
@@ -282,11 +292,13 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+
 [TestFixture]
 public class DefaultSuiteTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
+  
   [SetUp]
   public void SetUp() {
     driver = new ChromeDriver();
@@ -319,6 +331,7 @@ public class DefaultSuiteTest {
     driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
     Assert.That(driver.Title, Is.EqualTo(\\"New Window\\"));
   }
+  
   [Test]
   public void reuse() {
     selectwindow();
@@ -350,11 +363,13 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+
 [TestFixture]
 public class LoginTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
+  
   [SetUp]
   public void SetUp() {
     driver = new ChromeDriver();
@@ -392,11 +407,13 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+
 [TestFixture]
 public class ValidcredentialsTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
+  
   [SetUp]
   public void SetUp() {
     driver = new ChromeDriver();
@@ -416,6 +433,7 @@ public class ValidcredentialsTest {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
   }
+  
   [Test]
   public void validcredentials() {
     vars[\\"username\\"] = \\"tomsmith\\";
@@ -440,11 +458,13 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+
 [TestFixture]
 public class SelectwindowTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
+  
   [SetUp]
   public void SetUp() {
     driver = new ChromeDriver();
@@ -469,6 +489,7 @@ public class SelectwindowTest {
       return whNow.First().ToString();
     }
   }
+  
   [Test]
   public void selectwindow() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/\\");
@@ -501,11 +522,13 @@ using OpenQA.Selenium.Remote;
 using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using NUnit.Framework;
+
 [TestFixture]
 public class LoginTest {
   private IWebDriver driver;
   public IDictionary<string, object> vars {get; private set;}
   private IJavaScriptExecutor js;
+  
   [SetUp]
   public void SetUp() {
     driver = new RemoteWebDriver(new Uri(\\"http://localhost:4444/wd/hub\\"), new FirefoxOptions().ToCapabilities());
