@@ -34,7 +34,7 @@ exports[`command code emitter should emit \`add selection\` command 1`] = `
 exports[`command code emitter should emit \`answer prompt\` command 1`] = `
 "{
   Alert alert = driver.switchTo().alert();
-  alert.sendKeys(\\"an answer\\")
+  alert.sendKeys(\\"an answer\\");
   alert.accept();
 }"
 `;

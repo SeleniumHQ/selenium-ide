@@ -210,9 +210,12 @@ export async function emitCommand(
   // A command that starts with // is commented out
   if (command.command.startsWith('//')) return ''
   // e.g., a plugin command. Leave a comment, so the step isn't lost silently.
-  return `${context.commentPrefix} Can't export command: ${command.command} | ${
-    command.target ?? ''
-  } | ${command.value ?? ''}`
+  // Line breaks are removed, so nothing ends up outside the comment.
+  const oneLine = (text?: string) =>
+    (text ?? '').replace(/[\r\n\u2028\u2029]+/g, ' ')
+  return `${context.commentPrefix} Can't export command: ${oneLine(
+    command.command
+  )} | ${oneLine(command.target)} | ${oneLine(command.value)}`
 }
 
 export type StringEmitter = (selector: string) => Promise<string>

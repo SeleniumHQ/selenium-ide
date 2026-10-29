@@ -50,6 +50,10 @@ describe('command code emitter', () => {
       expect(await Command.emit(command, opts)).toBe(
         "# Can't export command: customCommand | id=a | "
       )
+      const multiline = { ...command, value: 'a\nraise Exception()' }
+      expect(await Command.emit(multiline, opts)).toBe(
+        "# Can't export command: customCommand | id=a | a raise Exception()"
+      )
     } finally {
       delete Commands.customCommand
     }

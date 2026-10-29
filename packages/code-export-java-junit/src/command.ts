@@ -209,7 +209,7 @@ function emitAnswerOnNextPrompt(textToSend: string) {
   const commands = [
     { level: 0, statement: '{' },
     { level: 1, statement: 'Alert alert = driver.switchTo().alert();' },
-    { level: 1, statement: `alert.sendKeys("${textToSend}")` },
+    { level: 1, statement: `alert.sendKeys("${textToSend}");` },
     { level: 1, statement: 'alert.accept();' },
     { level: 0, statement: '}' },
   ]
