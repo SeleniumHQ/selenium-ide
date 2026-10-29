@@ -19,9 +19,7 @@ import prettify from '../../../src/code-export/prettify'
 
 describe('Prettify', () => {
   const commandPrefixPadding = '  '
-  // Fails: prettify ignores the starting level for statement objects, so
-  // exported code loses its indentation. Turn on when that's fixed.
-  it.skip('should render from a command array', () => {
+  it('should render from a command array', () => {
     const commandBlock = {
       commands: [
         { level: 0, statement: 'blah' },
@@ -47,9 +45,7 @@ describe('Prettify', () => {
       }).body
     ).toBe(`${commandPrefixPadding}blah\n${commandPrefixPadding}blah`)
   })
-  // Fails: prettify ignores the starting level for statement objects, so
-  // exported code loses its indentation. Turn on when that's fixed.
-  it.skip('command array can render from a starting level', () => {
+  it('command array can render from a starting level', () => {
     const commandBlock = {
       commands: [
         { level: 0, statement: 'blah' },
@@ -61,9 +57,7 @@ describe('Prettify', () => {
       prettify(commandBlock, { commandPrefixPadding, startingLevel }).body
     ).toBe(`${commandPrefixPadding}blah\n${commandPrefixPadding}blah`)
   })
-  // Fails: prettify ignores the starting level for statement objects, so
-  // exported code loses its indentation. Turn on when that's fixed.
-  it.skip('command array can render nested commands from a non-zero starting level', () => {
+  it('command array can render nested commands from a non-zero starting level', () => {
     const commandBlock = {
       commands: [
         { level: 0, statement: 'if {' },
@@ -108,9 +102,7 @@ describe('Prettify', () => {
     const result = prettify(commandBlock, { commandPrefixPadding })
     expect(result.endingLevel).toBe(2)
   })
-  // Fails: prettify ignores the starting level for statement objects, so
-  // exported code loses its indentation. Turn on when that's fixed.
-  it.skip('command array can specify an adjustment to the starting level', () => {
+  it('command array can specify an adjustment to the starting level', () => {
     const commandBlock = {
       commands: [
         { level: 0, statement: 'blah' },

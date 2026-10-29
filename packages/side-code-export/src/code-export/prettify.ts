@@ -16,8 +16,7 @@
 // under the License.
 
 import { ExportCommandsShape } from '../types'
-import { ExportFlexCommandShape } from './emit'
-import { renderCommands } from './render'
+import type { ExportFlexCommandShape } from './emit'
 
 export interface PrettifyOptions {
   startingLevel?: number
@@ -49,44 +48,47 @@ const prettify: Prettify = (
   commandBlock,
   { startingLevel = 0, commandPrefixPadding }
 ) => {
-  if (startingLevel < 0) startingLevel = 0
   if (commandBlock === undefined) {
-    return { body: undefined, endingLevel: startingLevel }
+    return { body: undefined, endingLevel: Math.max(startingLevel, 0) }
   }
-  const isStringCommand = typeof commandBlock === 'string'
-  const isSingleCommand = isStringCommand || 'statement' in commandBlock
-  if (isSingleCommand) {
-    const command = isStringCommand ? commandBlock : commandBlock.statement
-    const level = isStringCommand ? startingLevel : commandBlock.level
+  if (typeof commandBlock === 'string') {
+    if (startingLevel < 0) startingLevel = 0
     return {
-      body: command
-        .split('\n')
-        .join('\n' + commandPrefixPadding.repeat(level))
-        .replace(/^/, commandPrefixPadding.repeat(level)),
-      endingLevel: level,
+      body: indent(commandBlock, commandPrefixPadding.repeat(startingLevel)),
+      endingLevel: startingLevel,
     }
+  }
+  // A single statement is a block with one line
+  if ('statement' in commandBlock) {
+    commandBlock = { commands: [commandBlock] }
   }
   if (commandBlock.startingLevelAdjustment) {
     startingLevel += commandBlock.startingLevelAdjustment
   }
+  if (startingLevel < 0) startingLevel = 0
+  const endingLevel = calculateEndingLevel({ startingLevel, commandBlock })
   if (commandBlock.skipEmitting) {
-    return {
-      endingLevel: calculateEndingLevel({
-        startingLevel,
-        commandBlock,
-      }),
-      skipEmitting: commandBlock.skipEmitting,
-    }
-  } else {
-    return {
-      body: renderCommands(commandBlock, {
-        commandPrefixPadding,
-        startingLevel,
-      }),
-      endingLevel: calculateEndingLevel({ startingLevel, commandBlock }),
-    }
+    return { endingLevel, skipEmitting: commandBlock.skipEmitting }
   }
+  // Each line's level is relative to the level the block starts at
+  const body = commandBlock.commands
+    .map((command) =>
+      typeof command === 'string'
+        ? indent(command, commandPrefixPadding.repeat(startingLevel))
+        : indent(
+            command.statement,
+            commandPrefixPadding.repeat(startingLevel + command.level)
+          )
+    )
+    .join('\n')
+  return { body, endingLevel }
 }
+
+const indent = (text: string, padding: string) =>
+  text
+    .split('\n')
+    .map((line) => padding + line)
+    .join('\n')
 
 export default prettify
 
@@ -105,6 +107,5 @@ function calculateEndingLevel({
     endingLevel = typeof finalCommand === 'string' ? 0 : finalCommand.level || 0
   }
   const endingLevelAdjustment = commandBlock.endingLevelAdjustment || 0
-  const result = startingLevel + endingLevel + endingLevelAdjustment
-  return result
+  return Math.max(startingLevel + endingLevel + endingLevelAdjustment, 0)
 }

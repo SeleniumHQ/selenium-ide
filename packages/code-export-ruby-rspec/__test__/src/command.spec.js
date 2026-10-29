@@ -447,9 +447,7 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  // Fails with a negative indentation level, from the same bug that makes
-  // prettify ignore the starting level. Turn on when that's fixed.
-  it.skip('should emit `repeatIf` command', () => {
+  it('should emit `repeatIf` command', () => {
     const command = {
       command: ControlFlowCommandNames.repeatIf,
       target: 'true',
