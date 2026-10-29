@@ -1,7 +1,6 @@
 {
   "folders": [
     { "path": "../", "name": "root" },
-    { "path": "../packages/browser-info" },
     { "path": "../packages/code-export-csharp-commons" },
     { "path": "../packages/code-export-csharp-nunit" },
     { "path": "../packages/code-export-csharp-xunit" },
@@ -9,7 +8,6 @@
     { "path": "../packages/code-export-javascript-mocha" },
     { "path": "../packages/code-export-python-pytest" },
     { "path": "../packages/code-export-ruby-rspec" },
-    { "path": "../packages/get-driver" },
     { "path": "../packages/selenium-ide" },
     { "path": "../packages/side-api" },
     { "path": "../packages/side-cli" },

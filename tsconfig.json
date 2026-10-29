@@ -8,9 +8,6 @@
   "include": [],
   "references": [
     {
-      "path": "./packages/browser-info"
-    },
-    {
       "path": "./packages/code-export-csharp-commons"
     },
     {
@@ -30,9 +27,6 @@
     },
     {
       "path": "./packages/code-export-ruby-rspec"
-    },
-    {
-      "path": "./packages/get-driver"
     },
     {
       "path": "./packages/side-api"
