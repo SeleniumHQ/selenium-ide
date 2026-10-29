@@ -328,6 +328,7 @@ async function emitMethod(
       {
         newLineCount: 0,
         startingLevel: level,
+        emptyBlockStatement: context.emptyBlockStatement,
       }
     )
     // Remove any trailing newlines on result to avoid double newlines.
@@ -476,6 +477,7 @@ async function emitTest(
       startingLevel: commandLevel,
       originTracing,
       enableOriginTracing,
+      emptyBlockStatement: context.emptyBlockStatement,
     }
   ) as string
   result.inEachEnd = render(

@@ -353,7 +353,14 @@ function emitControlFlowRepeatIf(script: any) {
 
 function emitControlFlowTimes(target: any) {
   const commands = [
-    { level: 0, statement: `var times = ${target};` },
+    {
+      level: 0,
+      statement: `var times = ${exporter.parsers.loopCount(
+        target,
+        (count) =>
+          `(int)Math.Floor(Convert.ToDouble(${count}, System.Globalization.CultureInfo.InvariantCulture))`
+      )};`,
+    },
     { level: 0, statement: 'for(int i = 0; i < times; i++) {' },
   ]
   return Promise.resolve({ commands, endingLevelAdjustment: 1 })

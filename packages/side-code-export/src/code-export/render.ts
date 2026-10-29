@@ -25,6 +25,8 @@ export interface RenderOptions {
   fullPayload?: boolean
   originTracing?: string[]
   enableOriginTracing?: boolean
+  // A statement for a block with no commands (e.g., `pass` in Python)
+  emptyBlockStatement?: string
 }
 
 export type PartialRenderParameters = [
@@ -47,6 +49,7 @@ export const renderCommand: RenderCommand = (
     fullPayload = false,
     originTracing = [],
     enableOriginTracing = false,
+    emptyBlockStatement,
   } = {}
 ) => {
   // A list of commands (e.g., the emitted commands of a test), or a block
@@ -61,6 +64,7 @@ export const renderCommand: RenderCommand = (
       commandPrefixPadding,
       originTracing,
       enableOriginTracing,
+      emptyBlockStatement,
     })
   }
   const result = prettify(input, {
@@ -75,7 +79,10 @@ export const renderCommand: RenderCommand = (
 
 export type RenderCommandsOptions = Pick<
   RenderOptions,
-  'enableOriginTracing' | 'startingLevel' | 'originTracing'
+  | 'enableOriginTracing'
+  | 'startingLevel'
+  | 'originTracing'
+  | 'emptyBlockStatement'
 > & {
   commandPrefixPadding: string
 }
@@ -94,10 +101,24 @@ export const renderCommands: RenderCommands = (
     commandPrefixPadding,
     originTracing = [],
     enableOriginTracing,
+    emptyBlockStatement,
   }
 ) => {
   let result = ''
-  let endingLevel = startingLevel
+  let endingLevel = startingLevel ?? 0
+  // The level of a block that has no commands yet
+  let emptyBlockLevel: number | undefined
+  const fillEmptyBlock = (level: number) => {
+    if (emptyBlockLevel !== undefined && level < emptyBlockLevel) {
+      if (emptyBlockStatement) {
+        result +=
+          commandPrefixPadding.repeat(emptyBlockLevel) +
+          emptyBlockStatement +
+          '\n'
+      }
+      emptyBlockLevel = undefined
+    }
+  }
 
   if (enableOriginTracing) {
     const originTitle = originTracing.splice(0, 2)
@@ -118,17 +139,28 @@ export const renderCommands: RenderCommands = (
           result += originRecord
         })
       }
+      const firstLevel =
+        typeof command === 'object' && 'commands' in command
+          ? Math.max(endingLevel + (command.startingLevelAdjustment ?? 0), 0)
+          : endingLevel
       const commandBlock = prettify(command, {
         commandPrefixPadding,
         startingLevel: endingLevel,
       })
       endingLevel = commandBlock.endingLevel
-      if (!commandBlock.skipEmitting) {
+      if (commandBlock.skipEmitting) {
+        fillEmptyBlock(endingLevel)
+      } else {
+        fillEmptyBlock(firstLevel)
+        emptyBlockLevel = undefined
         result += commandBlock.body
         result += '\n'
+        // The command opens a block, e.g. `if` or a loop
+        if (endingLevel > firstLevel) emptyBlockLevel = endingLevel
       }
     }
   })
+  fillEmptyBlock(-1)
   return result
 }
 

@@ -345,7 +345,15 @@ function emitControlFlowRepeatIf(script: ScriptShape) {
 }
 
 function emitControlFlowTimes(target: string) {
-  const commands = [{ level: 0, statement: `${target}.times do` }]
+  const commands = [
+    {
+      level: 0,
+      statement: `${exporter.parsers.loopCount(
+        target,
+        (count) => `Float(${count}).floor`
+      )}.times do`,
+    },
+  ]
   return Promise.resolve({ commands, endingLevelAdjustment: 1 })
 }
 

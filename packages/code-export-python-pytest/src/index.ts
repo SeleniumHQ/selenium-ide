@@ -37,6 +37,7 @@ export const opts: LanguageEmitterOpts = {
   commandPrefixPadding: '  ',
   terminatingKeyword: '',
   commentPrefix: '#',
+  emptyBlockStatement: 'pass',
   // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
   generateTestDeclaration: function generateTestDeclaration(name) {
     return `def test_${exporter.parsers.uncapitalize(

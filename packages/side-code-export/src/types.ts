@@ -95,6 +95,8 @@ export interface LanguageEmitterOpts {
   commentPrefix: string
   commandPrefixPadding: string
   displayName: string
+  // A statement for a block with no commands (e.g., `pass` in Python)
+  emptyBlockStatement?: string
   emitter: LanguageExportEmitter
   fileExtension: string
   generateFilename: (name: string) => string

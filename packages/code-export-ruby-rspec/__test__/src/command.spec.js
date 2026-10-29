@@ -668,6 +668,16 @@ describe('command code emitter', () => {
       prettify(command, { fullPayload: true })
     ).resolves.toMatchSnapshot()
   })
+  it('should emit `times` command with a variable count', () => {
+    const command = {
+      command: ControlFlowCommandNames.times,
+      target: '${count}',
+      value: '',
+    }
+    return expect(
+      prettify(command, { fullPayload: true })
+    ).resolves.toMatchSnapshot()
+  })
   it('should emit `type` command', () => {
     const command = {
       command: 'type',
