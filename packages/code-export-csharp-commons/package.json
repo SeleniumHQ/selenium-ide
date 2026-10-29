@@ -21,6 +21,7 @@
     "side-code-export": "^4.0.11"
   },
   "devDependencies": {
+    "@seleniumhq/side-runtime": "4.0.13",
     "@seleniumhq/side-model": "4.0.13"
   }
 }

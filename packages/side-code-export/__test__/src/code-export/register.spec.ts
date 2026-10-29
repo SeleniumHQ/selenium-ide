@@ -16,24 +16,25 @@
 // under the License.
 
 import { registerCommandEmitter } from '../../../src/code-export/register'
+import { PrebuildEmitter } from '../../../src/types'
 
 describe('Register', () => {
   describe('Command Emitters', () => {
     it('should register a new command emitter', () => {
       const emitters = {
         blah: 'blah',
-      }
+      } as unknown as Record<string, PrebuildEmitter>
       const command = 'foo'
-      const emitter = 'bar'
+      const emitter = 'bar' as unknown as PrebuildEmitter
       registerCommandEmitter({ command, emitter, emitters })
       expect(emitters).toEqual({ blah: 'blah', foo: 'bar' })
     })
     it('should throw when trying to overwrite an existing command emitter', () => {
       const emitters = {
         blah: 'blah',
-      }
+      } as unknown as Record<string, PrebuildEmitter>
       const command = 'blah'
-      const emitter = 'blah'
+      const emitter = 'blah' as unknown as PrebuildEmitter
       expect(() => {
         registerCommandEmitter({ command, emitter, emitters })
       }).toThrow()

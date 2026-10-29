@@ -490,6 +490,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'loop limit',
+      isOptional: true,
       description: '为防止无限循环，循环控制流命令可以执行的最大次数',
     },
   },
@@ -681,6 +682,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'loop limit',
+      isOptional: true,
       description: '为防止无限循环，循环控制流命令可以执行的最大次数',
     },
   },
@@ -954,6 +956,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'loop limit',
+      isOptional: true,
       description: '为防止无限循环，循环控制流命令可以执行的最大次数',
     },
   },

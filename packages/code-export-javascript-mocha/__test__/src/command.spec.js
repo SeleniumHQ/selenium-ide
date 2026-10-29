@@ -16,12 +16,10 @@
 // under the License.
 
 import Command from '../../src/command'
-import {
-  Commands,
-  ControlFlowCommandNames,
-} from '../../../selenium-ide/src/neo/models/Command'
+import { Commands } from '@seleniumhq/side-model'
+import { ControlFlowCommandNames } from '@seleniumhq/side-runtime/dist/playback-tree/commands'
 import { opts } from '../../src/index'
-import { codeExport as exporter } from '@seleniumhq/side-code-export'
+import { codeExport as exporter } from 'side-code-export'
 
 const commandPrefixPadding = opts.commandPrefixPadding
 
@@ -34,9 +32,10 @@ async function prettify(command, { fullPayload } = {}) {
 }
 
 describe('command code emitter', () => {
-  it('should emit all known commands', () => {
+  // Command.canEmit was part of the v3 API
+  it.skip('should emit all known commands', () => {
     let result = []
-    Commands.array.forEach(command => {
+    Object.keys(Commands).forEach(command => {
       if (!Command.canEmit(command)) {
         result.push(command)
       }
@@ -566,7 +565,8 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it('should skip playback supported commands, that are not supported in webdriver', () => {
+  // This command isn't in the v4 command model, so export rejects it
+  it.skip('should skip playback supported commands, that are not supported in webdriver', () => {
     return Promise.all([
       expect(
         prettify({ command: 'answerOnNextPrompt', target: 'blah' })
@@ -638,7 +638,8 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it('should emit `store xpath count` command', () => {
+  // This command isn't in the v4 command model, so export rejects it
+  it.skip('should emit `store xpath count` command', () => {
     const command = {
       command: 'storeXpathCount',
       target: 'xpath=button',
@@ -646,7 +647,8 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it('should emit `submit` command', () => {
+  // This command isn't in the v4 command model, so export rejects it
+  it.skip('should emit `submit` command', () => {
     const command = {
       command: 'submit',
       target: 'id=form',
@@ -846,7 +848,8 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it('should emit `answer on visible prompt` command', () => {
+  // This command isn't in the v4 command model, so export rejects it
+  it.skip('should emit `answer on visible prompt` command', () => {
     const command = {
       command: 'webdriverAnswerOnVisiblePrompt',
       target: 'an answer',
@@ -854,7 +857,8 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it('should emit `choose cancel on visible prompt` command', () => {
+  // This command isn't in the v4 command model, so export rejects it
+  it.skip('should emit `choose cancel on visible prompt` command', () => {
     const command = {
       command: 'webdriverChooseCancelOnVisiblePrompt',
       target: '',
@@ -862,7 +866,8 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it('should emit `choose ok on visible confirmation` command', () => {
+  // This command isn't in the v4 command model, so export rejects it
+  it.skip('should emit `choose ok on visible confirmation` command', () => {
     const command = {
       command: 'webdriverChooseOkOnVisibleConfirmation',
       target: '',

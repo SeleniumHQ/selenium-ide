@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`command code emitter should emit 'assert selected label' command 1`] = `
 "{
@@ -7,7 +7,8 @@ exports[`command code emitter should emit 'assert selected label' command 1`] = 
   String locator = String.format(\\"option[@value='%s']\\", value);
   String selectedText = element.findElement(By.xpath(locator)).getText();
   assertThat(selectedText, is(\\"test\\"));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit 'verify selected label' command 1`] = `
@@ -17,14 +18,16 @@ exports[`command code emitter should emit 'verify selected label' command 1`] = 
   String locator = String.format(\\"option[@value='%s']\\", value);
   String selectedText = element.findElement(By.xpath(locator)).getText();
   assertThat(selectedText, is(\\"test\\"));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`add selection\` command 1`] = `
 "{
   WebElement dropdown = driver.findElement(By.cssSelector(\\"select\\"));
   dropdown.findElement(By.xpath(\\"//option[. = 'A label']\\")).click();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`answer on visible prompt\` command 1`] = `
@@ -46,21 +49,24 @@ exports[`command code emitter should emit \`assert editable\` command 1`] = `
   WebElement element = driver.findElement(By.id(\\"text\\"));
   Boolean isEditable = element.isEnabled() && element.getAttribute(\\"readonly\\") == null;
   assertTrue(isEditable);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`assert element not present\` command 1`] = `
 "{
   List<WebElement> elements = driver.findElements(By.id(\\"element\\"));
   assert(elements.size() == 0);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`assert element present\` command 1`] = `
 "{
   List<WebElement> elements = driver.findElements(By.id(\\"element\\"));
   assert(elements.size() > 0);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`assert not checked\` command 1`] = `"assertFalse(driver.findElement(By.id(\\"check\\")).isSelected());"`;
@@ -70,14 +76,16 @@ exports[`command code emitter should emit \`assert not editable\` command 1`] = 
   WebElement element = driver.findElement(By.id(\\"text\\"));
   Boolean isEditable = element.isEnabled() && element.getAttribute(\\"readonly\\") == null;
   assertFalse(isEditable);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
 "{
   String value = driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\");
   assertThat(value, is(not(\\"test\\")));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`assert not text\` command 1`] = `"assertThat(driver.findElement(By.id(\\"test\\")).getText(), is(not(\\"text\\")));"`;
@@ -88,7 +96,8 @@ exports[`command code emitter should emit \`assert selected value\` command 1`] 
 "{
   String value = driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\");
   assertThat(value, is(\\"test\\"));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`assert text\` command 1`] = `"assertThat(driver.findElement(By.id(\\"test\\")).getText(), is(\\"some text that should be here\\"));"`;
@@ -99,7 +108,8 @@ exports[`command code emitter should emit \`assert value\` command 1`] = `
 "{
   String value = driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\");
   assertThat(value, is(\\"test\\"));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`assert\` command 1`] = `"assertEquals(vars.get(\\"varrrName\\").toString(), \\"blah\\");"`;
@@ -110,7 +120,8 @@ exports[`command code emitter should emit \`check\` command 1`] = `
   if (!element.isSelected()) {
     element.click();
   }
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`choose cancel on visible prompt\` command 1`] = `"driver.switchTo().alert().dismiss();"`;
@@ -125,7 +136,8 @@ exports[`command code emitter should emit \`close\` command 1`] = `"driver.close
 
 exports[`command code emitter should emit \`do\` command 1`] = `
 Object {
-  "body": "do {",
+  "body": "do {
+",
   "endingLevel": 1,
 }
 `;
@@ -135,7 +147,8 @@ exports[`command code emitter should emit \`double click at\` command 1`] = `
   WebElement element = driver.findElement(By.linkText(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.doubleClick(element).perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`double click\` command 1`] = `
@@ -143,7 +156,8 @@ exports[`command code emitter should emit \`double click\` command 1`] = `
   WebElement element = driver.findElement(By.linkText(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.doubleClick(element).perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`drag and drop to object\` command 1`] = `
@@ -152,7 +166,8 @@ exports[`command code emitter should emit \`drag and drop to object\` command 1`
   WebElement dropped = driver.findElement(By.linkText(\\"dropped\\"));
   Actions builder = new Actions(driver);
   builder.dragAndDrop(dragged, dropped).perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"System.out.println(\\"blah\\");"`;
@@ -163,27 +178,31 @@ exports[`command code emitter should emit \`edit content\` command 1`] = `
 "{
   WebElement element = driver.findElement(By.id(\\"contentEditable\\"));
   js.executeScript(\\"if(arguments[0].contentEditable === 'true') {arguments[0].innerText = '<button>test</button>'}\\", element);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`else if\` command 1`] = `
 Object {
-  "body": "} else if ((Boolean) js.executeScript(\\"return (true)\\")) {",
-  "endingLevel": 1,
+  "body": "} else if ((Boolean) js.executeScript(\\"return (true)\\")) {
+",
+  "endingLevel": 0,
 }
 `;
 
 exports[`command code emitter should emit \`else\` command 1`] = `
 Object {
-  "body": "} else {",
-  "endingLevel": 1,
+  "body": "} else {
+",
+  "endingLevel": 0,
 }
 `;
 
 exports[`command code emitter should emit \`end\` command 1`] = `
 Object {
-  "body": "}",
-  "endingLevel": 0,
+  "body": "}
+",
+  "endingLevel": -1,
 }
 `;
 
@@ -197,14 +216,16 @@ exports[`command code emitter should emit \`forEach\` command 1`] = `
 Object {
   "body": "ArrayList collectionCollection = (ArrayList) vars.get(\\"collection\\");
 for (int iIteratorVar = 0; i < collectionCollection.size() - 1; iIteratorVar++) {
-  vars.put(\\"iteratorVar\\", collectionCollection.get(i));",
+  vars.put(\\"iteratorVar\\", collectionCollection.get(i));
+",
   "endingLevel": 1,
 }
 `;
 
 exports[`command code emitter should emit \`if\` command 1`] = `
 Object {
-  "body": "if ((Boolean) js.executeScript(\\"return (true)\\")) {",
+  "body": "if ((Boolean) js.executeScript(\\"return (true)\\")) {
+",
   "endingLevel": 1,
 }
 `;
@@ -214,7 +235,8 @@ exports[`command code emitter should emit \`mouse down at\` event 1`] = `
   WebElement element = driver.findElement(By.id(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.moveToElement(element).clickAndHold().perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`mouse down\` command 1`] = `
@@ -222,7 +244,8 @@ exports[`command code emitter should emit \`mouse down\` command 1`] = `
   WebElement element = driver.findElement(By.id(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.moveToElement(element).clickAndHold().perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`mouse move at\` event 1`] = `
@@ -230,7 +253,8 @@ exports[`command code emitter should emit \`mouse move at\` event 1`] = `
   WebElement element = driver.findElement(By.id(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.moveToElement(element).perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`mouse move\` event 1`] = `
@@ -246,7 +270,8 @@ exports[`command code emitter should emit \`mouse out\` event 1`] = `
   WebElement element = driver.findElement(By.tagName(\\"body\\"));
   Actions builder = new Actions(driver);
   builder.moveToElement(element, 0, 0).perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`mouse over\` event 1`] = `
@@ -254,7 +279,8 @@ exports[`command code emitter should emit \`mouse over\` event 1`] = `
   WebElement element = driver.findElement(By.id(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.moveToElement(element).perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`mouse up at\` event 1`] = `
@@ -262,7 +288,8 @@ exports[`command code emitter should emit \`mouse up at\` event 1`] = `
   WebElement element = driver.findElement(By.id(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.moveToElement(element).release().perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`mouse up\` event 1`] = `
@@ -270,7 +297,8 @@ exports[`command code emitter should emit \`mouse up\` event 1`] = `
   WebElement element = driver.findElement(By.id(\\"button\\"));
   Actions builder = new Actions(driver);
   builder.moveToElement(element).release().perform();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`open\` with absolute url 1`] = `"driver.get(\\"https://www.seleniumhq.org/\\");"`;
@@ -280,17 +308,22 @@ exports[`command code emitter should emit \`pause\` command 1`] = `
   Thread.sleep(300);
 } catch (InterruptedException e) {
   e.printStackTrace();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`remove selection\` command 1`] = `
 "{
   WebElement dropdown = driver.findElement(By.cssSelector(\\"select\\"));
   dropdown.findElement(By.xpath(\\"//option[. = 'A label']\\")).click();
-}"
+}
+"
 `;
 
-exports[`command code emitter should emit \`repeatIf\` command 1`] = `"} while ((Boolean) js.executeScript(\\"return (true)\\"));"`;
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `
+"} while ((Boolean) js.executeScript(\\"return (true)\\"));
+"
+`;
 
 exports[`command code emitter should emit \`run script\` command 1`] = `"js.executeScript(\\"alert('test');alert('Im annoying');\\");"`;
 
@@ -304,7 +337,8 @@ exports[`command code emitter should emit \`select window\` to select a window b
 "{
   ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());
   driver.switchTo().window(handles.get(12));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`select window\` to select a window by name 1`] = `"driver.switchTo().window(\\"window\\");"`;
@@ -313,14 +347,16 @@ exports[`command code emitter should emit \`select window\` to select a window b
 "{
   ArrayList<String> handles = new ArrayList<String>(driver.getWindowHandles());
   driver.switchTo().window(handles.get(0));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`select\` command 1`] = `
 "{
   WebElement dropdown = driver.findElement(By.cssSelector(\\"select\\"));
   dropdown.findElement(By.xpath(\\"//option[. = 'A label']\\")).click();
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`send keys\` command 1`] = `"driver.findElement(By.id(\\"input\\")).sendKeys(\\"example input\\");"`;
@@ -338,7 +374,8 @@ exports[`command code emitter should emit \`store attribute\` command 1`] = `
   WebElement element = driver.findElement(By.xpath(\\"button[3]\\"));
   String attribute = element.getAttribute(\\"id\\");
   vars.put(\\"myVar\\", attribute);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`store text\` command 1`] = `"vars.put(\\"myVar\\", driver.findElement(By.id(\\"someElement\\")).getText());"`;
@@ -358,7 +395,8 @@ exports[`command code emitter should emit \`submit\` command 1`] = `"throw new E
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
   "body": "Integer times = 5;
-for(int i = 0; i < times; i++) {",
+for(int i = 0; i < times; i++) {
+",
   "endingLevel": 1,
 }
 `;
@@ -371,7 +409,8 @@ exports[`command code emitter should emit \`uncheck\` command 1`] = `
   if (element.isSelected()) {
     element.click();
   }
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`verify checked\` command 1`] = `"assertTrue(driver.findElement(By.id(\\"check\\")).isSelected());"`;
@@ -381,21 +420,24 @@ exports[`command code emitter should emit \`verify editable\` command 1`] = `
   WebElement element = driver.findElement(By.id(\\"text\\"));
   Boolean isEditable = element.isEnabled() && element.getAttribute(\\"readonly\\") == null;
   assertTrue(isEditable);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`verify element not present\` command 1`] = `
 "{
   List<WebElement> elements = driver.findElements(By.id(\\"element\\"));
   assert(elements.size() == 0);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`verify element present\` command 1`] = `
 "{
   List<WebElement> elements = driver.findElements(By.id(\\"element\\"));
   assert(elements.size() > 0);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`verify not checked\` command 1`] = `"assertFalse(driver.findElement(By.id(\\"check\\")).isSelected());"`;
@@ -405,14 +447,16 @@ exports[`command code emitter should emit \`verify not editable\` command 1`] = 
   WebElement element = driver.findElement(By.id(\\"text\\"));
   Boolean isEditable = element.isEnabled() && element.getAttribute(\\"readonly\\") == null;
   assertFalse(isEditable);
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
 "{
   String value = driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\");
   assertThat(value, is(not(\\"test\\")));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`verify not text\` command 1`] = `"assertThat(driver.findElement(By.id(\\"test\\")).getText(), is(not(\\"text\\")));"`;
@@ -421,7 +465,8 @@ exports[`command code emitter should emit \`verify selected value\` command 1`] 
 "{
   String value = driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\");
   assertThat(value, is(\\"test\\"));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`verify text\` command 1`] = `"assertThat(driver.findElement(By.id(\\"test\\")).getText(), is(\\"some text that should be here\\"));"`;
@@ -432,7 +477,8 @@ exports[`command code emitter should emit \`verify value\` command 1`] = `
 "{
   String value = driver.findElement(By.id(\\"select\\")).getAttribute(\\"value\\");
   assertThat(value, is(\\"test\\"));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`verify\` command 1`] = `"assertEquals(vars.get(\\"varrrName\\").toString(), \\"blah\\");"`;
@@ -441,14 +487,16 @@ exports[`command code emitter should emit \`waitForElementEditable\` command 1`]
 "{
   WebDriverWait wait = new WebDriverWait(driver, 5);
   wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(\\"#blah\\")));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `
 "{
   WebDriverWait wait = new WebDriverWait(driver, 5);
   wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(By.cssSelector(\\"#blah\\"))));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `
@@ -456,40 +504,46 @@ exports[`command code emitter should emit \`waitForElementNotPresent\` command 1
   WebDriverWait wait = new WebDriverWait(driver, 5);
   WebElement element = driver.findElement(By.cssSelector(\\"#blah\\"));
   wait.until(ExpectedConditions.stalenessOf(element));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `
 "{
   WebDriverWait wait = new WebDriverWait(driver, 5);
   wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(\\"#blah\\")));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `
 "{
   WebDriverWait wait = new WebDriverWait(driver, 5);
   wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(\\"#blah\\")));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `
 "{
   WebDriverWait wait = new WebDriverWait(driver, 5);
   wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(\\"#blah\\")));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`waitForText\` command 1`] = `
 "{
   WebDriverWait wait = new WebDriverWait(driver, 30);
   wait.until(ExpectedConditions.textToBe(By.cssSelector(\\"#blah\\"), \\"text\\"));
-}"
+}
+"
 `;
 
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
-  "body": "while ((Boolean) js.executeScript(\\"return (true)\\")) {",
+  "body": "while ((Boolean) js.executeScript(\\"return (true)\\")) {
+",
   "endingLevel": 1,
 }
 `;

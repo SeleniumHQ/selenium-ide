@@ -17,6 +17,10 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "devDependencies": {
+    "@seleniumhq/side-model": "4.0.13",
+    "@seleniumhq/side-runtime": "4.0.13"
+  },
   "dependencies": {
     "@seleniumhq/code-export-csharp-commons": "4.0.13",
     "side-code-export": "^4.0.11"
