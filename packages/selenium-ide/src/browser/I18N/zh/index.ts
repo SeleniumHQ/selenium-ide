@@ -117,7 +117,7 @@ const suitesTab = {
   suiteName: '集合名称',
   cancel: '取消',
   create: '创建',
-  deleteNotice: '确认删除集合?',
+  deleteNotice: '确认删除集合 {name}?',
   tooltip: '双击修改名称,右键导出或者删除集合',
   notDeleteNotice: '只有一个集合时不允许删除!',
   noSuiteSelected: '没有集合被选中',

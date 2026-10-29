@@ -31,11 +31,18 @@ const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
       }),
     [prefersDarkMode]
   )
-  const [languageMap, setLanguageMap] = React.useState<any>(null)
+  // Dialogs and playback windows don't have the system API: render them
+  // right away, as before
+  const hasLanguageAPI = Boolean(window.sideAPI?.system?.getLanguageMap)
+  const [languageMap, setLanguageMap] = React.useState<any>(
+    hasLanguageAPI ? null : {}
+  )
   React.useEffect(() => {
-    window.sideAPI.system.getLanguageMap(true).then((result) => {
-      setLanguageMap(result)
-    })
+    if (!hasLanguageAPI) return
+    window.sideAPI.system.getLanguageMap(true).then(
+      (result) => setLanguageMap(result),
+      () => setLanguageMap({})
+    )
   }, [])
 
   // Wait for the messages, so nothing renders with missing translations
