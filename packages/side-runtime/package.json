@@ -28,7 +28,6 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "devDependencies": {
-    "@seleniumhq/get-driver": "4.0.13",
     "@seleniumhq/side-testkit": "4.0.13",
     "@seleniumhq/webdriver-testkit": "4.0.13"
   },

@@ -25,9 +25,6 @@
   },
   "references": [
     {
-      "path": "../browser-info"
-    },
-    {
       "path": "../code-export-csharp-commons"
     },
     {
@@ -47,9 +44,6 @@
     },
     {
       "path": "../code-export-ruby-rspec"
-    },
-    {
-      "path": "../get-driver"
     },
     {
       "path": "../side-api"

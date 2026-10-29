@@ -208,6 +208,18 @@ async function main() {
         throw new Error('Playback did not pass: ' + JSON.stringify(results))
       })
     console.log('IDE is correctly playing back commands!')
+
+    // The IDE finds an installed Chrome and its driver with Selenium Manager
+    const { browsers } = await driver.executeAsyncScript(
+      'const done = arguments[arguments.length - 1]; window.sideAPI.driver.listBrowsers().then(done)'
+    )
+    const chrome = browsers.find((b) => b.browser === 'chrome')
+    if (!chrome?.version) {
+      throw new Error(
+        'Expected to find Chrome, got ' + JSON.stringify(browsers)
+      )
+    }
+    console.log(`IDE found Chrome ${chrome.version} with Selenium Manager`)
     await driver.quit()
     proc.kill()
   } catch (e) {

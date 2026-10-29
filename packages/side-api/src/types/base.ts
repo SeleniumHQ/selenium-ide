@@ -1,10 +1,11 @@
 import { CommandShape, ProjectShape } from '@seleniumhq/side-model'
-import { Chrome } from '@seleniumhq/browser-info'
-import { Browser } from '@seleniumhq/get-driver'
 import { StateShape } from '../models/state'
 
-export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
+export type Browser = 'chrome' | 'electron' | 'firefox' | 'MicrosoftEdge'
+
+export interface BrowserInfo {
   browser: Browser
+  version: string
 }
 
 export interface BrowsersInfo {

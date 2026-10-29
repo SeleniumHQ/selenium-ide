@@ -9,12 +9,6 @@
   "exclude": ["**/__mocks__"],
   "references": [
     {
-      "path": "../browser-info"
-    },
-    {
-      "path": "../get-driver"
-    },
-    {
       "path": "../side-model"
     },
     {

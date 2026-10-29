@@ -1,4 +1,3 @@
-import { resolveDriverName } from '@seleniumhq/get-driver'
 import { ChildProcess, spawn } from 'child_process'
 import { app } from 'electron'
 import * as fs from 'fs-extra'
@@ -6,6 +5,7 @@ import { BrowserInfo, Session } from 'main/types'
 import * as path from 'node:path'
 import * as os from 'os'
 import { COLOR_MAGENTA, COLOR_YELLOW, isAutomated, vdebuglog } from 'main/util'
+import { findChrome } from './selenium-manager'
 
 // ChromeDriver 152+ adds the port: "was started successfully on port 9516."
 const successMessage = 'was started successfully'
@@ -25,7 +25,8 @@ export const port = isAutomated ? 9518 : app.isPackaged ? 9516 : 9515
 
 /**
  * This module is just an async function that does the following:
- *   1. Grab driver from the node_modules, as fetched by electron-driver
+ *   1. Get the driver: electron-chromedriver for Electron, or the chromedriver
+ *      that Selenium Manager finds for the installed Chrome
  *   2. Spawn a process of it and waits for `driver was started successfully`
  *   3. Return successfully if this occurs, or promote the failure if it doesn't work
  *   4. When Electron is quitting, close the child driver process
@@ -36,32 +37,20 @@ const ourElectronPath = __non_webpack_require__.resolve(
   path.join('electron-chromedriver', 'bin', electronBinary)
 )
 
-const getDriver = ({ browser, version }: BrowserInfo) =>
-  (browser === 'electron'
-    ? ourElectronPath
-    : path.resolve(
-        path.join(
-          __dirname,
-          '..',
-          'files',
-          resolveDriverName({
-            browser,
-            platform: os.platform(),
-            version,
-          })
-        )
-      )
-  ).replace('app.asar', 'app.asar.unpacked')
+const getDriver = async ({ browser }: BrowserInfo) =>
+  browser === 'electron'
+    ? ourElectronPath.replace('app.asar', 'app.asar.unpacked')
+    : (await findChrome())?.driverPath ?? ''
 
 export type StartDriver = (
   session: Session
 ) => (info: BrowserInfo) => Promise<DriverStartSuccess | DriverStartFailure>
 
-const startDriver: StartDriver = (session: Session) => (info) =>
-  new Promise((resolve) => {
+const startDriver: StartDriver = (session: Session) => async (info) => {
+  const driverPath = await getDriver(info)
+  return new Promise((resolve) => {
     let initialized = false
     const args = ['--verbose', `--port=${port}`]
-    const driverPath = getDriver(info)
     console.log(
       'Starting driver',
       info.browser,
@@ -137,5 +126,6 @@ const startDriver: StartDriver = (session: Session) => (info) =>
       })
     }
   })
+}
 
 export default startDriver

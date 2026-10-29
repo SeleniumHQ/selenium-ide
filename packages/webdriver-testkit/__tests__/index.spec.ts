@@ -19,7 +19,6 @@ import * as index from '../src'
 
 describe('webdriver-testkit', () => {
   it('should export all the required things', () => {
-    expect(index.updateDrivers).toBeDefined()
     expect(index.createDriver).toBeDefined()
     expect(index.createHeadlessChrome).toBeDefined()
     expect(index.createHeadlessFirefox).toBeDefined()

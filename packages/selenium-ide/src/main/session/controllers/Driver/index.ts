@@ -1,4 +1,3 @@
-import { Chrome } from '@seleniumhq/browser-info'
 import { retry } from '@seleniumhq/side-commons'
 import { CommandShape } from '@seleniumhq/side-model'
 import { PluginRuntimeShape, WebDriverExecutor } from '@seleniumhq/side-runtime'
@@ -10,7 +9,7 @@ import { join } from 'path'
 import { Builder } from 'selenium-webdriver'
 import getScriptManager from 'selenium-webdriver/bidi/scriptManager'
 
-import downloadDriver from './download'
+import { findChrome } from './selenium-manager'
 import startDriver, { port, WebdriverDebugLog } from './start'
 import BaseController from '../Base'
 import { createBidiAPIBindings } from './bidi'
@@ -312,7 +311,11 @@ export default class DriverController extends BaseController {
   }
 
   async download(info: BrowserInfo) {
-    await downloadDriver(info)
+    // Electron's driver is bundled. For Chrome, Selenium Manager downloads
+    // a matching chromedriver if needed.
+    if (info.browser !== 'electron') {
+      await findChrome()
+    }
   }
 
   async listBrowsers(): Promise<BrowsersInfo> {
@@ -320,16 +323,10 @@ export default class DriverController extends BaseController {
      * Note: This is shelved for optimization but could be unearthed
      * if using browsers other than electron is valuable to people
      */
-    const chromeBrowserInfo = await Chrome.getBrowserInfo()
-    const chromeBrowserInfoArr = Array.isArray(chromeBrowserInfo)
-      ? chromeBrowserInfo
-      : [chromeBrowserInfo]
-    const ourChromeBrowserInfo: BrowserInfo[] = chromeBrowserInfoArr.map(
-      (info) => ({
-        browser: 'chrome',
-        version: info.version,
-      })
-    )
+    const chrome = await findChrome()
+    const ourChromeBrowserInfo: BrowserInfo[] = chrome
+      ? [{ browser: 'chrome', version: chrome.version }]
+      : []
     return {
       browsers: [ourElectronBrowserInfo].concat(ourChromeBrowserInfo),
       selected: this.session.store.get('browserInfo') || ourElectronBrowserInfo,

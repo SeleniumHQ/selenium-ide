@@ -242,9 +242,6 @@ importers:
       '@seleniumhq/code-export-ruby-rspec':
         specifier: 4.0.13
         version: link:../code-export-ruby-rspec
-      '@seleniumhq/get-driver':
-        specifier: 4.0.13
-        version: link:../get-driver
       '@seleniumhq/side-api':
         specifier: 4.0.13
         version: link:../side-api
@@ -315,9 +312,6 @@ importers:
       '@medv/finder':
         specifier: ^1.1.1
         version: 1.1.3
-      '@seleniumhq/browser-info':
-        specifier: 4.0.13
-        version: link:../browser-info
       '@types/electron-devtools-installer':
         specifier: ^2.2.5
         version: 2.2.5
@@ -402,12 +396,6 @@ importers:
 
   packages/side-api:
     dependencies:
-      '@seleniumhq/browser-info':
-        specifier: 4.0.13
-        version: link:../browser-info
-      '@seleniumhq/get-driver':
-        specifier: 4.0.13
-        version: link:../get-driver
       '@seleniumhq/side-model':
         specifier: 4.0.13
         version: link:../side-model
@@ -571,9 +559,6 @@ importers:
         specifier: ^4.51.0
         version: 4.51.0
     devDependencies:
-      '@seleniumhq/get-driver':
-        specifier: 4.0.13
-        version: link:../get-driver
       '@seleniumhq/side-testkit':
         specifier: 4.0.13
         version: link:../side-testkit
@@ -594,20 +579,7 @@ importers:
         version: 5.0.6
 
   packages/webdriver-testkit:
-    dependencies:
-      '@seleniumhq/browser-info':
-        specifier: 4.0.13
-        version: link:../browser-info
-      '@seleniumhq/get-driver':
-        specifier: 4.0.13
-        version: link:../get-driver
-      fs-extra:
-        specifier: ^8.1.0
-        version: 8.1.0
     devDependencies:
-      '@types/fs-extra':
-        specifier: ^8.0.1
-        version: 8.1.2
       '@types/selenium-webdriver':
         specifier: ^4.35.7
         version: 4.35.7
