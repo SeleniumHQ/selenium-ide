@@ -1,4 +1,5 @@
 import langFileEn, { LanguageMap } from 'browser/I18N/en'
+import langFileZh from 'browser/I18N/zh'
 import { dialog, ipcMain } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { writeFile } from 'fs/promises'
@@ -6,7 +7,7 @@ import { COLOR_CYAN, isAutomated, vdebuglog } from 'main/util'
 import { platform } from 'os'
 import { inspect } from 'util'
 import BaseController from '../Base'
-import { flattenNestedObject } from 'browser/I18N/util'
+import { flattenNestedObject, getSupportedLanguage } from 'browser/I18N/util'
 
 let firstTime = true
 export default class SystemController extends BaseController {
@@ -54,23 +55,15 @@ export default class SystemController extends BaseController {
     this.logs.push(args.map((arg) => inspect(arg)).join(' '))
   }
 
-  /***以下是我新增***/
   async getLanguageMap(frontend = false) {
-    try {
-      const language = await this.session.app.getLocale()
-      const langFile = await import(`../../i18n/${language}/Commands`)
-      this.languageMap = langFile.default
-    } catch (e) {
-      // lang DNE, stay en
-    }
+    const language = getSupportedLanguage(this.session.app.getLocale())
+    this.languageMap = language === 'zh' ? langFileZh : langFileEn
     if (frontend) {
       // React intl uses a flat dict so we convert it here
       return flattenNestedObject(this.languageMap)
     }
     return this.languageMap
   }
-
-  /***以上是我新增***/
 
   async startup() {
     this.isDev =
