@@ -18,16 +18,19 @@
 import render from '../../../src/code-export/render'
 import { renderCommands } from '../../../src/code-export/render'
 import { emitOriginTracing } from '../../../src/code-export/emit'
-import TestCase from '../../../../selenium-ide/src/neo/models/TestCase'
 
 describe('Render', () => {
   const commandPrefixPadding = '  '
   const commentPrefix = '//'
 
   it('should render with command tracing', () => {
-    const test = new TestCase()
-    test.createCommand(undefined, 'a')
-    test.createCommand(undefined, 'b', undefined, undefined, 'comment')
+    const test = {
+      name: 'Untitled Test',
+      commands: [
+        { command: 'a', target: '', value: '', comment: '' },
+        { command: 'b', target: '', value: '', comment: 'comment' },
+      ],
+    }
     const commandStatements = ['blah', 'andblah']
     let originTracing = emitOriginTracing(test, { commentPrefix }, true, false)
     let result = renderCommands(commandStatements, {
@@ -84,6 +87,33 @@ describe('Render', () => {
     const result = render(commandPrefixPadding, input, { startingLevel: 1 })
     expect(result).toMatch(commandPrefixPadding)
   })
-  //it('should skip emitting', () => {
-  //})
+  it('should indent the commands inside a block', () => {
+    const commands = [
+      'first',
+      {
+        commands: [{ level: 0, statement: 'if x:' }],
+        endingLevelAdjustment: 1,
+      },
+      'inside',
+      {
+        commands: [{ level: 0, statement: 'else:' }],
+        startingLevelAdjustment: -1,
+        endingLevelAdjustment: 1,
+      },
+      'inside',
+      {
+        commands: [{ level: 0, statement: '' }],
+        skipEmitting: true,
+        startingLevelAdjustment: -1,
+      },
+      'last',
+    ]
+    const result = renderCommands(commands, {
+      startingLevel: 1,
+      commandPrefixPadding,
+    })
+    expect(result).toBe(
+      '  first\n  if x:\n    inside\n  else:\n    inside\n  last\n'
+    )
+  })
 })

@@ -27,8 +27,8 @@ describe('Hooks', () => {
     hook.clearRegister()
     expect(hook.emitters).toEqual([])
   })
-  // Fails: an empty hook emits one empty statement. Check with the
-  // exported code indentation fix.
+  // Fails: an empty hook emits an empty line for its starting syntax and
+  // another for its ending syntax
   it.skip('should not error when no emitters registered', async () => {
     const hook = new Hook()
     const result = (await hook.emit({})) as ExportCommandsShape
@@ -55,11 +55,11 @@ describe('Hooks', () => {
       ],
     })
   })
-  // Fails: an optional hook with nothing registered returns an empty command
-  // list instead of undefined. Check with the exported code indentation fix.
-  it.skip('should optionally emit commands', async () => {
+  it('should optionally emit commands', async () => {
     const hook = new Hook({ startingSyntax: 'blah1', endingSyntax: 'blah99' })
-    await expect(hook.emit({ isOptional: true })).resolves.toBeUndefined()
+    await expect(hook.emit({ isOptional: true })).resolves.toEqual({
+      commands: [],
+    })
     await expect(hook.emit({ isOptional: false })).resolves.toEqual({
       commands: [
         { level: 0, statement: 'blah1' },

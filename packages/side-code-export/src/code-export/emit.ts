@@ -227,19 +227,9 @@ async function emitCommands(commands: CommandShape[], context: EmitterContext) {
       }
     })
   )
-  let result: ExportCommandShape[] = []
-  emittedCommands.forEach((entry) => {
-    if (typeof entry === 'string') {
-      entry.split('\n').forEach((subEntry) => result.push(subEntry))
-    } else {
-      if ('statement' in entry) {
-        result.push(entry)
-      } else if ('commands' in entry) {
-        result = result.concat(entry.commands)
-      }
-    }
-  })
-  return result
+  // Keep each command's block whole, so its level adjustments apply when
+  // it's rendered
+  return emittedCommands.filter((entry) => entry !== undefined)
 }
 
 export interface EmitMethodContext {
@@ -430,12 +420,10 @@ async function emitTest(
     }
   ) as string
   result.commands = render(
-    {
-      commands: await emitCommands(test.commands, context).catch((error) => {
-        // prefix test name on error
-        throw new Error(`Test '${test.name}' has a problem: ${error.message}`)
-      }),
-    },
+    await emitCommands(test.commands, context).catch((error) => {
+      // prefix test name on error
+      throw new Error(`Test '${test.name}' has a problem: ${error.message}`)
+    }),
     {
       startingLevel: commandLevel,
       originTracing,
