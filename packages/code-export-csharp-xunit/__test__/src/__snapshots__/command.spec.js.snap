@@ -145,8 +145,8 @@ exports[`command code emitter should emit \`verify title\` command 1`] = `"Asser
 
 exports[`command code emitter should emit \`verify value\` command 1`] = `
 "{
-  string value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
-  Assert.That(value, Is.EqualTo(\\"test\\"));
+  String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
+  Assert.Equal(value, \\"test\\");
 }"
 `;
 

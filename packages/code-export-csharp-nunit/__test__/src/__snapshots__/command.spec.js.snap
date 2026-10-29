@@ -20,6 +20,10 @@ exports[`command code emitter should emit 'verify selected label' command 1`] = 
 }"
 `;
 
+exports[`command code emitter should emit \`accept alert\` command 1`] = `"driver.SwitchTo().Alert().Accept();"`;
+
+exports[`command code emitter should emit \`accept confirmation\` command 1`] = `"driver.SwitchTo().Alert().Accept();"`;
+
 exports[`command code emitter should emit \`add selection\` command 1`] = `
 "{
   var dropdown = driver.FindElement(By.CssSelector(\\"select\\"));
@@ -27,7 +31,13 @@ exports[`command code emitter should emit \`add selection\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`answer on visible prompt\` command 1`] = `undefined`;
+exports[`command code emitter should emit \`answer prompt\` command 1`] = `
+"{
+  var Alert = driver.SwitchTo().Alert();
+  Alert.SendKeys(\\"an answer\\");
+  Alert.Accept();
+}"
+`;
 
 exports[`command code emitter should emit \`assert alert\` command 1`] = `"Assert.That(driver.SwitchTo().Alert().Text, Is.EqualTo(\\"an alert\\"));"`;
 
@@ -105,15 +115,15 @@ exports[`command code emitter should emit \`check\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`choose cancel on visible prompt\` command 1`] = `undefined`;
-
-exports[`command code emitter should emit \`choose ok on visible confirmation\` command 1`] = `undefined`;
-
 exports[`command code emitter should emit \`click at\` command 1`] = `"driver.FindElement(By.LinkText(\\"button\\")).Click();"`;
 
 exports[`command code emitter should emit \`click\` command 1`] = `"driver.FindElement(By.LinkText(\\"button\\")).Click();"`;
 
 exports[`command code emitter should emit \`close\` command 1`] = `"driver.Close();"`;
+
+exports[`command code emitter should emit \`dismiss confirmation\` command 1`] = `"driver.SwitchTo().Alert().Dismiss();"`;
+
+exports[`command code emitter should emit \`dismiss prompt\` command 1`] = `"driver.SwitchTo().Alert().Dismiss();"`;
 
 exports[`command code emitter should emit \`do\` command 1`] = `
 Object {
@@ -326,6 +336,8 @@ exports[`command code emitter should emit \`store attribute\` command 1`] = `
 }"
 `;
 
+exports[`command code emitter should emit \`store element count\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElements(By.XPath(\\"button\\")).Count;"`;
+
 exports[`command code emitter should emit \`store json\` command 1`] = `"throw new System.Exception(\\"The \`storeJson\` command is not yet implemented for this language.\\");"`;
 
 exports[`command code emitter should emit \`store text\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElement(By.Id(\\"someElement\\")).Text;"`;
@@ -336,11 +348,7 @@ exports[`command code emitter should emit \`store value\` command 1`] = `"vars[\
 
 exports[`command code emitter should emit \`store window handle\` command 1`] = `"vars[\\"windowName\\"] = driver.CurrentWindowHandle;"`;
 
-exports[`command code emitter should emit \`store xpath count\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElements(By.XPath(\\"button\\")).Count;"`;
-
 exports[`command code emitter should emit \`store\` command 1`] = `"vars[\\"myVar\\"] = \\"some value\\";"`;
-
-exports[`command code emitter should emit \`submit\` command 1`] = `"throw new System.Exception(\\"\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\");"`;
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
@@ -491,11 +499,3 @@ exports[`command code emitter should emit new window handling, if command opens 
 driver.FindElement(By.CssSelector(\\"button\\")).Click();
 vars[\\"newWin\\"] = waitForWindow(2000);"
 `;
-
-exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 1`] = `""`;
-
-exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 2`] = `""`;
-
-exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 3`] = `""`;
-
-exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 4`] = `""`;

@@ -32,22 +32,11 @@ async function prettify(command, { fullPayload } = {}) {
 }
 
 describe('command code emitter', () => {
-  it.skip('should emit all known commands', () => {
-    let result = []
-    Object.keys(Commands).forEach(command => {
-      if (!Command.canEmit(command)) {
-        result.push(command)
-      }
-    })
-    expect(() => {
-      if (result.length) {
-        if (result.length === 1) {
-          throw new Error(`${result[0]} has no emitter, write one!`)
-        } else {
-          throw new Error(`No emitters for ${result.join(', ')}. Write them!`)
-        }
-      }
-    }).not.toThrow()
+  it('should have an emitter for every command', () => {
+    const missing = Object.keys(Commands).filter(
+      (command) => !Command.emitters[command]
+    )
+    expect(missing).toEqual([])
   })
   it('should emit `add selection` command', () => {
     const command = {
@@ -373,14 +362,6 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it.skip('should emit `mouse move` event', () => {
-    const command = {
-      command: 'mouseMove',
-      target: 'id=button',
-      value: '',
-    }
-    return expect(prettify(command)).resolves.toMatchSnapshot()
-  })
   it('should emit `mouse move at` event', () => {
     const command = {
       command: 'mouseMoveAt',
@@ -563,23 +544,6 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  // This command isn't in the v4 command model, so export rejects it
-  it.skip('should skip playback supported commands, that are not supported in webdriver', () => {
-    return Promise.all([
-      expect(
-        prettify({ command: 'answerOnNextPrompt', target: 'blah' })
-      ).resolves.toMatchSnapshot(),
-      expect(
-        prettify({ command: 'chooseCancelOnNextConfirmation' })
-      ).resolves.toMatchSnapshot(),
-      expect(
-        prettify({ command: 'chooseCancelOnNextPrompt' })
-      ).resolves.toMatchSnapshot(),
-      expect(
-        prettify({ command: 'chooseOkOnNextConfirmation' })
-      ).resolves.toMatchSnapshot(),
-    ])
-  })
   it('should emit `store` command', () => {
     const command = {
       command: 'store',
@@ -636,21 +600,11 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  // This command isn't in the v4 command model, so export rejects it
-  it.skip('should emit `store xpath count` command', () => {
+  it('should emit `store element count` command', () => {
     const command = {
-      command: 'storeXpathCount',
+      command: 'storeElementCount',
       target: 'xpath=button',
       value: 'myVar',
-    }
-    return expect(prettify(command)).resolves.toMatchSnapshot()
-  })
-  // This command isn't in the v4 command model, so export rejects it
-  it.skip('should emit `submit` command', () => {
-    const command = {
-      command: 'submit',
-      target: 'id=form',
-      value: '',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
@@ -858,28 +812,41 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  // This command isn't in the v4 command model, so export rejects it
-  it.skip('should emit `answer on visible prompt` command', () => {
+  it('should emit `answer prompt` command', () => {
     const command = {
-      command: 'webdriverAnswerOnVisiblePrompt',
+      command: 'answerPrompt',
       target: 'an answer',
       value: '',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  // This command isn't in the v4 command model, so export rejects it
-  it.skip('should emit `choose cancel on visible prompt` command', () => {
+  it('should emit `dismiss prompt` command', () => {
     const command = {
-      command: 'webdriverChooseCancelOnVisiblePrompt',
+      command: 'dismissPrompt',
       target: '',
       value: '',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  // This command isn't in the v4 command model, so export rejects it
-  it.skip('should emit `choose ok on visible confirmation` command', () => {
+  it('should emit `accept confirmation` command', () => {
     const command = {
-      command: 'webdriverChooseOkOnVisibleConfirmation',
+      command: 'acceptConfirmation',
+      target: '',
+      value: '',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
+  it('should emit `accept alert` command', () => {
+    const command = {
+      command: 'acceptAlert',
+      target: '',
+      value: '',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
+  it('should emit `dismiss confirmation` command', () => {
+    const command = {
+      command: 'dismissConfirmation',
       target: '',
       value: '',
     }

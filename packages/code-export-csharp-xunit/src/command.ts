@@ -132,7 +132,7 @@ async function emitVerifyNotChecked(locator: string) {
 }
 
 emitters.assertNotEditable = emitVerifyNotEditable
-emitters.verifyNotEdtiable = emitVerifyNotEditable
+emitters.verifyNotEditable = emitVerifyNotEditable
 
 async function emitVerifyNotEditable(locator: string) {
   const commands = [
@@ -226,6 +226,7 @@ async function emitVerifySelectedLabel(locator: string, labelValue: string) {
 emitters.assertSelectedValue = emitVerifyValue
 emitters.verifySelectedValue = emitVerifyValue
 emitters.assertValue = emitVerifyValue
+emitters.verifyValue = emitVerifyValue
 
 async function emitVerifyValue(locator: string, value: string) {
   const commands = [

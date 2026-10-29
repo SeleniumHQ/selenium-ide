@@ -29,7 +29,6 @@ import selection from './selection'
 
 export const emitters: Record<string, ProcessedCommandEmitter> = {
   addSelection: emitSelect,
-  answerOnNextPrompt: skip,
   assert: emitAssert,
   assertAlert: emitAssertAlert,
   assertChecked: emitVerifyChecked,
@@ -48,9 +47,6 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   assertText: emitVerifyText,
   assertTitle: emitVerifyTitle,
   check: emitCheck,
-  chooseCancelOnNextConfirmation: skip,
-  chooseCancelOnNextPrompt: skip,
-  chooseOkOnNextConfirmation: skip,
   click: emitClick,
   clickAt: emitClick,
   close: emitClose,
@@ -70,7 +66,6 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   if: emitControlFlowIf,
   mouseDown: emitMouseDown,
   mouseDownAt: emitMouseDown,
-  mouseMove: emitMouseMove,
   mouseMoveAt: emitMouseMove,
   mouseOver: emitMouseMove,
   mouseOut: emitMouseOut,
@@ -95,8 +90,7 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   storeTitle: emitStoreTitle,
   storeValue: emitStoreValue,
   storeWindowHandle: emitStoreWindowHandle,
-  storeXpathCount: emitStoreXpathCount,
-  submit: emitSubmit,
+  storeElementCount: emitStoreXpathCount,
   times: emitControlFlowTimes,
   type: emitType,
   uncheck: emitUncheck,
@@ -120,12 +114,13 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   waitForElementNotEditable: emitWaitForElementNotEditable,
   waitForElementNotPresent: emitWaitForElementNotPresent,
   waitForElementNotVisible: emitWaitForElementNotVisible,
-  webdriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
+  answerPrompt: emitAnswerOnNextPrompt,
   waitForText: emitWaitForText,
-  webdriverChooseCancelOnVisibleConfirmation:
+  dismissConfirmation:
     emitChooseCancelOnNextConfirmation,
-  webdriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
-  webdriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
+  dismissPrompt: emitChooseCancelOnNextConfirmation,
+  acceptConfirmation: emitChooseOkOnNextConfirmation,
+  acceptAlert: emitChooseOkOnNextConfirmation,
   while: emitControlFlowWhile,
 }
 
@@ -684,12 +679,6 @@ async function emitStoreWindowHandle(varName: string) {
 async function emitStoreXpathCount(locator: string, varName: string) {
   const result = `@driver.find_elements(${await location.emit(locator)}).length`
   return Promise.resolve(variableSetter(varName, result))
-}
-
-async function emitSubmit(_locator: string) {
-  return Promise.resolve(
-    `raise "'submit' is not a supported command in Selenium WebDriver. Please re-record the step in the IDE."`
-  )
 }
 
 async function emitType(target: string, value: string) {
