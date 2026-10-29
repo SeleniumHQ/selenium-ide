@@ -50,9 +50,9 @@ export default class MenuController extends BaseController {
         const clickHandler: Electron.MenuItemConstructorOptions['click'] =
           command.click
             ? async (...args) => {
-              await command.click!(...args)
-              resolve(command.label!)
-            }
+                await command.click!(...args)
+                resolve(command.label!)
+              }
             : fallbackHandler
         return {
           ...command,

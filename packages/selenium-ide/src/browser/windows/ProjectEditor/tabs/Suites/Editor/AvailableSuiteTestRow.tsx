@@ -38,7 +38,13 @@ const AvailableSuiteTestRow: FC<AvailableSuiteTestRowProps> = ({
   >
     <ListItemText
       disableTypography
-      primary={<Box sx={commandTextFormat}>{state.userPrefs.camelCaseNamesPref === "Yes" ? camelToTitleCase(test.name) : test.name}</Box>}
+      primary={
+        <Box sx={commandTextFormat}>
+          {state.userPrefs.camelCaseNamesPref === 'Yes'
+            ? camelToTitleCase(test.name)
+            : test.name}
+        </Box>
+      }
     />
   </DraggableListItem>
 )

@@ -20,6 +20,6 @@ export const window: WindowConfig['window'] = () => {
     title: 'Playback Window',
     webPreferences: {
       nodeIntegrationInSubFrames: true,
-    }
+    },
   }
 }

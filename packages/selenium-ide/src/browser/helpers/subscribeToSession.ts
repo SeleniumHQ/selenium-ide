@@ -1,5 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { project as defaultProject, state as defaultState } from '@seleniumhq/side-api'
+import {
+  project as defaultProject,
+  state as defaultState,
+} from '@seleniumhq/side-api'
 import { CoreSessionData } from '@seleniumhq/side-api'
 
 const performSubscription = async (
@@ -11,7 +14,7 @@ const performSubscription = async (
       const [namespace, method] = path.split('.')
       console.debug('Queueing Mutator', path, data)
       updateSession((session) => {
-        // @ts-expect-error - We know this object to be truthy because onMutate always does 
+        // @ts-expect-error - We know this object to be truthy because onMutate always does
         const newSession = window.sideAPI.mutators[namespace][method](
           session,
           data
@@ -25,7 +28,7 @@ const performSubscription = async (
       try {
         window.sideAPI.state.onMutate.removeListener(handler)
       } catch (e) {}
-    };
+    }
     // window.addEventListener('beforeunload', removeHandler)
     return removeHandler
   }, [])
@@ -41,7 +44,7 @@ export default () => {
     project: defaultProject,
     state: defaultState,
   })
-  console.debug('activeTestID:'+session.state.activeTestID)
+  console.debug('activeTestID:' + session.state.activeTestID)
   performSubscription(updateSession)
   return session
 }

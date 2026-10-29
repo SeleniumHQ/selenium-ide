@@ -16,7 +16,7 @@ const useReorderPreview = <T = any>(
   const [preview, setPreview] = React.useState(addIndexes(entries.map(id)))
   const resetPreview = () => {
     setPreview(addIndexes(entries.map(id)))
-  } 
+  }
   const reorderPreview: ReorderPreview = ({ newIndex }) => {
     const newPreview = reorderList({
       entries: preview,

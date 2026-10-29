@@ -44,7 +44,7 @@ const TestDeleteDialog: React.FC<TestDeleteDialogProps> = ({
   return (
     <Dialog
       classes={{
-        container: 'justify-content-start'
+        container: 'justify-content-start',
       }}
       onClose={handleClose}
       open={open}

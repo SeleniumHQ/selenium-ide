@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from "electron"
+import { contextBridge, ipcRenderer } from 'electron'
 
 function alertError(error: Error | string) {
   if (error instanceof Error) {
@@ -12,5 +12,5 @@ function acceptAlert() {
   ipcRenderer.send('accept-alert')
 }
 
-contextBridge.exposeInMainWorld('acceptAlert', acceptAlert);
-contextBridge.exposeInMainWorld('alertError', alertError);
+contextBridge.exposeInMainWorld('acceptAlert', acceptAlert)
+contextBridge.exposeInMainWorld('alertError', alertError)

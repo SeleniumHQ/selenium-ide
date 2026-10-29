@@ -17,10 +17,10 @@ const TestSelector: React.FC = () => {
   const [confirmCreate, setConfirmCreate] = React.useState(false)
   const { activeTestID } = useContext(activetestIDContext)
   const tests = useContext(testsContext)
-  const activeTest = React.useMemo(() => tests.find((t) => t.id === activeTestID), [
-    tests,
-    activeTestID,
-  ])
+  const activeTest = React.useMemo(
+    () => tests.find((t) => t.id === activeTestID),
+    [tests, activeTestID]
+  )
   return (
     <>
       <EditorToolbar

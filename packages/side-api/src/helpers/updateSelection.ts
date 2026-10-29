@@ -23,8 +23,8 @@ export const updateSelection: UpdateSelection = (
       newIndexes.reverse()
     }
   }
-  const filteredIndexes = selectionIndexes.filter((index) =>
-    !newIndexes.includes(index)
+  const filteredIndexes = selectionIndexes.filter(
+    (index) => !newIndexes.includes(index)
   )
   if (add) {
     return filteredIndexes.concat(newIndexes)

@@ -1,11 +1,11 @@
 // import { ipcRenderer } from 'electron'
 import Recorder from './recorder'
-import {singleton as locatorBuilders} from 'browser/windows/PlaybackWindow/preload/locator-builders'
+import { singleton as locatorBuilders } from 'browser/windows/PlaybackWindow/preload/locator-builders'
 
 let recorder: Recorder
 let eleTarget: HTMLElement | null
 
-const shortcutHandler = new Map
+const shortcutHandler = new Map()
 
 shortcutHandler.set('verifyText', function () {
   return (eleTarget as any).innerText
@@ -20,7 +20,7 @@ shortcutHandler.set('waitForElementVisible', function () {
   return '1000'
 })
 
-async function onContextMenu (event: any) {
+async function onContextMenu(event: any) {
   eleTarget = event.target as HTMLElement
   /*
   const result = await ipcRenderer.invoke('show-shortcut-menu')
@@ -43,11 +43,11 @@ async function onContextMenu (event: any) {
   )
 }
 
-export function attach (_recorder: Recorder) {
+export function attach(_recorder: Recorder) {
   recorder = _recorder
   window.addEventListener('contextmenu', onContextMenu)
 }
 
-export function detach () {
+export function detach() {
   window.removeEventListener('contextmenu', onContextMenu)
 }

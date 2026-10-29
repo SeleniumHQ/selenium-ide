@@ -17,7 +17,7 @@ const baseListener = <ARGS extends VariadicArgs>(
     dispatchEvent(...args) {
       console.debug(path, 'dispatching event')
       const results = listeners.map((fn) => fn(...args))
-      return results;
+      return results
     },
     hasListener(listener) {
       return listeners.includes(listener)

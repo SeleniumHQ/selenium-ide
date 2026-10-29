@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from "electron"
+import { contextBridge, ipcRenderer } from 'electron'
 
 function acceptConfirmation() {
   ipcRenderer.send('accept-confirmation', true)
@@ -16,6 +16,6 @@ function dismissConfirmation() {
   ipcRenderer.send('dismiss-confirmation', false)
 }
 
-contextBridge.exposeInMainWorld('dismissConfirmation', dismissConfirmation);
-contextBridge.exposeInMainWorld('confirmError', confirmationError);
-contextBridge.exposeInMainWorld('acceptConfirmation', acceptConfirmation);
+contextBridge.exposeInMainWorld('dismissConfirmation', dismissConfirmation)
+contextBridge.exposeInMainWorld('confirmError', confirmationError)
+contextBridge.exposeInMainWorld('acceptConfirmation', acceptConfirmation)

@@ -100,7 +100,7 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
     },
   })
 
-  // 
+  //
   const [{ isDragging }, drag] = useDrag({
     type: dragType,
     item: () => {

@@ -33,7 +33,7 @@ const DraggableListItem: React.FC<DraggableListItemProps> = ({
         const result = monitor.getDropResult()
         end(result)
       }
-    }
+    },
   })
 
   drag(ref)

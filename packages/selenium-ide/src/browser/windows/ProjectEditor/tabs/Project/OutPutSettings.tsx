@@ -70,7 +70,9 @@ const OutPutSettings: FC = () => {
   const linkTestPlatform = async (url: string) => {
     if (url == '' || url == undefined) {
       message.alertMessage({
-        content: <FormattedMessage id={languageMap.outPutConfig.platformError} />,
+        content: (
+          <FormattedMessage id={languageMap.outPutConfig.platformError} />
+        ),
         duration: 6000,
         type: 'error',
         title: <FormattedMessage id={languageMap.outPutConfig.warn} />,

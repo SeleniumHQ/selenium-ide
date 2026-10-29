@@ -94,8 +94,8 @@ const CommandEditor: FC<CommandEditorProps> = ({
               note={intl.formatMessage({
                 id: languageMap.testCore.windowTimeoutNote,
               })}
-              />
-            </>
+            />
+          </>
         )}
         <CommandTextField
           command={correctedCommand}

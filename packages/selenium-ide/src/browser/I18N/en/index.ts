@@ -178,7 +178,8 @@ const testCore = {
   windowHandleName: 'Window Handle Name',
   windowHandleNameNote: 'Variable name to set to the new window handle',
   windowTimeout: 'Window Timeout',
-  windowTimeoutNote: 'The amount of time to wait for the window to open (in milliseconds)',
+  windowTimeoutNote:
+    'The amount of time to wait for the window to open (in milliseconds)',
   commands: 'Commands',
   tabCommand: 'Cmd',
   tabTarget: 'Target',

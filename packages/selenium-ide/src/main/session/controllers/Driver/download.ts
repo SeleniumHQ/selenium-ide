@@ -18,13 +18,16 @@
 import * as fs from 'fs-extra'
 import * as path from 'node:path'
 import * as os from 'os'
-import { Arch, downloadDriver as doDownloadDriver } from '@seleniumhq/get-driver'
+import {
+  Arch,
+  downloadDriver as doDownloadDriver,
+} from '@seleniumhq/get-driver'
 import { BrowserInfo } from 'main/types'
 
 const downloadDriver = async (browserInfo: BrowserInfo) => {
   if (browserInfo.browser === 'electron') {
-    console.log('Electron is builtin, skipping');
-    return;
+    console.log('Electron is builtin, skipping')
+    return
   }
   const downloadDirectory = path.join(__dirname, '../files')
   if (!(await fs.pathExists(downloadDirectory))) {

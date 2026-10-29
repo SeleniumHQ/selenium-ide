@@ -46,7 +46,7 @@ export default class PluginsController extends BaseController {
         }
       })
       .filter(Boolean) as string[]
-    
+
     return Promise.all(
       correctedPreloadPaths.map((preloadPath) => readFile(preloadPath, 'utf-8'))
     )
