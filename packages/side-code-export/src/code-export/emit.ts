@@ -207,7 +207,12 @@ export async function emitCommand(
     }
     return result
   }
-  return ''
+  // A command that starts with // is commented out
+  if (command.command.startsWith('//')) return ''
+  // e.g., a plugin command. Leave a comment, so the step isn't lost silently.
+  return `${context.commentPrefix} Can't export command: ${command.command} | ${
+    command.target ?? ''
+  } | ${command.value ?? ''}`
 }
 
 export type StringEmitter = (selector: string) => Promise<string>

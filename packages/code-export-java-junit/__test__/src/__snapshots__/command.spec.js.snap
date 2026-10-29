@@ -20,6 +20,10 @@ exports[`command code emitter should emit 'verify selected label' command 1`] = 
 }"
 `;
 
+exports[`command code emitter should emit \`accept alert\` command 1`] = `"driver.switchTo().alert().accept();"`;
+
+exports[`command code emitter should emit \`accept confirmation\` command 1`] = `"driver.switchTo().alert().accept();"`;
+
 exports[`command code emitter should emit \`add selection\` command 1`] = `
 "{
   WebElement dropdown = driver.findElement(By.cssSelector(\\"select\\"));
@@ -27,7 +31,7 @@ exports[`command code emitter should emit \`add selection\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`answer on visible prompt\` command 1`] = `
+exports[`command code emitter should emit \`answer prompt\` command 1`] = `
 "{
   Alert alert = driver.switchTo().alert();
   alert.sendKeys(\\"an answer\\")
@@ -113,15 +117,15 @@ exports[`command code emitter should emit \`check\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`choose cancel on visible prompt\` command 1`] = `"driver.switchTo().alert().dismiss();"`;
-
-exports[`command code emitter should emit \`choose ok on visible confirmation\` command 1`] = `"driver.switchTo().alert().accept();"`;
-
 exports[`command code emitter should emit \`click at\` command 1`] = `"driver.findElement(By.linkText(\\"button\\")).click();"`;
 
 exports[`command code emitter should emit \`click\` command 1`] = `"driver.findElement(By.linkText(\\"button\\")).click();"`;
 
 exports[`command code emitter should emit \`close\` command 1`] = `"driver.close();"`;
+
+exports[`command code emitter should emit \`dismiss confirmation\` command 1`] = `"driver.switchTo().alert().dismiss();"`;
+
+exports[`command code emitter should emit \`dismiss prompt\` command 1`] = `"driver.switchTo().alert().dismiss();"`;
 
 exports[`command code emitter should emit \`do\` command 1`] = `
 Object {
@@ -233,14 +237,6 @@ exports[`command code emitter should emit \`mouse move at\` event 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`mouse move\` event 1`] = `
-"{
-  WebElement element = driver.findElement(By.id(\\"button\\"));
-  Actions builder = new Actions(driver);
-  builder.moveToElement(element).perform();
-}"
-`;
-
 exports[`command code emitter should emit \`mouse out\` event 1`] = `
 "{
   WebElement element = driver.findElement(By.tagName(\\"body\\"));
@@ -341,6 +337,8 @@ exports[`command code emitter should emit \`store attribute\` command 1`] = `
 }"
 `;
 
+exports[`command code emitter should emit \`store element count\` command 1`] = `"vars.put(\\"myVar\\", driver.findElements(By.xpath(\\"button\\")).size());"`;
+
 exports[`command code emitter should emit \`store text\` command 1`] = `"vars.put(\\"myVar\\", driver.findElement(By.id(\\"someElement\\")).getText());"`;
 
 exports[`command code emitter should emit \`store title\` command 1`] = `"vars.put(\\"myVar\\", driver.getTitle());"`;
@@ -349,11 +347,7 @@ exports[`command code emitter should emit \`store value\` command 1`] = `"vars.p
 
 exports[`command code emitter should emit \`store window handle\` command 1`] = `"vars.put(\\"windowName\\", driver.getWindowHandle());"`;
 
-exports[`command code emitter should emit \`store xpath count\` command 1`] = `"vars.put(\\"myVar\\", driver.findElements(By.xpath(\\"button\\")).size());"`;
-
 exports[`command code emitter should emit \`store\` command 1`] = `"vars.put(\\"myVar\\", \\"some value\\");"`;
-
-exports[`command code emitter should emit \`submit\` command 1`] = `"throw new Error(\\"\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.\\");"`;
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
@@ -507,11 +501,3 @@ exports[`command code emitter should emit new window handling, if command opens 
 driver.findElement(By.cssSelector(\\"button\\")).click();
 vars.put(\\"newWin\\", waitForWindow(2000));"
 `;
-
-exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 1`] = `""`;
-
-exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 2`] = `""`;
-
-exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 3`] = `""`;
-
-exports[`command code emitter should skip playback supported commands, that are not supported in webdriver 4`] = `""`;

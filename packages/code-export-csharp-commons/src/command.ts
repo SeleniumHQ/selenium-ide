@@ -30,7 +30,6 @@ import selection from './selection'
 
 export const emitters: Record<string, ProcessedCommandEmitter> = {
   addSelection: emitSelect,
-  answerOnNextPrompt: skip,
   assert: emitAssert,
   assertAlert: emitAssertAlert,
   assertChecked: emitVerifyChecked,
@@ -49,9 +48,6 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   assertText: emitVerifyText,
   assertTitle: emitVerifyTitle,
   check: emitCheck,
-  chooseCancelOnNextConfirmation: skip,
-  chooseCancelOnNextPrompt: skip,
-  chooseOkOnNextConfirmation: skip,
   click: emitClick,
   clickAt: emitClick,
   close: emitClose,
@@ -71,7 +67,6 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   if: emitControlFlowIf,
   mouseDown: emitMouseDown,
   mouseDownAt: emitMouseDown,
-  mouseMove: emitMouseMove,
   mouseMoveAt: emitMouseMove,
   mouseOver: emitMouseMove,
   mouseOut: emitMouseOut,
@@ -96,8 +91,7 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   storeTitle: emitStoreTitle,
   storeValue: emitStoreValue,
   storeWindowHandle: emitStoreWindowHandle,
-  storeXpathCount: emitStoreXpathCount,
-  submit: emitSubmit,
+  storeElementCount: emitStoreXpathCount,
   times: emitControlFlowTimes,
   type: emitType,
   uncheck: emitUncheck,
@@ -122,11 +116,12 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   waitForElementNotPresent: emitWaitForElementNotPresent,
   waitForElementNotVisible: emitWaitForElementNotVisible,
   waitForText: emitWaitForText,
-  webDriverAnswerOnVisiblePrompt: emitAnswerOnNextPrompt,
-  webDriverChooseCancelOnVisibleConfirmation:
+  answerPrompt: emitAnswerOnNextPrompt,
+  dismissConfirmation:
     emitChooseCancelOnNextConfirmation,
-  webDriverChooseCancelOnVisiblePrompt: emitChooseCancelOnNextConfirmation,
-  webDriverChooseOkOnVisibleConfirmation: emitChooseOkOnNextConfirmation,
+  dismissPrompt: emitChooseCancelOnNextConfirmation,
+  acceptConfirmation: emitChooseOkOnNextConfirmation,
+  acceptAlert: emitChooseOkOnNextConfirmation,
   while: emitControlFlowWhile,
 }
 
@@ -223,7 +218,7 @@ function emitAnswerOnNextPrompt(textToSend: string) {
   const commands = [
     { level: 0, statement: '{' },
     { level: 1, statement: 'var Alert = driver.SwitchTo().Alert();' },
-    { level: 1, statement: `Alert.SendKeys("${textToSend}")` },
+    { level: 1, statement: `Alert.SendKeys("${textToSend}");` },
     { level: 1, statement: 'Alert.Accept();' },
     { level: 0, statement: '}' },
   ]
@@ -744,12 +739,6 @@ async function emitStoreWindowHandle(varName: string) {
 async function emitStoreXpathCount(locator: any, varName: string) {
   const result = `driver.FindElements(${await location.emit(locator)}).Count`
   return Promise.resolve(variableSetter(varName, result))
-}
-
-async function emitSubmit(_locator: any) {
-  return Promise.resolve(
-    `throw new System.Exception("\`submit\` is not a supported command in Selenium WebDriver. Please re-record the step in the IDE.");`
-  )
 }
 
 async function emitType(target: any, value: any) {

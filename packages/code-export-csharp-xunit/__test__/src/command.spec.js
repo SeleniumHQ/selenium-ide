@@ -31,22 +31,11 @@ async function prettify(command, { fullPayload } = {}) {
 }
 
 describe('command code emitter', () => {
-  it.skip('should emit all known commands', () => {
-    let result = []
-    Object.keys(Commands).forEach(command => {
-      if (!Command.canEmit(command)) {
-        result.push(command)
-      }
-    })
-    expect(() => {
-      if (result.length) {
-        if (result.length === 1) {
-          throw new Error(`${result[0]} has no emitter, write one!`)
-        } else {
-          throw new Error(`No emitters for ${result.join(', ')}. Write them!`)
-        }
-      }
-    }).not.toThrow()
+  it('should have an emitter for every command', () => {
+    const missing = Object.keys(Commands).filter(
+      (command) => !Command.emitters[command]
+    )
+    expect(missing).toEqual([])
   })
   it('should emit `assert` command', () => {
     const command = {
