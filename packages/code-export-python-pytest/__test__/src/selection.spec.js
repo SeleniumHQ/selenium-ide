@@ -15,6 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
+import { defaultPreprocessor, resolveVariables } from 'side-code-export'
 import { emit } from '../../src/selection'
 
 describe('selection location code emitter', () => {
@@ -35,12 +36,14 @@ describe('selection location code emitter', () => {
       `By.XPATH, "//option[. = '${selector}']"`
     )
   })
-  it('should emit label locator with variable', () => {
-    const type = 'label'
-    const selector = 'self.vars["label"]'
-    return expect(emit(`${type}=${selector}`)).resolves.toEqual(
-      `By.XPATH, "//option[. = '{}']".format(${selector})`
-    )
+  it('should emit label locator with variable', async () => {
+    const code = await emit(defaultPreprocessor('label=${label}'))
+    expect(
+      resolveVariables(code, (name) => `self.vars["${name}"]`, {
+        quotes: ['"', "'"],
+        toString: (lookup) => `str(${lookup})`,
+      })
+    ).toEqual(`By.XPATH, "//option[. = '" + str(self.vars["label"]) + "']"`)
   })
   it('should emit id locator', () => {
     const type = 'id'

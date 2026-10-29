@@ -598,9 +598,7 @@ function generateSendKeysInput(value: string | string[]) {
   if (typeof value === 'object') {
     return value
       .map((s) => {
-        if (s.startsWith('@vars[')) {
-          return s
-        } else if (s.startsWith('Key[')) {
+        if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)?.[1]
           return `:${key?.toLowerCase()}`
         } else {

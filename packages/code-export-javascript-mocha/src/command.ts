@@ -148,7 +148,7 @@ function emit(command: CommandShape, context: EmitterContext) {
 // How a variable is joined with a string literal, e.g. "Hi " + name
 const variableInString = {
   quotes: ['"', "'", '`'],
-  toString: (lookup: string) => lookup,
+  toString: (lookup: string) => `String(${lookup})`,
 }
 
 function variableLookup(varName: string) {
@@ -653,9 +653,7 @@ function generateSendKeysInput(value: string | string[]) {
   if (typeof value === 'object') {
     return value
       .map((s) => {
-        if (s.startsWith('vars[')) {
-          return s
-        } else if (s.startsWith('Key[')) {
+        if (s.startsWith('Key[')) {
           const key = s.match(/\['(.*)'\]/)?.[1]
           return `Key.${key}`
         } else {

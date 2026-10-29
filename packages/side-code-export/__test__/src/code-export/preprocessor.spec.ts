@@ -19,6 +19,7 @@ import {
   defaultPreprocessor,
   scriptPreprocessor,
   keysPreprocessor,
+  preprocessParameter,
   resolveVariables,
 } from '../../../src/code-export/preprocessor'
 
@@ -56,8 +57,8 @@ describe('preprocessors', () => {
         'print("a " + str(self.vars["x"]) + " b")'
       )
     })
-    it('should use a variable that is the whole string as it is', () => {
-      expect(resolve('find("${x}")')).toBe('find(self.vars["x"])')
+    it('should convert a variable that is the whole string', () => {
+      expect(resolve('find("${x}")')).toBe('find(str(self.vars["x"]))')
     })
     it('should join several variables', () => {
       expect(resolve("find('#${x}${y}')")).toBe(
@@ -66,6 +67,22 @@ describe('preprocessors', () => {
     })
     it('should use the lookup outside of a string', () => {
       expect(resolve('range(0, ${x})')).toBe('range(0, self.vars["x"])')
+    })
+    it('should keep a mark with no end as it is', () => {
+      expect(resolveVariables('print("a \uE000x")', pythonLookup, python)).toBe(
+        'print("a \uE000x")'
+      )
+    })
+    it('should remove marks typed in a parameter', () => {
+      const target = preprocessParameter(
+        "\uE000x') + `id`\uE001",
+        undefined,
+        pythonLookup,
+        { ignoreEscaping: false }
+      )
+      const code = resolveVariables(`run("${target}")`, pythonLookup, python)
+      expect(code).not.toMatch(/[\uE000\uE001]/)
+      expect(code).not.toContain('self.vars')
     })
     it('should skip escaped quotes', () => {
       expect(resolve('find("//*[@id=\\"${x}\\"]")')).toBe(

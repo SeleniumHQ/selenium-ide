@@ -651,9 +651,7 @@ function generateSendKeysInput(value: string | string[]) {
   if (Array.isArray(value)) {
     return value
       .map((s) => {
-        if (s.startsWith('vars[')) {
-          return s
-        } else if (s.startsWith('Key[')) {
+        if (s.startsWith('Key[')) {
           const key = (s.match(/\['(.*)'\]/) as RegExpMatchArray)[1]
           return `Keys.${exporter.parsers.capitalize(key.toLowerCase())}`
         } else {

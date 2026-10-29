@@ -121,7 +121,7 @@ dropped = @driver.find_element(:link_text, 'dropped')
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"puts('blah')"`;
 
-exports[`command code emitter should emit \`echo\` command with variables 1`] = `"puts(@vars['blah'])"`;
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"puts(@vars['blah'].to_s)"`;
 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
 "element = @driver.find_element(:id, 'contentEditable')
@@ -249,7 +249,7 @@ exports[`command code emitter should emit \`send keys\` command 1`] = `"@driver.
 
 exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"@driver.find_element(:id, 'input').send_keys('SuperSecretPassword!', :enter)"`;
 
-exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"@driver.find_element(:id, 'input').send_keys(@vars['blah'])"`;
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"@driver.find_element(:id, 'input').send_keys(@vars['blah'].to_s)"`;
 
 exports[`command code emitter should emit \`set speed\` 1`] = `"print(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\")"`;
 

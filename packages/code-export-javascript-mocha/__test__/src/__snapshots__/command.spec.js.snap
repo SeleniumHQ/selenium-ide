@@ -153,7 +153,7 @@ exports[`command code emitter should emit \`drag and drop to object\` command 1`
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"console.log(\\"blah\\")"`;
 
-exports[`command code emitter should emit \`echo\` command with variables 1`] = `"console.log(vars[\\"blah\\"])"`;
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"console.log(String(vars[\\"blah\\"]))"`;
 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
 "{
@@ -299,7 +299,7 @@ exports[`command code emitter should emit \`send keys\` command 1`] = `"await dr
 
 exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"await driver.findElement(By.id(\\"input\\")).sendKeys(\\"SuperSecretPassword!\\", Key.ENTER)"`;
 
-exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"await driver.findElement(By.id(\\"input\\")).sendKeys(vars[\\"blah\\"])"`;
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"await driver.findElement(By.id(\\"input\\")).sendKeys(String(vars[\\"blah\\"]))"`;
 
 exports[`command code emitter should emit \`set speed\` 1`] = `"console.log(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\")"`;
 

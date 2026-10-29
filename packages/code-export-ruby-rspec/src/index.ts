@@ -60,4 +60,4 @@ export const opts: LanguageEmitterOpts = {
   },
 }
 
-export default languageFromOpts(opts, location.emit);
+export default languageFromOpts(opts, location.emit)

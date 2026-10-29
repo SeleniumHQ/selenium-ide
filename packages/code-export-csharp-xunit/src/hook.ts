@@ -29,7 +29,7 @@ export const emitters = {
   inEachEnd: empty,
 } as const
 
-export default emitters;
+export default emitters
 
 function beforeEach() {
   const params: HookFunctionInputs = {

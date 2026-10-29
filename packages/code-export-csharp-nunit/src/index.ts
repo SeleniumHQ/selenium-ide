@@ -58,4 +58,4 @@ export const opts: LanguageEmitterOpts = {
 }
 
 // Emit an individual test, wrapped in a suite (using the test name as the suite name)
-export default languageFromOpts(opts, location.emit);
+export default languageFromOpts(opts, location.emit)

@@ -47,22 +47,31 @@ function escapeString(
   else return stringEscape(str)
 }
 
+// Private use characters that mark a variable in a preprocessed parameter.
+// resolveVariables replaces the marks once the code around them is emitted.
+const VARIABLE_START = '\uE000'
+const VARIABLE_END = '\uE001'
+
+// Only marks made by defaultPreprocessor may reach resolveVariables
+const removeVariableMarks = (param: string) =>
+  typeof param === 'string'
+    ? param.replace(new RegExp(`[${VARIABLE_START}${VARIABLE_END}]`, 'g'), '')
+    : param
+
 export function preprocessParameter(
   param: string,
   preprocessor: Preprocessor | undefined,
   variableLookup: VariableLookup,
   { ignoreEscaping }: PreprocessorOptions
 ) {
-  const escapedParam = escapeString(param, { preprocessor, ignoreEscaping })
+  const escapedParam = escapeString(removeVariableMarks(param), {
+    preprocessor,
+    ignoreEscaping,
+  })
   return preprocessor
     ? preprocessor(escapedParam, variableLookup)
     : defaultPreprocessor(escapedParam, variableLookup)
 }
-
-// Private use characters that mark a variable in a preprocessed parameter.
-// resolveVariables replaces the marks once the code around them is emitted.
-const VARIABLE_START = '\uE000'
-const VARIABLE_END = '\uE001'
 
 export function defaultPreprocessor(
   param: string,
@@ -102,12 +111,14 @@ export function resolveVariables(
   let quote: string | undefined
   // Where the text of the current string literal starts in the result
   let textStart = 0
-  // Whether a variable was already joined with the current string literal
-  let joined = false
   for (let i = 0; i < code.length; i++) {
     const character = code[i]
     if (character === VARIABLE_START) {
       const end = code.indexOf(VARIABLE_END, i)
+      if (end === -1) {
+        result += code.slice(i)
+        break
+      }
       const lookup = variableLookup(code.slice(i + 1, end))
       i = end
       if (!quote) {
@@ -119,10 +130,7 @@ export function resolveVariables(
       // Close the string before the variable, unless it's still empty
       if (startsString) result = result.slice(0, -1)
       else result += `${quote} + `
-      // A variable that is the whole string is used as it is
-      result +=
-        startsString && endsString && !joined ? lookup : toString(lookup)
-      joined = true
+      result += toString(lookup)
       // Open the string again after the variable, unless it ends there
       if (endsString) {
         quote = undefined
@@ -131,8 +139,13 @@ export function resolveVariables(
         result += ` + ${quote}`
         textStart = result.length
       }
-    } else if (quote && character === '\\') {
-      result += character + (code[i + 1] ?? '')
+    } else if (
+      quote &&
+      character === '\\' &&
+      code[i + 1] !== undefined &&
+      code[i + 1] !== VARIABLE_START
+    ) {
+      result += character + code[i + 1]
       i++
     } else {
       if (character === quote) {
@@ -140,7 +153,6 @@ export function resolveVariables(
       } else if (!quote && quotes.includes(character)) {
         quote = character
         textStart = result.length + 1
-        joined = false
       }
       result += character
     }
