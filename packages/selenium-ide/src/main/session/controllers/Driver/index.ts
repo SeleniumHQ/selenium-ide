@@ -9,7 +9,7 @@ import { join } from 'path'
 import { Builder } from 'selenium-webdriver'
 import getScriptManager from 'selenium-webdriver/bidi/scriptManager'
 
-import { findChrome } from './selenium-manager'
+import { findChromeDriver } from './selenium-manager'
 import startDriver, { port, WebdriverDebugLog } from './start'
 import BaseController from '../Base'
 import { createBidiAPIBindings } from './bidi'
@@ -314,7 +314,7 @@ export default class DriverController extends BaseController {
     // Electron's driver is bundled. For Chrome, Selenium Manager downloads
     // a matching chromedriver if needed.
     if (info.browser !== 'electron') {
-      await findChrome()
+      findChromeDriver()
     }
   }
 
@@ -323,9 +323,10 @@ export default class DriverController extends BaseController {
      * Note: This is shelved for optimization but could be unearthed
      * if using browsers other than electron is valuable to people
      */
-    const chrome = await findChrome()
-    const ourChromeBrowserInfo: BrowserInfo[] = chrome
-      ? [{ browser: 'chrome', version: chrome.version }]
+    // Selenium Manager picks the driver for the installed Chrome, so the
+    // version isn't needed
+    const ourChromeBrowserInfo: BrowserInfo[] = findChromeDriver()
+      ? [{ browser: 'chrome', version: '' }]
       : []
     return {
       browsers: [ourElectronBrowserInfo].concat(ourChromeBrowserInfo),

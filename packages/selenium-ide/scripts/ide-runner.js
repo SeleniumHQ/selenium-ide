@@ -213,13 +213,12 @@ async function main() {
     const { browsers } = await driver.executeAsyncScript(
       'const done = arguments[arguments.length - 1]; window.sideAPI.driver.listBrowsers().then(done)'
     )
-    const chrome = browsers.find((b) => b.browser === 'chrome')
-    if (!chrome?.version) {
+    if (!browsers.some((b) => b.browser === 'chrome')) {
       throw new Error(
         'Expected to find Chrome, got ' + JSON.stringify(browsers)
       )
     }
-    console.log(`IDE found Chrome ${chrome.version} with Selenium Manager`)
+    console.log('IDE found Chrome with Selenium Manager')
     await driver.quit()
     proc.kill()
   } catch (e) {

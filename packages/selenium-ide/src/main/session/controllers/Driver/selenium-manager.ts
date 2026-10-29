@@ -1,26 +1,15 @@
-import { execFile } from 'child_process'
 import * as os from 'os'
 import * as path from 'node:path'
-import { promisify } from 'util'
-
-const execFileAsync = promisify(execFile)
-
-export interface ChromeInstall {
-  browserPath: string
-  driverPath: string
-  version: string
-}
-
-interface SeleniumManagerOutput {
-  logs: { level: string; message: string }[]
-  result: { driver_path: string; browser_path: string }
-}
+import { Capabilities } from 'selenium-webdriver'
+import { getBinaryPaths } from 'selenium-webdriver/common/driverFinder'
 
 /**
- * Path to the Selenium Manager binary that ships with selenium-webdriver.
- * In the packaged app it is unpacked from app.asar so it can run.
+ * selenium-webdriver looks for Selenium Manager next to its own files, which
+ * moves when webpack bundles it, and the packaged app can't run a binary
+ * from inside app.asar. Point it at the unpacked binary instead.
  */
-const getSeleniumManagerPath = () => {
+const useUnpackedSeleniumManager = () => {
+  if (process.env.SE_MANAGER_PATH) return
   const folder =
     os.platform() === 'win32'
       ? 'windows'
@@ -34,36 +23,19 @@ const getSeleniumManagerPath = () => {
   const seleniumDir = path.dirname(
     __non_webpack_require__.resolve('selenium-webdriver/package.json')
   )
-  return path
+  process.env.SE_MANAGER_PATH = path
     .join(seleniumDir, 'bin', folder, binary)
     .replace('app.asar', 'app.asar.unpacked')
 }
 
 /**
- * Asks Selenium Manager for the installed Chrome and a matching chromedriver,
- * which it downloads if needed. Returns null if Chrome isn't installed.
+ * Path to a chromedriver for the installed Chrome. Selenium Manager downloads
+ * it if needed. Returns null if Chrome isn't installed.
  */
-export const findChrome = async (): Promise<ChromeInstall | null> => {
+export const findChromeDriver = (): string | null => {
+  useUnpackedSeleniumManager()
   try {
-    const { stdout } = await execFileAsync(getSeleniumManagerPath(), [
-      '--browser',
-      'chrome',
-      '--language-binding',
-      'javascript',
-      '--output',
-      'json',
-      // The debug logs include the detected browser version
-      '--debug',
-    ])
-    const output: SeleniumManagerOutput = JSON.parse(stdout)
-    const detected = output.logs
-      .map(({ message }) => message.match(/^Detected browser: chrome (\S+)/))
-      .find(Boolean)
-    return {
-      browserPath: output.result.browser_path,
-      driverPath: output.result.driver_path,
-      version: detected?.[1] ?? '',
-    }
+    return getBinaryPaths(Capabilities.chrome()).driverPath
   } catch (e) {
     console.warn('Selenium Manager could not find Chrome', e)
     return null
