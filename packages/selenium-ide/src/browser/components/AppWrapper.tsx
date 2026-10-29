@@ -8,6 +8,7 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import React, { FC } from 'react'
 import { IntlProvider } from 'react-intl'
+import { getSupportedLanguage } from 'browser/I18N/util'
 
 type AppWrapperProps = Pick<React.HTMLAttributes<HTMLDivElement>, 'children'>
 const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
@@ -30,16 +31,24 @@ const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
       }),
     [prefersDarkMode]
   )
-  const [languageMap, setLanguageMap] = React.useState<any>({})
+  const [languageMap, setLanguageMap] = React.useState<any>(null)
   React.useEffect(() => {
     window.sideAPI.system.getLanguageMap(true).then((result) => {
       setLanguageMap(result)
     })
   }, [])
 
+  // Wait for the messages, so nothing renders with missing translations
+  if (!languageMap) {
+    return null
+  }
+
   return (
-    // The app only loads the English messages for now
-    <IntlProvider defaultLocale="en" locale="en" messages={languageMap}>
+    <IntlProvider
+      defaultLocale="en"
+      locale={getSupportedLanguage(navigator.language)}
+      messages={languageMap}
+    >
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {children}

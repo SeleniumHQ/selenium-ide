@@ -40,11 +40,13 @@ const CommandTextField: FC<CommandFieldProps> = ({
     }
   }
   // 一定会使用languageMap.commandMap,其实是为了兼容参数commands
+  // Not every field has a description, for example the comment field
+  const descriptionID = `commandMap.${command.command}.${fieldName}.description`
   const fullNote =
     note ||
-    intl.formatMessage({
-      id: `commandMap.${command.command}.${fieldName}.description`,
-    })
+    (descriptionID in intl.messages
+      ? intl.formatMessage({ id: descriptionID })
+      : '')
   const label = fullNote
     ? handleLabel(FieldName) + ' - ' + fullNote
     : handleLabel(FieldName)

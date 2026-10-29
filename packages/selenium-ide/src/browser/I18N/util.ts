@@ -53,3 +53,12 @@ const flattenOneLevel = <T extends RecursiveShape>(
 export const flattenNestedObject = <T extends RecursiveShape>(
   obj: T
 ): Record<string, any> => flattenOneLevel('', (_k, v) => v, {}, obj)
+
+export type SupportedLanguage = 'en' | 'zh'
+
+/**
+ * The app has English and Chinese messages. Chinese locales (zh, zh-CN,
+ * zh-TW, ...) use Chinese, everything else uses English.
+ */
+export const getSupportedLanguage = (locale: string): SupportedLanguage =>
+  locale.toLowerCase().startsWith('zh') ? 'zh' : 'en'

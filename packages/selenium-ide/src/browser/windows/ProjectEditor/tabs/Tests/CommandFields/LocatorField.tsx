@@ -53,9 +53,12 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         return value
     }
   }
-  const fullnote = intl.formatMessage({
-    id: `commandMap.${command.command}.${fieldName}.description`,
-  })
+  // Not every field has a description
+  const descriptionID = `commandMap.${command.command}.${fieldName}.description`
+  const fullnote =
+    descriptionID in intl.messages
+      ? intl.formatMessage({ id: descriptionID })
+      : ''
   const label = fullnote
     ? handleLabel(FieldName) + ' - ' + fullnote
     : handleLabel(FieldName)
