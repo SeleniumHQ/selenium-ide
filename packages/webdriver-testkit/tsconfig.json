@@ -7,11 +7,5 @@
   "include": ["src/**/*.ts"],
   "exclude": ["**/__mocks__"],
   "references": [
-    {
-      "path": "../browser-info"
-    },
-    {
-      "path": "../get-driver"
-    }
   ]
 }

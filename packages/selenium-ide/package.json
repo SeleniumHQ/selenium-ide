@@ -42,7 +42,10 @@
     "appId": "org.seleniumhq.selenium-ide",
     "asarUnpack": [
       "node_modules/electron-chromedriver/bin/chromedriver",
-      "node_modules/electron-chromedriver/bin/chromedriver.exe"
+      "node_modules/electron-chromedriver/bin/chromedriver.exe",
+      "node_modules/selenium-webdriver/bin/**",
+      "node_modules/selenium-webdriver/common/**",
+      "node_modules/selenium-webdriver/lib/logging.js"
     ],
     "files": [
       "**/build/**/*",
@@ -124,7 +127,6 @@
     "@seleniumhq/code-export-javascript-mocha": "4.0.13",
     "@seleniumhq/code-export-python-pytest": "4.0.13",
     "@seleniumhq/code-export-ruby-rspec": "4.0.13",
-    "@seleniumhq/get-driver": "4.0.13",
     "@seleniumhq/side-api": "4.0.13",
     "@seleniumhq/side-commons": "4.0.13",
     "@seleniumhq/side-model": "4.0.13",
@@ -150,7 +152,6 @@
   },
   "devDependencies": {
     "@medv/finder": "^1.1.1",
-    "@seleniumhq/browser-info": "4.0.13",
     "@types/electron-devtools-installer": "^2.2.5",
     "@types/fs-extra": "^11.0.1",
     "@types/lodash": "^4.14.199",

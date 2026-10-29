@@ -1,5 +1,4 @@
-import { Chrome } from '@seleniumhq/browser-info'
-import { Browser } from '@seleniumhq/get-driver'
+import { Browser } from '@seleniumhq/side-api'
 import { App } from 'electron'
 import Store from 'electron-store'
 import config from './store/config'
@@ -24,10 +23,11 @@ import WindowsController from './session/controllers/Windows'
 import { MainApi } from './api'
 import { StorageSchema } from './store'
 
-export interface BrowserInfo extends Pick<Chrome.BrowserInfo, 'version'> {
-  binary?: Chrome.BrowserInfo['binary']
+export interface BrowserInfo {
+  binary?: string
   browser: Browser
   useBidi?: boolean
+  version: string
 }
 
 export interface BrowsersInfo {

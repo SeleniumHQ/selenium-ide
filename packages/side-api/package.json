@@ -20,8 +20,6 @@
     "dist"
   ],
   "dependencies": {
-    "@seleniumhq/browser-info": "4.0.13",
-    "@seleniumhq/get-driver": "4.0.13",
     "@seleniumhq/side-model": "4.0.13",
     "@seleniumhq/side-runtime": "4.0.13",
     "lodash": "^4.18.1"

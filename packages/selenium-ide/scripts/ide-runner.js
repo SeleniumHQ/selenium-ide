@@ -208,6 +208,15 @@ async function main() {
         throw new Error('Playback did not pass: ' + JSON.stringify(results))
       })
     console.log('IDE is correctly playing back commands!')
+
+    // The IDE gets Chrome and its driver with Selenium Manager
+    const download = await driver.executeAsyncScript(
+      "const done = arguments[arguments.length - 1]; window.sideAPI.driver.download({ browser: 'chrome', version: '' }).then(() => done(null), (e) => done(String(e)))"
+    )
+    if (download) {
+      throw new Error('Selenium Manager could not get Chrome: ' + download)
+    }
+    console.log('IDE got Chrome and its driver with Selenium Manager')
     await driver.quit()
     proc.kill()
   } catch (e) {
