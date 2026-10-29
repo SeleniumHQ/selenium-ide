@@ -4,7 +4,7 @@ import { CustomCommandShape, PluginRuntimeShape } from './types'
 
 export const correctPluginPaths = (
   projectPath: string,
-  plugins: string[]
+  plugins: string[] = []
 ): string[] => {
   const projectDir = projectPath?.split(path.sep).slice(0, -1).join(path.sep)
   return plugins

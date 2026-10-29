@@ -10,6 +10,8 @@ export const argTypes: ArgTypes = {
   },
   answer: {
     name: 'answer',
+    // An empty answer is valid
+    isOptional: true,
     description: 'The answer to give in response to the prompt pop-up',
   },
   attributeLocator: {
@@ -92,6 +94,8 @@ export const argTypes: ArgTypes = {
   },
   pattern: {
     name: 'text',
+    // An empty text is valid, e.g. to check for an empty title
+    isOptional: true,
     description: `An exact string match. Support for pattern matching is in the 
       works. See https://github.com/SeleniumHQ/selenium-ide/issues/141 for details`,
   },

@@ -22,6 +22,7 @@ const commands: typeof Commands = {
     description: '影响当前显示的Prompt。此命令指示Selenium为其提供指定的响应。',
     target: {
       name: 'answer',
+      isOptional: true,
       description: '弹出提示给出的响应',
     },
   },
@@ -114,6 +115,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'text',
+      isOptional: true,
       description:
         '完全匹配的字符串。对模式匹配的支持正在进行中。请前往https://github.com/SeleniumHQ/selenium-ide/issues/141了解详细信息',
     },
@@ -127,6 +129,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'text',
+      isOptional: true,
       description:
         '完全匹配的字符串。对模式匹配的支持正在进行中。请前往https://github.com/SeleniumHQ/selenium-ide/issues/141了解详细信息',
     },
@@ -149,6 +152,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'text',
+      isOptional: true,
       description:
         '完全匹配的字符串。对模式匹配的支持正在进行中。请前往https://github.com/SeleniumHQ/selenium-ide/issues/141了解详细信息',
     },
@@ -163,6 +167,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'text',
+      isOptional: true,
       description:
         '完全匹配的字符串。对模式匹配的支持正在进行中。请前往https://github.com/SeleniumHQ/selenium-ide/issues/141了解详细信息',
     },
@@ -176,6 +181,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'text',
+      isOptional: true,
       description:
         '完全匹配的字符串。对模式匹配的支持正在进行中。请前往https://github.com/SeleniumHQ/selenium-ide/issues/141了解详细信息',
     },
@@ -186,6 +192,7 @@ const commands: typeof Commands = {
       '确认当前页面的标题包含所提供的文本。如果断言失败，测试将停止。',
     target: {
       name: 'text',
+      isOptional: true,
       description:
         '完全匹配的字符串。对模式匹配的支持正在进行中。请前往https://github.com/SeleniumHQ/selenium-ide/issues/141了解详细信息',
     },
@@ -200,6 +207,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'text',
+      isOptional: true,
       description:
         '完全匹配的字符串。对模式匹配的支持正在进行中。请前往https://github.com/SeleniumHQ/selenium-ide/issues/141了解详细信息',
     },
@@ -810,6 +818,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'text',
+      isOptional: true,
       description:
         '完全匹配的字符串。对模式匹配的支持正在进行中。请前往https://github.com/SeleniumHQ/selenium-ide/issues/141了解详细信息',
     },
@@ -858,6 +867,7 @@ const commands: typeof Commands = {
     },
     value: {
       name: 'text',
+      isOptional: true,
       description:
         '完全匹配的字符串。对模式匹配的支持正在进行中。请前往https://github.com/SeleniumHQ/selenium-ide/issues/141了解详细信息',
     },

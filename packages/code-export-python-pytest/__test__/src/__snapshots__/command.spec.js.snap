@@ -74,6 +74,8 @@ exports[`command code emitter should emit \`assert text\` command 1`] = `"assert
 
 exports[`command code emitter should emit \`assert title\` command 1`] = `"assert self.driver.title == \\"example title\\""`;
 
+exports[`command code emitter should emit \`assert title\` command with an empty title 1`] = `"assert self.driver.title == \\"\\""`;
+
 exports[`command code emitter should emit \`assert value\` command 1`] = `
 "value = self.driver.find_element(By.ID, \\"select\\").get_attribute(\\"value\\")
 assert value == \\"test\\""
