@@ -29,6 +29,7 @@ function emit(command: CommandShape, context: EmitterContext) {
     context,
     emitNewWindowHandling: Command.extras.emitNewWindowHandling,
     variableLookup: Command.variableLookup,
+    variableInString: Command.variableInString,
   })
 }
 

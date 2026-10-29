@@ -141,7 +141,14 @@ function emit(command: CommandShape, context: EmitterContext) {
     context,
     emitNewWindowHandling,
     variableLookup,
+    variableInString,
   })
+}
+
+// How a variable is joined with a string literal, e.g. "Hi " + name
+const variableInString = {
+  quotes: ['"'],
+  toString: (lookup: string) => lookup,
 }
 
 function variableLookup(varName: string) {
@@ -400,8 +407,7 @@ async function emitDragAndDrop(dragged: any, dropped: any) {
 }
 
 async function emitEcho(message: string) {
-  const _message = message.startsWith('vars[') ? message : `"${message}"`
-  return Promise.resolve(`Console.WriteLine(${_message});`)
+  return Promise.resolve(`Console.WriteLine("${message}");`)
 }
 
 async function emitEditContent(locator: any, content: any) {
@@ -1092,6 +1098,7 @@ async function emitWaitForElementNotVisible(locator: any, timeout: number) {
 export default {
   emitters,
   variableLookup,
+  variableInString,
   variableSetter,
   emit,
   register,
