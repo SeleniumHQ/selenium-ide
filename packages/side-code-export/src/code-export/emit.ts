@@ -53,6 +53,24 @@ export interface EmitterContext extends Omit<LanguageEmitterOpts, 'hooks'> {
   enableDescriptionAsComment: boolean
   hooks: LanguageHooks
   project: ProjectShape
+  // Number of the loop a loop command belongs to, unique in a test or method
+  loopId?: number
+}
+
+// Numbers the loops in a list of commands. repeatIf gets the number of its do.
+export function numberLoops(commands: CommandShape[]) {
+  const loopIds: (number | undefined)[] = []
+  const openDos: number[] = []
+  let count = 0
+  commands.forEach((command, index) => {
+    if (['while', 'times', 'do'].includes(command.command)) {
+      loopIds[index] = ++count
+      if (command.command === 'do') openDos.push(count)
+    } else if (command.command === 'repeatIf') {
+      loopIds[index] = openDos.pop()
+    }
+  })
+  return loopIds
 }
 
 function validateCommand(command: CommandShape) {
@@ -270,10 +288,14 @@ export function emitSelection(location: string, emitters: SelectionEmitters) {
 
 async function emitCommands(commands: CommandShape[], context: EmitterContext) {
   const { emitter } = context
+  const loopIds = numberLoops(commands)
   const emittedCommands = await Promise.all(
-    commands.map((command) => {
+    commands.map((command, index) => {
       try {
-        return emitter.emit(command, context)
+        return emitter.emit(
+          command,
+          loopIds[index] ? { ...context, loopId: loopIds[index] } : context
+        )
       } catch (e) {
         throw new Error(
           `Error while emitting command ${command.command}|${command.target}|${

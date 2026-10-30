@@ -129,7 +129,8 @@ exports[`command code emitter should emit \`dismiss prompt\` command 1`] = `"dri
 
 exports[`command code emitter should emit \`do\` command 1`] = `
 Object {
-  "body": "do {",
+  "body": "int loop1 = 0;
+do {",
   "endingLevel": 1,
 }
 `;
@@ -286,7 +287,10 @@ exports[`command code emitter should emit \`remove selection\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`repeatIf\` command 1`] = `"} while ((Boolean) js.executeScript(\\"return (true)\\"));"`;
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `
+"  if (++loop1 > 1000) throw new RuntimeException(\\"Max retry limit exceeded\\");
+} while ((Boolean) js.executeScript(\\"return (true)\\"));"
+`;
 
 exports[`command code emitter should emit \`run script\` command 1`] = `"js.executeScript(\\"alert('test');alert('Im annoying');\\");"`;
 
@@ -351,16 +355,18 @@ exports[`command code emitter should emit \`store\` command 1`] = `"vars.put(\\"
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
-  "body": "Integer times = 5;
-for(int i = 0; i < times; i++) {",
+  "body": "Integer times1 = 5;
+for (int loop1 = 0; loop1 < times1; loop1++) {
+  if (loop1 >= 1000) throw new RuntimeException(\\"Max retry limit exceeded\\");",
   "endingLevel": 1,
 }
 `;
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "Integer times = (int) Math.floor(Double.parseDouble(String.valueOf(vars.get(\\"count\\").toString())));
-for(int i = 0; i < times; i++) {",
+  "body": "Integer times1 = (int) Math.floor(Double.parseDouble(String.valueOf(vars.get(\\"count\\").toString())));
+for (int loop1 = 0; loop1 < times1; loop1++) {
+  if (loop1 >= 1000) throw new RuntimeException(\\"Max retry limit exceeded\\");",
   "endingLevel": 1,
 }
 `;
@@ -491,7 +497,9 @@ exports[`command code emitter should emit \`waitForText\` command 1`] = `
 
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
-  "body": "while ((Boolean) js.executeScript(\\"return (true)\\")) {",
+  "body": "int loop1 = 0;
+while ((Boolean) js.executeScript(\\"return (true)\\")) {
+  if (++loop1 > 1000) throw new RuntimeException(\\"Max retry limit exceeded\\");",
   "endingLevel": 1,
 }
 `;

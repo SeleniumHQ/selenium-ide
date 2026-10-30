@@ -127,7 +127,8 @@ exports[`command code emitter should emit \`dismiss prompt\` command 1`] = `"dri
 
 exports[`command code emitter should emit \`do\` command 1`] = `
 Object {
-  "body": "do {",
+  "body": "var loop1 = 0;
+do {",
   "endingLevel": 1,
 }
 `;
@@ -285,7 +286,10 @@ exports[`command code emitter should emit \`remove selection\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`repeatIf\` command 1`] = `"} while ((Boolean) js.ExecuteScript(\\"return (true)\\"));"`;
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `
+"  if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");
+} while ((Boolean) js.ExecuteScript(\\"return (true)\\"));"
+`;
 
 exports[`command code emitter should emit \`run script\` command 1`] = `"js.ExecuteScript(\\"alert('test');alert('Im annoying');\\");"`;
 
@@ -352,16 +356,18 @@ exports[`command code emitter should emit \`store\` command 1`] = `"vars[\\"myVa
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
-  "body": "var times = 5;
-for(int i = 0; i < times; i++) {",
+  "body": "var times1 = 5;
+for (var loop1 = 0; loop1 < times1; loop1++) {
+  if (loop1 >= 1000) throw new Exception(\\"Max retry limit exceeded\\");",
   "endingLevel": 1,
 }
 `;
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "var times = (int)Math.Floor(Convert.ToDouble(vars[\\"count\\"].ToString(), System.Globalization.CultureInfo.InvariantCulture));
-for(int i = 0; i < times; i++) {",
+  "body": "var times1 = (int)Math.Floor(Convert.ToDouble(vars[\\"count\\"].ToString(), System.Globalization.CultureInfo.InvariantCulture));
+for (var loop1 = 0; loop1 < times1; loop1++) {
+  if (loop1 >= 1000) throw new Exception(\\"Max retry limit exceeded\\");",
   "endingLevel": 1,
 }
 `;
@@ -489,7 +495,9 @@ exports[`command code emitter should emit \`waitForText\` command 1`] = `
 
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
-  "body": "while ((Boolean) js.ExecuteScript(\\"return (true)\\")) {",
+  "body": "var loop1 = 0;
+while ((Boolean) js.ExecuteScript(\\"return (true)\\")) {
+  if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");",
   "endingLevel": 1,
 }
 `;

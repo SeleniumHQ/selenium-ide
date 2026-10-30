@@ -890,6 +890,16 @@ describe('command code emitter', () => {
       prettify(command, { fullPayload: true })
     ).resolves.toMatchSnapshot()
   })
+  it('should emit `while` command with a loop limit', () => {
+    const command = {
+      command: ControlFlowCommandNames.while,
+      target: 'true',
+      value: '5',
+    }
+    return expect(
+      prettify(command, { fullPayload: true })
+    ).resolves.toMatchSnapshot()
+  })
   it('should emit new window handling, if command opens a new window', () => {
     const command = {
       command: 'click',

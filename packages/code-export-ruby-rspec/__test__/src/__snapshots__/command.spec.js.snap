@@ -102,7 +102,8 @@ exports[`command code emitter should emit \`dismiss prompt\` command 1`] = `"@dr
 
 exports[`command code emitter should emit \`do\` command 1`] = `
 Object {
-  "body": "loop do",
+  "body": "loop1 = 0
+loop do",
   "endingLevel": 1,
 }
 `;
@@ -220,7 +221,9 @@ dropdown.find_element(:xpath, \\"//option[. = 'A label']\\").click"
 `;
 
 exports[`command code emitter should emit \`repeatIf\` command 1`] = `
-"  break if !@driver.execute_script(\\"return (true)\\")
+"  loop1 += 1
+  raise 'Max retry limit exceeded' if loop1 > 1000
+  break if !@driver.execute_script(\\"return (true)\\")
 end"
 `;
 
@@ -274,14 +277,16 @@ exports[`command code emitter should emit \`store\` command 1`] = `"@vars['myVar
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
-  "body": "5.times do",
+  "body": "5.times do |loop1|
+  raise 'Max retry limit exceeded' if loop1 >= 1000",
   "endingLevel": 1,
 }
 `;
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "Float(@vars['count']).floor.times do",
+  "body": "Float(@vars['count']).floor.times do |loop1|
+  raise 'Max retry limit exceeded' if loop1 >= 1000",
   "endingLevel": 1,
 }
 `;
@@ -367,7 +372,10 @@ exports[`command code emitter should emit \`waitForText\` command 1`] = `"Seleni
 
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
-  "body": "while @driver.execute_script(\\"return (true)\\") do",
+  "body": "loop1 = 0
+while @driver.execute_script(\\"return (true)\\") do
+  loop1 += 1
+  raise 'Max retry limit exceeded' if loop1 > 1000",
   "endingLevel": 1,
 }
 `;

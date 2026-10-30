@@ -117,8 +117,7 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   waitForElementNotVisible: emitWaitForElementNotVisible,
   waitForText: emitWaitForText,
   answerPrompt: emitAnswerOnNextPrompt,
-  dismissConfirmation:
-    emitChooseCancelOnNextConfirmation,
+  dismissConfirmation: emitChooseCancelOnNextConfirmation,
   dismissPrompt: emitChooseCancelOnNextConfirmation,
   acceptConfirmation: emitChooseOkOnNextConfirmation,
   acceptAlert: emitChooseOkOnNextConfirmation,
@@ -267,9 +266,19 @@ function generateExpressionScript(script: ScriptShape) {
   )})`
 }
 
-function emitControlFlowDo() {
+// The name of the counter of a loop, unique in a test
+const loopCounter = (context?: EmitterContext) => `loop${context?.loopId ?? 1}`
+
+function emitControlFlowDo(
+  _target: string,
+  _value: string,
+  context: EmitterContext
+) {
   return Promise.resolve({
-    commands: [{ level: 0, statement: 'do {' }],
+    commands: [
+      { level: 0, statement: `var ${loopCounter(context)} = 0;` },
+      { level: 0, statement: 'do {' },
+    ],
     endingLevelAdjustment: 1,
   })
 }
@@ -337,36 +346,73 @@ function emitControlFlowForEach(
   })
 }
 
-function emitControlFlowRepeatIf(script: any) {
+function emitControlFlowRepeatIf(
+  script: ScriptShape,
+  value: string,
+  context: EmitterContext
+) {
   return Promise.resolve({
     commands: [
+      {
+        level: 1,
+        statement: `if (++${loopCounter(
+          context
+        )} > ${exporter.parsers.loopLimit(value)}) throw new Exception("${
+          exporter.parsers.loopLimitMessage
+        }");`,
+      },
       { level: 0, statement: `} while (${generateExpressionScript(script)});` },
     ],
     startingLevelAdjustment: -1,
   })
 }
 
-function emitControlFlowTimes(target: any) {
-  const commands = [
+function emitControlFlowTimes(
+  target: string,
+  value: string,
+  context: EmitterContext
+) {
+  const loop = loopCounter(context)
+  const times = `times${context?.loopId ?? 1}`
+  const count = exporter.parsers.loopCount(
+    target,
+    (count) =>
+      `(int)Math.Floor(Convert.ToDouble(${count}, System.Globalization.CultureInfo.InvariantCulture))`
+  )
+  const commands = [{ level: 0, statement: `var ${times} = ${count};` }]
+
+  commands.push(
     {
       level: 0,
-      statement: `var times = ${exporter.parsers.loopCount(
-        target,
-        (count) =>
-          `(int)Math.Floor(Convert.ToDouble(${count}, System.Globalization.CultureInfo.InvariantCulture))`
-      )};`,
+      statement: `for (var ${loop} = 0; ${loop} < ${times}; ${loop}++) {`,
     },
-    { level: 0, statement: 'for(int i = 0; i < times; i++) {' },
-  ]
-  return Promise.resolve({ commands, endingLevelAdjustment: 1 })
+    {
+      level: 1,
+      statement: `if (${loop} >= ${exporter.parsers.loopLimit(
+        value
+      )}) throw new Exception("${exporter.parsers.loopLimitMessage}");`,
+    }
+  )
+  return Promise.resolve({ commands })
 }
 
-function emitControlFlowWhile(script: any) {
+function emitControlFlowWhile(
+  script: ScriptShape,
+  value: string,
+  context: EmitterContext
+) {
+  const loop = loopCounter(context)
   return Promise.resolve({
     commands: [
+      { level: 0, statement: `var ${loop} = 0;` },
       { level: 0, statement: `while (${generateExpressionScript(script)}) {` },
+      {
+        level: 1,
+        statement: `if (++${loop} > ${exporter.parsers.loopLimit(
+          value
+        )}) throw new Exception("${exporter.parsers.loopLimitMessage}");`,
+      },
     ],
-    endingLevelAdjustment: 1,
   })
 }
 

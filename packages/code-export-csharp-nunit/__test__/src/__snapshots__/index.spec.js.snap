@@ -123,16 +123,19 @@ public class ControlflowTest {
   [Test]
   public void controlflowdo() {
     vars[\\"check\\"] = js.ExecuteScript(\\"return 1\\");
+    var loop1 = 0;
     do {
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
+      if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");
     } while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]));
     Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
   }
   [Test]
   public void controlflowtimes() {
     vars[\\"check\\"] = js.ExecuteScript(\\"return 1\\");
-    var times = 2;
-    for(int i = 0; i < times; i++) {
+    var times1 = 2;
+    for (var loop1 = 0; loop1 < times1; loop1++) {
+      if (loop1 >= 1000) throw new Exception(\\"Max retry limit exceeded\\");
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
     Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
@@ -140,7 +143,9 @@ public class ControlflowTest {
   [Test]
   public void controlflowwhile() {
     vars[\\"check\\"] = js.ExecuteScript(\\"return 1\\");
+    var loop1 = 0;
     while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"])) {
+      if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
     Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));

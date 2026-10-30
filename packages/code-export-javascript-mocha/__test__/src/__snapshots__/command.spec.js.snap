@@ -128,7 +128,8 @@ exports[`command code emitter should emit \`dismiss prompt\` command 1`] = `"awa
 
 exports[`command code emitter should emit \`do\` command 1`] = `
 Object {
-  "body": "do {",
+  "body": "let loop1 = 0
+do {",
   "endingLevel": 1,
 }
 `;
@@ -269,7 +270,10 @@ exports[`command code emitter should emit \`remove selection\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`repeatIf\` command 1`] = `"} while(!!await driver.executeScript(\\"return (true)\\"))"`;
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `
+"  if (++loop1 > 1000) throw new Error('Max retry limit exceeded')
+} while(!!await driver.executeScript(\\"return (true)\\"))"
+`;
 
 exports[`command code emitter should emit \`run script\` command 1`] = `"await driver.executeScript(\\"alert('test');alert('Im annoying');\\")"`;
 
@@ -324,14 +328,16 @@ exports[`command code emitter should emit \`store window handle\` command 1`] = 
 exports[`command code emitter should emit \`store\` command 1`] = `"vars[\\"myVar\\"] = \\"some value\\""`;
 
 exports[`command code emitter should emit \`times\` command 1`] = `
-"const times = 5
-for(let i = 0; i < times; i++) {"
+"const times1 = 5
+for (let loop1 = 0; loop1 < times1; loop1++) {
+  if (loop1 >= 1000) throw new Error('Max retry limit exceeded')"
 `;
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
-"const times = Math.floor(Number(vars[\\"count\\"]))
-if (isNaN(times)) throw new Error('Invalid number provided as a target.')
-for(let i = 0; i < times; i++) {"
+"const times1 = Math.floor(Number(vars[\\"count\\"]))
+if (isNaN(times1)) throw new Error('Invalid number provided as a target.')
+for (let loop1 = 0; loop1 < times1; loop1++) {
+  if (loop1 >= 1000) throw new Error('Max retry limit exceeded')"
 `;
 
 exports[`command code emitter should emit \`type\` command 1`] = `"await driver.findElement(By.id(\\"input\\")).sendKeys(\\"example input\\")"`;
@@ -423,7 +429,11 @@ exports[`command code emitter should emit \`waitForElementVisible\` command 1`] 
 
 exports[`command code emitter should emit \`waitForText\` command 1`] = `"await driver.wait(until.elementTextIs(await driver.findElement(By.css(\\"#blah\\")), 'text'), 30000)"`;
 
-exports[`command code emitter should emit \`while\` command 1`] = `"while(!!await driver.executeScript(\\"return (true)\\")) {"`;
+exports[`command code emitter should emit \`while\` command 1`] = `
+"let loop1 = 0
+while(!!await driver.executeScript(\\"return (true)\\")) {
+  if (++loop1 > 1000) throw new Error('Max retry limit exceeded')"
+`;
 
 exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
 "vars[\\"windowHandles\\"] = await driver.getAllWindowHandles()

@@ -35,3 +35,14 @@ export function uncapitalize(input: string) {
 export function loopCount(count: string, convert: (count: string) => string) {
   return /^\d+$/.test(count.trim()) ? count : convert(count)
 }
+
+/**
+ * The most times a loop can run, from the loop command's value. Like
+ * playback, it's 1000 when the value is empty or isn't a number.
+ */
+export function loopLimit(value?: string) {
+  const limit = Math.floor(Number(value))
+  return value && !isNaN(limit) ? String(limit) : '1000'
+}
+
+export const loopLimitMessage = 'Max retry limit exceeded'
