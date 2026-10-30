@@ -1,0 +1,6 @@
+# Exported code and build output
+java/src/
+java/target/
+csharp-*/exported/
+csharp-*/bin/
+csharp-*/obj/

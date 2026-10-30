@@ -45,7 +45,8 @@ export const opts: LanguageEmitterOpts = {
     )}Test${opts.fileExtension}`
   },
   generateMethodDeclaration: (name) => {
-    return `public void ${exporter.parsers.sanitizeName(name)}() {`
+    // run_ prefix: generated test names can't contain it, so they can't clash
+    return `public void run_${exporter.parsers.sanitizeName(name)}() {`
   },
   // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
   generateSuiteDeclaration: (name) => {

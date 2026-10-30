@@ -53,6 +53,9 @@ jobs:
         run: npm run pretest
       - name: Run unit tests
         run: npm run test:jest:core
+      - name: Compile the Java and C# exports
+        if: matrix.os == 'ubuntu-24.04'
+        run: node tests/code-export/compile.mjs
       - name: Run side-runner tests
         run: npm run test:side-runner:ci
       - name: Run the IDE smoke test

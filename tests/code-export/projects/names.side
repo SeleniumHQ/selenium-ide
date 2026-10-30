@@ -1,0 +1,85 @@
+{
+  "id": "names",
+  "version": "2.0",
+  "name": "names",
+  "url": "http://localhost:8080",
+  "tests": [
+    {
+      "id": "t1",
+      "name": "foo",
+      "commands": [
+        {
+          "id": "c1",
+          "command": "open",
+          "target": "/",
+          "value": "",
+          "comment": ""
+        }
+      ]
+    },
+    {
+      "id": "t2",
+      "name": "Foo",
+      "commands": [
+        {
+          "id": "c2",
+          "command": "open",
+          "target": "/",
+          "value": "",
+          "comment": ""
+        }
+      ]
+    },
+    {
+      "id": "t3",
+      "name": "runFoo",
+      "commands": [
+        {
+          "id": "c3",
+          "command": "run",
+          "target": "foo",
+          "value": "",
+          "comment": ""
+        },
+        {
+          "id": "c4",
+          "command": "run",
+          "target": "Foo",
+          "value": "",
+          "comment": ""
+        }
+      ]
+    },
+    {
+      "id": "t4",
+      "name": "2 steps",
+      "commands": [
+        {
+          "id": "c5",
+          "command": "run",
+          "target": "foo",
+          "value": "",
+          "comment": ""
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "s1",
+      "name": "names",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300,
+      "tests": [
+        "t1",
+        "t3",
+        "t4"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost:8080"
+  ],
+  "plugins": []
+}

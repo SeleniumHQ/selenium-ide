@@ -16,7 +16,9 @@
 // under the License.
 
 export function sanitizeName(input: string) {
-  return input.replace(/([^a-z0-9]+)/gi, '')
+  const name = input.replace(/([^a-z0-9]+)/gi, '')
+  // A name can't start with a digit in most languages
+  return /^\d/.test(name) ? '_' + name : name
 }
 
 export function capitalize(input: string) {

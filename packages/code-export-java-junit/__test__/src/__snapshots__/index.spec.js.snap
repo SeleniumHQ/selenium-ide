@@ -215,7 +215,7 @@ public class ReusedmethodsTest {
   public void tearDown() {
     driver.quit();
   }
-  public void login() {
+  public void run_login() {
     driver.get(\\"https://the-internet.herokuapp.com/\\");
     driver.findElement(By.linkText(\\"Form Authentication\\")).click();
     driver.findElement(By.id(\\"username\\")).sendKeys(String.valueOf(vars.get(\\"username\\")));
@@ -224,7 +224,7 @@ public class ReusedmethodsTest {
       driver.findElement(By.cssSelector(\\".fa\\")).click();
     }
   }
-  public void tinymethod() {
+  public void run_tinymethod() {
     vars.put(\\"value\\", \\"field\\");
   }
   
@@ -232,20 +232,20 @@ public class ReusedmethodsTest {
   public void invalidcredentials() {
     vars.put(\\"username\\", \\"blah\\");
     vars.put(\\"password\\", \\"blah\\");
-    login();
+    run_login();
   }
   @Test
   public void validcredentials() {
     vars.put(\\"username\\", \\"tomsmith\\");
     vars.put(\\"password\\", \\"SuperSecretPassword!\\");
-    login();
+    run_login();
   }
   @Test
   public void twomethods() {
     vars.put(\\"username\\", \\"blah\\");
     vars.put(\\"password\\", \\"blah\\");
-    login();
-    tinymethod();
+    run_login();
+    run_tinymethod();
   }
 }
 "
@@ -305,7 +305,7 @@ public class DefaultSuiteTest {
     }
     return whNow.iterator().next();
   }
-  public void selectwindow() {
+  public void run_selectwindow() {
     driver.get(\\"http://the-internet.herokuapp.com/windows\\");
     vars.put(\\"window_handles\\", driver.getWindowHandles());
     driver.findElement(By.linkText(\\"Click Here\\")).click();
@@ -316,7 +316,7 @@ public class DefaultSuiteTest {
   
   @Test
   public void reuse() {
-    selectwindow();
+    run_selectwindow();
   }
 }
 "
@@ -376,7 +376,7 @@ public class DefaultSuiteTest {
     }
     return whNow.iterator().next();
   }
-  public void selectwindow() {
+  public void run_selectwindow() {
     driver.get(\\"http://the-internet.herokuapp.com/windows\\");
     vars.put(\\"window_handles\\", driver.getWindowHandles());
     driver.findElement(By.linkText(\\"Click Here\\")).click();
@@ -387,7 +387,7 @@ public class DefaultSuiteTest {
   
   @Test
   public void reuse() {
-    selectwindow();
+    run_selectwindow();
   }
   @Test
   public void selectwindow() {
@@ -497,7 +497,7 @@ public class ValidcredentialsTest {
   public void tearDown() {
     driver.quit();
   }
-  public void login() {
+  public void run_login() {
     driver.get(\\"https://the-internet.herokuapp.com/\\");
     driver.findElement(By.linkText(\\"Form Authentication\\")).click();
     driver.findElement(By.id(\\"username\\")).sendKeys(String.valueOf(vars.get(\\"username\\")));
@@ -511,7 +511,7 @@ public class ValidcredentialsTest {
   public void validcredentials() {
     vars.put(\\"username\\", \\"tomsmith\\");
     vars.put(\\"password\\", \\"SuperSecretPassword!\\");
-    login();
+    run_login();
   }
 }
 "

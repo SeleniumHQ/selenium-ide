@@ -587,7 +587,7 @@ async function emitRun(
       `${context.commentPrefix} Cannot export run with a test name from a variable: ${testName}`
     )
   }
-  return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
+  return Promise.resolve(`run_${exporter.parsers.sanitizeName(testName)}();`)
 }
 
 async function emitRunScript(script: ScriptShape) {
@@ -1007,9 +1007,9 @@ async function emitWaitForElementEditable(locator: string, timeout: number) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
@@ -1028,9 +1028,9 @@ async function emitWaitForText(locator: string, text: string) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
@@ -1052,9 +1052,9 @@ async function emitWaitForElementPresent(locator: string, timeout: number) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
@@ -1072,9 +1072,9 @@ async function emitWaitForElementVisible(locator: string, timeout: number) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
@@ -1094,9 +1094,9 @@ async function emitWaitForElementNotEditable(locator: string, timeout: number) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
@@ -1116,9 +1116,9 @@ async function emitWaitForElementNotPresent(locator: string, timeout: number) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,
@@ -1142,9 +1142,9 @@ async function emitWaitForElementNotVisible(locator: string, timeout: number) {
     { level: 0, statement: '{' },
     {
       level: 1,
-      statement: `WebDriverWait wait = new WebDriverWait(driver, ${Math.floor(
+      statement: `WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(${Math.floor(
         timeout / 1000
-      )});`,
+      )}));`,
     },
     {
       level: 1,

@@ -190,7 +190,7 @@ Object {
 }
 `;
 
-exports[`command code emitter should emit \`execute async script\` command 1`] = `"vars[\\"myVar\\"] = js.executeAsyncScript(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\");"`;
+exports[`command code emitter should emit \`execute async script\` command 1`] = `"vars[\\"myVar\\"] = js.ExecuteAsyncScript(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\");"`;
 
 exports[`command code emitter should emit \`execute script\` command 1`] = `"vars[\\"myVar\\"] = js.ExecuteScript(\\"javascript\\");"`;
 
@@ -293,9 +293,9 @@ exports[`command code emitter should emit \`repeatIf\` command 1`] = `
 
 exports[`command code emitter should emit \`run script\` command 1`] = `"js.ExecuteScript(\\"alert('test');alert('Im annoying');\\");"`;
 
-exports[`command code emitter should emit \`run\` command 1`] = `"sometestcase();"`;
+exports[`command code emitter should emit \`run\` command 1`] = `"run_sometestcase();"`;
 
-exports[`command code emitter should emit \`run\` command for a test with a capitalized name 1`] = `"SomeTestCase();"`;
+exports[`command code emitter should emit \`run\` command for a test with a capitalized name 1`] = `"run_SomeTestCase();"`;
 
 exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"driver.SwitchTo().DefaultContent();"`;
 

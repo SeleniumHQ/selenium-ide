@@ -486,7 +486,7 @@ async function emitExecuteScript(script: ScriptShape, varName: string) {
 }
 
 async function emitExecuteAsyncScript(script: ScriptShape, varName: string) {
-  const result = `js.executeAsyncScript("var callback = arguments[arguments.length - 1];${
+  const result = `js.ExecuteAsyncScript("var callback = arguments[arguments.length - 1];${
     script.script
   }.then(callback).catch(callback);${generateScriptArguments(script)}")`
   return Promise.resolve(variableSetter(varName, result))
@@ -595,7 +595,7 @@ async function emitRun(
       `${context.commentPrefix} Cannot export run with a test name from a variable: ${testName}`
     )
   }
-  return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
+  return Promise.resolve(`run_${exporter.parsers.sanitizeName(testName)}();`)
 }
 
 async function emitRunScript(script: ScriptShape) {

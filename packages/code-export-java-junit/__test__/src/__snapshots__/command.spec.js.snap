@@ -294,9 +294,9 @@ exports[`command code emitter should emit \`repeatIf\` command 1`] = `
 
 exports[`command code emitter should emit \`run script\` command 1`] = `"js.executeScript(\\"alert('test');alert('Im annoying');\\");"`;
 
-exports[`command code emitter should emit \`run\` command 1`] = `"sometestcase();"`;
+exports[`command code emitter should emit \`run\` command 1`] = `"run_sometestcase();"`;
 
-exports[`command code emitter should emit \`run\` command for a test with a capitalized name 1`] = `"SomeTestCase();"`;
+exports[`command code emitter should emit \`run\` command for a test with a capitalized name 1`] = `"run_SomeTestCase();"`;
 
 exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"driver.switchTo().defaultContent();"`;
 
@@ -451,21 +451,21 @@ exports[`command code emitter should emit \`verify\` command 1`] = `"assertEqual
 
 exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `
 "{
-  WebDriverWait wait = new WebDriverWait(driver, 5);
+  WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(5));
   wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(\\"#blah\\")));
 }"
 `;
 
 exports[`command code emitter should emit \`waitForElementNotEditable\` command 1`] = `
 "{
-  WebDriverWait wait = new WebDriverWait(driver, 5);
+  WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(5));
   wait.until(ExpectedConditions.not(ExpectedConditions.elementToBeClickable(By.cssSelector(\\"#blah\\"))));
 }"
 `;
 
 exports[`command code emitter should emit \`waitForElementNotPresent\` command 1`] = `
 "{
-  WebDriverWait wait = new WebDriverWait(driver, 5);
+  WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(5));
   WebElement element = driver.findElement(By.cssSelector(\\"#blah\\"));
   wait.until(ExpectedConditions.stalenessOf(element));
 }"
@@ -473,28 +473,28 @@ exports[`command code emitter should emit \`waitForElementNotPresent\` command 1
 
 exports[`command code emitter should emit \`waitForElementNotVisible\` command 1`] = `
 "{
-  WebDriverWait wait = new WebDriverWait(driver, 5);
+  WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(5));
   wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(\\"#blah\\")));
 }"
 `;
 
 exports[`command code emitter should emit \`waitForElementPresent\` command 1`] = `
 "{
-  WebDriverWait wait = new WebDriverWait(driver, 5);
+  WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(5));
   wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(\\"#blah\\")));
 }"
 `;
 
 exports[`command code emitter should emit \`waitForElementVisible\` command 1`] = `
 "{
-  WebDriverWait wait = new WebDriverWait(driver, 5);
+  WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(5));
   wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(\\"#blah\\")));
 }"
 `;
 
 exports[`command code emitter should emit \`waitForText\` command 1`] = `
 "{
-  WebDriverWait wait = new WebDriverWait(driver, 30);
+  WebDriverWait wait = new WebDriverWait(driver, java.time.Duration.ofSeconds(30));
   wait.until(ExpectedConditions.textToBe(By.cssSelector(\\"#blah\\"), \\"text\\"));
 }"
 `;
