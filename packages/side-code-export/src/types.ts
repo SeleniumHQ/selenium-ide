@@ -97,6 +97,8 @@ export interface LanguageEmitterOpts {
   displayName: string
   // A statement for a block with no commands (e.g., `pass` in Python)
   emptyBlockStatement?: string
+  // The quote characters to escape in values (all of them when it's empty)
+  escapedQuotes?: string
   emitter: LanguageExportEmitter
   fileExtension: string
   generateFilename: (name: string) => string

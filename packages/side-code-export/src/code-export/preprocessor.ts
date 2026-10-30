@@ -31,6 +31,8 @@ export type Preprocessor = (
 
 export type PreprocessorOptions = {
   ignoreEscaping: boolean
+  // The quote characters to escape (all of them when it's empty)
+  escapedQuotes?: string
 }
 
 export interface EscapeStringOptions extends PreprocessorOptions {
@@ -39,12 +41,12 @@ export interface EscapeStringOptions extends PreprocessorOptions {
 
 function escapeString(
   str: string,
-  { preprocessor, ignoreEscaping }: EscapeStringOptions
+  { preprocessor, ignoreEscaping, escapedQuotes }: EscapeStringOptions
 ) {
   if (ignoreEscaping) return str
   else if (preprocessor && preprocessor.name === 'scriptPreprocessor')
     return str.replace(/"/g, "'")
-  else return stringEscape(str)
+  else return stringEscape(str, escapedQuotes)
 }
 
 // Private use characters that mark a variable in a preprocessed parameter.
@@ -62,11 +64,12 @@ export function preprocessParameter(
   param: string,
   preprocessor: Preprocessor | undefined,
   variableLookup: VariableLookup,
-  { ignoreEscaping }: PreprocessorOptions
+  { ignoreEscaping, escapedQuotes }: PreprocessorOptions
 ) {
   const escapedParam = escapeString(removeVariableMarks(param), {
     preprocessor,
     ignoreEscaping,
+    escapedQuotes,
   })
   return preprocessor
     ? preprocessor(escapedParam, variableLookup)
