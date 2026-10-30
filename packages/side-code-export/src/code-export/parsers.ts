@@ -38,11 +38,16 @@ export function loopCount(count: string, convert: (count: string) => string) {
 
 /**
  * The most times a loop can run, from the loop command's value. Like
- * playback, it's 1000 when the value is empty or isn't a number.
+ * playback, it's 1000 when the value is empty or isn't a number. It's kept
+ * between 0 and the largest 32-bit integer, so it's valid in every language.
+ *
+ * Exported loops count runs: a limit of 5 allows 5 runs. Playback counts
+ * checks of the loop condition, so it stops one run earlier.
  */
 export function loopLimit(value?: string) {
   const limit = Math.floor(Number(value))
-  return value && !isNaN(limit) ? String(limit) : '1000'
+  if (!value || isNaN(limit)) return '1000'
+  return String(Math.min(Math.max(limit, 0), 2147483647))
 }
 
 export const loopLimitMessage = 'Max retry limit exceeded'

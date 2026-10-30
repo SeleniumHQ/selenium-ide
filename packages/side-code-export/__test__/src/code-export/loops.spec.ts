@@ -39,6 +39,12 @@ describe('loopLimit', () => {
     expect(loopLimit('5')).toBe('5')
     expect(loopLimit('2.5')).toBe('2')
   })
+  it('should keep the limit between 0 and the largest 32-bit integer', () => {
+    expect(loopLimit('Infinity')).toBe('2147483647')
+    expect(loopLimit('1e309')).toBe('2147483647')
+    expect(loopLimit('-Infinity')).toBe('0')
+    expect(loopLimit('-5')).toBe('0')
+  })
   it('should be 1000 when the value is empty or not a number', () => {
     expect(loopLimit('')).toBe('1000')
     expect(loopLimit(undefined)).toBe('1000')
