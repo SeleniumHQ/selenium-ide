@@ -17,14 +17,8 @@
 
 import fs from 'fs'
 import path from 'path'
-import codeExport, {
-  emitTest,
-  emitSuite,
-  _emitMethod,
-  _findTestByName,
-} from '../../src'
+import languageExport from '../../src'
 import Command from '../../src/command'
-import { project as projectProcessor } from 'side-code-export'
 
 function readFile(filename) {
   return JSON.parse(
@@ -43,112 +37,92 @@ function readFile(filename) {
   )
 }
 
-// These tests use the v3 export API (emitTest, emitSuite), which no longer
-// exists. Port them to codeExport.emit.test and codeExport.emit.suite.
-describe.skip('Code Export Java JUnit', () => {
+const options = (project) => ({
+  project,
+  tests: project.tests,
+  enableOriginTracing: false,
+  enableDescriptionAsComment: false,
+  beforeEachOptions: {},
+})
+
+describe('Code Export Java JUnit', () => {
   it('should export a test', async () => {
     const project = readFile('single-test.side')
-    const results = await emitTest({
-      baseUrl: project.url,
+    const results = await languageExport.emit.test({
+      ...options(project),
       test: project.tests[0],
-      tests: project.tests,
     })
-    expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
-  it('should export a test with a grid configuration', async () => {
+  it('should export a test with grid execution', async () => {
     const project = readFile('single-test.side')
-    const results = await emitTest({
-      baseUrl: project.url,
+    const results = await languageExport.emit.test({
+      ...options(project),
       test: project.tests[0],
-      tests: project.tests,
       beforeEachOptions: {
         browserName: 'Firefox',
         gridUrl: 'http://localhost:4444/wd/hub',
       },
     })
-    expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
   it('should export a suite', async () => {
-    const project = normalizeProject(readFile('single-suite.side'))
-    const results = await emitSuite({
-      baseUrl: project.url,
+    const project = readFile('single-suite.side')
+    const results = await languageExport.emit.suite({
+      ...options(project),
       suite: project.suites[0],
-      tests: project.tests,
     })
-    expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
   it('should export a test with a reused test method', async () => {
-    const project = normalizeProject(readFile('test-case-reuse.side'))
-    const results = await emitTest({
-      baseUrl: project.url,
+    const project = readFile('test-case-reuse.side')
+    const results = await languageExport.emit.test({
+      ...options(project),
       test: project.tests[1],
-      tests: project.tests,
     })
-    expect(results.body).toBeDefined()
-    expect(results.body).toMatchSnapshot()
-  })
-  it('should export a test with commands that open a new window', async () => {
-    const project = normalizeProject(readFile('select-window.side'))
-    const results = await emitTest({
-      baseUrl: project.url,
-      test: project.tests[0],
-      tests: project.tests,
-    })
-    expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
   it('should export a suite with a reused test method', async () => {
-    const project = normalizeProject(readFile('test-case-reuse.side'))
-    const results = await emitSuite({
-      baseUrl: project.url,
+    const project = readFile('test-case-reuse.side')
+    const results = await languageExport.emit.suite({
+      ...options(project),
       suite: project.suites[0],
-      tests: project.tests,
     })
-    expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
   it('should export a suite that uses control flow commands', async () => {
-    const project = normalizeProject(readFile('control-flow-suite.side'))
-    const results = await emitSuite({
-      baseUrl: project.url,
+    const project = readFile('control-flow-suite.side')
+    const results = await languageExport.emit.suite({
+      ...options(project),
       suite: project.suites[0],
-      tests: project.tests,
     })
-    expect(results.body).toBeDefined()
+    expect(results.body).toMatchSnapshot()
+  })
+  it('should export a test with commands that open a new window', async () => {
+    const project = readFile('select-window.side')
+    const results = await languageExport.emit.test({
+      ...options(project),
+      test: project.tests[0],
+    })
     expect(results.body).toMatchSnapshot()
   })
   it('should export a suite with commands that open a new window inside of a reused test method', async () => {
-    const project = normalizeProject(readFile('nested-select-window.side'))
-    const results = await emitSuite({
-      baseUrl: project.url,
+    const project = readFile('nested-select-window.side')
+    const results = await languageExport.emit.suite({
+      ...options(project),
       suite: project.suites[0],
-      tests: project.tests,
     })
-    expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
   it('should export a suite with just one new window util method when there are multiple commands that open a new window', async () => {
-    const project = normalizeProject(readFile('nested-select-window-v2.side'))
-    const results = await emitSuite({
-      baseUrl: project.url,
+    const project = readFile('nested-select-window-v2.side')
+    const results = await languageExport.emit.suite({
+      ...options(project),
       suite: project.suites[0],
-      tests: project.tests,
     })
-    expect(results.body).toBeDefined()
     expect(results.body).toMatchSnapshot()
   })
   it('should export the command emitter', () => {
-    expect(Command.emit).toStrictEqual(codeExport.emit.command)
+    expect(languageExport.emit.command).toBe(Command.emit)
   })
 })
-
-function normalizeProject(project) {
-  let _project = { ...project }
-  _project.suites.forEach(suite => {
-    projectProcessor.normalizeTestsInSuite({ suite, tests: _project.tests })
-  })
-  return _project
-}

@@ -5,10 +5,12 @@ exports[`Code Export JavaScript Mocha should export a suite 1`] = `
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
+
 describe('login', function() {
   this.timeout(30000)
   let driver
   let vars
+  
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build()
     vars = {}
@@ -22,7 +24,7 @@ describe('login', function() {
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
-    assert(await driver.findElement(By.css(\\".flash.success\\")).getText() == \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    assert.equal(await driver.findElement(By.css(\\".flash.success\\")).getText(), \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
   })
   it('invalid credentials', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/login\\")
@@ -30,7 +32,7 @@ describe('login', function() {
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"blah\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"blah\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
-    assert(await driver.findElement(By.id(\\"flash\\")).getText() == \\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\")
+    assert.equal(await driver.findElement(By.id(\\"flash\\")).getText(), \\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\")
   })
 })
 "
@@ -41,10 +43,12 @@ exports[`Code Export JavaScript Mocha should export a suite that uses control fl
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
+
 describe('control flow', function() {
   this.timeout(30000)
   let driver
   let vars
+  
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build()
     vars = {}
@@ -116,10 +120,12 @@ exports[`Code Export JavaScript Mocha should export a suite with a reused test m
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
+
 describe('Reused methods', function() {
   this.timeout(30000)
   let driver
   let vars
+  
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build()
     vars = {}
@@ -130,8 +136,8 @@ describe('Reused methods', function() {
   async function login() {
     await driver.get(\\"https://the-internet.herokuapp.com/\\")
     await driver.findElement(By.linkText(\\"Form Authentication\\")).click()
-    await driver.findElement(By.id(\\"username\\")).sendKeys(vars[\\"username\\"])
-    await driver.findElement(By.id(\\"password\\")).sendKeys(vars[\\"password\\"])
+    await driver.findElement(By.id(\\"username\\")).sendKeys(String(vars[\\"username\\"]))
+    await driver.findElement(By.id(\\"password\\")).sendKeys(String(vars[\\"password\\"]))
     if (!!await driver.executeScript(\\"return (true)\\")) {
       await driver.findElement(By.css(\\".fa\\")).click()
     }
@@ -139,6 +145,7 @@ describe('Reused methods', function() {
   async function tinymethod() {
     vars[\\"value\\"] = \\"field\\"
   }
+  
   it('invalid credentials', async function() {
     vars[\\"username\\"] = \\"blah\\"
     vars[\\"password\\"] = \\"blah\\"
@@ -164,10 +171,12 @@ exports[`Code Export JavaScript Mocha should export a suite with commands that o
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
+
 describe('Default Suite', function() {
   this.timeout(30000)
   let driver
   let vars
+  
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build()
     vars = {}
@@ -192,6 +201,7 @@ describe('Default Suite', function() {
     await driver.switchTo().window(vars[\\"win9425\\"])
     assert(await driver.getTitle() == \\"New Window\\")
   }
+  
   it('reuse', async function() {
     selectwindow()
   })
@@ -204,10 +214,12 @@ exports[`Code Export JavaScript Mocha should export a suite with just one new wi
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
+
 describe('Default Suite', function() {
   this.timeout(30000)
   let driver
   let vars
+  
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build()
     vars = {}
@@ -232,6 +244,7 @@ describe('Default Suite', function() {
     await driver.switchTo().window(vars[\\"win9425\\"])
     assert(await driver.getTitle() == \\"New Window\\")
   }
+  
   it('reuse', async function() {
     selectwindow()
   })
@@ -252,10 +265,12 @@ exports[`Code Export JavaScript Mocha should export a test 1`] = `
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
+
 describe('login', function() {
   this.timeout(30000)
   let driver
   let vars
+  
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build()
     vars = {}
@@ -269,7 +284,7 @@ describe('login', function() {
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
-    assert(await driver.findElement(By.css(\\".flash.success\\")).getText() == \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    assert.equal(await driver.findElement(By.css(\\".flash.success\\")).getText(), \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
   })
 })
 "
@@ -280,10 +295,12 @@ exports[`Code Export JavaScript Mocha should export a test with a reused test me
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
+
 describe('valid credentials', function() {
   this.timeout(30000)
   let driver
   let vars
+  
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build()
     vars = {}
@@ -294,12 +311,13 @@ describe('valid credentials', function() {
   async function login() {
     await driver.get(\\"https://the-internet.herokuapp.com/\\")
     await driver.findElement(By.linkText(\\"Form Authentication\\")).click()
-    await driver.findElement(By.id(\\"username\\")).sendKeys(vars[\\"username\\"])
-    await driver.findElement(By.id(\\"password\\")).sendKeys(vars[\\"password\\"])
+    await driver.findElement(By.id(\\"username\\")).sendKeys(String(vars[\\"username\\"]))
+    await driver.findElement(By.id(\\"password\\")).sendKeys(String(vars[\\"password\\"]))
     if (!!await driver.executeScript(\\"return (true)\\")) {
       await driver.findElement(By.css(\\".fa\\")).click()
     }
   }
+  
   it('valid credentials', async function() {
     vars[\\"username\\"] = \\"tomsmith\\"
     vars[\\"password\\"] = \\"SuperSecretPassword!\\"
@@ -314,10 +332,12 @@ exports[`Code Export JavaScript Mocha should export a test with commands that op
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
+
 describe('select window', function() {
   this.timeout(30000)
   let driver
   let vars
+  
   beforeEach(async function() {
     driver = await new Builder().forBrowser('chrome').build()
     vars = {}
@@ -334,6 +354,7 @@ describe('select window', function() {
     }
     throw new Error(\\"New window did not appear before timeout\\")
   }
+  
   it('select window', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/\\")
     await driver.manage().window().setRect({ width: 1260, height: 1027 })
@@ -356,10 +377,12 @@ exports[`Code Export JavaScript Mocha should export a test with grid execution 1
 const { Builder, By, Key, until } = require('selenium-webdriver')
 const assert = require('assert')
 
+
 describe('login', function() {
   this.timeout(30000)
   let driver
   let vars
+  
   beforeEach(async function() {
     driver = await new Builder().forBrowser('firefox').usingServer('http://localhost:4444/wd/hub').build()
     vars = {}
@@ -373,7 +396,7 @@ describe('login', function() {
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
-    assert(await driver.findElement(By.css(\\".flash.success\\")).getText() == \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    assert.equal(await driver.findElement(By.css(\\".flash.success\\")).getText(), \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
   })
 })
 "

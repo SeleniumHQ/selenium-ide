@@ -13,7 +13,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 class TestLogin():
+  
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -53,7 +55,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 class TestControlflow():
+  
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -127,7 +131,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 class TestReusedmethods():
+  
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -138,13 +144,14 @@ class TestReusedmethods():
   def login(self):
     self.driver.get(\\"https://the-internet.herokuapp.com/\\")
     self.driver.find_element(By.LINK_TEXT, \\"Form Authentication\\").click()
-    self.driver.find_element(By.ID, \\"username\\").send_keys(self.vars[\\"username\\"])
-    self.driver.find_element(By.ID, \\"password\\").send_keys(self.vars[\\"password\\"])
+    self.driver.find_element(By.ID, \\"username\\").send_keys(str(self.vars[\\"username\\"]))
+    self.driver.find_element(By.ID, \\"password\\").send_keys(str(self.vars[\\"password\\"]))
     if self.driver.execute_script(\\"return (true)\\"):
       self.driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
   
   def tinymethod(self):
     self.vars[\\"value\\"] = \\"field\\"
+  
   
   def test_invalidcredentials(self):
     self.vars[\\"username\\"] = \\"blah\\"
@@ -178,7 +185,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 class TestDefaultSuite():
+  
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -200,6 +209,7 @@ class TestDefaultSuite():
     self.vars[\\"win9425\\"] = self.wait_for_window(2000)
     self.driver.switch_to.window(self.vars[\\"win9425\\"])
     assert self.driver.title == \\"New Window\\"
+  
   
   def test_reuse(self):
     self.selectwindow()
@@ -220,7 +230,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 class TestDefaultSuite():
+  
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -242,6 +254,7 @@ class TestDefaultSuite():
     self.vars[\\"win9425\\"] = self.wait_for_window(2000)
     self.driver.switch_to.window(self.vars[\\"win9425\\"])
     assert self.driver.title == \\"New Window\\"
+  
   
   def test_reuse(self):
     self.selectwindow()
@@ -270,7 +283,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 class TestLogin():
+  
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -302,7 +317,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 class TestValidcredentials():
+  
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -313,10 +330,11 @@ class TestValidcredentials():
   def login(self):
     self.driver.get(\\"https://the-internet.herokuapp.com/\\")
     self.driver.find_element(By.LINK_TEXT, \\"Form Authentication\\").click()
-    self.driver.find_element(By.ID, \\"username\\").send_keys(self.vars[\\"username\\"])
-    self.driver.find_element(By.ID, \\"password\\").send_keys(self.vars[\\"password\\"])
+    self.driver.find_element(By.ID, \\"username\\").send_keys(str(self.vars[\\"username\\"]))
+    self.driver.find_element(By.ID, \\"password\\").send_keys(str(self.vars[\\"password\\"]))
     if self.driver.execute_script(\\"return (true)\\"):
       self.driver.find_element(By.CSS_SELECTOR, \\".fa\\").click()
+  
   
   def test_validcredentials(self):
     self.vars[\\"username\\"] = \\"tomsmith\\"
@@ -339,7 +357,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 class TestSelectwindow():
+  
   def setup_method(self, method):
     self.driver = webdriver.Chrome()
     self.vars = {}
@@ -353,6 +373,7 @@ class TestSelectwindow():
     wh_then = self.vars[\\"window_handles\\"]
     if len(wh_now) > len(wh_then):
       return set(wh_now).difference(set(wh_then)).pop()
+  
   
   def test_selectwindow(self):
     self.driver.get(\\"http://the-internet.herokuapp.com/\\")
@@ -383,7 +404,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 class TestLogin():
+  
   def setup_method(self, method):
     self.driver = webdriver.Remote(command_executor='http://localhost:4444/wd/hub', desired_capabilities=DesiredCapabilities.FIREFOX)
     self.vars = {}
