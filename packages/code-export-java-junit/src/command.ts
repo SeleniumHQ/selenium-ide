@@ -87,7 +87,7 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   setWindowSize: emitSetWindowSize,
   store: emitStore,
   storeAttribute: emitStoreAttribute,
-  //storeJson: emitStoreJson,
+  storeJson: emitStoreJson,
   storeText: emitStoreText,
   storeTitle: emitStoreTitle,
   storeValue: emitStoreValue,
@@ -322,15 +322,15 @@ function emitControlFlowForEach(
     commands: [
       {
         level: 0,
-        statement: `ArrayList collection${collectionName} = (ArrayList) vars.get("${collectionVarName}");`,
+        statement: `List<?> collection${collectionName} = (List<?>) vars.get("${collectionVarName}");`,
       },
       {
         level: 0,
-        statement: `for (int i${iteratorName} = 0; i < collection${collectionName}.size() - 1; i${iteratorName}++) {`,
+        statement: `for (int i${iteratorName} = 0; i${iteratorName} < collection${collectionName}.size(); i${iteratorName}++) {`,
       },
       {
         level: 1,
-        statement: `vars.put("${iteratorVarName}", collection${collectionName}.get(i));`,
+        statement: `vars.put("${iteratorVarName}", collection${collectionName}.get(i${iteratorName}));`,
       },
     ],
   })
@@ -761,6 +761,25 @@ async function emitStoreAttribute(locator: string, varName: string) {
 //  // TODO
 //  return Promise.resolve('')
 //}
+
+// storeJson gets the JSON as it was typed, so escape it for a string literal
+const toStringLiteral = (text: string) =>
+  `"${text
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n')}"`
+
+async function emitStoreJson(json: string, varName: string) {
+  return Promise.resolve(
+    variableSetter(
+      varName,
+      `new org.openqa.selenium.json.Json().toType(${toStringLiteral(
+        json
+      )}, Object.class)`
+    )
+  )
+}
 
 async function emitStoreText(locator: string, varName: string) {
   const result = `driver.findElement(${await location.emit(locator)}).getText()`

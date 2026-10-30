@@ -36,19 +36,27 @@ describe('command code emitter', () => {
     const missing = Object.keys(Commands).filter(
       (command) => !Command.emitters[command]
     )
-    // storeJson can't be exported to Java yet
-    expect(missing).toEqual(['storeJson'])
+    expect(missing).toEqual([])
   })
   it('should keep a command with no emitter inside a comment', async () => {
-    // storeJson has no Java emitter
+    // e.g., a command added by a plugin
+    Commands.customCommand = {
+      name: 'custom command',
+      description: '',
+      target: { name: 'locator', description: '' },
+    }
     const command = {
-      command: 'storeJson',
+      command: 'customCommand',
       target: '\\u000aSystem.exit(1);//',
       value: 'x',
     }
-    expect(await Command.emit(command, opts)).toBe(
-      "// Can't export command: storeJson | \\\\u000aSystem.exit(1);// | x"
-    )
+    try {
+      expect(await Command.emit(command, opts)).toBe(
+        "// Can't export command: customCommand | \\\\u000aSystem.exit(1);// | x"
+      )
+    } finally {
+      delete Commands.customCommand
+    }
   })
   it('should emit `add selection` command', () => {
     const command = {
@@ -588,11 +596,19 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
-  it.skip('should emit `store json` command', () => {
+  it('should emit `store json` command', () => {
     const command = {
       command: 'storeJson',
       target: '[{"a":0}]',
       value: 'myVar',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
+  it('should escape the variable name of `store json`', () => {
+    const command = {
+      command: 'storeJson',
+      target: '{"a":0}',
+      value: 'x"); System.exit(1); //',
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })

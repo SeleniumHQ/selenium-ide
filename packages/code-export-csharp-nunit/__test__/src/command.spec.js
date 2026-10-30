@@ -584,6 +584,18 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
+  it('should escape the variable name of `store json`', () => {
+    const command = {
+      command: 'storeJson',
+      target: '{"a":0}',
+      value: 'x"); System.exit(1); //',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
+  it('should store a json array as a list', () => {
+    const command = { command: 'storeJson', target: '[1, 2]', value: 'list' }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
   it('should emit `store title` command', () => {
     const command = {
       command: 'storeTitle',
