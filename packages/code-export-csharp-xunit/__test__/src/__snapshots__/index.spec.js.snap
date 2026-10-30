@@ -36,7 +36,7 @@ public class SuiteTests : IDisposable {
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
     driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
-    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\");
+    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\n×\\");
   }
   [Fact]
   public void Invalidcredentials() {
@@ -45,7 +45,7 @@ public class SuiteTests : IDisposable {
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"blah\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"blah\\");
     driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
-    Assert.Equal(driver.FindElement(By.Id(\\"flash\\")).Text, \\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\");
+    Assert.Equal(driver.FindElement(By.Id(\\"flash\\")).Text, \\"Your username is invalid!\\\\\\\\n×\\");
   }
 }
 "
@@ -384,7 +384,7 @@ public class SuiteTests : IDisposable {
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
     driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
-    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\");
+    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\n×\\");
   }
 }
 "
@@ -538,7 +538,7 @@ public class SuiteTests : IDisposable {
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
     driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
-    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\");
+    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\n×\\");
   }
 }
 "

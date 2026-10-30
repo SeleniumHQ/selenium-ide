@@ -64,6 +64,16 @@ describe('command code emitter', () => {
       'driver.findElement(By.id("a")).sendKeys("it\\\'s `ok`");'
     )
   })
+  it('should escape a text check value once', async () => {
+    const command = {
+      command: 'assertText',
+      target: 'id=a',
+      value: 'a "b" `c`',
+    }
+    expect(await Command.emit(command, opts)).toBe(
+      'assertThat(driver.findElement(By.id("a")).getText(), is("a \\"b\\" `c`"));'
+    )
+  })
   it('should emit `add selection` command', () => {
     const command = {
       command: 'addSelection',

@@ -24,7 +24,7 @@ describe('login', function() {
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
-    assert.equal(await driver.findElement(By.css(\\".flash.success\\")).getText(), \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    assert.equal(await driver.findElement(By.css(\\".flash.success\\")).getText(), \\"You logged into a secure area!\\\\\\\\n×\\")
   })
   it('invalid credentials', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/login\\")
@@ -32,7 +32,7 @@ describe('login', function() {
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"blah\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"blah\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
-    assert.equal(await driver.findElement(By.id(\\"flash\\")).getText(), \\"Your username is invalid!\\\\\\\\\\\\\\\\n×\\")
+    assert.equal(await driver.findElement(By.id(\\"flash\\")).getText(), \\"Your username is invalid!\\\\\\\\n×\\")
   })
 })
 "
@@ -289,7 +289,7 @@ describe('login', function() {
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
-    assert.equal(await driver.findElement(By.css(\\".flash.success\\")).getText(), \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    assert.equal(await driver.findElement(By.css(\\".flash.success\\")).getText(), \\"You logged into a secure area!\\\\\\\\n×\\")
   })
 })
 "
@@ -401,7 +401,7 @@ describe('login', function() {
     await driver.findElement(By.id(\\"username\\")).sendKeys(\\"tomsmith\\")
     await driver.findElement(By.id(\\"password\\")).sendKeys(\\"SuperSecretPassword!\\")
     await driver.findElement(By.css(\\"#login button\\")).click()
-    assert.equal(await driver.findElement(By.css(\\".flash.success\\")).getText(), \\"You logged into a secure area!\\\\\\\\\\\\\\\\n×\\")
+    assert.equal(await driver.findElement(By.css(\\".flash.success\\")).getText(), \\"You logged into a secure area!\\\\\\\\n×\\")
   })
 })
 "

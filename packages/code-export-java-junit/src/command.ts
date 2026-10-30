@@ -931,9 +931,7 @@ async function emitVerifyNotSelectedValue(
     },
     {
       level: 1,
-      statement: `assertThat(value, is(not("${exporter.emit.text(
-        expectedValue
-      )}")));`,
+      statement: `assertThat(value, is(not("${expectedValue}")));`,
     },
     { level: 0, statement: '}' },
   ]
@@ -942,9 +940,7 @@ async function emitVerifyNotSelectedValue(
 
 async function emitVerifyNotText(locator: string, text: string) {
   const result = `driver.findElement(${await location.emit(locator)}).getText()`
-  return Promise.resolve(
-    `assertThat(${result}, is(not("${exporter.emit.text(text)}")));`
-  )
+  return Promise.resolve(`assertThat(${result}, is(not("${text}")));`)
 }
 
 async function emitVerifySelectedLabel(locator: string, labelValue: string) {
@@ -982,7 +978,7 @@ async function emitVerifyText(locator: string, text: string) {
   return Promise.resolve(
     `assertThat(driver.findElement(${await location.emit(
       locator
-    )}).getText(), is("${exporter.emit.text(text)}"));`
+    )}).getText(), is("${text}"));`
   )
 }
 

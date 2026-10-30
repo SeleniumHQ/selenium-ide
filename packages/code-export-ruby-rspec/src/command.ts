@@ -835,9 +835,7 @@ async function emitVerifyNotSelectedValue(
     },
     {
       level: 0,
-      statement: `expect(value).not_to eq('${exporter.emit.text(
-        expectedValue
-      )}')`,
+      statement: `expect(value).not_to eq('${expectedValue}')`,
     },
   ]
   return Promise.resolve({ commands })
@@ -853,7 +851,7 @@ async function emitVerifyNotText(locator: string, text: string) {
     },
     {
       level: 0,
-      statement: `expect(text).not_to eq('${exporter.emit.text(text)}')`,
+      statement: `expect(text).not_to eq('${text}')`,
     },
   ]
   return Promise.resolve({ commands })
@@ -888,7 +886,7 @@ async function emitVerifyText(locator: string, text: string) {
       level: 0,
       statement: `expect(@driver.find_element(${await location.emit(
         locator
-      )}).text).to eq('${exporter.emit.text(text)}')`,
+      )}).text).to eq('${text}')`,
     },
   ]
   return Promise.resolve({ commands })

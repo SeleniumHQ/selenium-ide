@@ -857,7 +857,7 @@ async function emitVerifyNotSelectedValue(
     },
     {
       level: 0,
-      statement: `assert value != "${exporter.emit.text(expectedValue)}"`,
+      statement: `assert value != "${expectedValue}"`,
     },
   ]
   return Promise.resolve({ commands })
@@ -871,7 +871,7 @@ async function emitVerifyNotText(locator: string, text: string) {
         locator
       )}).text`,
     },
-    { level: 0, statement: `assert text != "${exporter.emit.text(text)}"` },
+    { level: 0, statement: `assert text != "${text}"` },
   ]
   return Promise.resolve({ commands })
 }
@@ -905,7 +905,7 @@ async function emitVerifyText(locator: string, text: string) {
       level: 0,
       statement: `assert self.driver.find_element(${await location.emit(
         locator
-      )}).text == "${exporter.emit.text(text)}"`,
+      )}).text == "${text}"`,
     },
   ]
   return Promise.resolve({ commands })
