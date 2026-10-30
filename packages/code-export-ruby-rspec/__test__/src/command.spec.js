@@ -445,6 +445,14 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
+  it('should emit `run` command for a test with a capitalized name', () => {
+    const command = { command: 'run', target: 'Some Test Case', value: '' }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
+  it('should emit a comment for `run` with a test name from a variable', async () => {
+    const command = { command: 'run', target: '${testName}', value: '' }
+    expect(await Command.emit(command, opts)).toMatchSnapshot()
+  })
   it('should emit `run script` command', () => {
     const command = {
       command: 'runScript',

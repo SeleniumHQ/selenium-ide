@@ -24,6 +24,7 @@ import {
   PrebuildEmitter,
   ProcessedCommandEmitter,
   ScriptShape,
+  hasVariable,
 } from 'side-code-export'
 import location from './location'
 import selection from './selection'
@@ -574,7 +575,17 @@ async function emitPause(time: string) {
   return Promise.resolve({ commands })
 }
 
-async function emitRun(testName: string) {
+async function emitRun(
+  testName: string,
+  _value: string,
+  context: EmitterContext
+) {
+  // The test to run is only known during playback
+  if (hasVariable(testName)) {
+    return Promise.resolve(
+      `${context.commentPrefix} Cannot export run with a test name from a variable: ${testName}`
+    )
+  }
   return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}();`)
 }
 
