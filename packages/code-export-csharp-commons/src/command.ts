@@ -146,8 +146,9 @@ const variableInString = {
   toString: (lookup: string) => lookup,
 }
 
+// Convert.ToString turns a null value into an empty string instead of failing
 function variableLookup(varName: string) {
-  return `vars["${varName}"].ToString()`
+  return `Convert.ToString(vars["${varName}"])`
 }
 
 function variableSetter(varName: string, value: string) {
@@ -204,7 +205,7 @@ function emitAssert(varName: string, value: string) {
       ? exporter.parsers.capitalize(value)
       : value
   return Promise.resolve(
-    `Assert.That(vars["${varName}"].ToString(), Is.EqualTo("${_value}"));`
+    `Assert.That(${variableLookup(varName)}, Is.EqualTo("${_value}"));`
   )
 }
 

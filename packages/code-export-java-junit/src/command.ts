@@ -146,8 +146,9 @@ const variableInString = {
   toString: (lookup: string) => lookup,
 }
 
+// String.valueOf turns a null value into "null" instead of failing
 function variableLookup(varName: string) {
-  return `vars.get("${varName}").toString()`
+  return `String.valueOf(vars.get("${varName}"))`
 }
 
 function variableSetter(varName: string, value: string) {
@@ -195,7 +196,7 @@ async function emitNewWindowHandling(
 
 function emitAssert(varName: string, value: string) {
   return Promise.resolve(
-    `assertEquals(vars.get("${varName}").toString(), "${value}");`
+    `assertEquals(${variableLookup(varName)}, "${value}");`
   )
 }
 
