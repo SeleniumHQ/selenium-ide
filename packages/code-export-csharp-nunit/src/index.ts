@@ -45,10 +45,8 @@ export const opts: LanguageEmitterOpts = {
     )}Test${opts.fileExtension}`
   },
   generateMethodDeclaration: (name) => {
-    // run prefix: a reused test can also be a test with the same name
-    return `public void run${exporter.parsers.capitalize(
-      exporter.parsers.sanitizeName(name)
-    )}() {`
+    // run_ prefix: generated test names can't contain it, so they can't clash
+    return `public void run_${exporter.parsers.sanitizeName(name)}() {`
   },
   generateTestDeclaration: (name) => {
     return `[Test]\npublic void ${exporter.parsers.uncapitalize(

@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// Exports every project in tests/examples to Java and C#, and compiles the
+// Exports every project in tests/examples (and ./projects) to Java and C#, and compiles the
 // result with Maven and dotnet. Run it after building the packages.
 import { execFileSync } from 'child_process'
 import fs from 'fs'
@@ -25,7 +25,11 @@ import { fileURLToPath } from 'url'
 
 const here = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(here, '..', '..')
-const examples = path.join(root, 'tests', 'examples')
+// The examples, plus projects with names that are hard to export
+const projects = [
+  path.join(root, 'tests', 'examples'),
+  path.join(here, 'projects'),
+]
 const exportBin = path.join(
   root,
   'packages',
@@ -46,8 +50,12 @@ const run = (command, args, cwd) =>
 // can have suites with the same name.
 function exportExamples(language, target, addScope) {
   fs.rmSync(target, { recursive: true, force: true })
-  for (const file of fs.readdirSync(examples)) {
-    if (!file.endsWith('.side')) continue
+  const files = projects.flatMap((folder) =>
+    fs.readdirSync(folder).map((file) => path.join(folder, file))
+  )
+  for (const sideFile of files) {
+    if (!sideFile.endsWith('.side')) continue
+    const file = path.basename(sideFile)
     const scope = 'example_' + path.basename(file, '.side').replace(/\W/g, '_')
     const out = fs.mkdtempSync(path.join(os.tmpdir(), 'side-export-'))
     execFileSync(process.execPath, [
@@ -59,7 +67,7 @@ function exportExamples(language, target, addScope) {
         'dist',
         'index.js'
       ),
-      path.join(examples, file),
+      sideFile,
       out,
     ])
     for (const exported of fs.readdirSync(out)) {

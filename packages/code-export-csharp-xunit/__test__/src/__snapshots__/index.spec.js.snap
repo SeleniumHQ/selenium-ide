@@ -179,7 +179,7 @@ public class ReusedmethodsTests : IDisposable {
   {
     driver.Quit();
   }
-  public void runLogin() 
+  public void run_login() 
   {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
@@ -189,7 +189,7 @@ public class ReusedmethodsTests : IDisposable {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
   }
-  public void runTinymethod() 
+  public void run_tinymethod() 
   {
     vars[\\"value\\"] = \\"field\\";
   }
@@ -198,20 +198,20 @@ public class ReusedmethodsTests : IDisposable {
   public void Invalidcredentials() {
     vars[\\"username\\"] = \\"blah\\";
     vars[\\"password\\"] = \\"blah\\";
-    runLogin();
+    run_login();
   }
   [Fact]
   public void Validcredentials() {
     vars[\\"username\\"] = \\"tomsmith\\";
     vars[\\"password\\"] = \\"SuperSecretPassword!\\";
-    runLogin();
+    run_login();
   }
   [Fact]
   public void Twomethods() {
     vars[\\"username\\"] = \\"blah\\";
     vars[\\"password\\"] = \\"blah\\";
-    runLogin();
-    runTinymethod();
+    run_login();
+    run_tinymethod();
   }
 }
 "
@@ -260,7 +260,7 @@ public class DefaultSuiteTests : IDisposable {
       return whNow.First().ToString();
     }
   }
-  public void runSelectwindow() 
+  public void run_selectwindow() 
   {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
@@ -272,7 +272,7 @@ public class DefaultSuiteTests : IDisposable {
   
   [Fact]
   public void Reuse() {
-    runSelectwindow();
+    run_selectwindow();
   }
 }
 "
@@ -321,7 +321,7 @@ public class DefaultSuiteTests : IDisposable {
       return whNow.First().ToString();
     }
   }
-  public void runSelectwindow() 
+  public void run_selectwindow() 
   {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
@@ -333,7 +333,7 @@ public class DefaultSuiteTests : IDisposable {
   
   [Fact]
   public void Reuse() {
-    runSelectwindow();
+    run_selectwindow();
   }
   [Fact]
   public void Selectwindow() {
@@ -419,7 +419,7 @@ public class ValidcredentialsTests : IDisposable {
   {
     driver.Quit();
   }
-  public void runLogin() 
+  public void run_login() 
   {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
@@ -434,7 +434,7 @@ public class ValidcredentialsTests : IDisposable {
   public void Validcredentials() {
     vars[\\"username\\"] = \\"tomsmith\\";
     vars[\\"password\\"] = \\"SuperSecretPassword!\\";
-    runLogin();
+    run_login();
   }
 }
 "

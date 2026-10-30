@@ -587,11 +587,7 @@ async function emitRun(
       `${context.commentPrefix} Cannot export run with a test name from a variable: ${testName}`
     )
   }
-  return Promise.resolve(
-    `run${exporter.parsers.capitalize(
-      exporter.parsers.sanitizeName(testName)
-    )}();`
-  )
+  return Promise.resolve(`run_${exporter.parsers.sanitizeName(testName)}();`)
 }
 
 async function emitRunScript(script: ScriptShape) {
