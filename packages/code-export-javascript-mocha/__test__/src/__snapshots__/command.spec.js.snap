@@ -277,7 +277,9 @@ exports[`command code emitter should emit \`repeatIf\` command 1`] = `
 
 exports[`command code emitter should emit \`run script\` command 1`] = `"await driver.executeScript(\\"alert('test');alert('Im annoying');\\")"`;
 
-exports[`command code emitter should emit \`run\` command 1`] = `"sometestcase()"`;
+exports[`command code emitter should emit \`run\` command 1`] = `"await sometestcase()"`;
+
+exports[`command code emitter should emit \`run\` command for a test with a capitalized name 1`] = `"await someTestCase()"`;
 
 exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"await driver.switchTo().defaultContent()"`;
 
@@ -434,6 +436,8 @@ exports[`command code emitter should emit \`while\` command 1`] = `
 while(!!await driver.executeScript(\\"return (true)\\")) {
   if (++loop1 > 1000) throw new Error('Max retry limit exceeded')"
 `;
+
+exports[`command code emitter should emit a comment for \`run\` with a test name from a variable 1`] = `"// Cannot export run with a test name from a variable: vars[\\"testName\\"]"`;
 
 exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
 "vars[\\"windowHandles\\"] = await driver.getAllWindowHandles()

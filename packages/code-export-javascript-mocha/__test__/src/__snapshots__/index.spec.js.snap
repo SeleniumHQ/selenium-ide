@@ -154,18 +154,18 @@ describe('Reused methods', function() {
   it('invalid credentials', async function() {
     vars[\\"username\\"] = \\"blah\\"
     vars[\\"password\\"] = \\"blah\\"
-    login()
+    await login()
   })
   it('valid credentials', async function() {
     vars[\\"username\\"] = \\"tomsmith\\"
     vars[\\"password\\"] = \\"SuperSecretPassword!\\"
-    login()
+    await login()
   })
   it('two methods', async function() {
     vars[\\"username\\"] = \\"blah\\"
     vars[\\"password\\"] = \\"blah\\"
-    login()
-    tinymethod()
+    await login()
+    await tinymethod()
   })
 })
 "
@@ -208,7 +208,7 @@ describe('Default Suite', function() {
   }
   
   it('reuse', async function() {
-    selectwindow()
+    await selectwindow()
   })
 })
 "
@@ -251,7 +251,7 @@ describe('Default Suite', function() {
   }
   
   it('reuse', async function() {
-    selectwindow()
+    await selectwindow()
   })
   it('select window', async function() {
     await driver.get(\\"http://the-internet.herokuapp.com/windows\\")
@@ -326,7 +326,7 @@ describe('valid credentials', function() {
   it('valid credentials', async function() {
     vars[\\"username\\"] = \\"tomsmith\\"
     vars[\\"password\\"] = \\"SuperSecretPassword!\\"
-    login()
+    await login()
   })
 })
 "

@@ -73,6 +73,10 @@ export function preprocessParameter(
     : defaultPreprocessor(escapedParam, variableLookup)
 }
 
+// Whether a preprocessed parameter uses a variable
+export const hasVariable = (param: string) =>
+  typeof param === 'string' && param.includes(VARIABLE_START)
+
 export function defaultPreprocessor(
   param: string,
   _variableLookup?: VariableLookup

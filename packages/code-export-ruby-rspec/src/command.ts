@@ -21,6 +21,7 @@ import {
   ExportFlexCommandShape,
   ProcessedCommandEmitter,
   ScriptShape,
+  hasVariable,
 } from 'side-code-export'
 // eslint-disable-next-line node/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
@@ -540,8 +541,22 @@ async function emitPause(time: number) {
   return Promise.resolve({ commands })
 }
 
-async function emitRun(testName: string) {
-  return Promise.resolve(`${exporter.parsers.sanitizeName(testName)}()`)
+async function emitRun(
+  testName: string,
+  _value: string,
+  context: EmitterContext
+) {
+  // The test to run is only known during playback
+  if (hasVariable(testName)) {
+    return Promise.resolve(
+      `${context.commentPrefix} Cannot export run with a test name from a variable: ${testName}`
+    )
+  }
+  return Promise.resolve(
+    `${exporter.parsers.uncapitalize(
+      exporter.parsers.sanitizeName(testName)
+    )}()`
+  )
 }
 
 async function emitRunScript(script: ScriptShape) {

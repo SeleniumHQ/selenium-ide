@@ -243,6 +243,8 @@ exports[`command code emitter should emit \`run script\` command 1`] = `"self.dr
 
 exports[`command code emitter should emit \`run\` command 1`] = `"self.sometestcase()"`;
 
+exports[`command code emitter should emit \`run\` command for a test with a capitalized name 1`] = `"self.someTestCase()"`;
+
 exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"self.driver.switch_to.default_content()"`;
 
 exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"self.driver.switch_to.window(self.vars[\\"window\\"])"`;
@@ -393,6 +395,8 @@ while self.driver.execute_script(\\"return (true)\\"):
   "endingLevel": 1,
 }
 `;
+
+exports[`command code emitter should emit a comment for \`run\` with a test name from a variable 1`] = `"# Cannot export run with a test name from a variable: self.vars[\\"testName\\"]"`;
 
 exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
 "self.vars[\\"window_handles\\"] = self.driver.window_handles

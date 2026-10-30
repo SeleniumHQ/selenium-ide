@@ -296,6 +296,8 @@ exports[`command code emitter should emit \`run script\` command 1`] = `"js.exec
 
 exports[`command code emitter should emit \`run\` command 1`] = `"sometestcase();"`;
 
+exports[`command code emitter should emit \`run\` command for a test with a capitalized name 1`] = `"SomeTestCase();"`;
+
 exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"driver.switchTo().defaultContent();"`;
 
 exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"driver.switchTo().window(vars.get(\\"window\\").toString());"`;
@@ -503,6 +505,8 @@ while ((Boolean) js.executeScript(\\"return (true)\\")) {
   "endingLevel": 1,
 }
 `;
+
+exports[`command code emitter should emit a comment for \`run\` with a test name from a variable 1`] = `"// Cannot export run with a test name from a variable: vars.get(\\"testName\\").toString()"`;
 
 exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
 "vars.put(\\"window_handles\\", driver.getWindowHandles());

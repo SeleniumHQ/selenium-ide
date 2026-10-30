@@ -231,6 +231,8 @@ exports[`command code emitter should emit \`run script\` command 1`] = `"@driver
 
 exports[`command code emitter should emit \`run\` command 1`] = `"sometestcase()"`;
 
+exports[`command code emitter should emit \`run\` command for a test with a capitalized name 1`] = `"someTestCase()"`;
+
 exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"@driver.switch_to.default_content"`;
 
 exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"@driver.switch_to.window(@vars['window'])"`;
@@ -379,6 +381,8 @@ while @driver.execute_script(\\"return (true)\\") do
   "endingLevel": 1,
 }
 `;
+
+exports[`command code emitter should emit a comment for \`run\` with a test name from a variable 1`] = `"# Cannot export run with a test name from a variable: @vars['testName']"`;
 
 exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
 "@vars['window_handles'] = @driver.window_handles
