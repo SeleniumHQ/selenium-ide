@@ -58,6 +58,23 @@ describe('command code emitter', () => {
       delete Commands.customCommand
     }
   })
+  it('should not escape backticks in values', async () => {
+    const command = { command: 'type', target: 'id=a', value: "it's `ok`" }
+    expect(await Command.emit(command, opts)).toBe(
+      'self.driver.find_element(By.ID, "a").send_keys("it\\\'s `ok`")'
+    )
+  })
+  it('should escape a text check value once', async () => {
+    const command = {
+      command: 'assertText',
+      target: 'id=a',
+      value: 'a "b" `c`',
+    }
+    const { commands } = await Command.emit(command, opts)
+    expect(commands[0].statement).toBe(
+      'assert self.driver.find_element(By.ID, "a").text == "a \\"b\\" `c`"'
+    )
+  })
   it('should emit `add selection` command', () => {
     const command = {
       command: 'addSelection',

@@ -38,6 +38,12 @@ describe('command code emitter', () => {
     )
     expect(missing).toEqual([])
   })
+  it('should not escape backticks in values', async () => {
+    const command = { command: 'type', target: 'id=a', value: "it's `ok`" }
+    expect(await Command.emit(command, opts)).toBe(
+      'driver.FindElement(By.Id("a")).SendKeys("it\\\'s `ok`");'
+    )
+  })
   it('should emit `add selection` command', () => {
     const command = {
       command: 'addSelection',

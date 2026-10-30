@@ -171,9 +171,7 @@ async function emitVerifyNotSelectedValue(
     },
     {
       level: 1,
-      statement: `Assert.NotEqual(value, ${exporter.emit.text(
-        expectedValue
-      )});`,
+      statement: `Assert.NotEqual(value, "${expectedValue}");`,
     },
     { level: 0, statement: '}' },
   ]
@@ -185,9 +183,7 @@ emitters.verifyNotText = emitVerifyNotText
 
 async function emitVerifyNotText(locator: string, text: string) {
   const result = `driver.FindElement(${await location.emit(locator)}).Text`
-  return Promise.resolve(
-    `Assert.NotEqual(${result}, "${exporter.emit.text(text)}");`
-  )
+  return Promise.resolve(`Assert.NotEqual(${result}, "${text}");`)
 }
 
 emitters.assertSelectedLabel = emitVerifySelectedLabel
@@ -250,7 +246,7 @@ async function emitVerifyText(locator: string, text: string) {
   return Promise.resolve(
     `Assert.Equal(driver.FindElement(${await location.emit(
       locator
-    )}).Text, "${exporter.emit.text(text)}");`
+    )}).Text, "${text}");`
   )
 }
 

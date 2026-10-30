@@ -37,6 +37,8 @@ export const opts: LanguageEmitterOpts = {
   commandPrefixPadding: '  ',
   terminatingKeyword: '',
   commentPrefix: '#',
+  // A backslash before a backtick isn't a valid escape
+  escapedQuotes: `"'`,
   emptyBlockStatement: 'pass',
   // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
   generateTestDeclaration: function generateTestDeclaration(name) {

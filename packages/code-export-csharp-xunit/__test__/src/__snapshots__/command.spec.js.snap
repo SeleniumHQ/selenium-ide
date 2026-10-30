@@ -61,7 +61,7 @@ exports[`command code emitter should emit \`assert not editable\` command 1`] = 
 exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
 "{
   String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
-  Assert.NotEqual(value, test);
+  Assert.NotEqual(value, \\"test\\");
 }"
 `;
 
@@ -126,7 +126,7 @@ exports[`command code emitter should emit \`verify not editable\` command 1`] = 
 exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
 "{
   String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
-  Assert.NotEqual(value, test);
+  Assert.NotEqual(value, \\"test\\");
 }"
 `;
 

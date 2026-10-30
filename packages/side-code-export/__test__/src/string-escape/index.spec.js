@@ -29,4 +29,7 @@ describe('String escape', () => {
     expect(stringEscape(`AAAAA'BBBBB`, '"')).toEqual(`AAAAA'BBBBB`)
     expect(stringEscape('AAAAA`BBBBB', "'")).toEqual('AAAAA`BBBBB')
   })
+  it('should escape only the provided quote characters', () => {
+    expect(stringEscape('a`b"c\'d', `"'`)).toBe('a`b\\"c\\\'d')
+  })
 })

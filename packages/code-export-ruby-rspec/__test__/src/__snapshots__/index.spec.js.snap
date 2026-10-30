@@ -20,7 +20,7 @@ describe 'Login' do
     @driver.find_element(:id, 'username').send_keys('tomsmith')
     @driver.find_element(:id, 'password').send_keys('SuperSecretPassword!')
     @driver.find_element(:css, '#login button').click
-    expect(@driver.find_element(:css, '.flash.success').text).to eq('You logged into a secure area!\\\\\\\\\\\\\\\\n×')
+    expect(@driver.find_element(:css, '.flash.success').text).to eq('You logged into a secure area!\\\\\\\\n×')
   end
   it 'invalidcredentials' do
     @driver.get(\\"http://the-internet.herokuapp.com/login\\")
@@ -28,7 +28,7 @@ describe 'Login' do
     @driver.find_element(:id, 'username').send_keys('blah')
     @driver.find_element(:id, 'password').send_keys('blah')
     @driver.find_element(:css, '#login button').click
-    expect(@driver.find_element(:id, 'flash').text).to eq('Your username is invalid!\\\\\\\\\\\\\\\\n×')
+    expect(@driver.find_element(:id, 'flash').text).to eq('Your username is invalid!\\\\\\\\n×')
   end
 end
 "
@@ -261,7 +261,7 @@ describe 'Login' do
     @driver.find_element(:id, 'username').send_keys('tomsmith')
     @driver.find_element(:id, 'password').send_keys('SuperSecretPassword!')
     @driver.find_element(:css, '#login button').click
-    expect(@driver.find_element(:css, '.flash.success').text).to eq('You logged into a secure area!\\\\\\\\\\\\\\\\n×')
+    expect(@driver.find_element(:css, '.flash.success').text).to eq('You logged into a secure area!\\\\\\\\n×')
   end
 end
 "
@@ -358,7 +358,7 @@ describe 'Login' do
     @driver.find_element(:id, 'username').send_keys('tomsmith')
     @driver.find_element(:id, 'password').send_keys('SuperSecretPassword!')
     @driver.find_element(:css, '#login button').click
-    expect(@driver.find_element(:css, '.flash.success').text).to eq('You logged into a secure area!\\\\\\\\\\\\\\\\n×')
+    expect(@driver.find_element(:css, '.flash.success').text).to eq('You logged into a secure area!\\\\\\\\n×')
   end
 end
 "

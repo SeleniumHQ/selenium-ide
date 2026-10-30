@@ -206,13 +206,13 @@ export async function emitCommand(
         command.target as string,
         emitter.targetPreprocessor,
         variableLookup,
-        { ignoreEscaping }
+        { ignoreEscaping, escapedQuotes: context?.escapedQuotes }
       ),
       preprocessParameter(
         command.value as string,
         emitter.valuePreprocessor,
         variableLookup,
-        { ignoreEscaping: false }
+        { ignoreEscaping: false, escapedQuotes: context?.escapedQuotes }
       ),
       context
     )
