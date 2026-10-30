@@ -767,9 +767,22 @@ async function emitStoreAttribute(locator: string | string[], varName: string) {
   return Promise.resolve({ commands })
 }
 
-async function emitStoreJson(_json: any, _varName: string) {
+// storeJson gets the JSON as it was typed, so escape it for a string literal
+const toStringLiteral = (text: string) =>
+  `"${text
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n')}"`
+
+async function emitStoreJson(json: string, varName: string) {
   return Promise.resolve(
-    'throw new System.Exception("The `storeJson` command is not yet implemented for this language.");'
+    variableSetter(
+      varName,
+      `System.Text.Json.JsonSerializer.Deserialize<object>(${toStringLiteral(
+        json
+      )})`
+    )
   )
 }
 

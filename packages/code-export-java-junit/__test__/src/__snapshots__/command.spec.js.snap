@@ -345,6 +345,8 @@ exports[`command code emitter should emit \`store attribute\` command 1`] = `
 
 exports[`command code emitter should emit \`store element count\` command 1`] = `"vars.put(\\"myVar\\", driver.findElements(By.xpath(\\"button\\")).size());"`;
 
+exports[`command code emitter should emit \`store json\` command 1`] = `"vars.put(\\"myVar\\", new org.openqa.selenium.json.Json().toType(\\"[{\\\\\\"a\\\\\\":0}]\\", Object.class));"`;
+
 exports[`command code emitter should emit \`store text\` command 1`] = `"vars.put(\\"myVar\\", driver.findElement(By.id(\\"someElement\\")).getText());"`;
 
 exports[`command code emitter should emit \`store title\` command 1`] = `"vars.put(\\"myVar\\", driver.getTitle());"`;

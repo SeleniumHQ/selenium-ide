@@ -344,7 +344,7 @@ exports[`command code emitter should emit \`store attribute\` command 1`] = `
 
 exports[`command code emitter should emit \`store element count\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElements(By.XPath(\\"button\\")).Count;"`;
 
-exports[`command code emitter should emit \`store json\` command 1`] = `"throw new System.Exception(\\"The \`storeJson\` command is not yet implemented for this language.\\");"`;
+exports[`command code emitter should emit \`store json\` command 1`] = `"vars[\\"myVar\\"] = System.Text.Json.JsonSerializer.Deserialize<object>(\\"[{\\\\\\"a\\\\\\":0}]\\");"`;
 
 exports[`command code emitter should emit \`store text\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElement(By.Id(\\"someElement\\")).Text;"`;
 
