@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { HookFunctionInputs } from 'side-code-export'
+import { codeExport as exporter, HookFunctionInputs } from 'side-code-export'
 
 export const emitters = {
   afterAll: empty,
@@ -31,11 +31,17 @@ export const emitters = {
 
 export default emitters
 
+// The test class of a suite, e.g. LoginTests
+export const suiteClassName = (suiteName = 'Suite') =>
+  `${exporter.parsers.capitalize(
+    exporter.parsers.sanitizeName(suiteName)
+  )}Tests`
+
 function beforeEach() {
   const params: HookFunctionInputs = {
-    startingSyntax: ({ browserName, gridUrl } = {}) => ({
+    startingSyntax: ({ browserName, gridUrl, suiteName } = {}) => ({
       commands: [
-        { level: 0, statement: `public SuiteTests()` },
+        { level: 0, statement: `public ${suiteClassName(suiteName)}()` },
         { level: 0, statement: `{` },
         {
           level: 1,

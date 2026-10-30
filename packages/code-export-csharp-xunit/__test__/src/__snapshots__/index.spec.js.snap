@@ -14,12 +14,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 
-public class SuiteTests : IDisposable {
+public class LoginTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
   
-  public SuiteTests()
+  public LoginTests()
   {
     driver = new ChromeDriver();
     js = (IJavaScriptExecutor)driver;
@@ -65,12 +65,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 
-public class SuiteTests : IDisposable {
+public class ControlflowTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
   
-  public SuiteTests()
+  public ControlflowTests()
   {
     driver = new ChromeDriver();
     js = (IJavaScriptExecutor)driver;
@@ -164,12 +164,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 
-public class SuiteTests : IDisposable {
+public class ReusedmethodsTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
   
-  public SuiteTests()
+  public ReusedmethodsTests()
   {
     driver = new ChromeDriver();
     js = (IJavaScriptExecutor)driver;
@@ -179,7 +179,7 @@ public class SuiteTests : IDisposable {
   {
     driver.Quit();
   }
-  public void login() 
+  public void runLogin() 
   {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
@@ -189,7 +189,7 @@ public class SuiteTests : IDisposable {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
   }
-  public void tinymethod() 
+  public void runTinymethod() 
   {
     vars[\\"value\\"] = \\"field\\";
   }
@@ -198,20 +198,20 @@ public class SuiteTests : IDisposable {
   public void Invalidcredentials() {
     vars[\\"username\\"] = \\"blah\\";
     vars[\\"password\\"] = \\"blah\\";
-    login();
+    runLogin();
   }
   [Fact]
   public void Validcredentials() {
     vars[\\"username\\"] = \\"tomsmith\\";
     vars[\\"password\\"] = \\"SuperSecretPassword!\\";
-    login();
+    runLogin();
   }
   [Fact]
   public void Twomethods() {
     vars[\\"username\\"] = \\"blah\\";
     vars[\\"password\\"] = \\"blah\\";
-    login();
-    tinymethod();
+    runLogin();
+    runTinymethod();
   }
 }
 "
@@ -231,12 +231,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 
-public class SuiteTests : IDisposable {
+public class DefaultSuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
   
-  public SuiteTests()
+  public DefaultSuiteTests()
   {
     driver = new ChromeDriver();
     js = (IJavaScriptExecutor)driver;
@@ -260,7 +260,7 @@ public class SuiteTests : IDisposable {
       return whNow.First().ToString();
     }
   }
-  public void selectwindow() 
+  public void runSelectwindow() 
   {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
@@ -272,7 +272,7 @@ public class SuiteTests : IDisposable {
   
   [Fact]
   public void Reuse() {
-    selectwindow();
+    runSelectwindow();
   }
 }
 "
@@ -292,12 +292,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 
-public class SuiteTests : IDisposable {
+public class DefaultSuiteTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
   
-  public SuiteTests()
+  public DefaultSuiteTests()
   {
     driver = new ChromeDriver();
     js = (IJavaScriptExecutor)driver;
@@ -321,7 +321,7 @@ public class SuiteTests : IDisposable {
       return whNow.First().ToString();
     }
   }
-  public void selectwindow() 
+  public void runSelectwindow() 
   {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
@@ -333,7 +333,7 @@ public class SuiteTests : IDisposable {
   
   [Fact]
   public void Reuse() {
-    selectwindow();
+    runSelectwindow();
   }
   [Fact]
   public void Selectwindow() {
@@ -362,12 +362,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 
-public class SuiteTests : IDisposable {
+public class LoginTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
   
-  public SuiteTests()
+  public LoginTests()
   {
     driver = new ChromeDriver();
     js = (IJavaScriptExecutor)driver;
@@ -404,12 +404,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 
-public class SuiteTests : IDisposable {
+public class ValidcredentialsTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
   
-  public SuiteTests()
+  public ValidcredentialsTests()
   {
     driver = new ChromeDriver();
     js = (IJavaScriptExecutor)driver;
@@ -419,7 +419,7 @@ public class SuiteTests : IDisposable {
   {
     driver.Quit();
   }
-  public void login() 
+  public void runLogin() 
   {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
@@ -434,7 +434,7 @@ public class SuiteTests : IDisposable {
   public void Validcredentials() {
     vars[\\"username\\"] = \\"tomsmith\\";
     vars[\\"password\\"] = \\"SuperSecretPassword!\\";
-    login();
+    runLogin();
   }
 }
 "
@@ -454,12 +454,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 
-public class SuiteTests : IDisposable {
+public class SelectwindowTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
   
-  public SuiteTests()
+  public SelectwindowTests()
   {
     driver = new ChromeDriver();
     js = (IJavaScriptExecutor)driver;
@@ -516,12 +516,12 @@ using OpenQA.Selenium.Support.UI;
 using OpenQA.Selenium.Interactions;
 using Xunit;
 
-public class SuiteTests : IDisposable {
+public class LoginTests : IDisposable {
   public IWebDriver driver {get; private set;}
   public IDictionary<String, Object> vars {get; private set;}
   public IJavaScriptExecutor js {get; private set;}
   
-  public SuiteTests()
+  public LoginTests()
   {
     driver = new RemoteWebDriver(new Uri(\\"http://localhost:4444/wd/hub\\"), new FirefoxOptions().ToCapabilities());
     js = (IJavaScriptExecutor)driver;

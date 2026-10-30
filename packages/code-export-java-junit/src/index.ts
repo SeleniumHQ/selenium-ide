@@ -45,7 +45,10 @@ export const opts: LanguageEmitterOpts = {
     )}Test${opts.fileExtension}`
   },
   generateMethodDeclaration: (name) => {
-    return `public void ${exporter.parsers.sanitizeName(name)}() {`
+    // run prefix: a reused test can also be a test with the same name
+    return `public void run${exporter.parsers.capitalize(
+      exporter.parsers.sanitizeName(name)
+    )}() {`
   },
   // Create generators for dynamic string creation of primary entities (e.g., filename, methods, test, and suite)
   generateSuiteDeclaration: (name) => {

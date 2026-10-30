@@ -185,7 +185,7 @@ public class ReusedmethodsTest {
   protected void TearDown() {
     driver.Quit();
   }
-  public void login() {
+  public void runLogin() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(Convert.ToString(vars[\\"username\\"]));
@@ -194,7 +194,7 @@ public class ReusedmethodsTest {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
   }
-  public void tinymethod() {
+  public void runTinymethod() {
     vars[\\"value\\"] = \\"field\\";
   }
   
@@ -202,20 +202,20 @@ public class ReusedmethodsTest {
   public void invalidcredentials() {
     vars[\\"username\\"] = \\"blah\\";
     vars[\\"password\\"] = \\"blah\\";
-    login();
+    runLogin();
   }
   [Test]
   public void validcredentials() {
     vars[\\"username\\"] = \\"tomsmith\\";
     vars[\\"password\\"] = \\"SuperSecretPassword!\\";
-    login();
+    runLogin();
   }
   [Test]
   public void twomethods() {
     vars[\\"username\\"] = \\"blah\\";
     vars[\\"password\\"] = \\"blah\\";
-    login();
-    tinymethod();
+    runLogin();
+    runTinymethod();
   }
 }
 "
@@ -266,7 +266,7 @@ public class DefaultSuiteTest {
       return whNow.First().ToString();
     }
   }
-  public void selectwindow() {
+  public void runSelectwindow() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
@@ -277,7 +277,7 @@ public class DefaultSuiteTest {
   
   [Test]
   public void reuse() {
-    selectwindow();
+    runSelectwindow();
   }
 }
 "
@@ -328,7 +328,7 @@ public class DefaultSuiteTest {
       return whNow.First().ToString();
     }
   }
-  public void selectwindow() {
+  public void runSelectwindow() {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
@@ -339,7 +339,7 @@ public class DefaultSuiteTest {
   
   [Test]
   public void reuse() {
-    selectwindow();
+    runSelectwindow();
   }
   [Test]
   public void selectwindow() {
@@ -429,7 +429,7 @@ public class ValidcredentialsTest {
   protected void TearDown() {
     driver.Quit();
   }
-  public void login() {
+  public void runLogin() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
     driver.FindElement(By.Id(\\"username\\")).SendKeys(Convert.ToString(vars[\\"username\\"]));
@@ -443,7 +443,7 @@ public class ValidcredentialsTest {
   public void validcredentials() {
     vars[\\"username\\"] = \\"tomsmith\\";
     vars[\\"password\\"] = \\"SuperSecretPassword!\\";
-    login();
+    runLogin();
   }
 }
 "

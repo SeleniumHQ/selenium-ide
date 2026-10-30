@@ -654,7 +654,8 @@ async function emitSuite(
       suite,
       tests,
       project,
-      startingSyntaxOptions: beforeEachOptions,
+      // The suite name is for languages that repeat it, e.g. a constructor
+      startingSyntaxOptions: { ...beforeEachOptions, suiteName },
     }),
     {
       startingLevel: testLevel,

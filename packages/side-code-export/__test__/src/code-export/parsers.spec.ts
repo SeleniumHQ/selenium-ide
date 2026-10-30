@@ -24,6 +24,9 @@ describe('parsers', () => {
   it('should trim whitespace from the name', () => {
     expect(sanitizeName(' blah blah ')).toEqual('blahblah')
   })
+  it('should prefix a name that starts with a digit', () => {
+    expect(sanitizeName('2A - Suite 1')).toEqual('_2ASuite1')
+  })
   it('should capitalize the name', () => {
     expect(capitalize('blahblah')).toEqual('Blahblah')
   })

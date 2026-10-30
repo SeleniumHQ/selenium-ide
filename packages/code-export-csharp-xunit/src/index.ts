@@ -22,7 +22,7 @@ import {
   languageFromOpts,
 } from 'side-code-export'
 import emitter from './command'
-import hooks from './hook'
+import hooks, { suiteClassName } from './hook'
 import { location } from '@seleniumhq/code-export-csharp-commons'
 
 // Define language options
@@ -46,15 +46,18 @@ export const opts: LanguageEmitterOpts = {
   },
 
   generateMethodDeclaration: (name) => {
-    return `public void ${exporter.parsers.sanitizeName(name)}() \n{`
+    // run prefix: a reused test can also be a test with the same name
+    return `public void run${exporter.parsers.capitalize(
+      exporter.parsers.sanitizeName(name)
+    )}() \n{`
   },
   generateTestDeclaration: (name) => {
     return `[Fact]\npublic void ${exporter.parsers.capitalize(
       exporter.parsers.sanitizeName(name)
     )}() {`
   },
-  generateSuiteDeclaration: () => {
-    return `public class SuiteTests : IDisposable {`
+  generateSuiteDeclaration: (name) => {
+    return `public class ${suiteClassName(name)} : IDisposable {`
   },
 }
 
