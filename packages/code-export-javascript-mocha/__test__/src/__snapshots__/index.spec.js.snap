@@ -91,22 +91,27 @@ describe('control flow', function() {
   })
   it('control flow do', async function() {
     vars[\\"check\\"] = await driver.executeScript(\\"return 1\\")
+    let loop1 = 0
     do {
       vars[\\"check\\"] = await driver.executeScript(\\"return arguments[0] + 1\\", vars[\\"check\\"])
+      if (++loop1 > 1000) throw new Error('Max retry limit exceeded')
     } while(!!await driver.executeScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]))
     assert(vars[\\"check\\"].toString() == \\"3\\")
   })
   it('control flow times', async function() {
     vars[\\"check\\"] = await driver.executeScript(\\"return 1\\")
-    const times = 2
-    for(let i = 0; i < times; i++) {
+    const times1 = 2
+    for (let loop1 = 0; loop1 < times1; loop1++) {
+      if (loop1 >= 1000) throw new Error('Max retry limit exceeded')
       vars[\\"check\\"] = await driver.executeScript(\\"return arguments[0] + 1\\", vars[\\"check\\"])
     }
     assert(vars[\\"check\\"].toString() == \\"3\\")
   })
   it('control flow while', async function() {
     vars[\\"check\\"] = await driver.executeScript(\\"return 1\\")
+    let loop1 = 0
     while(!!await driver.executeScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"])) {
+      if (++loop1 > 1000) throw new Error('Max retry limit exceeded')
       vars[\\"check\\"] = await driver.executeScript(\\"return arguments[0] + 1\\", vars[\\"check\\"])
     }
     assert(vars[\\"check\\"].toString() == \\"3\\")

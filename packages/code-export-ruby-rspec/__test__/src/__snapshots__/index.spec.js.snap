@@ -83,22 +83,29 @@ describe 'Controlflow' do
   end
   it 'controlflowdo' do
     @vars['check'] = @driver.execute_script('return 1')
+    loop1 = 0
     loop do
       @vars['check'] = @driver.execute_script('return arguments[0] + 1', @vars['check'])
+      loop1 += 1
+      raise 'Max retry limit exceeded' if loop1 > 1000
       break if !@driver.execute_script(\\"return (arguments[0] < 3)\\", @vars['check'])
     end
     expect(@vars['check']).to eq(3)
   end
   it 'controlflowtimes' do
     @vars['check'] = @driver.execute_script('return 1')
-    2.times do
+    2.times do |loop1|
+      raise 'Max retry limit exceeded' if loop1 >= 1000
       @vars['check'] = @driver.execute_script('return arguments[0] + 1', @vars['check'])
     end
     expect(@vars['check']).to eq(3)
   end
   it 'controlflowwhile' do
     @vars['check'] = @driver.execute_script('return 1')
+    loop1 = 0
     while @driver.execute_script(\\"return (arguments[0] < 3)\\", @vars['check']) do
+      loop1 += 1
+      raise 'Max retry limit exceeded' if loop1 > 1000
       @vars['check'] = @driver.execute_script('return arguments[0] + 1', @vars['check'])
     end
     expect(@vars['check']).to eq(3)

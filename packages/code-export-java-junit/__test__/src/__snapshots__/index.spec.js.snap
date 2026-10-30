@@ -143,16 +143,19 @@ public class ControlflowTest {
   @Test
   public void controlflowdo() {
     vars.put(\\"check\\", js.executeScript(\\"return 1\\"));
+    int loop1 = 0;
     do {
       vars.put(\\"check\\", js.executeScript(\\"return arguments[0] + 1\\", vars.get(\\"check\\")));
+      if (++loop1 > 1000) throw new RuntimeException(\\"Max retry limit exceeded\\");
     } while ((Boolean) js.executeScript(\\"return (arguments[0] < 3)\\", vars.get(\\"check\\")));
     assertEquals(vars.get(\\"check\\").toString(), \\"3\\");
   }
   @Test
   public void controlflowtimes() {
     vars.put(\\"check\\", js.executeScript(\\"return 1\\"));
-    Integer times = 2;
-    for(int i = 0; i < times; i++) {
+    Integer times1 = 2;
+    for (int loop1 = 0; loop1 < times1; loop1++) {
+      if (loop1 >= 1000) throw new RuntimeException(\\"Max retry limit exceeded\\");
       vars.put(\\"check\\", js.executeScript(\\"return arguments[0] + 1\\", vars.get(\\"check\\")));
     }
     assertEquals(vars.get(\\"check\\").toString(), \\"3\\");
@@ -160,7 +163,9 @@ public class ControlflowTest {
   @Test
   public void controlflowwhile() {
     vars.put(\\"check\\", js.executeScript(\\"return 1\\"));
+    int loop1 = 0;
     while ((Boolean) js.executeScript(\\"return (arguments[0] < 3)\\", vars.get(\\"check\\"))) {
+      if (++loop1 > 1000) throw new RuntimeException(\\"Max retry limit exceeded\\");
       vars.put(\\"check\\", js.executeScript(\\"return arguments[0] + 1\\", vars.get(\\"check\\")));
     }
     assertEquals(vars.get(\\"check\\").toString(), \\"3\\");

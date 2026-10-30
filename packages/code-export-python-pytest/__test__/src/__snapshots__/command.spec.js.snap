@@ -104,7 +104,8 @@ exports[`command code emitter should emit \`dismiss prompt\` command 1`] = `"sel
 
 exports[`command code emitter should emit \`do\` command 1`] = `
 Object {
-  "body": "condition = True
+  "body": "loop1 = 0
+condition = True
 while condition:",
   "endingLevel": 1,
 }
@@ -232,7 +233,11 @@ exports[`command code emitter should emit \`remove selection\` command 1`] = `
 dropdown.find_element(By.XPATH, \\"//option[. = 'A label']\\").click()"
 `;
 
-exports[`command code emitter should emit \`repeatIf\` command 1`] = `"condition = self.driver.execute_script(\\"return (true)\\")"`;
+exports[`command code emitter should emit \`repeatIf\` command 1`] = `
+"loop1 += 1
+if loop1 > 1000: raise Exception(\\"Max retry limit exceeded\\")
+condition = self.driver.execute_script(\\"return (true)\\")"
+`;
 
 exports[`command code emitter should emit \`run script\` command 1`] = `"self.driver.execute_script(\\"alert('test');alert('Im annoying');\\")"`;
 
@@ -284,14 +289,16 @@ exports[`command code emitter should emit \`store\` command 1`] = `"self.vars[\\
 
 exports[`command code emitter should emit \`times\` command 1`] = `
 Object {
-  "body": "for i in range(0, 5):",
+  "body": "for loop1 in range(0, 5):
+  if loop1 >= 1000: raise Exception(\\"Max retry limit exceeded\\")",
   "endingLevel": 1,
 }
 `;
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "for i in range(0, int(float(self.vars[\\"count\\"]) // 1)):",
+  "body": "for loop1 in range(0, int(float(self.vars[\\"count\\"]) // 1)):
+  if loop1 >= 1000: raise Exception(\\"Max retry limit exceeded\\")",
   "endingLevel": 1,
 }
 `;
@@ -369,7 +376,20 @@ exports[`command code emitter should emit \`waitForText\` command 1`] = `"WebDri
 
 exports[`command code emitter should emit \`while\` command 1`] = `
 Object {
-  "body": "while self.driver.execute_script(\\"return (true)\\"):",
+  "body": "loop1 = 0
+while self.driver.execute_script(\\"return (true)\\"):
+  loop1 += 1
+  if loop1 > 1000: raise Exception(\\"Max retry limit exceeded\\")",
+  "endingLevel": 1,
+}
+`;
+
+exports[`command code emitter should emit \`while\` command with a loop limit 1`] = `
+Object {
+  "body": "loop1 = 0
+while self.driver.execute_script(\\"return (true)\\"):
+  loop1 += 1
+  if loop1 > 5: raise Exception(\\"Max retry limit exceeded\\")",
   "endingLevel": 1,
 }
 `;

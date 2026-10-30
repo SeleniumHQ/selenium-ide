@@ -97,21 +97,28 @@ class TestControlflow():
   
   def test_controlflowdo(self):
     self.vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
+    loop1 = 0
     condition = True
     while condition:
       self.vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", self.vars[\\"check\\"])
+      loop1 += 1
+      if loop1 > 1000: raise Exception(\\"Max retry limit exceeded\\")
       condition = self.driver.execute_script(\\"return (arguments[0] < 3)\\", self.vars[\\"check\\"])
     assert(self.vars[\\"check\\"] == 3)
   
   def test_controlflowtimes(self):
     self.vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
-    for i in range(0, 2):
+    for loop1 in range(0, 2):
+      if loop1 >= 1000: raise Exception(\\"Max retry limit exceeded\\")
       self.vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", self.vars[\\"check\\"])
     assert(self.vars[\\"check\\"] == 3)
   
   def test_controlflowwhile(self):
     self.vars[\\"check\\"] = self.driver.execute_script(\\"return 1\\")
+    loop1 = 0
     while self.driver.execute_script(\\"return (arguments[0] < 3)\\", self.vars[\\"check\\"]):
+      loop1 += 1
+      if loop1 > 1000: raise Exception(\\"Max retry limit exceeded\\")
       self.vars[\\"check\\"] = self.driver.execute_script(\\"return arguments[0] + 1\\", self.vars[\\"check\\"])
     assert(self.vars[\\"check\\"] == 3)
   

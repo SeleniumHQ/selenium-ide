@@ -119,16 +119,19 @@ public class SuiteTests : IDisposable {
   [Fact]
   public void Controlflowdo() {
     vars[\\"check\\"] = js.ExecuteScript(\\"return 1\\");
+    var loop1 = 0;
     do {
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
+      if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");
     } while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]));
     Assert.Equal(vars[\\"check\\"].ToString(), \\"3\\");
   }
   [Fact]
   public void Controlflowtimes() {
     vars[\\"check\\"] = js.ExecuteScript(\\"return 1\\");
-    var times = 2;
-    for(int i = 0; i < times; i++) {
+    var times1 = 2;
+    for (var loop1 = 0; loop1 < times1; loop1++) {
+      if (loop1 >= 1000) throw new Exception(\\"Max retry limit exceeded\\");
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
     Assert.Equal(vars[\\"check\\"].ToString(), \\"3\\");
@@ -136,7 +139,9 @@ public class SuiteTests : IDisposable {
   [Fact]
   public void Controlflowwhile() {
     vars[\\"check\\"] = js.ExecuteScript(\\"return 1\\");
+    var loop1 = 0;
     while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"])) {
+      if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
     Assert.Equal(vars[\\"check\\"].ToString(), \\"3\\");

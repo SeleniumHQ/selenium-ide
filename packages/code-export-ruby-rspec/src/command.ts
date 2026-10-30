@@ -116,8 +116,7 @@ export const emitters: Record<string, ProcessedCommandEmitter> = {
   waitForElementNotVisible: emitWaitForElementNotVisible,
   answerPrompt: emitAnswerOnNextPrompt,
   waitForText: emitWaitForText,
-  dismissConfirmation:
-    emitChooseCancelOnNextConfirmation,
+  dismissConfirmation: emitChooseCancelOnNextConfirmation,
   dismissPrompt: emitChooseCancelOnNextConfirmation,
   acceptConfirmation: emitChooseOkOnNextConfirmation,
   acceptAlert: emitChooseOkOnNextConfirmation,
@@ -258,9 +257,19 @@ function generateScriptArguments(script: ScriptShape) {
     .join(',')}`
 }
 
-function emitControlFlowDo() {
+// The name of the counter of a loop, unique in a test
+const loopCounter = (context?: EmitterContext) => `loop${context?.loopId ?? 1}`
+
+function emitControlFlowDo(
+  _target: string,
+  _value: string,
+  context: EmitterContext
+) {
   return Promise.resolve({
-    commands: [{ level: 0, statement: 'loop do' }],
+    commands: [
+      { level: 0, statement: `${loopCounter(context)} = 0` },
+      { level: 0, statement: 'loop do' },
+    ],
     endingLevelAdjustment: 1,
   })
 }
@@ -324,40 +333,68 @@ function emitControlFlowForEach(
   })
 }
 
-function emitControlFlowRepeatIf(script: ScriptShape) {
+function emitControlFlowRepeatIf(
+  script: ScriptShape,
+  value: string,
+  context: EmitterContext
+) {
+  const loop = loopCounter(context)
   return Promise.resolve({
     commands: [
+      { level: 0, statement: `${loop} += 1` },
       {
         level: 0,
-        statement: `break if !${generateExpressionScript(script)}`,
+        statement: `raise '${
+          exporter.parsers.loopLimitMessage
+        }' if ${loop} > ${exporter.parsers.loopLimit(value)}`,
       },
+      { level: 0, statement: `break if !${generateExpressionScript(script)}` },
+      { level: -1, statement: `end` },
+    ],
+  })
+}
+
+function emitControlFlowTimes(
+  target: string,
+  value: string,
+  context: EmitterContext
+) {
+  const loop = loopCounter(context)
+  const count = exporter.parsers.loopCount(
+    target,
+    (count) => `Float(${count}).floor`
+  )
+  return Promise.resolve({
+    commands: [
+      { level: 0, statement: `${count}.times do |${loop}|` },
       {
-        level: -1,
-        statement: `end`,
+        level: 1,
+        statement: `raise '${
+          exporter.parsers.loopLimitMessage
+        }' if ${loop} >= ${exporter.parsers.loopLimit(value)}`,
       },
     ],
   })
 }
 
-function emitControlFlowTimes(target: string) {
-  const commands = [
-    {
-      level: 0,
-      statement: `${exporter.parsers.loopCount(
-        target,
-        (count) => `Float(${count}).floor`
-      )}.times do`,
-    },
-  ]
-  return Promise.resolve({ commands, endingLevelAdjustment: 1 })
-}
-
-function emitControlFlowWhile(script: ScriptShape) {
+function emitControlFlowWhile(
+  script: ScriptShape,
+  value: string,
+  context: EmitterContext
+) {
+  const loop = loopCounter(context)
   return Promise.resolve({
     commands: [
+      { level: 0, statement: `${loop} = 0` },
       { level: 0, statement: `while ${generateExpressionScript(script)} do` },
+      { level: 1, statement: `${loop} += 1` },
+      {
+        level: 1,
+        statement: `raise '${
+          exporter.parsers.loopLimitMessage
+        }' if ${loop} > ${exporter.parsers.loopLimit(value)}`,
+      },
     ],
-    endingLevelAdjustment: 1,
   })
 }
 
