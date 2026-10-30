@@ -199,6 +199,7 @@ export async function emitCommand(
 ) {
   validateCommand(command)
   if (emitter) {
+    // storeJson's target is JSON, used as it was typed
     const ignoreEscaping = command.command === 'storeJson'
     const emitted = await emitter(
       preprocessParameter(
@@ -211,7 +212,7 @@ export async function emitCommand(
         command.value as string,
         emitter.valuePreprocessor,
         variableLookup,
-        { ignoreEscaping }
+        { ignoreEscaping: false }
       ),
       context
     )

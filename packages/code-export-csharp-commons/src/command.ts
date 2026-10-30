@@ -779,9 +779,10 @@ async function emitStoreJson(json: string, varName: string) {
   return Promise.resolve(
     variableSetter(
       varName,
-      `System.Text.Json.JsonSerializer.Deserialize<object>(${toStringLiteral(
-        json
-      )})`
+      // An array becomes a list, so forEach can loop over it
+      `System.Text.Json.JsonSerializer.Deserialize<${
+        json.trim().startsWith('[') ? 'List<object>' : 'object'
+      }>(${toStringLiteral(json)})`
     )
   )
 }

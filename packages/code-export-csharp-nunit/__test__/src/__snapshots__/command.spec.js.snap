@@ -344,7 +344,7 @@ exports[`command code emitter should emit \`store attribute\` command 1`] = `
 
 exports[`command code emitter should emit \`store element count\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElements(By.XPath(\\"button\\")).Count;"`;
 
-exports[`command code emitter should emit \`store json\` command 1`] = `"vars[\\"myVar\\"] = System.Text.Json.JsonSerializer.Deserialize<object>(\\"[{\\\\\\"a\\\\\\":0}]\\");"`;
+exports[`command code emitter should emit \`store json\` command 1`] = `"vars[\\"myVar\\"] = System.Text.Json.JsonSerializer.Deserialize<List<object>>(\\"[{\\\\\\"a\\\\\\":0}]\\");"`;
 
 exports[`command code emitter should emit \`store text\` command 1`] = `"vars[\\"myVar\\"] = driver.FindElement(By.Id(\\"someElement\\")).Text;"`;
 
@@ -511,3 +511,7 @@ exports[`command code emitter should emit new window handling, if command opens 
 driver.FindElement(By.CssSelector(\\"button\\")).Click();
 vars[\\"newWin\\"] = waitForWindow(2000);"
 `;
+
+exports[`command code emitter should escape the variable name of \`store json\` 1`] = `"vars[\\"x\\\\\\"); System.exit(1); //\\"] = System.Text.Json.JsonSerializer.Deserialize<object>(\\"{\\\\\\"a\\\\\\":0}\\");"`;
+
+exports[`command code emitter should store a json array as a list 1`] = `"vars[\\"list\\"] = System.Text.Json.JsonSerializer.Deserialize<List<object>>(\\"[1, 2]\\");"`;
