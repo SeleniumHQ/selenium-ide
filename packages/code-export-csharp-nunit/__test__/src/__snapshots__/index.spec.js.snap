@@ -94,7 +94,7 @@ public class ControlflowTest {
     } else {
       vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.That(vars[\\"output\\"].ToString(), Is.EqualTo(\\"a\\"));
+    Assert.That(Convert.ToString(vars[\\"output\\"]), Is.EqualTo(\\"a\\"));
   }
   [Test]
   public void controlflowelseif() {
@@ -106,7 +106,7 @@ public class ControlflowTest {
     } else {
       vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.That(vars[\\"output\\"].ToString(), Is.EqualTo(\\"b\\"));
+    Assert.That(Convert.ToString(vars[\\"output\\"]), Is.EqualTo(\\"b\\"));
   }
   [Test]
   public void controlflowelse() {
@@ -118,7 +118,7 @@ public class ControlflowTest {
     } else {
       vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.That(vars[\\"output\\"].ToString(), Is.EqualTo(\\"c\\"));
+    Assert.That(Convert.ToString(vars[\\"output\\"]), Is.EqualTo(\\"c\\"));
   }
   [Test]
   public void controlflowdo() {
@@ -128,7 +128,7 @@ public class ControlflowTest {
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
       if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");
     } while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]));
-    Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
+    Assert.That(Convert.ToString(vars[\\"check\\"]), Is.EqualTo(\\"3\\"));
   }
   [Test]
   public void controlflowtimes() {
@@ -138,7 +138,7 @@ public class ControlflowTest {
       if (loop1 >= 1000) throw new Exception(\\"Max retry limit exceeded\\");
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
-    Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
+    Assert.That(Convert.ToString(vars[\\"check\\"]), Is.EqualTo(\\"3\\"));
   }
   [Test]
   public void controlflowwhile() {
@@ -148,7 +148,7 @@ public class ControlflowTest {
       if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
-    Assert.That(vars[\\"check\\"].ToString(), Is.EqualTo(\\"3\\"));
+    Assert.That(Convert.ToString(vars[\\"check\\"]), Is.EqualTo(\\"3\\"));
   }
 }
 "
@@ -188,8 +188,8 @@ public class ReusedmethodsTest {
   public void login() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
-    driver.FindElement(By.Id(\\"username\\")).SendKeys(vars[\\"username\\"].ToString());
-    driver.FindElement(By.Id(\\"password\\")).SendKeys(vars[\\"password\\"].ToString());
+    driver.FindElement(By.Id(\\"username\\")).SendKeys(Convert.ToString(vars[\\"username\\"]));
+    driver.FindElement(By.Id(\\"password\\")).SendKeys(Convert.ToString(vars[\\"password\\"]));
     if ((Boolean) js.ExecuteScript(\\"return (true)\\")) {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
@@ -271,7 +271,7 @@ public class DefaultSuiteTest {
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     vars[\\"win9425\\"] = waitForWindow(2000);
-    driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
+    driver.SwitchTo().Window(Convert.ToString(vars[\\"win9425\\"]));
     Assert.That(driver.Title, Is.EqualTo(\\"New Window\\"));
   }
   
@@ -333,7 +333,7 @@ public class DefaultSuiteTest {
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     vars[\\"win9425\\"] = waitForWindow(2000);
-    driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
+    driver.SwitchTo().Window(Convert.ToString(vars[\\"win9425\\"]));
     Assert.That(driver.Title, Is.EqualTo(\\"New Window\\"));
   }
   
@@ -347,7 +347,7 @@ public class DefaultSuiteTest {
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     vars[\\"win9425\\"] = waitForWindow(2000);
-    driver.SwitchTo().Window(vars[\\"win9425\\"].ToString());
+    driver.SwitchTo().Window(Convert.ToString(vars[\\"win9425\\"]));
     Assert.That(driver.Title, Is.EqualTo(\\"New Window\\"));
   }
 }
@@ -432,8 +432,8 @@ public class ValidcredentialsTest {
   public void login() {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
-    driver.FindElement(By.Id(\\"username\\")).SendKeys(vars[\\"username\\"].ToString());
-    driver.FindElement(By.Id(\\"password\\")).SendKeys(vars[\\"password\\"].ToString());
+    driver.FindElement(By.Id(\\"username\\")).SendKeys(Convert.ToString(vars[\\"username\\"]));
+    driver.FindElement(By.Id(\\"password\\")).SendKeys(Convert.ToString(vars[\\"password\\"]));
     if ((Boolean) js.ExecuteScript(\\"return (true)\\")) {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
@@ -504,9 +504,9 @@ public class SelectwindowTest {
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     vars[\\"win9625\\"] = waitForWindow(2000);
     vars[\\"root\\"] = driver.CurrentWindowHandle;
-    driver.SwitchTo().Window(vars[\\"win9625\\"].ToString());
+    driver.SwitchTo().Window(Convert.ToString(vars[\\"win9625\\"]));
     Assert.That(driver.Title, Is.EqualTo(\\"New Window\\"));
-    driver.SwitchTo().Window(vars[\\"root\\"].ToString());
+    driver.SwitchTo().Window(Convert.ToString(vars[\\"root\\"]));
     Assert.That(driver.Title, Is.EqualTo(\\"The Internet\\"));
   }
 }

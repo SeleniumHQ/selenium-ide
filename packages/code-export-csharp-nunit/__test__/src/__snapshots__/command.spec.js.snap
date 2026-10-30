@@ -104,7 +104,7 @@ exports[`command code emitter should emit \`assert value\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`assert\` command 1`] = `"Assert.That(vars[\\"varrrName\\"].ToString(), Is.EqualTo(\\"blah\\"));"`;
+exports[`command code emitter should emit \`assert\` command 1`] = `"Assert.That(Convert.ToString(vars[\\"varrrName\\"]), Is.EqualTo(\\"blah\\"));"`;
 
 exports[`command code emitter should emit \`check\` command 1`] = `
 "{
@@ -160,7 +160,7 @@ exports[`command code emitter should emit \`drag and drop to object\` command 1`
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"Console.WriteLine(\\"blah\\");"`;
 
-exports[`command code emitter should emit \`echo\` command with variables 1`] = `"Console.WriteLine(vars[\\"blah\\"].ToString());"`;
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"Console.WriteLine(Convert.ToString(vars[\\"blah\\"]));"`;
 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
 "{
@@ -299,7 +299,7 @@ exports[`command code emitter should emit \`run\` command for a test with a capi
 
 exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"driver.SwitchTo().DefaultContent();"`;
 
-exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"driver.SwitchTo().Window(vars[\\"window\\"].ToString());"`;
+exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"driver.SwitchTo().Window(Convert.ToString(vars[\\"window\\"]));"`;
 
 exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `
 "{
@@ -328,7 +328,7 @@ exports[`command code emitter should emit \`send keys\` command 1`] = `"driver.F
 
 exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"driver.FindElement(By.Id(\\"input\\")).SendKeys(\\"SuperSecretPassword!\\" + Keys.Enter);"`;
 
-exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"driver.FindElement(By.Id(\\"input\\")).SendKeys(vars[\\"blah\\"].ToString());"`;
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"driver.FindElement(By.Id(\\"input\\")).SendKeys(Convert.ToString(vars[\\"blah\\"]));"`;
 
 exports[`command code emitter should emit \`set speed\` 1`] = `"Console.WriteLine(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\");"`;
 
@@ -367,7 +367,7 @@ for (var loop1 = 0; loop1 < times1; loop1++) {
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "var times1 = (int)Math.Floor(Convert.ToDouble(vars[\\"count\\"].ToString(), System.Globalization.CultureInfo.InvariantCulture));
+  "body": "var times1 = (int)Math.Floor(Convert.ToDouble(Convert.ToString(vars[\\"count\\"]), System.Globalization.CultureInfo.InvariantCulture));
 for (var loop1 = 0; loop1 < times1; loop1++) {
   if (loop1 >= 1000) throw new Exception(\\"Max retry limit exceeded\\");",
   "endingLevel": 1,
@@ -444,7 +444,7 @@ exports[`command code emitter should emit \`verify value\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`verify\` command 1`] = `"Assert.That(vars[\\"varrrName\\"].ToString(), Is.EqualTo(\\"blah\\"));"`;
+exports[`command code emitter should emit \`verify\` command 1`] = `"Assert.That(Convert.ToString(vars[\\"varrrName\\"]), Is.EqualTo(\\"blah\\"));"`;
 
 exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `
 "{
@@ -504,7 +504,7 @@ while ((Boolean) js.ExecuteScript(\\"return (true)\\")) {
 }
 `;
 
-exports[`command code emitter should emit a comment for \`run\` with a test name from a variable 1`] = `"// Cannot export run with a test name from a variable: vars[\\"testName\\"].ToString()"`;
+exports[`command code emitter should emit a comment for \`run\` with a test name from a variable 1`] = `"// Cannot export run with a test name from a variable: Convert.ToString(vars[\\"testName\\"])"`;
 
 exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
 "vars[\\"WindowHandles\\"] = driver.WindowHandles;

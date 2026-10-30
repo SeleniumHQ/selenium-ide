@@ -38,7 +38,7 @@ emitters.verify = emitAssert
 
 function emitAssert(varName: string, value: string) {
   return Promise.resolve(
-    `Assert.Equal(vars["${varName}"].ToString(), "${value}");`
+    `Assert.Equal(${Command.variableLookup(varName)}, "${value}");`
   )
 }
 

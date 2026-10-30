@@ -106,7 +106,7 @@ exports[`command code emitter should emit \`assert value\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`assert\` command 1`] = `"assertEquals(vars.get(\\"varrrName\\").toString(), \\"blah\\");"`;
+exports[`command code emitter should emit \`assert\` command 1`] = `"assertEquals(String.valueOf(vars.get(\\"varrrName\\")), \\"blah\\");"`;
 
 exports[`command code emitter should emit \`check\` command 1`] = `
 "{
@@ -162,7 +162,7 @@ exports[`command code emitter should emit \`drag and drop to object\` command 1`
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"System.out.println(\\"blah\\");"`;
 
-exports[`command code emitter should emit \`echo\` command with variables 1`] = `"System.out.println(vars.get(\\"blah\\").toString());"`;
+exports[`command code emitter should emit \`echo\` command with variables 1`] = `"System.out.println(String.valueOf(vars.get(\\"blah\\")));"`;
 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
 "{
@@ -300,7 +300,7 @@ exports[`command code emitter should emit \`run\` command for a test with a capi
 
 exports[`command code emitter should emit \`select frame\` to select the top frame 1`] = `"driver.switchTo().defaultContent();"`;
 
-exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"driver.switchTo().window(vars.get(\\"window\\").toString());"`;
+exports[`command code emitter should emit \`select window\` to select a window by handle 1`] = `"driver.switchTo().window(String.valueOf(vars.get(\\"window\\")));"`;
 
 exports[`command code emitter should emit \`select window\` to select a window by implicit index 1`] = `
 "{
@@ -329,7 +329,7 @@ exports[`command code emitter should emit \`send keys\` command 1`] = `"driver.f
 
 exports[`command code emitter should emit \`send keys\` command with a key press 1`] = `"driver.findElement(By.id(\\"input\\")).sendKeys(\\"SuperSecretPassword!\\", Keys.ENTER);"`;
 
-exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"driver.findElement(By.id(\\"input\\")).sendKeys(vars.get(\\"blah\\").toString());"`;
+exports[`command code emitter should emit \`send keys\` command with a variable input 1`] = `"driver.findElement(By.id(\\"input\\")).sendKeys(String.valueOf(vars.get(\\"blah\\")));"`;
 
 exports[`command code emitter should emit \`set speed\` 1`] = `"System.out.println(\\"\`set speed\` is a no-op in code export, use \`pause\` instead\\");"`;
 
@@ -368,7 +368,7 @@ for (int loop1 = 0; loop1 < times1; loop1++) {
 
 exports[`command code emitter should emit \`times\` command with a variable count 1`] = `
 Object {
-  "body": "Integer times1 = (int) Math.floor(Double.parseDouble(String.valueOf(vars.get(\\"count\\").toString())));
+  "body": "Integer times1 = (int) Math.floor(Double.parseDouble(String.valueOf(String.valueOf(vars.get(\\"count\\")))));
 for (int loop1 = 0; loop1 < times1; loop1++) {
   if (loop1 >= 1000) throw new RuntimeException(\\"Max retry limit exceeded\\");",
   "endingLevel": 1,
@@ -447,7 +447,7 @@ exports[`command code emitter should emit \`verify value\` command 1`] = `
 }"
 `;
 
-exports[`command code emitter should emit \`verify\` command 1`] = `"assertEquals(vars.get(\\"varrrName\\").toString(), \\"blah\\");"`;
+exports[`command code emitter should emit \`verify\` command 1`] = `"assertEquals(String.valueOf(vars.get(\\"varrrName\\")), \\"blah\\");"`;
 
 exports[`command code emitter should emit \`waitForElementEditable\` command 1`] = `
 "{
@@ -508,7 +508,7 @@ while ((Boolean) js.executeScript(\\"return (true)\\")) {
 }
 `;
 
-exports[`command code emitter should emit a comment for \`run\` with a test name from a variable 1`] = `"// Cannot export run with a test name from a variable: vars.get(\\"testName\\").toString()"`;
+exports[`command code emitter should emit a comment for \`run\` with a test name from a variable 1`] = `"// Cannot export run with a test name from a variable: String.valueOf(vars.get(\\"testName\\"))"`;
 
 exports[`command code emitter should emit new window handling, if command opens a new window 1`] = `
 "vars.put(\\"window_handles\\", driver.getWindowHandles());
