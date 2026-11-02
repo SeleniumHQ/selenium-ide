@@ -1,0 +1,82 @@
+{
+  "id": "duplicates",
+  "version": "2.0",
+  "name": "duplicates",
+  "url": "http://localhost:8080",
+  "tests": [
+    {
+      "id": "t1",
+      "name": "foo",
+      "commands": [
+        { "id": "c1", "command": "echo", "target": "t1", "value": "", "comment": "" }
+      ]
+    },
+    {
+      "id": "t2",
+      "name": "Foo",
+      "commands": [
+        { "id": "c2", "command": "echo", "target": "t2", "value": "", "comment": "" }
+      ]
+    },
+    {
+      "id": "t3",
+      "name": "foo",
+      "commands": [
+        { "id": "c3", "command": "echo", "target": "t3", "value": "", "comment": "" }
+      ]
+    },
+    {
+      "id": "t4",
+      "name": "Log in",
+      "commands": [
+        { "id": "c4", "command": "echo", "target": "t4", "value": "", "comment": "" }
+      ]
+    },
+    {
+      "id": "t5",
+      "name": "log-in",
+      "commands": [
+        { "id": "c5", "command": "echo", "target": "t5", "value": "", "comment": "" }
+      ]
+    },
+    {
+      "id": "t6",
+      "name": "runAll",
+      "commands": [
+        { "id": "c6", "command": "run", "target": "foo", "value": "", "comment": "" },
+        { "id": "c7", "command": "run", "target": "Foo", "value": "", "comment": "" },
+        { "id": "c8", "command": "run", "target": "Log in", "value": "", "comment": "" },
+        { "id": "c9", "command": "run", "target": "log-in", "value": "", "comment": "" }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "s1",
+      "name": "Same",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300,
+      "tests": ["t1", "t2", "t3", "t4", "t5", "t6"]
+    },
+    {
+      "id": "s2",
+      "name": "Same",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300,
+      "tests": ["t1"]
+    },
+    {
+      "id": "s3",
+      "name": "same",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300,
+      "tests": ["t2"]
+    }
+  ],
+  "urls": ["http://localhost:8080/"],
+  "plugins": [],
+  "snapshot": { "tests": [], "dependencies": {}, "jest": { "extraGlobals": [] } }
+}

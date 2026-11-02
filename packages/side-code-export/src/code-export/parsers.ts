@@ -53,3 +53,28 @@ export function loopLimit(value?: string) {
 }
 
 export const loopLimitMessage = 'Max retry limit exceeded'
+
+// Makes names that turn into the same code unique, e.g. two tests whose
+// names differ only in case get the same method name. `toCode` turns a name
+// into the code that must be unique (a declaration or a filename). A name
+// that clashes gets a number added (" 2", " 3", ...). Returns the names in
+// the same order.
+export function uniqueNames(
+  names: string[],
+  toCode: (name: string) => string,
+  ignoreCase = false
+) {
+  const key = (name: string) => {
+    const code = toCode(name)
+    return ignoreCase ? code.toLowerCase() : code
+  }
+  const used = new Set<string>()
+  return names.map((name) => {
+    let unique = name
+    for (let n = 2; used.has(key(unique)); n++) {
+      unique = `${name} ${n}`
+    }
+    used.add(key(unique))
+    return unique
+  })
+}

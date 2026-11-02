@@ -39,6 +39,7 @@ import {
   LanguageEmitterOpts,
 } from '../types'
 import { writeCommands } from './utils'
+import { uniqueNames } from './parsers'
 import { LanguageHooks } from './hook'
 import { CommandKey } from '@seleniumhq/side-model/src/Commands'
 
@@ -55,6 +56,25 @@ export interface EmitterContext extends Omit<LanguageEmitterOpts, 'hooks'> {
   project: ProjectShape
   // Number of the loop a loop command belongs to, unique in a test or method
   loopId?: number
+  // The name each reused test's method is generated from, by test name
+  methodNames?: Map<string, string>
+}
+
+// Reused tests become methods. Tests whose names turn into the same method
+// name get a number added to the name, so each one gets its own method. A
+// name used by more than one test means the first test, like playback.
+export function reusedMethodNames(
+  tests: TestShape[],
+  generateMethodDeclaration: LanguageEmitterOpts['generateMethodDeclaration']
+) {
+  const names = [...new Set(tests.map((test) => test.name))]
+  const declaration = (name: string) => {
+    const result = generateMethodDeclaration(name)
+    return typeof result === 'object' ? result.body : result
+  }
+  const unique = uniqueNames(names, declaration)
+  // A Map, so names like toString or __proto__ are plain keys
+  return new Map(names.map((name, index) => [name, unique[index]]))
 }
 
 // Numbers the loops in a list of commands. repeatIf gets the number of its do.
@@ -198,6 +218,11 @@ export async function emitCommand(
   }: EmitCommandContext
 ) {
   validateCommand(command)
+  // Call the method of the reused test by the name it was declared with
+  const methodName =
+    command.command === 'run' &&
+    context?.methodNames?.get(command.target as string)
+  if (methodName) command = { ...command, target: methodName }
   if (emitter) {
     // storeJson's target is JSON, used as it was typed
     const ignoreEscaping = command.command === 'storeJson'
@@ -425,8 +450,15 @@ export interface EmittedTest {
 async function emitTest(
   test: TestShape,
   tests: TestShape[],
-  context: EmitterContext
+  emitterContext: EmitterContext
 ): Promise<EmittedTest> {
+  const context: EmitterContext = {
+    ...emitterContext,
+    methodNames: reusedMethodNames(
+      tests,
+      emitterContext.generateMethodDeclaration
+    ),
+  }
   const {
     testLevel = 1,
     commandLevel = 2,
@@ -470,7 +502,11 @@ async function emitTest(
   }
 
   // handle reused test methods (e.g., commands that use the `run` command)
-  for (const method of methods) {
+  for (const reusedTest of methods) {
+    const method = {
+      ...reusedTest,
+      name: context.methodNames?.get(reusedTest.name) ?? reusedTest.name,
+    }
     const result = await emitMethod(method, {
       context,
       level: testLevel,
@@ -545,13 +581,22 @@ async function emitTestsFromSuite(
   >
 ) {
   let result: Record<string, EmittedTest> = {}
-  for (const testID of suite.tests) {
-    const test = tests.find((test) => test.id === testID) as TestShape
-    const testDeclaration = generateTestDeclaration(test.name)
+  const suiteTests = suite.tests.map(
+    (testID) => tests.find((test) => test.id === testID) as TestShape
+  )
+  // Tests with the same name, or names that only differ in case or symbols,
+  // would get the same method name
+  const names = uniqueNames(
+    suiteTests.map((test) => test.name),
+    generateTestDeclaration
+  )
+  for (const [index, test] of suiteTests.entries()) {
+    const name = names[index]
+    const testDeclaration = generateTestDeclaration(name)
     const testCompletion = generateTestCompletion
-      ? generateTestCompletion(test.name)
+      ? generateTestCompletion(name)
       : languageOpts.terminatingKeyword
-    result[test.name] = await emitTest(test, tests, {
+    result[name] = await emitTest(test, tests, {
       ...languageOpts,
       testDeclaration,
       testCompletion,

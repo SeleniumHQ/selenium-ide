@@ -155,6 +155,72 @@ describe('Code Export Python pytest', () => {
     expect(results.body).toMatchSnapshot()
     expectValidSyntax(results.body)
   })
+  it('should give tests with names that clash their own methods', async () => {
+    const project = JSON.parse(
+      fs.readFileSync(
+        path.join(
+          __dirname,
+          '..',
+          '..',
+          '..',
+          '..',
+          'tests',
+          'code-export',
+          'projects',
+          'duplicates.side'
+        )
+      )
+    )
+    const results = await languageExport.emit.suite({
+      ...options(project),
+      suite: project.suites[0],
+    })
+    // foo, Foo and foo again; Log in and log-in
+    for (const name of ['foo', 'foo2', 'foo3', 'login', 'login2']) {
+      expect(results.body).toContain(`def test_${name}(self):`)
+    }
+    // run calls the method of the test it names
+    expect(results.body).toContain('def foo2(self):\n    print("t2")')
+    expect(results.body).toContain(
+      'self.foo()\n    self.foo2()\n    self.login()\n    self.login2()'
+    )
+    expectValidSyntax(results.body)
+  })
+  it('should export run with test names like toString and __proto__', async () => {
+    const command = (id, name, target) => ({
+      id,
+      command: name,
+      target,
+      value: '',
+    })
+    const project = {
+      id: 'p',
+      name: 'p',
+      url: 'http://localhost:8080',
+      tests: [
+        {
+          id: 't1',
+          name: '__proto__',
+          commands: [command('c1', 'echo', 't1')],
+        },
+        {
+          id: 't2',
+          name: 'runThem',
+          commands: [
+            command('c2', 'run', '__proto__'),
+            command('c3', 'run', 'toString'),
+          ],
+        },
+      ],
+      suites: [],
+    }
+    const results = await languageExport.emit.test({
+      ...options(project),
+      test: project.tests[1],
+    })
+    expect(results.body).toContain('self.proto()\n    self.toString()')
+    expectValidSyntax(results.body)
+  })
   it('should export the command emitter', () => {
     expect(languageExport.emit.command).toBe(Command.emit)
   })
