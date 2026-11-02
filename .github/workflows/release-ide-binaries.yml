@@ -20,18 +20,8 @@ jobs:
             platform: mac
 
     permissions:
-      actions: read
-      checks: read
+      # electron-builder uploads the binaries to a draft GitHub release
       contents: write
-      deployments: read
-      issues: read
-      discussions: read
-      packages: read
-      pages: read
-      pull-requests: read
-      repository-projects: read
-      security-events: read
-      statuses: read
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
       - uses: actions/checkout@v7
@@ -40,15 +30,19 @@ jobs:
         with:
           node-version: '24.x'
           registry-url: 'https://registry.npmjs.org'
-      - name: Check the tag matches the app version
+      - name: Check every package has the tag's version
         if: github.ref_type == 'tag'
         shell: bash
         run: |
-          version=$(node -p "require('./packages/selenium-ide/package.json').version")
-          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
-            echo "Tag $GITHUB_REF_NAME does not match selenium-ide version $version"
-            exit 1
-          fi
+          version="${GITHUB_REF_NAME#v}"
+          for file in packages/*/package.json; do
+            actual=$(node -p "require('./$file').version")
+            if [ "$actual" != "$version" ]; then
+              echo "$file is $actual, expected $version"
+              failed=1
+            fi
+          done
+          [ -z "$failed" ]
       - name: Install dependencies
         run: pnpm -r i
       - name: Install dependencies
@@ -63,4 +57,3 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         working-directory: ./packages/selenium-ide
-        

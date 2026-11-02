@@ -75,4 +75,19 @@ For small fixes, a pull request is fine.
 3. Make sure the build, tests and lint pass.
 4. Fill in the pull request template and reference the issues it fixes.
 
+## Releasing
+
+All packages share one version. Packages depend on each other with `workspace:*`, and
+`pnpm publish` replaces it with the exact version. To set a new version:
+
+```
+pnpm -r exec npm pkg set version=4.1.0
+pnpm install
+```
+
+Merge that change, then push a tag with the same version (`v4.1.0`). The tag starts the release
+workflows. They check that every package has the tag's version, publish the packages to npm,
+and upload the app to a draft GitHub release. A pre-release such as `4.1.0-beta.1` goes to
+the `beta` dist-tag on npm.
+
 Thank you for contributing!

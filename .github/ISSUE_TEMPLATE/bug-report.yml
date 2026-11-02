@@ -48,7 +48,7 @@ body:
     attributes:
       label: Version
       description: Selenium IDE app or selenium-side-runner version
-      placeholder: e.g., 4.0.1-beta.14
+      placeholder: e.g., 4.1.0-beta.1
     validations:
       required: true
   - type: dropdown
