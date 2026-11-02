@@ -9,9 +9,19 @@ Selenium IDE as an electron application written to enable recording and playback
 
 Installation can be performed in a variety of ways:
 
-1. Prepackaged binaries are available to be installed directly as github releases.
-2. Selenium-ide can be installed via npm `npm install -g selenium-ide` and run via `selenium-ide` directly.
+1. Prepackaged binaries are available to be installed directly as [GitHub releases](https://github.com/SeleniumHQ/selenium-ide/releases).
+2. Selenium-ide can be installed via npm `npm install -g selenium-ide` and run via `selenium-ide` directly. For a beta, use `npm install -g selenium-ide@beta`.
 3. The application can be built manually using the below instructions.
+
+### Unsigned builds
+
+The binaries are not code signed yet, so your system warns you the first time you open them:
+
+- **macOS**: "Apple could not verify Selenium IDE is free of malware". Open **System Settings > Privacy & Security** and click **Open Anyway**, or run `xattr -dr com.apple.quarantine "/Applications/Selenium IDE.app"`.
+- **Windows**: SmartScreen says "Windows protected your PC". Click **More info**, then **Run anyway**.
+- **Linux**: make the AppImage executable with `chmod +x Selenium-IDE-*.AppImage`.
+
+Automatic updates don't work on macOS until the builds are signed. Download new versions from the releases page.
 
 ### Building Manually
 

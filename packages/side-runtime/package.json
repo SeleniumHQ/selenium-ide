@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/side-runtime",
-  "version": "4.0.13",
+  "version": "4.1.0-beta.1",
   "private": false,
   "description": "Selenium IDE playback and execution",
   "author": "Tomer <tomer@corevo.io>",
@@ -28,12 +28,12 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "devDependencies": {
-    "@seleniumhq/side-testkit": "4.0.13",
-    "@seleniumhq/webdriver-testkit": "4.0.13"
+    "@seleniumhq/side-testkit": "4.1.0-beta.1",
+    "@seleniumhq/webdriver-testkit": "4.1.0-beta.1"
   },
   "dependencies": {
-    "@seleniumhq/side-commons": "4.0.13",
-    "@seleniumhq/side-model": "4.0.13",
+    "@seleniumhq/side-commons": "4.1.0-beta.1",
+    "@seleniumhq/side-model": "4.1.0-beta.1",
     "@types/selenium-webdriver": "^4.35.7",
     "selenium-webdriver": "^4.51.0"
   },
