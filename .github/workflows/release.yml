@@ -42,13 +42,19 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
-        # A run that is started again reuses its draft. A published release
-        # with this version stops the run.
+        # A run started again on the same commit reuses its draft. A draft
+        # from another commit is deleted and created again, so the notes and
+        # binaries match this commit. A published release stops the run.
         run: |
-          if gh release view "v$VERSION" --json isDraft --jq .isDraft > draft.txt; then
-            if [ "$(cat draft.txt)" = "true" ]; then exit 0; fi
-            echo "v$VERSION is already released"
-            exit 1
+          if gh release view "v$VERSION" --json isDraft,targetCommitish \
+            --jq '"\(.isDraft) \(.targetCommitish)"' > draft.txt; then
+            read -r draft target < draft.txt
+            if [ "$draft" != "true" ]; then
+              echo "v$VERSION is already released"
+              exit 1
+            fi
+            if [ "$target" = "$GITHUB_SHA" ]; then exit 0; fi
+            gh release delete "v$VERSION" --yes
           fi
           prerelease=""
           if [[ "$VERSION" == *-* ]]; then prerelease="--prerelease"; fi
