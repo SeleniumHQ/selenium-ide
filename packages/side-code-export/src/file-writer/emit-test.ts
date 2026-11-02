@@ -4,7 +4,8 @@ import { LanguageEmitter } from '../types'
 export async function emitTest(
   format: LanguageEmitter,
   project: ProjectShape,
-  testName: string
+  // The test itself, or its ID. A name still works, but names may repeat.
+  test: TestShape | string
 ) {
   return format.emit.test({
     baseUrl: project.url,
@@ -12,7 +13,16 @@ export async function emitTest(
     enableDescriptionAsComment: true,
     enableOriginTracing: false,
     project,
-    test: project.tests.find((t) => t.name === testName) as TestShape,
+    test: findTest(project, test),
     tests: project.tests,
   })
+}
+
+function findTest(project: ProjectShape, test: TestShape | string) {
+  if (typeof test !== 'string') return test
+  const found =
+    project.tests.find((item) => item.id === test) ||
+    project.tests.find((item) => item.name === test)
+  if (!found) throw new Error(`Test '${test}' not found`)
+  return found
 }

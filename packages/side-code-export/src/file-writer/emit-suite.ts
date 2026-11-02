@@ -4,7 +4,8 @@ import { LanguageEmitter } from '../types'
 export async function emitSuite(
   format: LanguageEmitter,
   project: ProjectShape,
-  suiteName: string
+  // The suite itself, or its ID. A name still works, but names may repeat.
+  suite: SuiteShape | string
 ) {
   return format.emit.suite({
     baseUrl: project.url,
@@ -12,7 +13,16 @@ export async function emitSuite(
     enableDescriptionAsComment: true,
     enableOriginTracing: false,
     project,
-    suite: project.suites.find((s) => s.name === suiteName) as SuiteShape,
+    suite: findSuite(project, suite),
     tests: project.tests,
   })
+}
+
+function findSuite(project: ProjectShape, suite: SuiteShape | string) {
+  if (typeof suite !== 'string') return suite
+  const found =
+    project.suites.find((item) => item.id === suite) ||
+    project.suites.find((item) => item.name === suite)
+  if (!found) throw new Error(`Suite '${suite}' not found`)
+  return found
 }

@@ -51,7 +51,7 @@ export default class OutputFormatsController extends BaseController {
     )
     if (outputPath.canceled) return
     const filepath = outputPath.filePath as string
-    const suiteCode = await fileWriter.emitSuite(format, project, suiteName)
+    const suiteCode = await fileWriter.emitSuite(format, project, suiteID)
 
     return fileWriter.writeFile(
       filepath,
@@ -73,7 +73,7 @@ export default class OutputFormatsController extends BaseController {
     )
     if (outputPath.canceled) return
     const filepath = outputPath.filePath as string
-    const testCode = await fileWriter.emitTest(format, project, testName)
+    const testCode = await fileWriter.emitTest(format, project, testID)
 
     return fileWriter.writeFile(
       filepath,

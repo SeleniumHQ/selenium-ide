@@ -21,7 +21,8 @@ import fs from 'fs'
 import path from 'path'
 import { Command } from 'commander'
 import * as fileWriter from './file-writer'
-import { ProjectShape } from '@seleniumhq/side-model'
+import { ProjectShape, SuiteShape, TestShape } from '@seleniumhq/side-model'
+import { uniqueNames } from './code-export/parsers'
 import { correctPluginPaths, loadPlugins } from '@seleniumhq/side-runtime'
 
 const metadata = require('../package.json')
@@ -117,15 +118,26 @@ export const main = async () => {
   const iteratee =
     configuration.mode === 'suite' ? project.suites : project.tests
 
-  iteratee.forEach(async (item) => {
-    if (new RegExp(configuration.filter).test(item.name)) {
-      const { body, filename } = await emitter(outputFormat, project, item.name)
-      fileWriter.writeFile(
-        path.join(configuration.outputDir, filename),
-        body,
-        project.url
-      )
-    }
+  const filter = new RegExp(configuration.filter)
+  const items = (iteratee as (SuiteShape | TestShape)[]).filter((item) =>
+    filter.test(item.name)
+  )
+  // Items with the same name, or names that only differ in case or symbols,
+  // would get the same file and class name. Case is ignored because file
+  // systems on Windows and macOS ignore it.
+  const names = uniqueNames(
+    items.map((item) => item.name),
+    outputFormat.opts.generateFilename,
+    true
+  )
+  items.forEach(async (item, index) => {
+    const renamed = { ...item, name: names[index] } as any
+    const { body, filename } = await emitter(outputFormat, project, renamed)
+    fileWriter.writeFile(
+      path.join(configuration.outputDir, filename),
+      body,
+      project.url
+    )
   })
 }
 

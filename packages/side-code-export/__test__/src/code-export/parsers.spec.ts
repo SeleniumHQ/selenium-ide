@@ -15,7 +15,11 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { sanitizeName, capitalize } from '../../../src/code-export/parsers'
+import {
+  sanitizeName,
+  capitalize,
+  uniqueNames,
+} from '../../../src/code-export/parsers'
 
 describe('parsers', () => {
   it('should sanitize the name', () => {
@@ -29,5 +33,22 @@ describe('parsers', () => {
   })
   it('should capitalize the name', () => {
     expect(capitalize('blahblah')).toEqual('Blahblah')
+  })
+  it('should number names that turn into the same code', () => {
+    const toCode = (name: string) => sanitizeName(name).toLowerCase()
+    expect(
+      uniqueNames(['foo', 'Foo', 'foo', 'Log in', 'log-in', 'bar'], toCode)
+    ).toEqual(['foo', 'Foo 2', 'foo 3', 'Log in', 'log-in 2', 'bar'])
+  })
+  it('should skip a number that is already taken', () => {
+    expect(uniqueNames(['a', 'a 2', 'a'], sanitizeName)).toEqual([
+      'a',
+      'a 2',
+      'a 3',
+    ])
+  })
+  it('should ignore case only when asked', () => {
+    expect(uniqueNames(['A', 'a'], (name) => name)).toEqual(['A', 'a'])
+    expect(uniqueNames(['A', 'a'], (name) => name, true)).toEqual(['A', 'a 2'])
   })
 })
