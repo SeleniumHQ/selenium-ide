@@ -1,0 +1,136 @@
+name: 'Release'
+
+# Releases the version in package.json: builds the app for every platform,
+# uploads it to a draft GitHub release and publishes the npm packages. Release
+# notes are generated from the pull requests merged since the previous release.
+# Publishing the draft release creates the tag.
+on:
+  workflow_dispatch:
+
+# A second run waits for the first, so two runs never upload to the same draft
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Check the version and create a draft release
+    runs-on: ubuntu-latest
+    if: github.repository == 'seleniumhq/selenium-ide'
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      dist-tag: ${{ steps.version.outputs.dist-tag }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check every package has the same version
+        id: version
+        shell: bash
+        run: |
+          version=$(node -p "require('./packages/selenium-ide/package.json').version")
+          for file in packages/*/package.json; do
+            actual=$(node -p "require('./$file').version")
+            if [ "$actual" != "$version" ]; then
+              echo "$file is $actual, expected $version"
+              failed=1
+            fi
+          done
+          [ -z "$failed" ]
+          # A pre-release (e.g. 4.1.0-beta.1) goes to the beta dist-tag, so
+          # npm install keeps getting the latest stable version
+          if [[ "$version" == *-* ]]; then tag=beta; else tag=latest; fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "dist-tag=$tag" >> "$GITHUB_OUTPUT"
+      - name: Create a draft release with generated notes
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.version.outputs.version }}
+        # A run started again on the same commit reuses its draft. A draft
+        # from another commit is deleted and created again, so the notes and
+        # binaries match this commit.
+        run: |
+          # A tag pins the release to its commit, so an existing tag stops the run
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" > /dev/null 2>&1; then
+            echo "The tag v$VERSION already exists"
+            exit 1
+          fi
+          if gh release view "v$VERSION" --json isDraft,targetCommitish \
+            --jq '"\(.isDraft) \(.targetCommitish)"' > draft.txt; then
+            read -r draft target < draft.txt
+            if [ "$draft" != "true" ]; then
+              echo "v$VERSION is already released"
+              exit 1
+            fi
+            if [ "$target" = "$GITHUB_SHA" ]; then exit 0; fi
+            gh release delete "v$VERSION" --yes
+          fi
+          prerelease=""
+          if [[ "$VERSION" == *-* ]]; then prerelease="--prerelease"; fi
+          gh release create "v$VERSION" --draft $prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Selenium IDE $VERSION" \
+            --generate-notes
+
+  binaries:
+    name: Build the app for ${{ matrix.platform }}
+    needs: prepare
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: windows-latest
+            platform: windows
+          - os: macos-latest
+            platform: mac
+    permissions:
+      # electron-builder uploads the binaries to the draft release
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+      - name: Install dependencies
+        run: pnpm -r i
+      - name: Install app dependencies
+        run: npm run install-app-deps
+        working-directory: ./packages/selenium-ide
+      - name: Build all JS
+        run: pnpm run build
+        env:
+          NODE_ENV: "production"
+      - name: Build and upload the binaries
+        run: npm run publish:electron:${{ matrix.platform }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ./packages/selenium-ide
+
+  npm:
+    name: Publish the npm packages
+    # npm versions can't be published twice, so this runs after the binaries built
+    needs: [prepare, binaries]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # npm trusted publishing and provenance
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+          registry-url: 'https://registry.npmjs.org'
+      - name: Install dependencies
+        run: pnpm -r i
+      - name: Build all JS
+        run: pnpm run build
+        env:
+          NODE_ENV: "production"
+      - name: Publish packages to npm
+        run: pnpm -r publish --no-git-checks --access public --tag ${{ needs.prepare.outputs.dist-tag }}

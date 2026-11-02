@@ -85,9 +85,17 @@ pnpm -r exec npm pkg set version=4.1.0
 pnpm install
 ```
 
-Merge that change, then push a tag with the same version (`v4.1.0`). The tag starts the release
-workflows. They check that every package has the tag's version, publish the packages to npm,
-and upload the app to a draft GitHub release. A pre-release such as `4.1.0-beta.1` goes to
-the `beta` dist-tag on npm.
+Merge that change, then run the **Release** workflow from the Actions tab on `trunk`. It:
+
+1. checks that every package has the same version,
+2. creates a draft GitHub release with notes generated from the merged pull requests,
+3. builds the app for Linux, Windows and macOS and uploads it to the draft,
+4. publishes the packages to npm.
+
+Check the draft release, edit the notes if needed, and publish it. Publishing it creates the
+tag (`v4.1.0`).
+
+A pre-release such as `4.1.0-beta.1` is marked as a pre-release on GitHub and goes to the
+`beta` dist-tag on npm.
 
 Thank you for contributing!
