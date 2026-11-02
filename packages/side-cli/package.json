@@ -26,8 +26,8 @@
     "@types/react": "^18.3.31"
   },
   "dependencies": {
-    "@seleniumhq/side-model": "4.1.0-beta.1",
-    "@seleniumhq/side-runtime": "4.1.0-beta.1",
+    "@seleniumhq/side-model": "workspace:*",
+    "@seleniumhq/side-runtime": "workspace:*",
     "ink": "^4.4.1",
     "ink-select-input": "^5.0.0",
     "ink-spinner": "^5.0.0",

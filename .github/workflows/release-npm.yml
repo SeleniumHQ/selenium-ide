@@ -30,7 +30,14 @@ jobs:
           else
             version=$(node -p "require('./packages/selenium-ide/package.json').version")
           fi
-          node scripts/set-version.mjs --check "$version"
+          for file in packages/*/package.json; do
+            actual=$(node -p "require('./$file').version")
+            if [ "$actual" != "$version" ]; then
+              echo "$file is $actual, expected $version"
+              failed=1
+            fi
+          done
+          [ -z "$failed" ]
           # A pre-release (e.g. 4.1.0-beta.1) goes to the beta dist-tag, so
           # npm install keeps getting the latest stable version
           if [[ "$version" == *-* ]]; then tag=beta; else tag=latest; fi

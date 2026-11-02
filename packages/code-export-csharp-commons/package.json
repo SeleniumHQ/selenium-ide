@@ -18,10 +18,10 @@
     "watch": "tsc --watch"
   },
   "dependencies": {
-    "side-code-export": "4.1.0-beta.1"
+    "side-code-export": "workspace:*"
   },
   "devDependencies": {
-    "@seleniumhq/side-runtime": "4.1.0-beta.1",
-    "@seleniumhq/side-model": "4.1.0-beta.1"
+    "@seleniumhq/side-model": "workspace:*",
+    "@seleniumhq/side-runtime": "workspace:*"
   }
 }

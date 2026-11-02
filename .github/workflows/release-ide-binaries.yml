@@ -33,7 +33,16 @@ jobs:
       - name: Check every package has the tag's version
         if: github.ref_type == 'tag'
         shell: bash
-        run: node scripts/set-version.mjs --check "${GITHUB_REF_NAME#v}"
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          for file in packages/*/package.json; do
+            actual=$(node -p "require('./$file').version")
+            if [ "$actual" != "$version" ]; then
+              echo "$file is $actual, expected $version"
+              failed=1
+            fi
+          done
+          [ -z "$failed" ]
       - name: Install dependencies
         run: pnpm -r i
       - name: Install dependencies

@@ -17,11 +17,11 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "side-code-export": "4.1.0-beta.1"
+    "side-code-export": "workspace:*"
   },
   "devDependencies": {
-    "@seleniumhq/side-runtime": "4.1.0-beta.1",
-    "@seleniumhq/side-model": "4.1.0-beta.1"
+    "@seleniumhq/side-model": "workspace:*",
+    "@seleniumhq/side-runtime": "workspace:*"
   },
   "gitHead": "f58e327e7616e23a3e926e4b80cf9952164e5744"
 }
