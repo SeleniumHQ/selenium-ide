@@ -7,6 +7,11 @@ name: 'Release'
 on:
   workflow_dispatch:
 
+# A second run waits for the first, so two runs never upload to the same draft
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 jobs:
   prepare:
     name: Check the version and create a draft release
@@ -44,8 +49,13 @@ jobs:
           VERSION: ${{ steps.version.outputs.version }}
         # A run started again on the same commit reuses its draft. A draft
         # from another commit is deleted and created again, so the notes and
-        # binaries match this commit. A published release stops the run.
+        # binaries match this commit.
         run: |
+          # A tag pins the release to its commit, so an existing tag stops the run
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" > /dev/null 2>&1; then
+            echo "The tag v$VERSION already exists"
+            exit 1
+          fi
           if gh release view "v$VERSION" --json isDraft,targetCommitish \
             --jq '"\(.isDraft) \(.targetCommitish)"' > draft.txt; then
             read -r draft target < draft.txt
