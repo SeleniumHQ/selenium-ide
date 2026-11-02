@@ -186,6 +186,41 @@ describe('Code Export Python pytest', () => {
     )
     expectValidSyntax(results.body)
   })
+  it('should export run with test names like toString and __proto__', async () => {
+    const command = (id, name, target) => ({
+      id,
+      command: name,
+      target,
+      value: '',
+    })
+    const project = {
+      id: 'p',
+      name: 'p',
+      url: 'http://localhost:8080',
+      tests: [
+        {
+          id: 't1',
+          name: '__proto__',
+          commands: [command('c1', 'echo', 't1')],
+        },
+        {
+          id: 't2',
+          name: 'runThem',
+          commands: [
+            command('c2', 'run', '__proto__'),
+            command('c3', 'run', 'toString'),
+          ],
+        },
+      ],
+      suites: [],
+    }
+    const results = await languageExport.emit.test({
+      ...options(project),
+      test: project.tests[1],
+    })
+    expect(results.body).toContain('self.proto()\n    self.toString()')
+    expectValidSyntax(results.body)
+  })
   it('should export the command emitter', () => {
     expect(languageExport.emit.command).toBe(Command.emit)
   })

@@ -57,7 +57,7 @@ export interface EmitterContext extends Omit<LanguageEmitterOpts, 'hooks'> {
   // Number of the loop a loop command belongs to, unique in a test or method
   loopId?: number
   // The name each reused test's method is generated from, by test name
-  methodNames?: Record<string, string>
+  methodNames?: Map<string, string>
 }
 
 // Reused tests become methods. Tests whose names turn into the same method
@@ -73,11 +73,8 @@ export function reusedMethodNames(
     return typeof result === 'object' ? result.body : result
   }
   const unique = uniqueNames(names, declaration)
-  const result: Record<string, string> = {}
-  names.forEach((name, index) => {
-    result[name] = unique[index]
-  })
-  return result
+  // A Map, so names like toString or __proto__ are plain keys
+  return new Map(names.map((name, index) => [name, unique[index]]))
 }
 
 // Numbers the loops in a list of commands. repeatIf gets the number of its do.
@@ -224,7 +221,7 @@ export async function emitCommand(
   // Call the method of the reused test by the name it was declared with
   const methodName =
     command.command === 'run' &&
-    context?.methodNames?.[command.target as string]
+    context?.methodNames?.get(command.target as string)
   if (methodName) command = { ...command, target: methodName }
   if (emitter) {
     // storeJson's target is JSON, used as it was typed
@@ -508,7 +505,7 @@ async function emitTest(
   for (const reusedTest of methods) {
     const method = {
       ...reusedTest,
-      name: context.methodNames![reusedTest.name] ?? reusedTest.name,
+      name: context.methodNames?.get(reusedTest.name) ?? reusedTest.name,
     }
     const result = await emitMethod(method, {
       context,
