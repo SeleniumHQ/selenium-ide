@@ -23,7 +23,7 @@
     "test:jest": "npm-run-bg -s \"http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080\" \"npm run test:jest:core\"",
     "lint": "pnpm run lint:scripts",
     "lint:scripts": "eslint --ignore-pattern node_modules --ignore-pattern third-party --ignore-pattern dist --ignore-pattern build --ignore-pattern json --ext .ts,.tsx --ext .js packages/",
-    "test:code-export": "./packages/side-code-export/dist/bin.js ./packages/code-export-python-pytest/dist/index.js ./tests/examples/simple-parent.side ./output-tests",
+    "test:code-export": "node ./packages/side-code-export/bin.js ./packages/code-export-python-pytest/dist/index.js ./tests/examples/simple-parent.side ./output-tests",
     "test:ide": "npm-run-bg -s \"http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080\" \"node ./packages/selenium-ide/scripts/ide-runner.js\"",
     "test:ide:ci": "node ./packages/selenium-ide/scripts/ide-runner.js",
     "test:side-runner": "npm-run-bg -s \"http-server -p 8080 ./packages/side-testkit/fixtures/static::Available on::8080\" \"node ./packages/side-runner/dist/bin.js -t 15000 ./tests/examples/*.side\"",
