@@ -43,7 +43,9 @@ jobs:
         id: version
         shell: bash
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ inputs.version }}
+        # Runs before anything changes trunk, so a rejected version leaves it as it is
         run: |
           # Semantic version: no leading zeros, and pre-release parts that
           # aren't empty (4.1.0, 4.1.0-beta.2)
@@ -51,6 +53,17 @@ jobs:
           part='(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)'
           if ! [[ "$VERSION" =~ ^$num\.$num\.$num(-$part(\.$part)*)?$ ]]; then
             echo "$VERSION is not a version like 4.1.0 or 4.1.0-beta.2"
+            exit 1
+          fi
+          # The same version is allowed, so a run can be started again
+          current=$(node -p "require('./packages/selenium-ide/package.json').version")
+          if ! npx -y semver@7.7.2 -p -r ">=$current" "$VERSION" > /dev/null; then
+            echo "$VERSION is lower than the current version $current"
+            exit 1
+          fi
+          # A tag pins the release to its commit, so an existing tag stops the run
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" > /dev/null 2>&1; then
+            echo "The tag v$VERSION already exists"
             exit 1
           fi
           # A pre-release (e.g. 4.1.0-beta.1) goes to the beta dist-tag, so
@@ -84,11 +97,6 @@ jobs:
         # from another commit is deleted and created again, so the notes and
         # binaries match this commit.
         run: |
-          # A tag pins the release to its commit, so an existing tag stops the run
-          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" > /dev/null 2>&1; then
-            echo "The tag v$VERSION already exists"
-            exit 1
-          fi
           if gh release view "v$VERSION" --json isDraft,targetCommitish \
             --jq '"\(.isDraft) \(.targetCommitish)"' > draft.txt; then
             read -r draft target < draft.txt
