@@ -15,7 +15,7 @@
     "watch": "tsc --watch"
   },
   "bin": {
-    "side-code-export": "dist/bin.js"
+    "side-code-export": "bin.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -11,7 +11,7 @@
     "watch": "tsc --watch"
   },
   "bin": {
-    "selenium-side-runner": "dist/bin.js"
+    "selenium-side-runner": "bin.js"
   },
   "engines": {
     "node": ">=22"

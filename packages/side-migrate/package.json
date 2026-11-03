@@ -13,9 +13,10 @@
   },
   "main": "dist/migrate.js",
   "files": [
+    "bin.js",
     "dist"
   ],
-  "bin": "dist/bin.js",
+  "bin": "bin.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
