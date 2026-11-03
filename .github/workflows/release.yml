@@ -1,11 +1,18 @@
 name: 'Release'
 
-# Releases the version in package.json: builds the app for every platform,
-# uploads it to a draft GitHub release and publishes the npm packages. Release
-# notes are generated from the pull requests merged since the previous release.
-# Publishing the draft release creates the tag.
+# Releases the version entered when the run starts. If the packages don't have
+# that version yet, the run sets it, commits it to trunk and releases that
+# commit: it builds the app for every platform, uploads it to a draft GitHub
+# release and publishes the npm packages. Release notes are generated from the
+# pull requests merged since the previous release. Publishing the draft release
+# creates the tag.
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, e.g. 4.1.0 or 4.1.0-beta.2'
+        required: true
+        type: string
 
 # A second run waits for the first, so two runs never upload to the same draft
 concurrency:
@@ -14,44 +21,83 @@ concurrency:
 
 jobs:
   prepare:
-    name: Check the version and create a draft release
+    name: Set the version and create a draft release
     runs-on: ubuntu-latest
-    if: github.repository == 'seleniumhq/selenium-ide'
+    if: github.repository == 'seleniumhq/selenium-ide' && github.ref == 'refs/heads/trunk'
     permissions:
       contents: write
     outputs:
       version: ${{ steps.version.outputs.version }}
       dist-tag: ${{ steps.version.outputs.dist-tag }}
+      sha: ${{ steps.commit.outputs.sha }}
     steps:
+      # The latest trunk, so a run started again sees its own version commit
       - uses: actions/checkout@v7
-      - name: Check every package has the same version
+        with:
+          ref: trunk
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+      - name: Check the version
         id: version
         shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ inputs.version }}
+        # Runs before anything changes trunk, so a rejected version leaves it as it is
         run: |
-          version=$(node -p "require('./packages/selenium-ide/package.json').version")
-          for file in packages/*/package.json; do
-            actual=$(node -p "require('./$file').version")
-            if [ "$actual" != "$version" ]; then
-              echo "$file is $actual, expected $version"
-              failed=1
-            fi
-          done
-          [ -z "$failed" ]
+          # Semantic version: no leading zeros, and pre-release parts that
+          # aren't empty (4.1.0, 4.1.0-beta.2)
+          num='(0|[1-9][0-9]*)'
+          part='(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)'
+          if ! [[ "$VERSION" =~ ^$num\.$num\.$num(-$part(\.$part)*)?$ ]]; then
+            echo "$VERSION is not a version like 4.1.0 or 4.1.0-beta.2"
+            exit 1
+          fi
+          # The same version is allowed, so a run can be started again
+          current=$(node -p "require('./packages/selenium-ide/package.json').version")
+          if ! npx -y semver@7.7.2 -p -r ">=$current" "$VERSION" > /dev/null; then
+            echo "$VERSION is lower than the current version $current"
+            exit 1
+          fi
+          # A tag pins the release to its commit, so an existing tag stops the run
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" > /dev/null 2>&1; then
+            echo "The tag v$VERSION already exists"
+            exit 1
+          fi
           # A pre-release (e.g. 4.1.0-beta.1) goes to the beta dist-tag, so
           # npm install keeps getting the latest stable version
-          if [[ "$version" == *-* ]]; then tag=beta; else tag=latest; fi
-          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [[ "$VERSION" == *-* ]]; then tag=beta; else tag=latest; fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "dist-tag=$tag" >> "$GITHUB_OUTPUT"
+      - name: Set the version on every package and commit it
+        id: commit
+        shell: bash
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          # One package at a time: npm pkg set in parallel can read a package.json
+          # while another run is writing it
+          pnpm -r --workspace-concurrency=1 exec npm pkg set version="$VERSION"
+          if ! git diff --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -am "Release $VERSION"
+            git push origin HEAD:trunk
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
       - name: Create a draft release with generated notes
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERSION: ${{ steps.version.outputs.version }}
+          SHA: ${{ steps.commit.outputs.sha }}
         # A run started again on the same commit reuses its draft. A draft
         # from another commit is deleted and created again, so the notes and
         # binaries match this commit.
         run: |
-          # A tag pins the release to its commit, so an existing tag stops the run
+          # Checked again, in case the tag was created after the first check
           if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" > /dev/null 2>&1; then
             echo "The tag v$VERSION already exists"
             exit 1
@@ -63,13 +109,13 @@ jobs:
               echo "v$VERSION is already released"
               exit 1
             fi
-            if [ "$target" = "$GITHUB_SHA" ]; then exit 0; fi
+            if [ "$target" = "$SHA" ]; then exit 0; fi
             gh release delete "v$VERSION" --yes
           fi
           prerelease=""
           if [[ "$VERSION" == *-* ]]; then prerelease="--prerelease"; fi
           gh release create "v$VERSION" --draft $prerelease \
-            --target "$GITHUB_SHA" \
+            --target "$SHA" \
             --title "Selenium IDE $VERSION" \
             --generate-notes
 
@@ -91,6 +137,8 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -121,6 +169,8 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:

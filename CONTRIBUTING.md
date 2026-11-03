@@ -78,16 +78,12 @@ For small fixes, a pull request is fine.
 ## Releasing
 
 All packages share one version. Packages depend on each other with `workspace:*`, and
-`pnpm publish` replaces it with the exact version. To set a new version:
+`pnpm publish` replaces it with the exact version.
 
-```
-pnpm -r exec npm pkg set version=4.1.0
-pnpm install
-```
+Run the **Release** workflow from the Actions tab on `trunk` and enter the version (`4.1.0`).
+It:
 
-Merge that change, then run the **Release** workflow from the Actions tab on `trunk`. It:
-
-1. checks that every package has the same version,
+1. sets that version on every package and commits it to `trunk`, if they don't have it yet,
 2. creates a draft GitHub release with notes generated from the merged pull requests,
 3. builds the app for Linux, Windows and macOS and uploads it to the draft,
 4. publishes the packages to npm.
@@ -95,7 +91,13 @@ Merge that change, then run the **Release** workflow from the Actions tab on `tr
 Check the draft release, edit the notes if needed, and publish it. Publishing it creates the
 tag (`v4.1.0`).
 
-A pre-release such as `4.1.0-beta.1` is marked as a pre-release on GitHub and goes to the
+A pre-release such as `4.1.0-beta.2` is marked as a pre-release on GitHub and goes to the
 `beta` dist-tag on npm.
+
+To set the version by hand:
+
+```
+pnpm -r --workspace-concurrency=1 exec npm pkg set version=4.1.0
+```
 
 Thank you for contributing!
