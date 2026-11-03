@@ -36,7 +36,7 @@
     "watch:ts": "tsc --build --verbose --watch"
   },
   "engines": {
-    "node": ">=22.15"
+    "node": "^22.23.4 || ^24.22.1 || >=26.12.1"
   },
   "workspaces": [
     "packages/*"
