@@ -13,6 +13,12 @@
   "bin": {
     "selenium-side-runner": "bin.js"
   },
+  "files": [
+    "bin.js",
+    "dist",
+    "runner.jest.config.js",
+    "CHANGELOG.md"
+  ],
   "engines": {
     "node": ">=22"
   },

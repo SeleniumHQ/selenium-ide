@@ -1,3 +1,26 @@
 packages:
   # all packages in direct subdirs of packages/
   - 'packages/*'
+
+strictPeerDependencies: false
+
+# Shared tooling
+publicHoistPattern:
+  - '@types*'
+  - '*babel*'
+  - '*eslint*'
+  - '*jest*'
+  - '*side-runner*'
+  - 'typescript*'
+  - electron
+  - tsc
+
+# Bad to hoist
+hoistPattern:
+  - '!electron-chromedriver'
+
+allowBuilds:
+  '@parcel/watcher': false
+  electron-chromedriver: true
+  electron-winstaller: false
+  unrs-resolver: false
