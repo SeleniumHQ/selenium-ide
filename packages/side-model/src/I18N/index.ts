@@ -1,33 +1,34 @@
 import { ArgTypes } from '../ArgTypes'
 import Commands from '../Commands'
+import enArgTypes from './en/ArgTypes'
+import enCommands from './en/Commands'
+import { argTypes as zhArgTypes } from './zh/ArgTypes'
+import zhCommands from './zh/Commands'
 
 type I18NModelDataShape = {
   ArgTypes: ArgTypes
   Commands: typeof Commands
 }
 
-const supportedLanguages = ['en', 'zh'] as const
+// Imported statically, so bundlers include every language
+const languages: Record<string, I18NModelDataShape> = {
+  en: { ArgTypes: enArgTypes, Commands: enCommands },
+  zh: { ArgTypes: zhArgTypes, Commands: zhCommands },
+}
 
-type SupportedLanguages = typeof supportedLanguages[number]
+type SupportedLanguages = 'en' | 'zh'
 
+// Takes a language code like "zh" or "zh-CN". Unknown languages get English.
 const loadI18NData = async (
-  languageCode: SupportedLanguages
+  languageCode: SupportedLanguages | string
 ): Promise<I18NModelDataShape> => {
-  const languageSubstring = languageCode.slice(0, 2)
-  if (!supportedLanguages.includes(languageSubstring as SupportedLanguages)) {
+  const language = languageCode.slice(0, 2)
+  if (!Object.prototype.hasOwnProperty.call(languages, language)) {
     console.error(`Unsupported language code: ${languageCode}`)
     console.warn('Falling back to english for now')
-    return await loadI18NData('en')
+    return languages.en
   }
-
-  const [ArgTypes, Commands] = await Promise.all([
-    import(`./${languageCode}/ArgTypes`),
-    import(`./${languageCode}/Commands`),
-  ])
-  return {
-    ArgTypes: ArgTypes.default,
-    Commands: Commands.default,
-  }
+  return languages[language]
 }
 
 export default loadI18NData
