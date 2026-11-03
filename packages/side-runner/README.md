@@ -4,7 +4,7 @@ Runs exported Selenium IDE tests in command line
 
 ## Installation
 
-Node.js 22 or later is required to use the Selenium side-runner.
+The Selenium side-runner needs Node.js 22 (22.23.4 or later), 24 (24.22.1 or later), or 26.12.1 or later (the versions selenium-webdriver supports).
 
 ```yarn global add selenium-side-runner```  
 or  

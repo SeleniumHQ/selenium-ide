@@ -26,6 +26,6 @@
   },
   "devDependencies": {
     "@types/selenium-webdriver": "^4.35.7",
-    "selenium-webdriver": "^4.51.0"
+    "selenium-webdriver": "^4.52.0"
   }
 }

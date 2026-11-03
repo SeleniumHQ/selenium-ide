@@ -7,7 +7,7 @@
   "homepage": "http://github.com/SeleniumHQ/selenium-ide",
   "license": "Apache-2.0",
   "engines": {
-    "node": ">=22"
+    "node": "^22.23.4 || ^24.22.1 || >=26.12.1"
   },
   "scripts": {
     "build": "tsc",
@@ -35,7 +35,7 @@
     "@seleniumhq/side-commons": "workspace:*",
     "@seleniumhq/side-model": "workspace:*",
     "@types/selenium-webdriver": "^4.35.7",
-    "selenium-webdriver": "^4.51.0"
+    "selenium-webdriver": "^4.52.0"
   },
   "gitHead": "507c7c802f34196e6ee4800bf5c0b36553d41369"
 }
