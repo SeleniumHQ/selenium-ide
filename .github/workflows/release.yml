@@ -112,11 +112,9 @@ jobs:
             if [ "$target" = "$SHA" ]; then exit 0; fi
             gh release delete "v$VERSION" --yes
           fi
-          prerelease=""
-          if [[ "$VERSION" == *-* ]]; then prerelease="--prerelease"; fi
-          gh release create "v$VERSION" --draft $prerelease \
+          gh release create "v$VERSION" --draft \
             --target "$SHA" \
-            --title "Selenium IDE $VERSION" \
+            --title "$VERSION" \
             --generate-notes
 
   binaries:
