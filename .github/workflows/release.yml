@@ -45,7 +45,11 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
         run: |
-          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+          # Semantic version: no leading zeros, and pre-release parts that
+          # aren't empty (4.1.0, 4.1.0-beta.2)
+          num='(0|[1-9][0-9]*)'
+          part='(0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)'
+          if ! [[ "$VERSION" =~ ^$num\.$num\.$num(-$part(\.$part)*)?$ ]]; then
             echo "$VERSION is not a version like 4.1.0 or 4.1.0-beta.2"
             exit 1
           fi
