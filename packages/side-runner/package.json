@@ -16,6 +16,7 @@
   "files": [
     "bin.js",
     "dist",
+    "runner.jest.config.js",
     "CHANGELOG.md"
   ],
   "engines": {
