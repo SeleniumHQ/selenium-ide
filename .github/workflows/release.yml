@@ -97,6 +97,11 @@ jobs:
         # from another commit is deleted and created again, so the notes and
         # binaries match this commit.
         run: |
+          # Checked again, in case the tag was created after the first check
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/v$VERSION" > /dev/null 2>&1; then
+            echo "The tag v$VERSION already exists"
+            exit 1
+          fi
           if gh release view "v$VERSION" --json isDraft,targetCommitish \
             --jq '"\(.isDraft) \(.targetCommitish)"' > draft.txt; then
             read -r draft target < draft.txt
