@@ -192,6 +192,17 @@ const mainConfig: Configuration = {
   },
   plugins: commonPlugins,
   target: 'electron-main',
+  // These modules load files at runtime on purpose, so webpack can't bundle them:
+  // - side-runtime's plugin loader falls back to require(), but the IDE passes
+  //   its own loader
+  // - selenium-webdriver falls back to atoms in bazel-bin, which only exists in
+  //   Selenium's source tree
+  // - v8-compile-cache patches Node's module loader
+  ignoreWarnings: [
+    /side-runtime[\\/]dist[\\/]plugins\.js$/,
+    /selenium-webdriver[\\/]lib[\\/]http\.js$/,
+    /v8-compile-cache[\\/]v8-compile-cache\.js$/,
+  ].map((module) => ({ module, message: /Critical dependency/ })),
 }
 
 export default [
