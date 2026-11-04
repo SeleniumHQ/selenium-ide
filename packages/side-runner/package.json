@@ -31,7 +31,7 @@
   "dependencies": {
     "@seleniumhq/side-model": "workspace:*",
     "@seleniumhq/side-runtime": "workspace:*",
-    "commander": "^11.0.0",
+    "commander": "^11.1.0",
     "glob": "^14.0.3",
     "jest": "^30.5.2",
     "jest-cli": "^30.5.2",
@@ -39,14 +39,14 @@
     "js-yaml": "^4.3.2",
     "lodash": "^4.18.1",
     "resolve-bin": "^1.0.1",
-    "rimraf": "^5.0.1",
-    "semver": "^7.5.3",
-    "winston": "^3.9.0"
+    "rimraf": "^5.0.10",
+    "semver": "^7.8.6",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
-    "@types/js-yaml": "^4.0.5",
-    "@types/lodash": "^4.14.199",
-    "@types/resolve-bin": "^0.4.1",
-    "@types/semver": "^7.5.0"
+    "@types/js-yaml": "^4.0.9",
+    "@types/lodash": "^4.17.27",
+    "@types/resolve-bin": "^0.4.3",
+    "@types/semver": "^7.8.0"
   }
 }

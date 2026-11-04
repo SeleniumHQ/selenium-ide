@@ -778,22 +778,22 @@ export interface PlaybackEventShapes {
     testID?: string
     callstackIndex?: number
     command: CommandShape
-    state: typeof CommandStates[keyof typeof CommandStates]
+    state: (typeof CommandStates)[keyof typeof CommandStates]
     message?: string
     error?: Error
   }
   PLAYBACK_STATE_CHANGED: {
-    state: typeof PlaybackStates[keyof typeof PlaybackStates]
+    state: (typeof PlaybackStates)[keyof typeof PlaybackStates]
     testID?: string
   }
   CALL_STACK_CHANGED: {
-    change: typeof CallstackChange[keyof typeof CallstackChange]
+    change: (typeof CallstackChange)[keyof typeof CallstackChange]
     callee: TestShape
     caller: Caller
   }
   CONTROL_FLOW_CHANGED: {
     commandId: string
-    type: typeof CommandType[]
+    type: (typeof CommandType)[]
     end: boolean
   }
 }
@@ -817,7 +817,7 @@ export const PlaybackStates = {
   ABORTED: 'aborted',
 } as const
 
-export type PlaybackState = typeof PlaybackStates[keyof typeof PlaybackStates]
+export type PlaybackState = (typeof PlaybackStates)[keyof typeof PlaybackStates]
 
 const PlaybackStatesPriorities = {
   [PlaybackStates.FINISHED]: 0,
@@ -837,7 +837,7 @@ export const CommandStates = {
   ERRORED: 'errored',
 } as const
 
-export type CommandState = typeof CommandStates[keyof typeof CommandStates]
+export type CommandState = (typeof CommandStates)[keyof typeof CommandStates]
 
 export const CallstackChange = {
   CALLED: 'called',
