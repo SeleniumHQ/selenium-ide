@@ -52,6 +52,9 @@ export const main = async () => {
       '[options] your-format-path.js your-project-here.side output-dir-here'
     )
     .version(metadata.version)
+    .argument('[format]', 'Path to the export format module')
+    .argument('[project]', 'Project file to export')
+    .argument('[output-dir]', 'Folder to write the exported files to')
     .option('--base-url [url]', 'Override the base URL that was set in the IDE')
     .option(
       '-f, --filter [string]',

@@ -19,7 +19,10 @@ import fs from 'fs'
 import yaml from 'js-yaml'
 
 export function load(config: string) {
-  return yaml.load(fs.readFileSync(config, 'utf8'))
+  const text = fs.readFileSync(config, 'utf8')
+  // A file with no YAML document (empty or only comments) has no settings
+  if (yaml.loadAll(text).length === 0) return undefined
+  return yaml.load(text)
 }
 
 export default {
