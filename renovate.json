@@ -10,6 +10,7 @@
     "description": "Security updates skip the release age wait below.",
     "minimumReleaseAge": null
   },
+  "constraintsFiltering": "strict",
   "lockFileMaintenance": {
     "enabled": true
   },

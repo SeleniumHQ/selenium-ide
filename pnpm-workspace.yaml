@@ -24,3 +24,13 @@ allowBuilds:
   electron-chromedriver: true
   electron-winstaller: false
   unrs-resolver: false
+
+# Fail the install when a dependency's engines field excludes the running
+# Node.js, instead of only warning
+engineStrict: true
+
+overrides:
+  # extract-zip 2 (used by electron-chromedriver to unpack the driver) with
+  # yauzl 2 stops after the first file on Node.js 26 and still reports
+  # success. yauzl 3 has the same API and unpacks every file.
+  yauzl: ^3.4.0

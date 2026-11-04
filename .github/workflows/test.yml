@@ -7,13 +7,24 @@ on:
   workflow_dispatch:
 jobs:
   test:
-    name: Test on ${{ matrix.os }}
+    name: Test on ${{ matrix.os }} with Node ${{ matrix.node }}
     permissions:
       contents: read
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-24.04, ubuntu-26.04, windows-latest, macos-latest]
+        node: ['26.x']
+        # The other supported Node.js majors. These jobs skip the checks that
+        # don't depend on Node.js (lint, Java/C# compile) and the IDE app,
+        # which runs on the Node.js bundled with Electron.
+        include:
+          - os: ubuntu-24.04
+            node: '22.x'
+            node-only: true
+          - os: ubuntu-24.04
+            node: '24.x'
+            node-only: true
     runs-on: ${{ matrix.os }}
     if: github.repository == 'seleniumhq/selenium-ide'
     steps:
@@ -21,17 +32,17 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: '24.x'
+          node-version: ${{ matrix.node }}
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm -r i
       - name: Build side-runner and selenium-ide
         run: npm run build
       - name: Lint
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.os == 'ubuntu-24.04' && !matrix.node-only
         run: npm run lint
       - name: Check that Electron and its driver match
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.os == 'ubuntu-24.04' && !matrix.node-only
         run: node packages/selenium-ide/scripts/check-electron-versions.js
       - name: Install and start xvfb
         if: runner.os == 'Linux'
@@ -57,18 +68,22 @@ jobs:
       - name: Run unit tests
         run: npm run test:jest:core
       - name: Compile the Java and C# exports
-        if: matrix.os == 'ubuntu-24.04'
+        if: matrix.os == 'ubuntu-24.04' && !matrix.node-only
         run: node tests/code-export/compile.mjs
       - name: Run side-runner tests
         run: npm run test:side-runner:ci
       - name: Run the IDE smoke test
+        if: '!matrix.node-only'
         run: npm run test:ide:ci
       - name: Check a normal launch starts the playback driver
+        if: '!matrix.node-only'
         run: node packages/selenium-ide/scripts/launch-check.js
       - name: Package the app
+        if: '!matrix.node-only'
         run: npm run build:electron:dir
         working-directory: ./packages/selenium-ide
       - name: Run the IDE smoke test on the packaged app
+        if: '!matrix.node-only'
         shell: bash
         run: |
           case "$RUNNER_OS" in

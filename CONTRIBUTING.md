@@ -21,7 +21,7 @@ The issue tracker is for bugs and feature proposals.
 
 ## Development
 
-You need [Node.js](https://nodejs.org/) 24 (the version CI uses) and pnpm.
+You need [Node.js](https://nodejs.org/) 22.23.4+, 24.22.1+ or 26.12.1+ (CI tests all three) and pnpm.
 The pnpm version is pinned in `package.json` (`packageManager`). If you have
 [Corepack](https://nodejs.org/api/corepack.html) or a recent pnpm, it picks the right version for you.
 
