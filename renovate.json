@@ -1,0 +1,45 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Covers every dependency on trunk: npm/pnpm (all workspace packages, packageManager, lockfile), GitHub Actions, npm tools pinned in workflows, and the Maven and NuGet projects in tests/code-export. Only one Renovate branch and PR at a time.",
+  "extends": ["config:recommended", "group:allNonMajor"],
+  "prConcurrentLimit": 1,
+  "branchConcurrentLimit": 1,
+  "prHourlyLimit": 0,
+  "labels": ["dependencies"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "customManagers": [
+    {
+      "description": "npm tools that workflows run with npx at a pinned version, like semver in release.yml.",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "npx (?:-y |--yes )?(?<depName>(?:@[\\w.-]+/)?[\\w.-]+)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "npm"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Update electron and electron-chromedriver together, in their own PR. CI fails until both are on the same version.",
+      "matchPackageNames": ["electron", "electron-chromedriver"],
+      "groupName": "Electron"
+    },
+    {
+      "description": "Group GitHub Actions updates, majors included.",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "C# NUnit exports use Assert.True, which NUnit 4 removed.",
+      "matchPackageNames": ["NUnit"],
+      "allowedVersions": "<4"
+    },
+    {
+      "description": "Node.js types follow the oldest supported Node.js major (22).",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "<23"
+    }
+  ]
+}

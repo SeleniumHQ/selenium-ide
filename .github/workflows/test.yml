@@ -30,6 +30,9 @@ jobs:
       - name: Lint
         if: matrix.os == 'ubuntu-24.04'
         run: npm run lint
+      - name: Check that Electron and its driver match
+        if: matrix.os == 'ubuntu-24.04'
+        run: node packages/selenium-ide/scripts/check-electron-versions.js
       - name: Install and start xvfb
         if: runner.os == 'Linux'
         run: |
