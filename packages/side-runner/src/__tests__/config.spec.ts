@@ -23,4 +23,14 @@ describe('configuration loader', () => {
     const configuration = Config.load(path.join(__dirname, 'config_1.yml'))
     expect((configuration as any).capabilities).toBeDefined()
   })
+  it('should load no settings from an empty file', () => {
+    expect(
+      Config.load(path.join(__dirname, 'config_empty.yml'))
+    ).toBeUndefined()
+  })
+  it('should load no settings from a file with only comments', () => {
+    expect(
+      Config.load(path.join(__dirname, 'config_comments.yml'))
+    ).toBeUndefined()
+  })
 })
