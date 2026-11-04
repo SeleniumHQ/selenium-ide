@@ -634,8 +634,8 @@ importers:
         version: 1.6.11
     devDependencies:
       '@types/xml-escape':
-        specifier: 1.1.0
-        version: 1.1.0
+        specifier: 1.1.3
+        version: 1.1.3
       '@types/xml-js':
         specifier: 1.0.0
         version: 1.0.0
@@ -2343,8 +2343,8 @@ packages:
   '@types/ws@8.18.2':
     resolution: {integrity: sha512-67MQl+fpWKVTT1NYdnmo3U4sc/xPo/zQBncVnI74qmQa0z/b+1g6iYqNmGCPbxO+zz2aklb08a0oHfegiVd0/w==}
 
-  '@types/xml-escape@1.1.0':
-    resolution: {integrity: sha512-N8/W8PkPrzkxPls5QMTA8TQrKgD456BarGG2XTJK3Ax2suCAyqUthbpfBccgpGTBhT7hNuGUSuJd4XlwSXlmuA==}
+  '@types/xml-escape@1.1.3':
+    resolution: {integrity: sha512-xyp280LPQAj/IFwv4cdNgToDMtpGMADWr5uDbi1der5zqldBnk6VVLF/8N016SjgFDKi9UA4YW6Q072vhDaegA==}
 
   '@types/xml-js@1.0.0':
     resolution: {integrity: sha512-tRJYQN/uAD8Br9K+pqqzJNd/htIxQaFy6ppfNEWbwsAoWRK3oAxzROCGA39GHT+E3BHLyuBnSB7XKsnJ0s4w2g==}
@@ -8681,7 +8681,7 @@ snapshots:
     dependencies:
       '@types/node': 26.6.6
 
-  '@types/xml-escape@1.1.0': {}
+  '@types/xml-escape@1.1.3': {}
 
   '@types/xml-js@1.0.0':
     dependencies:
