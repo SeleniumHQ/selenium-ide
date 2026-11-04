@@ -22,6 +22,11 @@
   ],
   "packageRules": [
     {
+      "description": "pnpm refuses npm versions published less than a day ago (minimumReleaseAge), so wait a little longer before proposing them.",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "2 days"
+    },
+    {
       "description": "Update electron and electron-chromedriver together, in their own PR. CI fails until both are on the same version.",
       "matchPackageNames": ["electron", "electron-chromedriver"],
       "groupName": "Electron"
