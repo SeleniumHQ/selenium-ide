@@ -38,7 +38,7 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: '24.x'
+          node-version: '26.x'
       - name: Check the version
         id: version
         shell: bash
@@ -140,7 +140,7 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: '24.x'
+          node-version: '26.x'
       - name: Install dependencies
         run: pnpm -r i
       - name: Install app dependencies
@@ -172,7 +172,7 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          node-version: '24.x'
+          node-version: '26.x'
       - name: Install dependencies
         run: pnpm -r i
       - name: Build all JS
