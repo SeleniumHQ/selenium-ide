@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Covers every dependency on trunk: npm/pnpm (all workspace packages, packageManager, lockfile), GitHub Actions, and the Maven and NuGet projects in tests/code-export. Only one Renovate branch and PR at a time.",
+  "description": "Covers every dependency on trunk: npm/pnpm (all workspace packages, packageManager, lockfile), GitHub Actions, npm tools pinned in workflows, and the Maven and NuGet projects in tests/code-export. Only one Renovate branch and PR at a time.",
   "extends": ["config:recommended", "group:allNonMajor"],
   "prConcurrentLimit": 1,
   "branchConcurrentLimit": 1,
@@ -9,9 +9,20 @@
   "lockFileMaintenance": {
     "enabled": true
   },
+  "customManagers": [
+    {
+      "description": "npm tools that workflows run with npx at a pinned version, like semver in release.yml.",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "npx (?:-y |--yes )?(?<depName>(?:@[\\w.-]+/)?[\\w.-]+)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "npm"
+    }
+  ],
   "packageRules": [
     {
-      "description": "Keep electron and electron-chromedriver on the same version, in their own PR.",
+      "description": "Update electron and electron-chromedriver together, in their own PR. CI fails until both are on the same version.",
       "matchPackageNames": ["electron", "electron-chromedriver"],
       "groupName": "Electron"
     },
