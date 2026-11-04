@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-// eslint-disable-next-line node/no-unpublished-import
+// eslint-disable-next-line n/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
 import {
   EmitterContext,

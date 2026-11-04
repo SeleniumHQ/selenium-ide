@@ -23,7 +23,7 @@ import {
   ScriptShape,
   hasVariable,
 } from 'side-code-export'
-// eslint-disable-next-line node/no-unpublished-import
+// eslint-disable-next-line n/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
 import location from './location'
 import selection from './selection'
