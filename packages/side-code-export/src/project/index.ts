@@ -36,7 +36,7 @@ export function normalizeTestsInSuite({ suite, tests }: SuiteAndTestsShape) {
 export function sanitizeProjectName(projectName: string) {
   let name = projectName
   if (name.startsWith('http')) {
-    // eslint-disable-next-line node/no-deprecated-api
+    // eslint-disable-next-line n/no-deprecated-api
     return url.parse(projectName).host
   } else {
     return name.replace(/([^a-z0-9\u4e00-\u9fa5 ._#-]+)/gi, '')

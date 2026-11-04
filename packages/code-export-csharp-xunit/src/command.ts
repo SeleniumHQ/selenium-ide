@@ -17,7 +17,7 @@
 
 import { Command, location } from '@seleniumhq/code-export-csharp-commons'
 import { EmitterContext, codeExport as exporter } from 'side-code-export'
-// eslint-disable-next-line node/no-unpublished-import
+// eslint-disable-next-line n/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
 
 const emitters = { ...Command.emitters }

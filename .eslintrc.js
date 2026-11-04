@@ -8,7 +8,7 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:node/recommended',
+    'plugin:n/recommended',
     'plugin:react/recommended',
     'prettier',
   ],
@@ -27,9 +27,9 @@ module.exports = {
       parser: '@typescript-eslint/parser',
       rules: {
         'import/no-unresolved': 'error',
-        // import/no-unresolved checks imports in TypeScript; eslint-plugin-node
+        // import/no-unresolved checks imports in TypeScript; eslint-plugin-n
         // can't resolve packages that only have "exports", such as ink
-        'node/no-missing-import': 'off',
+        'n/no-missing-import': 'off',
         '@typescript-eslint/array-type': ['error', { default: 'array' }],
         '@typescript-eslint/no-empty-object-type': 'error',
         '@typescript-eslint/no-unsafe-function-type': 'error',
@@ -72,15 +72,15 @@ module.exports = {
     'constructor-super': 'error',
     'valid-typeof': 'error',
     'no-only-tests/no-only-tests': 'error',
-    'node/no-unpublished-require': [
+    'n/no-unpublished-require': [
       'error',
       {
         allowModules: ['electron'],
       },
     ],
-    'node/no-unsupported-features/es-syntax': 0,
-    'node/no-unsupported-features/node-builtins': 0,
-    'node/shebang': [
+    'n/no-unsupported-features/es-syntax': 0,
+    'n/no-unsupported-features/node-builtins': 0,
+    'n/shebang': [
       'error',
       {
         convertPath: {
@@ -89,14 +89,14 @@ module.exports = {
         },
       },
     ],
-    'node/no-missing-require': [
+    'n/no-missing-require': [
       'error',
       {
         allowModules: ['electron'],
         tryExtensions: ['.js', '.jsx', '.json', '.ts', '.tsx', '.node'],
       },
     ],
-    'node/no-missing-import': [
+    'n/no-missing-import': [
       'error',
       {
         allowModules: ['electron'],

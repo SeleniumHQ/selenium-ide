@@ -73,7 +73,7 @@ export const main = async () => {
 
   if (program.args.length < 2) {
     program.outputHelp()
-    // eslint-disable-next-line no-process-exit
+    // eslint-disable-next-line n/no-process-exit
     process.exit(1)
   }
 

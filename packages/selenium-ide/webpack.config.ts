@@ -10,7 +10,7 @@ import {
   SourceMapDevToolPlugin,
   WebpackPluginInstance,
 } from 'webpack'
-// eslint-disable-next-line node/no-unpublished-import
+// eslint-disable-next-line n/no-unpublished-import
 import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -47,7 +47,7 @@ const commonConfig: Pick<
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        // eslint-disable-next-line node/no-unpublished-require
+        // eslint-disable-next-line n/no-unpublished-require
         loader: require.resolve('ts-loader'),
         options: {
           transpileOnly: true,
