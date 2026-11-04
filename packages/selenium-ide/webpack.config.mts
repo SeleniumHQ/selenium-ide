@@ -2,16 +2,17 @@ import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import fs from 'fs'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
-import kebabCase from 'lodash/fp/kebabCase'
+import kebabCase from 'lodash/fp/kebabCase.js'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import path from 'path'
-import {
-  Configuration,
-  SourceMapDevToolPlugin,
-  WebpackPluginInstance,
-} from 'webpack'
+import { fileURLToPath } from 'url'
+import webpack from 'webpack'
+import type { Configuration, WebpackPluginInstance } from 'webpack'
 // eslint-disable-next-line n/no-unpublished-import
 import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
+
+const { SourceMapDevToolPlugin } = webpack
+const __dirname = import.meta.dirname
 
 const isProduction = process.env.NODE_ENV === 'production'
 const isDevelopment = !isProduction
@@ -47,8 +48,7 @@ const commonConfig: Pick<
       {
         test: /\.tsx?$/,
         exclude: /node_modules/,
-        // eslint-disable-next-line n/no-unpublished-require
-        loader: require.resolve('ts-loader'),
+        loader: fileURLToPath(import.meta.resolve('ts-loader')),
         options: {
           transpileOnly: true,
         },

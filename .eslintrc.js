@@ -23,7 +23,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/*.ts', '**/*.tsx'],
+      files: ['**/*.ts', '**/*.mts', '**/*.tsx'],
       parser: '@typescript-eslint/parser',
       rules: {
         'import/no-unresolved': 'error',

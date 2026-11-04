@@ -41,6 +41,7 @@ program
     '[options] your-project-glob-here-*.side [variadic-project-globs-*.side]'
   )
   .version(metadata.version)
+  .argument('[projects...]', 'Project files or globs to run')
   .option('--base-url [url]', 'Override the base URL that was set in the IDE')
   .option('-c, --capabilities [list]', 'Webdriver capabilities')
   .option(
@@ -96,8 +97,9 @@ program
     '-z, --screenshot-failure-directory [directory]',
     'Write screenshots of failed tests to file in specified directory. Name will be based on test + timestamp.'
   )
+  // No short flag: -f is --filter
   .option(
-    '-f, --force',
+    '--force',
     "Forcibly run the project, regardless of project's version"
   )
   .option('-d, --debug', 'Print debug logs')

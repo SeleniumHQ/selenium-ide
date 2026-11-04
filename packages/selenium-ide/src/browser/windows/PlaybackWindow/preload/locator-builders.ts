@@ -15,7 +15,7 @@
  */
 
 import { parse_locator, isVisible } from './utils'
-import finder from '@medv/finder'
+import { finder } from '@medv/finder'
 
 const findElement = require('./third-party/find-element')
 
