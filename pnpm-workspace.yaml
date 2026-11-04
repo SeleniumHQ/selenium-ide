@@ -24,3 +24,7 @@ allowBuilds:
   electron-chromedriver: true
   electron-winstaller: false
   unrs-resolver: false
+
+# Fail the install when a dependency's engines field excludes the running
+# Node.js, instead of only warning
+engineStrict: true
