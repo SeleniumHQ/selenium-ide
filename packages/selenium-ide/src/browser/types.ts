@@ -6,9 +6,9 @@ import Recorder from './windows/PlaybackWindow/preload/recorder'
 
 declare global {
   interface Window {
-    __originalPrompt: typeof window['prompt']
-    __originalConfirmation: typeof window['confirm']
-    __originalAlert: typeof window['alert']
+    __originalPrompt: (typeof window)['prompt']
+    __originalConfirmation: (typeof window)['confirm']
+    __originalAlert: (typeof window)['alert']
     sideAPI: Api & { mutators: typeof ApiMutators } & {
       resolveAPI?: (id: string, ...args: any[]) => void
     }

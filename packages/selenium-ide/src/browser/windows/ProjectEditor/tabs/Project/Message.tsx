@@ -1,7 +1,7 @@
 import Snackbar from '@mui/material/Snackbar'
 import Alert from '@mui/material/Alert'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import AlertTitle from '@mui/material/AlertTitle'
 
 function Message(props: any) {
@@ -41,7 +41,7 @@ const message = {
       ></Message>
     )
     // 渲染DOM
-    ReactDOM.render(JSXDom, dom)
+    createRoot(dom).render(JSXDom)
     // 置入到body节点下
     document.body.appendChild(dom)
   },

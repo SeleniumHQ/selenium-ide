@@ -32,6 +32,6 @@
     "@seleniumhq/side-model": "workspace:*",
     "unescape": "^1.0.1",
     "xml-escape": "^1.1.0",
-    "xml-js": "^1.5.2"
+    "xml-js": "^1.6.11"
   }
 }
