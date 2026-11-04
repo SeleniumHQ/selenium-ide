@@ -12,7 +12,7 @@
     "watch": "tsc --watch"
   },
   "engines": {
-    "node": ">16"
+    "node": "^22.23.4 || ^24.22.1 || >=26.12.1"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

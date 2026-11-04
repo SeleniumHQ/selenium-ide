@@ -36,7 +36,7 @@
     "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
   },
   "engines": {
-    "node": ">=22.15"
+    "node": "^22.23.4 || ^24.22.1 || >=26.12.1"
   },
   "build": {
     "appId": "org.seleniumhq.selenium-ide",
@@ -147,7 +147,7 @@
     "react-intl": "^6.6.5",
     "react-resizable-panels": "^1.0.8",
     "scroll-into-view-if-needed": "^3.0.10",
-    "selenium-webdriver": "^4.51.0",
+    "selenium-webdriver": "^4.52.0",
     "side-code-export": "workspace:*",
     "v8-compile-cache": "^2.3.0"
   },
