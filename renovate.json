@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Covers every dependency on trunk: npm/pnpm (all workspace packages, packageManager, lockfile), GitHub Actions, and the Maven and NuGet projects in tests/code-export. Only one Renovate branch and PR at a time.",
+  "extends": ["config:recommended", "group:allNonMajor"],
+  "prConcurrentLimit": 1,
+  "branchConcurrentLimit": 1,
+  "prHourlyLimit": 0,
+  "labels": ["dependencies"],
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "packageRules": [
+    {
+      "description": "Keep electron and electron-chromedriver on the same version, in their own PR.",
+      "matchPackageNames": ["electron", "electron-chromedriver"],
+      "groupName": "Electron"
+    },
+    {
+      "description": "Group GitHub Actions updates, majors included.",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "C# NUnit exports use Assert.True, which NUnit 4 removed.",
+      "matchPackageNames": ["NUnit"],
+      "allowedVersions": "<4"
+    },
+    {
+      "description": "Node.js types follow the oldest supported Node.js major (22).",
+      "matchPackageNames": ["@types/node"],
+      "allowedVersions": "<23"
+    }
+  ]
+}
