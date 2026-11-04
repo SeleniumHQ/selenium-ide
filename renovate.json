@@ -6,6 +6,10 @@
   "branchConcurrentLimit": 1,
   "prHourlyLimit": 0,
   "labels": ["dependencies"],
+  "vulnerabilityAlerts": {
+    "description": "Security updates skip the release age wait below.",
+    "minimumReleaseAge": null
+  },
   "lockFileMaintenance": {
     "enabled": true
   },
