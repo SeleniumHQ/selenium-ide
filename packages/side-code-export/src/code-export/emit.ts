@@ -540,7 +540,9 @@ async function emitTest(
   result.commands = render(
     await emitCommands(test.commands, context).catch((error) => {
       // prefix test name on error
-      throw new Error(`Test '${test.name}' has a problem: ${error.message}`)
+      throw new Error(`Test '${test.name}' has a problem: ${error.message}`, {
+        cause: error,
+      })
     }),
     {
       startingLevel: commandLevel,
