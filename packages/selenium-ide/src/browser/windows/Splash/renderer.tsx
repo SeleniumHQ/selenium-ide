@@ -58,10 +58,10 @@ const ProjectEditor = () => {
             <FormattedMessage id={languageMap.splash.openRecent} />
           </Typography>
           <List dense>
-            {recentProjects.map((filepath, index) => (
+            {recentProjects.map((filepath) => (
               <ListItem
                 disablePadding
-                key={index}
+                key={filepath}
                 onClick={() => {
                   window.sideAPI.projects.load(filepath).then(() => {
                     window.sideAPI.projects.getRecent().then(setRecentProjects)

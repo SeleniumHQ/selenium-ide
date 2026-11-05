@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import capitalize from 'lodash/fp/capitalize'
-import React, { FC, useEffect } from 'react'
+import React, { FC } from 'react'
 import { updateField, updateFieldAutoComplete } from './utils'
 import { CommandArgFieldProps } from '../types'
 import languageMap from 'browser/I18N/keys'
@@ -36,9 +36,12 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
     setLocalValue(value)
     updateTargetAutoComplete(testID, command.id)(e, value)
   }
-  useEffect(() => {
+  // Start from the new value when the field shows another command
+  const [commandId, setCommandId] = React.useState(command.id)
+  if (command.id !== commandId) {
+    setCommandId(command.id)
     setLocalValue(command[fieldName])
-  }, [command.id])
+  }
 
   // 处理label标签
   const handleLabel = (value: string) => {

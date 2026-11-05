@@ -94,9 +94,11 @@ const CommandRow: React.FC<CommandRowProps> = ({
   const state = commandState?.state ?? null
   const toggleBreakpoint = () =>
     updateIsBreakpoint(activeTest, id, !isBreakpoint)
-  if (state === 'executing') {
-    window.scrollTo(0, 20 * index)
-  }
+  React.useEffect(() => {
+    if (state === 'executing') {
+      window.scrollTo(0, 20 * index)
+    }
+  }, [state, index])
   const isDisabled = command.startsWith('//')
   const commandText = isDisabled ? command.slice(2) : command
   const mainClass = ['pos-rel width-100']

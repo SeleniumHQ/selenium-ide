@@ -136,21 +136,6 @@ export default [
     ...eslintReact.configs['recommended-typescript'],
   },
   {
-    files: ['**/*.tsx'],
-    // Hook and effect checks that existing components don't pass yet. Turn
-    // them on as the components are reworked.
-    rules: {
-      '@eslint-react/exhaustive-deps': 'off',
-      '@eslint-react/naming-convention-ref-name': 'off',
-      '@eslint-react/no-array-index-key': 'off',
-      '@eslint-react/purity': 'off',
-      '@eslint-react/set-state-in-effect': 'off',
-      '@eslint-react/use-state': 'off',
-      '@eslint-react/web-api-no-leaked-event-listener': 'off',
-      '@eslint-react/web-api-no-leaked-timeout': 'off',
-    },
-  },
-  {
     files: ['packages/selenium-ide/**'],
     rules: {
       'n/no-missing-import': 'off',

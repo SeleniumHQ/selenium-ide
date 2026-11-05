@@ -125,8 +125,11 @@ const DriverSelector = () => {
                 : browserToString(browserInfo.selected)
             }
           >
-            {browserInfo.browsers.map((browser, index) => (
-              <MenuItem key={index} value={browserToString(browser)}>
+            {browserInfo.browsers.map((browser) => (
+              <MenuItem
+                key={browserToString(browser)}
+                value={browserToString(browser)}
+              >
                 {browser.browser} - {browser.version}
               </MenuItem>
             ))}
