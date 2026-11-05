@@ -31,7 +31,9 @@ export const loadPlugins = async (
       console.debug('Loading plugin from path...', pluginPath)
       let pluginFile = importer
         ? await importer(pluginPath)
-        : await import(pluginPath)
+        : // require takes file paths on every OS, and loads ESM plugins
+          // too (require(esm))
+          require(pluginPath)
       const plugin: PluginRuntimeShape = pluginFile.default
         ? pluginFile.default
         : pluginFile
