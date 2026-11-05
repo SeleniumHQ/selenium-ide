@@ -93,7 +93,7 @@ export default class ResizablePanelsController extends BaseController {
     const projectWindowBounds = await projectWindow.getBounds()
     const panelGroupPosition =
       (await projectWindow.webContents.executeJavaScript(
-        `JSON.parse(JSON.stringify(document.querySelector('[data-panel-id="${id}"]').getBoundingClientRect()))`
+        `JSON.parse(JSON.stringify(document.querySelector('[data-panel][id="${id}"]').getBoundingClientRect()))`
       )) as Rect
     // Holy shit what are these numbers even related to :\
     return {

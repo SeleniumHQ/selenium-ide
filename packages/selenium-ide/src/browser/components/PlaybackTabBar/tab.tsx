@@ -47,7 +47,7 @@ const PlaybackTab: React.FC<TabShape> = ({
     >
       <Box
         className="flex flex-1 flex-col height-100 text-overflow"
-        justifyContent="center"
+        sx={{ justifyContent: 'center' }}
       >
         <Typography variant="subtitle1">{test || title}</Typography>
       </Box>

@@ -106,7 +106,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
   return (
     <ReorderableListItem
       className={mainClass}
-      componentsProps={{
+      slotProps={{
         root: {
           style: {
             display: 'flex',
@@ -195,7 +195,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
             className="flex flex-col"
             sx={{ justifyContent: 'center', ...commandTextFormat }}
           >
-            <Typography textOverflow="ellipsis" variant="body1">
+            <Typography sx={{ textOverflow: 'ellipsis' }} variant="body1">
               {camelToTitleCase(commandText)} {isDisabled ? '[Disabled]' : ''}
             </Typography>
           </Box>
@@ -205,7 +205,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
             className="flex flex-col"
             sx={{ justifyContent: 'center', ...argTextFormat }}
           >
-            <Typography textOverflow="ellipsis" variant="body1">
+            <Typography sx={{ textOverflow: 'ellipsis' }} variant="body1">
               {target}
             </Typography>
           </Box>
@@ -215,7 +215,7 @@ const CommandRow: React.FC<CommandRowProps> = ({
             className="flex flex-col"
             sx={{ justifyContent: 'center', ...argTextFormat }}
           >
-            <Typography textOverflow="ellipsis" variant="body1">
+            <Typography sx={{ textOverflow: 'ellipsis' }} variant="body1">
               {value}
             </Typography>
           </Box>

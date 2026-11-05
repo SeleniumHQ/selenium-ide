@@ -5,10 +5,10 @@ import Main from 'browser/components/Main'
 import { context } from 'browser/contexts/show-drawer'
 import { PROJECT_TAB, TAB } from 'browser/enums/tab'
 import { usePanelGroup } from 'browser/hooks/usePanelGroup'
-import React, { useContext } from 'react'
+import React, { use } from 'react'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { Panel, PanelGroup } from 'react-resizable-panels'
+import { Group, Panel } from 'react-resizable-panels'
 import ResizeHandle from '../ResizeHandle'
 
 export type PluginWindow = {
@@ -18,7 +18,7 @@ export type PluginWindow = {
 
 const ProjectEditor: React.FC = () => {
   const [tab, setTab] = React.useState<TAB>(PROJECT_TAB)
-  const showDrawer = useContext(context)
+  const showDrawer = use(context)
   const [pluginWindows, setPluginWindows] = React.useState<PluginWindow[]>([])
   React.useEffect(() => {
     const handler = (name: string, url: string) => {
@@ -35,33 +35,28 @@ const ProjectEditor: React.FC = () => {
         <div className="flex-initial no-window-drag">
           <SIDEAppBar setTab={setTab} tab={tab} />
         </div>
-        <PanelGroup direction="vertical" id="plugin-windows">
-          <Panel defaultSize={100} id="plugin-windows-panel">
+        <Group orientation="vertical" id="plugin-windows">
+          <Panel defaultSize="100%" id="plugin-windows-panel">
             <div className="flex-col flex-1 height-100 no-window-drag">
-              <PanelGroup
-                direction="horizontal"
+              <Group
+                orientation="horizontal"
                 id="drawer-editor"
                 {...usePanelGroup('drawer-editor', !showDrawer)}
               >
                 {showDrawer && (
                   <>
-                    <Panel
-                      collapsible
-                      id="editor-drawer"
-                      defaultSize={25}
-                      order={1}
-                    >
+                    <Panel collapsible id="editor-drawer" defaultSize="25%">
                       <SIDEDrawer tab={tab} />
                     </Panel>
                     <ResizeHandle id="h-resize-1" y />
                   </>
                 )}
-                <Panel defaultSize={75} id="editor-panel" order={2}>
+                <Panel defaultSize="75%" id="editor-panel">
                   <Box className="fill flex flex-col">
                     <Main setTab={setTab} tab={tab} />
                   </Box>
                 </Panel>
-              </PanelGroup>
+              </Group>
             </div>
           </Panel>
           {pluginWindows.map((pluginWindow, index) => (
@@ -76,7 +71,7 @@ const ProjectEditor: React.FC = () => {
               </Panel>
             </React.Fragment>
           ))}
-        </PanelGroup>
+        </Group>
       </div>
     </DndProvider>
   )

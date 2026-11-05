@@ -1,29 +1,39 @@
 import React from 'react'
-import { ImperativePanelGroupHandle } from 'react-resizable-panels'
+import { GroupImperativeHandle, Layout } from 'react-resizable-panels'
 
+/**
+ * Restores a panel group's saved sizes and saves them when they change.
+ * Sizes are stored as a list of percentages, in panel order.
+ */
 export const usePanelGroup = (id: string, disabled = false) => {
   const [ready, setReady] = React.useState(false)
-  const ref = React.useRef<null | ImperativePanelGroupHandle>(null)
+  const groupRef = React.useRef<null | GroupImperativeHandle>(null)
   React.useEffect(() => {
     if (disabled) {
       return setReady(false)
     }
-    if (!ref.current) return
+    if (!groupRef.current) return
     window.sideAPI.resizablePanels.getPanelGroup(id).then((values) => {
-      ref.current?.setLayout(values)
+      const group = groupRef.current
+      if (!group) return
+      const panelIds = Object.keys(group.getLayout())
+      if (panelIds.length === values.length) {
+        group.setLayout(
+          Object.fromEntries(panelIds.map((panelId, i) => [panelId, values[i]]))
+        )
+      }
       setReady(true)
     })
-  }, [disabled, ref])
-  const onLayout = React.useCallback(
-    (sizes: number[]) => {
+  }, [disabled, groupRef])
+  const onLayoutChange = React.useCallback(
+    (layout: Layout) => {
       if (!ready) return
-      window.sideAPI.resizablePanels.setPanelGroup(id, sizes)
+      window.sideAPI.resizablePanels.setPanelGroup(id, Object.values(layout))
     },
     [ready]
   )
   return {
-    ref,
-    reset: () => setReady(false),
-    onLayout,
+    groupRef,
+    onLayoutChange,
   }
 }

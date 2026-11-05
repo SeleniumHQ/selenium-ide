@@ -70,7 +70,7 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         disabled={disabled}
         freeSolo
         inputValue={localValue || ''}
-        componentsProps={{
+        slotProps={{
           paper: {
             sx: {
               zIndex: 3000,
@@ -90,9 +90,12 @@ const CommandLocatorField: FC<CommandArgFieldProps> = ({
         renderInput={(params) => (
           <TextField
             {...params}
-            inputProps={{
-              ...params.inputProps,
-              ['data-overridearrowkeys']: true,
+            slotProps={{
+              ...params.slotProps,
+              htmlInput: {
+                ...params.slotProps.htmlInput,
+                ['data-overridearrowkeys']: true,
+              },
             }}
             label={label}
             name={fieldName}

@@ -118,7 +118,6 @@ const DriverSelector = () => {
             label="Selected Playback Browser"
             labelId="browser-label"
             onChange={selectBrowser}
-            placeholder="Please select a browser"
             value={
               !browserInfo.selected?.useBidi ||
               browserInfo.selected?.browser === 'electron'
@@ -138,7 +137,6 @@ const DriverSelector = () => {
             label="Selected Playback Browser"
             labelId="browser-label"
             onChange={selectBrowser}
-            placeholder="Please select a browser"
             value={browserToString(ourElectronBrowserInfo)}
           >
             <MenuItem value="">

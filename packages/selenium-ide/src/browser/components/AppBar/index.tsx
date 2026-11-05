@@ -1,6 +1,6 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuOpenIcon from '@mui/icons-material/MenuOpen'
-import React, { useContext } from 'react'
+import React, { use } from 'react'
 import SuiteControls from 'browser/windows/ProjectEditor/tabs/Suites/Controls'
 import TestControls from 'browser/windows/ProjectEditor/tabs/Tests/Controls'
 import { SUITES_TAB, TESTS_TAB } from 'browser/enums/tab'
@@ -15,7 +15,7 @@ import TabPanel from '../Tab/Panel'
 type SIDEAppBarProps = Pick<SIDEMainProps, 'setTab' | 'tab'>
 
 const SIDEAppBar: React.FC<SIDEAppBarProps> = ({ setTab, tab }) => {
-  const showDrawer = useContext(context)
+  const showDrawer = use(context)
   return (
     <Paper className="flex flex-row width-100 z-3" elevation={1} square>
       <IconButton

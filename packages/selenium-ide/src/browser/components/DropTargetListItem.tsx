@@ -27,7 +27,7 @@ const DropTargetListItem: React.FC<DropTargetListItemProps> = ({
   reorderReset,
   ...props
 }) => {
-  const ref = React.useRef<HTMLLIElement>()
+  const ref = React.useRef<HTMLLIElement>(null)
   const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,

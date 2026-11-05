@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper'
 import React from 'react'
-import { PanelResizeHandle } from 'react-resizable-panels'
+import { Separator } from 'react-resizable-panels'
 
 export type PluginWindow = {
   name: string
@@ -22,7 +22,7 @@ const ResizeHandle: React.FC<ResizeHandleProps> = ({
   x = false,
   y = false,
 }) => (
-  <PanelResizeHandle className="resize-bar" id={id}>
+  <Separator className="resize-bar" id={id}>
     <Paper
       className={React.useMemo(
         () =>
@@ -34,7 +34,7 @@ const ResizeHandle: React.FC<ResizeHandleProps> = ({
       sx={sx}
       variant="outlined"
     />
-  </PanelResizeHandle>
+  </Separator>
 )
 
 export default ResizeHandle

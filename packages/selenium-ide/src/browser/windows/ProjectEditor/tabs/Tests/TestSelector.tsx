@@ -2,7 +2,7 @@ import FormControl from '@mui/material/FormControl'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
-import React, { useContext } from 'react'
+import React, { use } from 'react'
 import EditorToolbar from '../../../../components/Drawer/EditorToolbar'
 import TestCreateDialog from './TestCreateDialog'
 import TestRenameDialog from './TestRenameDialog'
@@ -15,8 +15,8 @@ const TestSelector: React.FC = () => {
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const [confirmRename, setConfirmRename] = React.useState(false)
   const [confirmCreate, setConfirmCreate] = React.useState(false)
-  const { activeTestID } = useContext(activetestIDContext)
-  const tests = useContext(testsContext)
+  const { activeTestID } = use(activetestIDContext)
+  const tests = use(testsContext)
   const activeTest = React.useMemo(
     () => tests.find((t) => t.id === activeTestID),
     [tests, activeTestID]
@@ -42,7 +42,6 @@ const TestSelector: React.FC = () => {
                 await window.sideAPI.state.setActiveTest(event.target.value)
               }}
               margin="dense"
-              placeholder={tests.length ? 'Select a test' : 'No tests found'}
               size="small"
               value={activeTestID}
             >

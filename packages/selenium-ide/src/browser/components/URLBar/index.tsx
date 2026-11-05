@@ -20,7 +20,10 @@ const URLBar: React.FC<{ tab: null | TabShape }> = ({ tab }) => {
   }, [tabURL])
   return (
     <>
-      <Box className="flex flex-col flex-initial" justifyContent="center">
+      <Box
+        className="flex flex-col flex-initial"
+        sx={{ justifyContent: 'center' }}
+      >
         <Typography>
           <FormattedMessage id={languageMap.playback.url} />
         </Typography>
@@ -28,8 +31,10 @@ const URLBar: React.FC<{ tab: null | TabShape }> = ({ tab }) => {
       <Box className="flex-1 justify-content-center no-window-drag px-3">
         <TextField
           className="width-100"
-          inputProps={{
-            ['data-url']: true,
+          slotProps={{
+            htmlInput: {
+              ['data-url']: true,
+            },
           }}
           inputRef={ref}
           onKeyDown={(e) => {

@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
-import React, { FC, useContext } from 'react'
+import React, { FC, use } from 'react'
 import Drawer from 'browser/components/Drawer/Wrapper'
 import EditorToolbar from 'browser/components/Drawer/EditorToolbar'
 import RenamableListItem from 'browser/components/Drawer/RenamableListItem'
@@ -24,10 +24,10 @@ const {
 
 const TestsDrawer: FC = () => {
   const intl = useIntl()
-  const { activeSuiteID, activeTestID } = useContext(activeTestContext)
-  const suites = useContext(suitesContext)
-  const tests = useContext(testsContext)
-  const testResults = useContext(testResultsContext)
+  const { activeSuiteID, activeTestID } = use(activeTestContext)
+  const suites = use(suitesContext)
+  const tests = use(testsContext)
+  const testResults = use(testResultsContext)
   const [confirmNew, setConfirmNew] = React.useState(false)
   const testList = activeSuiteID
     ? (suites
@@ -86,7 +86,6 @@ const TestsDrawer: FC = () => {
             className="flex-initial"
             displayEmpty
             onChange={(e) => setActiveSuite(e.target.value as string)}
-            placeholder="[All tests]"
             sx={{ bottom: 0 }}
             value={safeSuiteID}
           >

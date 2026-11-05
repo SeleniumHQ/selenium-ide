@@ -58,7 +58,7 @@ const CommandTextField: FC<CommandFieldProps> = ({
         disabled={disabled}
         id={`${fieldName}-${command.id}`}
         label={label}
-        InputLabelProps={inputLabelProps}
+        slotProps={{ inputLabel: inputLabelProps }}
         name={fieldName}
         onChange={updateText(testID, command.id)}
         onContextMenu={() => {

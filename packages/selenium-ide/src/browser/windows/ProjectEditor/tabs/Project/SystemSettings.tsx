@@ -6,7 +6,7 @@ import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import { context } from 'browser/contexts/config'
 import { VerboseBoolean } from '@seleniumhq/side-api'
-import React, { FC, useContext } from 'react'
+import React, { FC, use } from 'react'
 import DriverSelector from './DriverSelect'
 import { FormattedMessage } from 'react-intl'
 import languageMap from 'browser/I18N/keys'
@@ -17,7 +17,7 @@ export interface MiniProjectShape {
 }
 
 const SystemSettings: FC = () => {
-  const config = useContext(context)
+  const config = use(context)
   return (
     <Stack className="p-4" spacing={1}>
       <FormControl>

@@ -29,7 +29,7 @@ const DrawerWrapper: React.FC<DrawerWrapperProps> = ({
             textOverflow: 'ellipsis',
           }}
         >
-          <Typography variant="button" textOverflow="ellipsis">
+          <Typography variant="button" sx={{ textOverflow: 'ellipsis' }}>
             {header}
           </Typography>
         </Paper>

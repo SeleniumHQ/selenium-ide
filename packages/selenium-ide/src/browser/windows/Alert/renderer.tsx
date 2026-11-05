@@ -19,12 +19,12 @@ const Prompt = () => {
   return (
     <AppWrapper>
       <Grid className="centered pt-4" container spacing={1}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography id="alert" variant="subtitle1" />
         </Grid>
       </Grid>
       <Grid className="centered" container spacing={1}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Button onClick={acceptAlert} variant="contained">
             OK
           </Button>

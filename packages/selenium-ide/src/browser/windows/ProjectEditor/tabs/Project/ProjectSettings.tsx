@@ -23,7 +23,7 @@ const {
 const ProjectSettings: FC = () => {
   const {
     project: { delay, name, plugins, timeout, url },
-  } = React.useContext(context)
+  } = React.use(context)
   if (url === 'http://loading') {
     return null
   }
@@ -57,7 +57,7 @@ const ProjectSettings: FC = () => {
             }
             name="timeout"
             type="number"
-            inputProps={{ min: 0, step: 1000 }}
+            slotProps={{ htmlInput: { min: 0, step: 1000 } }}
             onChange={(e: any) => {
               update({
                 // delay: Math.max(parseInt(e.target.value || "0"), 0)
@@ -82,7 +82,7 @@ const ProjectSettings: FC = () => {
             }
             name="delay"
             type="number"
-            inputProps={{ min: 0, step: 1000 }}
+            slotProps={{ htmlInput: { min: 0, step: 1000 } }}
             onChange={(e: any) => {
               update({
                 delay: Math.max(parseInt(e.target.value || '0'), 0),

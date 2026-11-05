@@ -31,7 +31,7 @@ const ProjectEditor = () => {
   return (
     <AppWrapper>
       <Grid className="centered pt-4" container spacing={2}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant="h4">
             <FormattedMessage id={languageMap.splash.present} />
           </Typography>
@@ -43,17 +43,17 @@ const ProjectEditor = () => {
             <FormattedMessage id={languageMap.splash.openNotice} />
           </Typography>
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Button data-load-project onClick={loadProject} variant="contained">
             <FormattedMessage id={languageMap.splash.loadProject} />
           </Button>
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Button data-new-project onClick={newProject} variant="outlined">
             <FormattedMessage id={languageMap.splash.createProject} />
           </Button>
         </Grid>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant="h6">
             <FormattedMessage id={languageMap.splash.openRecent} />
           </Typography>
