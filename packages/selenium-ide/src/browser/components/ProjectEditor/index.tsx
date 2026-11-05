@@ -21,8 +21,15 @@ const ProjectEditor: React.FC = () => {
   const showDrawer = use(context)
   const [pluginWindows, setPluginWindows] = React.useState<PluginWindow[]>([])
   React.useEffect(() => {
+    // Each name is one panel: a new request for a name replaces its URL
     const handler = (name: string, url: string) => {
-      setPluginWindows((prev) => prev.concat({ name, url }))
+      setPluginWindows((prev) =>
+        prev.some((pluginWindow) => pluginWindow.name === name)
+          ? prev.map((pluginWindow) =>
+              pluginWindow.name === name ? { name, url } : pluginWindow
+            )
+          : prev.concat({ name, url })
+      )
     }
     window.sideAPI.plugins.onRequestCustomEditorPanel.addListener(handler)
     return () => {
