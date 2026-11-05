@@ -6,7 +6,7 @@ exports[`command code emitter should emit 'assert selected label' command 1`] = 
   String value = element.GetAttribute(\\"value\\");
   String locator = String.Format(\\"option[@value='%s']\\", \\"value\\");
   String selectedText = element.FindElement(By.XPath(locator)).Text;
-  Assert.Equal(selectedText, \\"test\\");
+  Assert.Equal(\\"test\\", selectedText);
 }"
 `;
 
@@ -16,15 +16,15 @@ exports[`command code emitter should emit 'verify selected label' command 1`] = 
   String value = element.GetAttribute(\\"value\\");
   String locator = String.Format(\\"option[@value='%s']\\", \\"value\\");
   String selectedText = element.FindElement(By.XPath(locator)).Text;
-  Assert.Equal(selectedText, \\"test\\");
+  Assert.Equal(\\"test\\", selectedText);
 }"
 `;
 
-exports[`command code emitter should emit \`assert alert\` command 1`] = `"Assert.Equal(driver.SwitchTo().Alert().Text, \\"an alert\\");"`;
+exports[`command code emitter should emit \`assert alert\` command 1`] = `"Assert.Equal(\\"an alert\\", driver.SwitchTo().Alert().Text);"`;
 
 exports[`command code emitter should emit \`assert checked\` command 1`] = `"Assert.True(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
 
-exports[`command code emitter should emit \`assert confirmation\` command 1`] = `"Assert.Equal(driver.SwitchTo().Alert().Text, \\"a confirmation\\");"`;
+exports[`command code emitter should emit \`assert confirmation\` command 1`] = `"Assert.Equal(\\"a confirmation\\", driver.SwitchTo().Alert().Text);"`;
 
 exports[`command code emitter should emit \`assert editable\` command 1`] = `
 "{
@@ -61,33 +61,33 @@ exports[`command code emitter should emit \`assert not editable\` command 1`] = 
 exports[`command code emitter should emit \`assert not selected value\` command 1`] = `
 "{
   String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
-  Assert.NotEqual(value, \\"test\\");
+  Assert.NotEqual(\\"test\\", value);
 }"
 `;
 
-exports[`command code emitter should emit \`assert not text\` command 1`] = `"Assert.NotEqual(driver.FindElement(By.Id(\\"test\\")).Text, \\"text\\");"`;
+exports[`command code emitter should emit \`assert not text\` command 1`] = `"Assert.NotEqual(\\"text\\", driver.FindElement(By.Id(\\"test\\")).Text);"`;
 
-exports[`command code emitter should emit \`assert prompt\` command 1`] = `"Assert.Equal(driver.SwitchTo().Alert().Text, \\"a prompt\\");"`;
+exports[`command code emitter should emit \`assert prompt\` command 1`] = `"Assert.Equal(\\"a prompt\\", driver.SwitchTo().Alert().Text);"`;
 
 exports[`command code emitter should emit \`assert selected value\` command 1`] = `
 "{
   String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
-  Assert.Equal(value, \\"test\\");
+  Assert.Equal(\\"test\\", value);
 }"
 `;
 
-exports[`command code emitter should emit \`assert text\` command 1`] = `"Assert.Equal(driver.FindElement(By.Id(\\"test\\")).Text, \\"some text that should be here\\");"`;
+exports[`command code emitter should emit \`assert text\` command 1`] = `"Assert.Equal(\\"some text that should be here\\", driver.FindElement(By.Id(\\"test\\")).Text);"`;
 
-exports[`command code emitter should emit \`assert title\` command 1`] = `"Assert.Equal(driver.Title, \\"example title\\");"`;
+exports[`command code emitter should emit \`assert title\` command 1`] = `"Assert.Equal(\\"example title\\", driver.Title);"`;
 
 exports[`command code emitter should emit \`assert value\` command 1`] = `
 "{
   String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
-  Assert.Equal(value, \\"test\\");
+  Assert.Equal(\\"test\\", value);
 }"
 `;
 
-exports[`command code emitter should emit \`assert\` command 1`] = `"Assert.Equal(Convert.ToString(vars[\\"varrrName\\"]), \\"blah\\");"`;
+exports[`command code emitter should emit \`assert\` command 1`] = `"Assert.Equal(\\"blah\\", Convert.ToString(vars[\\"varrrName\\"]));"`;
 
 exports[`command code emitter should emit \`verify checked\` command 1`] = `"Assert.True(driver.FindElement(By.Id(\\"check\\")).Selected);"`;
 
@@ -126,28 +126,28 @@ exports[`command code emitter should emit \`verify not editable\` command 1`] = 
 exports[`command code emitter should emit \`verify not selected value\` command 1`] = `
 "{
   String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
-  Assert.NotEqual(value, \\"test\\");
+  Assert.NotEqual(\\"test\\", value);
 }"
 `;
 
-exports[`command code emitter should emit \`verify not text\` command 1`] = `"Assert.NotEqual(driver.FindElement(By.Id(\\"test\\")).Text, \\"text\\");"`;
+exports[`command code emitter should emit \`verify not text\` command 1`] = `"Assert.NotEqual(\\"text\\", driver.FindElement(By.Id(\\"test\\")).Text);"`;
 
 exports[`command code emitter should emit \`verify selected value\` command 1`] = `
 "{
   String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
-  Assert.Equal(value, \\"test\\");
+  Assert.Equal(\\"test\\", value);
 }"
 `;
 
-exports[`command code emitter should emit \`verify text\` command 1`] = `"Assert.Equal(driver.FindElement(By.Id(\\"test\\")).Text, \\"some text that should be here\\");"`;
+exports[`command code emitter should emit \`verify text\` command 1`] = `"Assert.Equal(\\"some text that should be here\\", driver.FindElement(By.Id(\\"test\\")).Text);"`;
 
-exports[`command code emitter should emit \`verify title\` command 1`] = `"Assert.Equal(driver.Title, \\"example title\\");"`;
+exports[`command code emitter should emit \`verify title\` command 1`] = `"Assert.Equal(\\"example title\\", driver.Title);"`;
 
 exports[`command code emitter should emit \`verify value\` command 1`] = `
 "{
   String value = driver.FindElement(By.Id(\\"select\\")).GetAttribute(\\"value\\");
-  Assert.Equal(value, \\"test\\");
+  Assert.Equal(\\"test\\", value);
 }"
 `;
 
-exports[`command code emitter should emit \`verify\` command 1`] = `"Assert.Equal(Convert.ToString(vars[\\"varrrName\\"]), \\"blah\\");"`;
+exports[`command code emitter should emit \`verify\` command 1`] = `"Assert.Equal(\\"blah\\", Convert.ToString(vars[\\"varrrName\\"]));"`;

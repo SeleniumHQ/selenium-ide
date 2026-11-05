@@ -47,7 +47,7 @@ export const opts: LanguageEmitterOpts = {
 
   generateMethodDeclaration: (name) => {
     // run_ prefix: generated test names can't contain it, so they can't clash
-    return `public void run_${exporter.parsers.sanitizeName(name)}() \n{`
+    return `private void run_${exporter.parsers.sanitizeName(name)}() \n{`
   },
   generateTestDeclaration: (name) => {
     return `[Fact]\npublic void ${exporter.parsers.capitalize(

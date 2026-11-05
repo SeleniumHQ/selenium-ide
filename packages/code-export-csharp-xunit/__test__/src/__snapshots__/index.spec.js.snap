@@ -36,7 +36,7 @@ public class LoginTests : IDisposable {
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
     driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
-    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\n×\\");
+    Assert.Equal(\\"You logged into a secure area!\\\\\\\\n×\\", driver.FindElement(By.CssSelector(\\".flash.success\\")).Text);
   }
   [Fact]
   public void Invalidcredentials() {
@@ -45,7 +45,7 @@ public class LoginTests : IDisposable {
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"blah\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"blah\\");
     driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
-    Assert.Equal(driver.FindElement(By.Id(\\"flash\\")).Text, \\"Your username is invalid!\\\\\\\\n×\\");
+    Assert.Equal(\\"Your username is invalid!\\\\\\\\n×\\", driver.FindElement(By.Id(\\"flash\\")).Text);
   }
 }
 "
@@ -90,7 +90,7 @@ public class ControlflowTests : IDisposable {
     } else {
       vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.Equal(Convert.ToString(vars[\\"output\\"]), \\"a\\");
+    Assert.Equal(\\"a\\", Convert.ToString(vars[\\"output\\"]));
   }
   [Fact]
   public void Controlflowelseif() {
@@ -102,7 +102,7 @@ public class ControlflowTests : IDisposable {
     } else {
       vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.Equal(Convert.ToString(vars[\\"output\\"]), \\"b\\");
+    Assert.Equal(\\"b\\", Convert.ToString(vars[\\"output\\"]));
   }
   [Fact]
   public void Controlflowelse() {
@@ -114,7 +114,7 @@ public class ControlflowTests : IDisposable {
     } else {
       vars[\\"output\\"] = js.ExecuteScript(\\"return 'c'\\");
     }
-    Assert.Equal(Convert.ToString(vars[\\"output\\"]), \\"c\\");
+    Assert.Equal(\\"c\\", Convert.ToString(vars[\\"output\\"]));
   }
   [Fact]
   public void Controlflowdo() {
@@ -124,7 +124,7 @@ public class ControlflowTests : IDisposable {
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
       if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");
     } while ((Boolean) js.ExecuteScript(\\"return (arguments[0] < 3)\\", vars[\\"check\\"]));
-    Assert.Equal(Convert.ToString(vars[\\"check\\"]), \\"3\\");
+    Assert.Equal(\\"3\\", Convert.ToString(vars[\\"check\\"]));
   }
   [Fact]
   public void Controlflowtimes() {
@@ -134,7 +134,7 @@ public class ControlflowTests : IDisposable {
       if (loop1 >= 1000) throw new Exception(\\"Max retry limit exceeded\\");
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
-    Assert.Equal(Convert.ToString(vars[\\"check\\"]), \\"3\\");
+    Assert.Equal(\\"3\\", Convert.ToString(vars[\\"check\\"]));
   }
   [Fact]
   public void Controlflowwhile() {
@@ -144,7 +144,7 @@ public class ControlflowTests : IDisposable {
       if (++loop1 > 1000) throw new Exception(\\"Max retry limit exceeded\\");
       vars[\\"check\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", vars[\\"check\\"]);
     }
-    Assert.Equal(Convert.ToString(vars[\\"check\\"]), \\"3\\");
+    Assert.Equal(\\"3\\", Convert.ToString(vars[\\"check\\"]));
   }
 }
 "
@@ -179,7 +179,7 @@ public class ReusedmethodsTests : IDisposable {
   {
     driver.Quit();
   }
-  public void run_login() 
+  private void run_login() 
   {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
@@ -189,7 +189,7 @@ public class ReusedmethodsTests : IDisposable {
       driver.FindElement(By.CssSelector(\\".fa\\")).Click();
     }
   }
-  public void run_tinymethod() 
+  private void run_tinymethod() 
   {
     vars[\\"value\\"] = \\"field\\";
   }
@@ -260,14 +260,14 @@ public class DefaultSuiteTests : IDisposable {
       return whNow.First().ToString();
     }
   }
-  public void run_selectwindow() 
+  private void run_selectwindow() 
   {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     vars[\\"win9425\\"] = waitForWindow(2000);
     driver.SwitchTo().Window(Convert.ToString(vars[\\"win9425\\"]));
-    Assert.Equal(driver.Title, \\"New Window\\");
+    Assert.Equal(\\"New Window\\", driver.Title);
   }
   
   [Fact]
@@ -321,14 +321,14 @@ public class DefaultSuiteTests : IDisposable {
       return whNow.First().ToString();
     }
   }
-  public void run_selectwindow() 
+  private void run_selectwindow() 
   {
     driver.Navigate().GoToUrl(\\"http://the-internet.herokuapp.com/windows\\");
     vars[\\"WindowHandles\\"] = driver.WindowHandles;
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     vars[\\"win9425\\"] = waitForWindow(2000);
     driver.SwitchTo().Window(Convert.ToString(vars[\\"win9425\\"]));
-    Assert.Equal(driver.Title, \\"New Window\\");
+    Assert.Equal(\\"New Window\\", driver.Title);
   }
   
   [Fact]
@@ -342,7 +342,7 @@ public class DefaultSuiteTests : IDisposable {
     driver.FindElement(By.LinkText(\\"Click Here\\")).Click();
     vars[\\"win9425\\"] = waitForWindow(2000);
     driver.SwitchTo().Window(Convert.ToString(vars[\\"win9425\\"]));
-    Assert.Equal(driver.Title, \\"New Window\\");
+    Assert.Equal(\\"New Window\\", driver.Title);
   }
 }
 "
@@ -384,7 +384,7 @@ public class LoginTests : IDisposable {
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
     driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
-    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\n×\\");
+    Assert.Equal(\\"You logged into a secure area!\\\\\\\\n×\\", driver.FindElement(By.CssSelector(\\".flash.success\\")).Text);
   }
 }
 "
@@ -419,7 +419,7 @@ public class ValidcredentialsTests : IDisposable {
   {
     driver.Quit();
   }
-  public void run_login() 
+  private void run_login() 
   {
     driver.Navigate().GoToUrl(\\"https://the-internet.herokuapp.com/\\");
     driver.FindElement(By.LinkText(\\"Form Authentication\\")).Click();
@@ -494,9 +494,9 @@ public class SelectwindowTests : IDisposable {
     vars[\\"win9625\\"] = waitForWindow(2000);
     vars[\\"root\\"] = driver.CurrentWindowHandle;
     driver.SwitchTo().Window(Convert.ToString(vars[\\"win9625\\"]));
-    Assert.Equal(driver.Title, \\"New Window\\");
+    Assert.Equal(\\"New Window\\", driver.Title);
     driver.SwitchTo().Window(Convert.ToString(vars[\\"root\\"]));
-    Assert.Equal(driver.Title, \\"The Internet\\");
+    Assert.Equal(\\"The Internet\\", driver.Title);
   }
 }
 "
@@ -538,7 +538,7 @@ public class LoginTests : IDisposable {
     driver.FindElement(By.Id(\\"username\\")).SendKeys(\\"tomsmith\\");
     driver.FindElement(By.Id(\\"password\\")).SendKeys(\\"SuperSecretPassword!\\");
     driver.FindElement(By.CssSelector(\\"#login button\\")).Click();
-    Assert.Equal(driver.FindElement(By.CssSelector(\\".flash.success\\")).Text, \\"You logged into a secure area!\\\\\\\\n×\\");
+    Assert.Equal(\\"You logged into a secure area!\\\\\\\\n×\\", driver.FindElement(By.CssSelector(\\".flash.success\\")).Text);
   }
 }
 "
