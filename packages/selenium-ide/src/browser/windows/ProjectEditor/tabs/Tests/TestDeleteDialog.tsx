@@ -27,13 +27,14 @@ const TestDeleteDialog: React.FC<TestDeleteDialogProps> = ({
     setOpen(false)
   }
 
+  const onEnter = React.useEffectEvent(() => handleClose('Delete'))
   React.useEffect(() => {
     const onKeyDown = (event: KeyboardEvent): void => {
       // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
       if (event.key === 'Enter') {
         event.preventDefault()
         event.stopPropagation()
-        handleClose('Delete')
+        onEnter()
       }
     }
     window.addEventListener('keydown', onKeyDown)

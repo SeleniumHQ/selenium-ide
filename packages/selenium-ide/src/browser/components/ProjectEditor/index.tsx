@@ -60,9 +60,9 @@ const ProjectEditor: React.FC = () => {
             </div>
           </Panel>
           {pluginWindows.map((pluginWindow, index) => (
-            <React.Fragment key={index}>
+            <React.Fragment key={pluginWindow.name}>
               <ResizeHandle id={`v-resize-${index}`} x />
-              <Panel key={index} id={pluginWindow.name}>
+              <Panel id={pluginWindow.name}>
                 <iframe
                   className="fill"
                   src={pluginWindow.url}

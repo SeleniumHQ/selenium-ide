@@ -11,9 +11,12 @@ const UncontrolledTextField: FC<TextFieldProps> = ({
   ...props
 }) => {
   const [localValue, setLocalValue] = React.useState(value)
-  React.useEffect(() => {
+  // Start from the new value when the field shows another item
+  const [fieldId, setFieldId] = React.useState(props.id)
+  if (props.id !== fieldId) {
+    setFieldId(props.id)
     setLocalValue(value)
-  }, [props.id])
+  }
   const onChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const el = e.target as HTMLInputElement
     setLocalValue(el.value)

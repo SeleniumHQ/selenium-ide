@@ -7,19 +7,25 @@ import React from 'react'
 
 const completeStatus = 'Update Downloaded'
 
+// The main process sends the status with window.setStatus, which can run
+// before the component mounts
 let lastStatus = ''
+const statusListeners = new Set<() => void>()
 // @ts-expect-error just whatever
 window.setStatus = (status: string) => {
   lastStatus = status
+  statusListeners.forEach((listener) => listener())
 }
+const subscribeToStatus = (listener: () => void) => {
+  statusListeners.add(listener)
+  return () => {
+    statusListeners.delete(listener)
+  }
+}
+const getStatus = () => lastStatus
 
 const UpdateNotifier = () => {
-  const [status, setStatus] = React.useState(lastStatus)
-  React.useEffect(() => {
-    // @ts-expect-error just whatever
-    window.setStatus = setStatus
-    setStatus(lastStatus)
-  }, [])
+  const status = React.useSyncExternalStore(subscribeToStatus, getStatus)
   // @ts-expect-error this exists
   const doRestart = () => window.doRestart()
   const close = () => window.close()

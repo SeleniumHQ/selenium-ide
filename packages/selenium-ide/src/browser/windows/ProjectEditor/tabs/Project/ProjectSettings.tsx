@@ -105,6 +105,8 @@ const ProjectSettings: FC = () => {
         }}
       >
         {plugins.map((plugin, index) => (
+          // The plugin paths are edited in place, so they can't be the key
+          // eslint-disable-next-line @eslint-react/no-array-index-key
           <ListItem className="py-3" key={index}>
             <TextField
               value={typeof plugin === 'string' ? plugin : ''}

@@ -43,7 +43,7 @@ const AppWrapper: FC<AppWrapperProps> = ({ children }) => {
       (result) => setLanguageMap(result),
       () => setLanguageMap({})
     )
-  }, [])
+  }, [hasLanguageAPI])
 
   // Wait for the messages, so nothing renders with missing translations
   if (!languageMap) {
