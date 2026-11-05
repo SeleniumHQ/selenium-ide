@@ -12,6 +12,6 @@ export type OnPlaybackWindowChanged = [
     title: string
     url: string
     visible: boolean
-  }>
+  }>,
 ]
 export type Shape = BaseListener<OnPlaybackWindowChanged>

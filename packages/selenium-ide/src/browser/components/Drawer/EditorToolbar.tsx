@@ -126,8 +126,7 @@ export const EditorToolbarShell: FC<PaperProps> = ({
 )
 
 export interface EditorToolbarProps
-  extends PaperProps,
-    EditorToolbarIconsProps {}
+  extends PaperProps, EditorToolbarIconsProps {}
 
 const EditorToolbar: FC<EditorToolbarProps> = ({
   children,

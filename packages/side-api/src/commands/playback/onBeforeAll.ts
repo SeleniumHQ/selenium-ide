@@ -8,6 +8,6 @@ export type Type = 'EventListener'
 export type OnBeforeAllPlayback = [
   {
     suite: string
-  }
+  },
 ]
 export type Shape = BaseListener<OnBeforeAllPlayback>

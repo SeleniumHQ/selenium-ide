@@ -40,9 +40,8 @@ export default class ResizablePanelsController extends BaseController {
   } | null = null
 
   async getPlaybackWindowDimensions() {
-    const panelScreenPosition = await this.getPanelScreenPosition(
-      'playback-panel'
-    )
+    const panelScreenPosition =
+      await this.getPanelScreenPosition('playback-panel')
     const offset = { x: 0, y: 0 }
     switch (process.platform) {
       case 'win32':

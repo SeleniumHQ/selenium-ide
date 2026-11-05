@@ -8,7 +8,6 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import webpack from 'webpack'
 import type { Configuration, WebpackPluginInstance } from 'webpack'
-// eslint-disable-next-line n/no-unpublished-import
 import type { Configuration as DevServerConfiguration } from 'webpack-dev-server'
 
 const { SourceMapDevToolPlugin } = webpack

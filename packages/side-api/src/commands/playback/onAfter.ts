@@ -10,6 +10,6 @@ export type OnAfterPlayback = [
     endIndex: number
     status: 'success' | 'failure'
     error?: string
-  }
+  },
 ]
 export type Shape = BaseListener<OnAfterPlayback>

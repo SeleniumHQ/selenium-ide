@@ -28,8 +28,7 @@ export interface HookFunctionInputs {
 export type HookFunction = () => HookFunctionInputs
 
 export type SyntaxFactory =
-  | ExportFlexCommandShape
-  | ((opts: any) => ExportFlexCommandShape)
+  ExportFlexCommandShape | ((opts: any) => ExportFlexCommandShape)
 
 export interface HookProps {
   startingSyntax?: SyntaxFactory

@@ -9,6 +9,6 @@ export type OnPlaybackWindowOpened = [
     test?: string
     title?: string
     url: string
-  }
+  },
 ]
 export type Shape = BaseListener<OnPlaybackWindowOpened>

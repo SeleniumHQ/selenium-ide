@@ -6,6 +6,6 @@ import { BaseListener } from '../../types/base'
 export type OnAfterAllPlayback = [
   {
     suite: string
-  }
+  },
 ]
 export type Shape = BaseListener<OnAfterAllPlayback>

@@ -10,7 +10,7 @@ import getCore from '../helpers/getCore'
 
 export type MainListener<
   ARGS extends VariadicArgs,
-  RESULT extends any
+  RESULT extends any,
 > = BaseListener<ARGS, RESULT> & {
   dispatchEventAsync: (...args: ARGS) => Promise<RESULT[][]>
 }

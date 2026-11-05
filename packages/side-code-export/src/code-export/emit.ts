@@ -299,7 +299,7 @@ export function emitSelection(location: string, emitters: SelectionEmitters) {
   if (!location) throw new Error(`Location can't be empty`)
   const [type, selector] = location.split('=') as [
     keyof SelectionEmitters,
-    string
+    string,
   ]
   if (emitters[type] && selector) {
     let result = emitters[type](selector)
@@ -326,7 +326,8 @@ async function emitCommands(commands: CommandShape[], context: EmitterContext) {
         throw new Error(
           `Error while emitting command ${command.command}|${command.target}|${
             command.value
-          }: ${(e as Error).message}`
+          }: ${(e as Error).message}`,
+          { cause: e }
         )
         //  throw e
       }
@@ -539,7 +540,9 @@ async function emitTest(
   result.commands = render(
     await emitCommands(test.commands, context).catch((error) => {
       // prefix test name on error
-      throw new Error(`Test '${test.name}' has a problem: ${error.message}`)
+      throw new Error(`Test '${test.name}' has a problem: ${error.message}`, {
+        cause: error,
+      })
     }),
     {
       startingLevel: commandLevel,
