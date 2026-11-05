@@ -16,8 +16,9 @@
 
     /* Module Resolution Options */
     "esModuleInterop": true,
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "isolatedModules": true,
+    "module": "node20",
+    "moduleResolution": "node16",
     "sourceMap": true,
     "target": "ES2021",
     "types": ["node", "jest"]

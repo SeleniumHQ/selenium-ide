@@ -15,7 +15,7 @@
 // specific language governing permissions and limitations
 // under the License.
 
-import { JSON } from './types'
+import type { JSON } from './types'
 
 export function parseString(input = ''): Record<string, JSON> {
   const capabilities = {}
