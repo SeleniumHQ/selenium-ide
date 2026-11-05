@@ -83,7 +83,7 @@ export const main = async () => {
   const options = program.opts()
   const [formatPath, projectPath, outputDir] = program.args
 
-  let outputFormatPath = ''
+  let outputFormatPath: string
   const relativeFormatPath = path.join(process.cwd(), formatPath)
   if (path.isAbsolute(formatPath)) {
     outputFormatPath = formatPath

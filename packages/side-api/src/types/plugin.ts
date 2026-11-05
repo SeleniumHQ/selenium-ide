@@ -12,9 +12,7 @@ export interface OnCommandRecordedUpdateResult {
 }
 
 export type OnCommandRecordedResult =
-  | void
-  | onCommandRecordedDropResult
-  | OnCommandRecordedUpdateResult
+  void | onCommandRecordedDropResult | OnCommandRecordedUpdateResult
 
 export type PluginHookInput = {
   logger: Console

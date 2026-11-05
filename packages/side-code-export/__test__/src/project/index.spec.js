@@ -20,7 +20,7 @@ import path from 'path'
 import {
   normalizeTestsInSuite,
   sanitizeProjectName,
-} from '../../../src/project'
+} from '../../../src/project/index'
 
 describe('Normalize Project', () => {
   it('converts suite.tests guids to names', () => {

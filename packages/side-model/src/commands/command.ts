@@ -46,9 +46,8 @@ export interface CommandArguments {
   [key: string]: ArgType<Argument<any, any>[]>
 }
 
-export type ExtractArgType<A> = A extends ArgType<infer B>
-  ? ExtractArgument<B[number]> | undefined
-  : never
+export type ExtractArgType<A> =
+  A extends ArgType<infer B> ? ExtractArgument<B[number]> | undefined : never
 
 export type ExtractArgumentFromArgType<A extends CommandArguments> = {
   [K in keyof A]: ExtractArgType<A[K]>

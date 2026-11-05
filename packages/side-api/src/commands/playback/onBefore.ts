@@ -9,6 +9,6 @@ export type OnBeforePlayback = [
     test: string
     startIndex: number
     endIndex: number
-  }
+  },
 ]
 export type Shape = BaseListener<OnBeforePlayback>

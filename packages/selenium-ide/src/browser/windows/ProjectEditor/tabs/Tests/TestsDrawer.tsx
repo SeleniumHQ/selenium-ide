@@ -30,9 +30,9 @@ const TestsDrawer: FC = () => {
   const testResults = useContext(testResultsContext)
   const [confirmNew, setConfirmNew] = React.useState(false)
   const testList = activeSuiteID
-    ? suites
+    ? (suites
         .find((s) => s.id === activeSuiteID)
-        ?.tests.map((id) => tests.find((t) => t.id === id)!) ?? tests
+        ?.tests.map((id) => tests.find((t) => t.id === id)!) ?? tests)
     : tests
   const safeSuiteID = suites.find((s) => s.id === activeSuiteID)?.id ?? ''
   return (

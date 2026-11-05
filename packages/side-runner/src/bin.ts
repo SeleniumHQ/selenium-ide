@@ -150,7 +150,7 @@ try {
   const err = e as any
   if (options.configFile || err.code !== 'ENOENT') {
     console.warn(err)
-    throw new Error('Could not load ' + configFilePath)
+    throw new Error('Could not load ' + configFilePath, { cause: e })
   }
 }
 

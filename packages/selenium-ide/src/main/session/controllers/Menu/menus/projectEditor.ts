@@ -1,60 +1,59 @@
 import { MenuComponent } from 'main/types'
 import { menuFactoryFromCommandFactory } from '../utils'
 
-export const commands: MenuComponent = (session) => () =>
-  [
-    {
-      accelerator: 'CommandOrControl+N',
-      label: session.system.languageMap.fileMenuTree.newProject,
-      click: async () => {
-        await session.api.projects.new()
-      },
+export const commands: MenuComponent = (session) => () => [
+  {
+    accelerator: 'CommandOrControl+N',
+    label: session.system.languageMap.fileMenuTree.newProject,
+    click: async () => {
+      await session.api.projects.new()
     },
-    { type: 'separator' },
-    {
-      accelerator: 'CommandOrControl+O',
-      label: session.system.languageMap.fileMenuTree.loadProject,
-      click: async () => {
-        const response = await session.dialogs.open()
-        if (response.canceled) return
-        await session.api.projects.load(response.filePaths[0])
-      },
+  },
+  { type: 'separator' },
+  {
+    accelerator: 'CommandOrControl+O',
+    label: session.system.languageMap.fileMenuTree.loadProject,
+    click: async () => {
+      const response = await session.dialogs.open()
+      if (response.canceled) return
+      await session.api.projects.load(response.filePaths[0])
     },
-    {
-      accelerator: 'CommandOrControl+R',
-      label: session.system.languageMap.fileMenuTree.recentProjects,
-      click: async () => {
-        await session.projects.showRecents()
-      },
-      submenu: session.projects.getRecent().map((project) => ({
-        click: async () => {
-          await session.api.projects.load(project)
-        },
-        label: project,
-      })),
+  },
+  {
+    accelerator: 'CommandOrControl+R',
+    label: session.system.languageMap.fileMenuTree.recentProjects,
+    click: async () => {
+      await session.projects.showRecents()
     },
-    { type: 'separator' },
-    {
-      accelerator: 'CommandOrControl+S',
-      label: session.system.languageMap.fileMenuTree.saveProject,
+    submenu: session.projects.getRecent().map((project) => ({
       click: async () => {
-        await session.projects.save(session.projects.filepath as string)
+        await session.api.projects.load(project)
       },
-      enabled: Boolean(session.projects.filepath),
+      label: project,
+    })),
+  },
+  { type: 'separator' },
+  {
+    accelerator: 'CommandOrControl+S',
+    label: session.system.languageMap.fileMenuTree.saveProject,
+    click: async () => {
+      await session.projects.save(session.projects.filepath as string)
     },
-    {
-      accelerator: 'CommandOrControl+Shift+S',
-      label: session.system.languageMap.fileMenuTree.saveProjectAs,
-      click: async () => {
-        const response = await session.dialogs.openSave()
-        if (response.canceled) return
-        let filePath = response.filePath as string
-        if (!filePath.endsWith('.side')) {
-          filePath = `${filePath}.side`
-        }
-        await session.projects.save(filePath)
-      },
+    enabled: Boolean(session.projects.filepath),
+  },
+  {
+    accelerator: 'CommandOrControl+Shift+S',
+    label: session.system.languageMap.fileMenuTree.saveProjectAs,
+    click: async () => {
+      const response = await session.dialogs.openSave()
+      if (response.canceled) return
+      let filePath = response.filePath as string
+      if (!filePath.endsWith('.side')) {
+        filePath = `${filePath}.side`
+      }
+      await session.projects.save(filePath)
     },
-  ]
+  },
+]
 
 export default menuFactoryFromCommandFactory(commands)

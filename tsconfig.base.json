@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "composite": true,
-    "lib": ["es5", "es6", "es2017", "es2019", "dom", "dom.iterable"],
+    "lib": ["es5", "es6", "es2017", "es2019", "es2022.error", "dom", "dom.iterable"],
     "declaration": true,
     "declarationMap": true,
     "strict": true,

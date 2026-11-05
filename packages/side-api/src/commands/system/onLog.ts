@@ -7,5 +7,5 @@ import { BaseListener } from '../../types/base'
 export type Shape = BaseListener<OnLogSystem>
 export type OnLogSystem = [
   'silly' | 'debug' | 'verbose' | 'info' | 'warn' | 'error',
-  string
+  string,
 ]

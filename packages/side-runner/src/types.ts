@@ -2,28 +2,17 @@ import { ProjectShape } from '@seleniumhq/side-model'
 import { Command } from 'commander'
 
 export type JSON =
-  | null
-  | string
-  | number
-  | boolean
-  | JSON[]
-  | { [key: string]: JSON }
+  null | string | number | boolean | JSON[] | { [key: string]: JSON }
 
 export interface Project extends ProjectShape {
   path: string
 }
 
 export type ProxyType =
-  | 'autodetect'
-  | 'direct'
-  | 'manual'
-  | 'pac'
-  | 'socks'
-  | 'system'
+  'autodetect' | 'direct' | 'manual' | 'pac' | 'socks' | 'system'
 
 export type ProxyInputOptions =
-  | string
-  | Record<string, string | string[] | number>
+  string | Record<string, string | string[] | number>
 
 export type ProxyCapabilities = {
   proxyType: 'autodetect' | 'direct' | 'manual' | 'pac' | 'system'

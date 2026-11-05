@@ -188,9 +188,12 @@ export default class PromptController extends BaseController {
     errorKey: string
   ) {
     // Waiting for complete message
-    let result: T | null = null
     try {
-      result = await this._waitForResolution(obj.window!, successKeys, errorKey)
+      const result = await this._waitForResolution<T>(
+        obj.window!,
+        successKeys,
+        errorKey
+      )
       obj.resolve?.(result)
     } catch (e) {
       console.error(e)

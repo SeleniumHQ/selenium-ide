@@ -61,7 +61,7 @@ describe('Playback', () => {
         const playback = new Playback({
           baseUrl: '',
           executor: executor as any,
-          getTestByName: (_name = '') => ({} as unknown as TestShape),
+          getTestByName: (_name = '') => ({}) as unknown as TestShape,
           logger: console,
           variables,
         })

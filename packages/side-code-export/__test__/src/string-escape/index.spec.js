@@ -8,7 +8,7 @@ describe('String escape', () => {
     expect(stringEscape('AAAAA`BBBBB')).toEqual('AAAAA\\`BBBBB')
   })
   it('should escape backslashes', () => {
-    expect(stringEscape('AAAAA\\`BBBBB')).toEqual('AAAAA\\\\\\`BBBBB') // eslint-disable-line
+    expect(stringEscape('AAAAA\\`BBBBB')).toEqual('AAAAA\\\\\\`BBBBB')
   })
   it('should escape single-quotes', () => {
     expect(stringEscape("AAAAA'BBBBB")).toEqual("AAAAA\\'BBBBB")

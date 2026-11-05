@@ -206,25 +206,21 @@ export default class LocatorBuilders {
       return '"' + value + '"'
     } else {
       let result = 'concat('
-      let part = ''
-      let didReachEndOfValue = false
-      while (!didReachEndOfValue) {
-        let apos = value.indexOf("'")
-        let quot = value.indexOf('"')
+      while (true) {
+        const apos = value.indexOf("'")
+        const quot = value.indexOf('"')
         if (apos < 0) {
           result += "'" + value + "'"
-          didReachEndOfValue = true
           break
         } else if (quot < 0) {
           result += '"' + value + '"'
-          didReachEndOfValue = true
           break
         } else if (quot < apos) {
-          part = value.substring(0, apos)
+          const part = value.substring(0, apos)
           result += "'" + part + "'"
           value = value.substring(part.length)
         } else {
-          part = value.substring(0, quot)
+          const part = value.substring(0, quot)
           result += '"' + part + '"'
           value = value.substring(part.length)
         }

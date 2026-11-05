@@ -19,7 +19,7 @@ export type OnPlayUpdatePlayback = [
     intermediate?: boolean
     state: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']['state']
     testID?: string
-  }
+  },
 ]
 
 const testResultStatusFromPlaybackState: Record<

@@ -31,7 +31,7 @@ export interface RenderOptions {
 
 export type PartialRenderParameters = [
   ExportFlexCommandShape | ExportFlexCommandShape[],
-  RenderOptions
+  RenderOptions,
 ]
 
 export type RenderParameters = [string, ...PartialRenderParameters]
@@ -89,7 +89,7 @@ export type RenderCommandsOptions = Pick<
 
 export type RenderCommandsParameters = [
   ExportFlexCommandShape[] | ExportCommandsShape,
-  RenderCommandsOptions
+  RenderCommandsOptions,
 ]
 
 export type RenderCommands = (...args: RenderCommandsParameters) => string

@@ -11,7 +11,7 @@ import { EditorStateShape, PlaybackStateShape } from '../../models/state'
 export type Shape = BaseListener<OnStepUpdatePlayback>
 
 export type OnStepUpdatePlayback = [
-  PlaybackEventShapes['COMMAND_STATE_CHANGED']
+  PlaybackEventShapes['COMMAND_STATE_CHANGED'],
 ]
 
 export type StateUpdateShape = Partial<

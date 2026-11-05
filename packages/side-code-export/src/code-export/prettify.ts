@@ -25,7 +25,7 @@ export interface PrettifyOptions {
 
 export type PrettifyParameters = [
   commandBlock: ExportFlexCommandShape,
-  opts: PrettifyOptions
+  opts: PrettifyOptions,
 ]
 
 export interface PrettifyOutput {
