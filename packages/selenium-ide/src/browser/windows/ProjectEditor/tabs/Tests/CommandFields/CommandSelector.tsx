@@ -49,9 +49,12 @@ const CommandSelector: FC<CommandSelectorProps> = ({
           renderInput={(params) => (
             <TextField
               {...params}
-              inputProps={{
-                ...params.inputProps,
-                ['data-overridearrowkeys']: true,
+              slotProps={{
+                ...params.slotProps,
+                htmlInput: {
+                  ...params.slotProps.htmlInput,
+                  ['data-overridearrowkeys']: true,
+                },
               }}
               label={<FormattedMessage id={languageMap.testCore.stepCommand} />}
             />

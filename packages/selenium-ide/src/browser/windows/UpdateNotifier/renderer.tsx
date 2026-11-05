@@ -27,17 +27,17 @@ const UpdateNotifier = () => {
   return (
     <AppWrapper>
       <Grid className="centered pt-4" container spacing={1}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography variant="subtitle1">{status}</Typography>
         </Grid>
         {status === completeStatus && (
           <>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <Button onClick={close} variant="outlined">
                 OK
               </Button>
             </Grid>
-            <Grid item xs={6}>
+            <Grid size={6}>
               <Button onClick={doRestart} variant="contained">
                 Restart
               </Button>
@@ -45,7 +45,7 @@ const UpdateNotifier = () => {
           </>
         )}
         {status.startsWith('Error') && (
-          <Grid item xs={12}>
+          <Grid size={12}>
             <Button onClick={close} variant="outlined">
               OK
             </Button>

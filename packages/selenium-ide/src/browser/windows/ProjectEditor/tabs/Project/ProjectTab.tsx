@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import { SIDEMainProps } from 'browser/components/types'
-import React, { FC, useContext } from 'react'
+import React, { FC, use } from 'react'
 import OutPutSettings from './OutPutSettings'
 import ProjectSettings from './ProjectSettings'
 import SystemSettings from './SystemSettings'
@@ -15,7 +15,7 @@ export interface MiniProjectShape {
 }
 
 const SettingsWrapper: FC = () => {
-  const configSettingsGroup = useContext(context)
+  const configSettingsGroup = use(context)
   switch (configSettingsGroup) {
     case 'outPut':
       return <OutPutSettings />
@@ -28,7 +28,7 @@ const SettingsWrapper: FC = () => {
 
 const ProjectTab: React.FC<Pick<SIDEMainProps, 'setTab' | 'tab'>> = () => (
   <Box className="fill flex flex-col">
-    {!useContext(showDrawerContext) && <SettingsTabs />}
+    {!use(showDrawerContext) && <SettingsTabs />}
     <Paper elevation={1} id="project-editor" square>
       <SettingsWrapper />
     </Paper>

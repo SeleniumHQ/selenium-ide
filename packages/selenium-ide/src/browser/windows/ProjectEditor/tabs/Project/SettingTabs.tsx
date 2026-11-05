@@ -1,6 +1,6 @@
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import React, { useContext } from 'react'
+import React, { use } from 'react'
 import { context } from 'browser/contexts/config-settings-group'
 import { FormattedMessage } from 'react-intl'
 import languageMap from 'browser/I18N/keys'
@@ -21,7 +21,7 @@ const SettingsTabs: React.FC = () => (
       window.sideAPI.state.set('editor.configSettingsGroup', group)
     }}
     textColor="inherit"
-    value={useContext(context)}
+    value={use(context)}
     variant="fullWidth"
   >
     <Tab

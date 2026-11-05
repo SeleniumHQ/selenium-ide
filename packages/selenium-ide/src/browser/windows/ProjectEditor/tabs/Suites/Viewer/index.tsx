@@ -18,7 +18,7 @@ const SuiteViewer: React.FC<Pick<SIDEMainProps, 'session'>> = ({ session }) => {
   const activeSuite = getActiveSuite(session)
   if (activeSuite.id === loadingID) {
     return (
-      <Box className="flex-1 width-100" textAlign="center">
+      <Box className="flex-1 width-100" sx={{ textAlign: 'center' }}>
         <Typography className="p-4">No Suite Selected</Typography>
       </Box>
     )

@@ -40,7 +40,7 @@ const SystemConfig = ConfigGroup('system')
 const OutPutConfig = ConfigGroup('outPut')
 
 const ProjectDrawer: FC = () => {
-  const configSettingsGroup = React.useContext(context)
+  const configSettingsGroup = React.use(context)
   return (
     <Drawer header={<FormattedMessage id={languageMap.mainMenu.config} />}>
       <List dense>

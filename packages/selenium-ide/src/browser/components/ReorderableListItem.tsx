@@ -1,4 +1,5 @@
 import ListItem, { ListItemProps } from '@mui/material/ListItem'
+import { alpha, Theme } from '@mui/material/styles'
 import type { XYCoord, Identifier } from 'dnd-core'
 import React, { MutableRefObject } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
@@ -13,6 +14,7 @@ interface ReorderableListItemProps extends ListItemProps {
   reorderConfirm: (oldIndex: number, newIndex: number, item: DragItem) => void
   reorderReset: () => void
   select: SelectShape
+  selected?: boolean
 }
 
 interface DragItem {
@@ -31,11 +33,11 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
   reorderConfirm,
   reorderReset,
   select,
+  selected = false,
   sx = {},
   ...props
 }) => {
-  const ref = React.useRef<HTMLLIElement>()
-  const { selected } = props
+  const ref = React.useRef<HTMLLIElement>(null)
   const [{ handlerId }, drop] = useDrop<
     DragItem,
     void,
@@ -114,12 +116,16 @@ const ReorderableListItem: React.FC<ReorderableListItemProps> = ({
 
   drag(drop(ref))
 
-  const wrappedSX = !isDragging
-    ? sx
-    : {
-        ...sx,
-        opacity: 0.5,
-      }
+  // ListItem has no selected style, so selected rows get the same background
+  // as a selected ListItemButton
+  const wrappedSX = {
+    ...sx,
+    ...(selected && {
+      backgroundColor: (theme: Theme) =>
+        alpha(theme.palette.primary.main, theme.palette.action.selectedOpacity),
+    }),
+    ...(isDragging && { opacity: 0.5 }),
+  }
   return (
     <Component
       data-handler-id={handlerId}

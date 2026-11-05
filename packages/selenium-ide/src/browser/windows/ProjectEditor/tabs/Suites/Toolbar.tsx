@@ -1,4 +1,4 @@
-import React, { FC, useContext } from 'react'
+import React, { FC, use } from 'react'
 import EditorToolbar from 'browser/components/Drawer/EditorToolbar'
 import SuiteCreateDialog from './SuiteCreateDialog'
 import { context as activeTestContext } from 'browser/contexts/active-test'
@@ -9,9 +9,9 @@ import SuiteDeleteDialog from './SuiteDeleteDialog'
 const SuitesToolbar: FC<{ children?: React.ReactNode }> = ({
   children = null,
 }) => {
-  const { activeSuiteID } = useContext(activeTestContext)
-  const suiteMode = useContext(suiteModeContext)
-  const suites = useContext(context)
+  const { activeSuiteID } = use(activeTestContext)
+  const suiteMode = use(suiteModeContext)
+  const suites = use(context)
   const [confirmNew, setConfirmNew] = React.useState(false)
   const [confirmDelete, setConfirmDelete] = React.useState(false)
   const activeSuite = React.useMemo(

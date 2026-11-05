@@ -1,7 +1,7 @@
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-import React, { FC, useContext } from 'react'
+import React, { FC, use } from 'react'
 import { badIndex } from '@seleniumhq/side-api/dist/constants/badIndex'
 import baseControlProps from './BaseProps'
 import { context as playbackCurrentIndexContext } from 'browser/contexts/playback-current-index'
@@ -10,8 +10,8 @@ import { FormattedMessage } from 'react-intl'
 import languageMap from 'browser/I18N/keys'
 
 const PlayButton: FC = () => {
-  const { activeTestID } = useContext(activeTestContext)
-  const currentIndex = useContext(playbackCurrentIndexContext)
+  const { activeTestID } = use(activeTestContext)
+  const currentIndex = use(playbackCurrentIndexContext)
   return (
     <Tooltip
       title={<FormattedMessage id={languageMap.testCore.play} />}

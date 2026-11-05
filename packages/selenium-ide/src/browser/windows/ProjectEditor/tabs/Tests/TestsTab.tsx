@@ -5,7 +5,7 @@ import {
   getActiveCommand,
   getActiveTest,
 } from '@seleniumhq/side-api/dist/helpers/getActiveData'
-import React, { useContext, useRef } from 'react'
+import React, { use, useRef } from 'react'
 import CommandEditor from './TestCommandEditor'
 import CommandList from './TestCommandList'
 import CommandTable from './TestCommandTable'
@@ -29,7 +29,7 @@ const NoTestFound = () => (
 )
 
 const TestsTab: React.FC = () => {
-  const session = useContext(context)
+  const session = use(context)
   const {
     state: {
       activeTestID,

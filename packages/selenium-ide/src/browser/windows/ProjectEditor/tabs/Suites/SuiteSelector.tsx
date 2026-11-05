@@ -32,7 +32,6 @@ const SuiteSelector: React.FC<Pick<SIDEMainProps, 'session'>> = ({
             }
           }}
           margin="dense"
-          placeholder={suites.length ? 'Select a suite' : 'No suites found'}
           size="small"
           value={matchingSuite?.id ?? ''}
         >

@@ -19,7 +19,7 @@ const DraggableListItem: React.FC<DraggableListItemProps> = ({
   sx = {},
   ...props
 }) => {
-  const ref = React.useRef<HTMLLIElement>()
+  const ref = React.useRef<HTMLLIElement>(null)
   const [{ isDragging }, drag] = useDrag({
     type: dragType,
     item: () => {

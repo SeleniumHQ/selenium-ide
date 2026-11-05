@@ -1,7 +1,7 @@
 import FormControl from '@mui/material/FormControl'
 import Stack from '@mui/material/Stack'
 import TextField from 'browser/components/UncontrolledTextField'
-import React, { FC, useContext } from 'react'
+import React, { FC, use } from 'react'
 import { ProjectShape } from '@seleniumhq/side-api'
 import message from './Message'
 import Button from '@mui/material/Button'
@@ -54,7 +54,7 @@ const CustomButton = styled(Button)({
 })
 
 const OutPutSettings: FC = () => {
-  const { project: outPut } = useContext(context)
+  const { project: outPut } = use(context)
   const [options, setOptions] = React.useState([])
   const [host, setHost] = React.useState('http://127.0.0.1:9998')
   const [testPlatform, setTestPlatform] = React.useState(

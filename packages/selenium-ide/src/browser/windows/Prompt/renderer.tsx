@@ -25,7 +25,7 @@ const Prompt = () => {
   return (
     <AppWrapper>
       <Grid className="centered pt-4" container spacing={1}>
-        <Grid item xs={12}>
+        <Grid size={12}>
           <Typography id="question" variant="subtitle1" />
         </Grid>
       </Grid>
@@ -42,12 +42,12 @@ const Prompt = () => {
         />
       </Stack>
       <Grid className="centered" container spacing={1}>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Button onClick={dismissPrompt} variant="outlined">
             Cancel
           </Button>
         </Grid>
-        <Grid item xs={6}>
+        <Grid size={6}>
           <Button onClick={answerPrompt} variant="contained">
             Submit
           </Button>

@@ -2,7 +2,7 @@ import TabUnselectedIcon from '@mui/icons-material/TabUnselected'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import React, { useContext } from 'react'
+import React, { use } from 'react'
 import { Checkbox, Tooltip } from '@mui/material'
 import { context } from 'browser/contexts/session'
 import languageMap from 'browser/I18N/keys'
@@ -21,7 +21,7 @@ const inputProps = {
 }
 
 const PlaybackDimensionControls: React.FC = () => {
-  const session = useContext(context)
+  const session = use(context)
   const [panelWidth, setPanelWidth] = React.useState(0)
   const [panelHeight, setPanelHeight] = React.useState(0)
   const { active, width, height } = session.state.editor.overrideWindowSize
@@ -30,7 +30,7 @@ const PlaybackDimensionControls: React.FC = () => {
       return
     }
     const playbackPanel = document.querySelector(
-      '[data-panel-id="playback-panel"]'
+      '[data-panel][id="playback-panel"]'
     )!
     const observer = new ResizeObserver((entries) => {
       for (let entry of entries) {
@@ -50,9 +50,9 @@ const PlaybackDimensionControls: React.FC = () => {
       >
         <Box
           className="flex flex-row flex-initial ps-3"
-          justifyContent="center"
           sx={{
             cursor: 'pointer',
+            justifyContent: 'center',
           }}
           onClick={() =>
             set('editor.overrideWindowSize', {
@@ -66,7 +66,10 @@ const PlaybackDimensionControls: React.FC = () => {
           <Checkbox checked={active} size="small" disableRipple />
         </Box>
       </Tooltip>
-      <Box className="flex flex-col flex-initial pe-3" justifyContent="center">
+      <Box
+        className="flex flex-col flex-initial pe-3"
+        sx={{ justifyContent: 'center' }}
+      >
         <Typography>
           <FormattedMessage id={languageMap.playback.width} />
         </Typography>
@@ -74,7 +77,7 @@ const PlaybackDimensionControls: React.FC = () => {
       <Box className="flex-initial">
         <TextField
           disabled={!active}
-          inputProps={inputProps}
+          slotProps={{ htmlInput: inputProps }}
           onChange={(e: any) => {
             const val = Number(e.target.value)
             if (!isNaN(val)) {
@@ -87,7 +90,10 @@ const PlaybackDimensionControls: React.FC = () => {
           value={active ? width : panelWidth}
         />
       </Box>
-      <Box className="flex flex-col flex-initial px-3" justifyContent="center">
+      <Box
+        className="flex flex-col flex-initial px-3"
+        sx={{ justifyContent: 'center' }}
+      >
         <Typography>
           <FormattedMessage id={languageMap.playback.height} />
         </Typography>
@@ -95,7 +101,7 @@ const PlaybackDimensionControls: React.FC = () => {
       <Box className="flex-initial pe-4">
         <TextField
           disabled={!active}
-          inputProps={inputProps}
+          slotProps={{ htmlInput: inputProps }}
           onChange={(e: any) => {
             const val = Number(e.target.value)
             if (!isNaN(val)) {

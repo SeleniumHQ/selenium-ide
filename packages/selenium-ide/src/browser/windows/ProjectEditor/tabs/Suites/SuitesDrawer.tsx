@@ -1,6 +1,6 @@
 import List from '@mui/material/List'
 import Tooltip from '@mui/material/Tooltip'
-import React, { FC, useContext } from 'react'
+import React, { FC, use } from 'react'
 import Drawer from 'browser/components/Drawer/Wrapper'
 import RenamableListItem from 'browser/components/Drawer/RenamableListItem'
 import { context as activeTestContext } from 'browser/contexts/active-test'
@@ -18,8 +18,8 @@ const {
 const rename = (id: string, name: string) => update(id, { name })
 
 const SuitesDrawer: FC = () => {
-  const { activeSuiteID } = useContext(activeTestContext)
-  const suites = useContext(context)
+  const { activeSuiteID } = use(activeTestContext)
+  const suites = use(context)
   return (
     <Drawer>
       <SuitesToolbar>
