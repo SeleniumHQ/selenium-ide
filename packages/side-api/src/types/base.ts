@@ -13,7 +13,7 @@ export interface BrowsersInfo {
   selected: BrowserInfo
 }
 
-export { StateShape } from '../models/state'
+export type { StateShape } from '../models/state'
 
 export type VariadicArgs = any[]
 
