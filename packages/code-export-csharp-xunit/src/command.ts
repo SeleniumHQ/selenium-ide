@@ -38,7 +38,7 @@ emitters.verify = emitAssert
 
 function emitAssert(varName: string, value: string) {
   return Promise.resolve(
-    `Assert.Equal(${Command.variableLookup(varName)}, "${value}");`
+    `Assert.Equal("${value}", ${Command.variableLookup(varName)});`
   )
 }
 
@@ -48,7 +48,7 @@ emitters.assertPrompt = emitAssertAlert
 
 function emitAssertAlert(AlertText: string) {
   return Promise.resolve(
-    `Assert.Equal(driver.SwitchTo().Alert().Text, "${AlertText}");`
+    `Assert.Equal("${AlertText}", driver.SwitchTo().Alert().Text);`
   )
 }
 
@@ -171,7 +171,7 @@ async function emitVerifyNotSelectedValue(
     },
     {
       level: 1,
-      statement: `Assert.NotEqual(value, "${expectedValue}");`,
+      statement: `Assert.NotEqual("${expectedValue}", value);`,
     },
     { level: 0, statement: '}' },
   ]
@@ -183,7 +183,7 @@ emitters.verifyNotText = emitVerifyNotText
 
 async function emitVerifyNotText(locator: string, text: string) {
   const result = `driver.FindElement(${await location.emit(locator)}).Text`
-  return Promise.resolve(`Assert.NotEqual(${result}, "${text}");`)
+  return Promise.resolve(`Assert.NotEqual("${text}", ${result});`)
 }
 
 emitters.assertSelectedLabel = emitVerifySelectedLabel
@@ -210,7 +210,7 @@ async function emitVerifySelectedLabel(locator: string, labelValue: string) {
     },
     {
       level: 1,
-      statement: `Assert.Equal(selectedText, "${labelValue}");`,
+      statement: `Assert.Equal("${labelValue}", selectedText);`,
     },
     { level: 0, statement: '}' },
   ]
@@ -233,7 +233,7 @@ async function emitVerifyValue(locator: string, value: string) {
         locator
       )}).GetAttribute("value");`,
     },
-    { level: 1, statement: `Assert.Equal(value, "${value}");` },
+    { level: 1, statement: `Assert.Equal("${value}", value);` },
     { level: 0, statement: '}' },
   ]
   return Promise.resolve({ commands })
@@ -244,9 +244,9 @@ emitters.verifyText = emitVerifyText
 
 async function emitVerifyText(locator: string, text: string) {
   return Promise.resolve(
-    `Assert.Equal(driver.FindElement(${await location.emit(
+    `Assert.Equal("${text}", driver.FindElement(${await location.emit(
       locator
-    )}).Text, "${text}");`
+    )}).Text);`
   )
 }
 
@@ -254,7 +254,7 @@ emitters.assertTitle = emitVerifyTitle
 emitters.verifyTitle = emitVerifyTitle
 
 async function emitVerifyTitle(title: string) {
-  return Promise.resolve(`Assert.Equal(driver.Title, "${title}");`)
+  return Promise.resolve(`Assert.Equal("${title}", driver.Title);`)
 }
 
 export default {
