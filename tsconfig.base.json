@@ -16,6 +16,7 @@
 
     /* Module Resolution Options */
     "esModuleInterop": true,
+    "isolatedModules": true,
     "module": "node20",
     "moduleResolution": "node16",
     "sourceMap": true,
