@@ -201,7 +201,7 @@ async function emitVerifySelectedLabel(locator: string, labelValue: string) {
     { level: 1, statement: 'String value = element.GetAttribute("value");' },
     {
       level: 1,
-      statement: `String locator = String.Format("option[@value='%s']", "value");`,
+      statement: `String locator = String.Format("option[@value='{0}']", value);`,
     },
     {
       level: 1,

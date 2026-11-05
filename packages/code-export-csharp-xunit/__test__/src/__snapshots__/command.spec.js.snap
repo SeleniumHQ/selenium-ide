@@ -4,7 +4,7 @@ exports[`command code emitter should emit 'assert selected label' command 1`] = 
 "{
   var element = driver.FindElement(By.Id(\\"test\\"));
   String value = element.GetAttribute(\\"value\\");
-  String locator = String.Format(\\"option[@value='%s']\\", \\"value\\");
+  String locator = String.Format(\\"option[@value='{0}']\\", value);
   String selectedText = element.FindElement(By.XPath(locator)).Text;
   Assert.Equal(\\"test\\", selectedText);
 }"
@@ -14,7 +14,7 @@ exports[`command code emitter should emit 'verify selected label' command 1`] = 
 "{
   var element = driver.FindElement(By.Id(\\"test\\"));
   String value = element.GetAttribute(\\"value\\");
-  String locator = String.Format(\\"option[@value='%s']\\", \\"value\\");
+  String locator = String.Format(\\"option[@value='{0}']\\", value);
   String selectedText = element.FindElement(By.XPath(locator)).Text;
   Assert.Equal(\\"test\\", selectedText);
 }"
