@@ -25,7 +25,7 @@ const CommandSelector: FC<CommandSelectorProps> = ({
       Object.entries(commands)
         .map(([id, { name }]: [string, { name: string }]) => ({ id, name }))
         .sort((a, b) => a.name.localeCompare(b.name)),
-    []
+    [commands]
   )
   if (commandsList.length === 0) {
     return null

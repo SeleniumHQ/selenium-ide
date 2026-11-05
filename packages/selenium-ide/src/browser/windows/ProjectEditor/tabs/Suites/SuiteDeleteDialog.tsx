@@ -29,20 +29,23 @@ const SuiteDeleteDialog: React.FC<SuiteDeleteDialogProps> = ({
     setOpen(false)
   }
 
+  const onEnter = React.useEffectEvent(() => handleClose('Delete'))
+  // Enter confirms the deletion, only while the dialog is open
   React.useEffect(() => {
+    if (!open) return
     const onKeyDown = (event: KeyboardEvent): void => {
       // 'keypress' event misbehaves on mobile so we track 'Enter' key via 'keydown' event
       if (event.key === 'Enter') {
         event.preventDefault()
         event.stopPropagation()
-        handleClose('Delete')
+        onEnter()
       }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => {
       window.removeEventListener('keydown', onKeyDown)
     }
-  }, [])
+  }, [open])
   return (
     <Dialog
       classes={{

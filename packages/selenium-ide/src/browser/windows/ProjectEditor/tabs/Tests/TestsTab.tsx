@@ -65,20 +65,20 @@ const TestsTab: React.FC = () => {
   const activeTest = getActiveTest(session)
   const activeCommand = getActiveCommand(session)
   React.useEffect(() => {
-    if (activeCommand) {
-      setTimeout(() => {
-        const commandElement = document.querySelector(
-          `[data-command-id="${activeCommand.id}"]`
-        )
-        if (commandElement) {
-          commandElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'nearest',
-            inline: 'start',
-          })
-        }
-      }, 100)
-    }
+    if (!activeCommand) return
+    const timeout = setTimeout(() => {
+      const commandElement = document.querySelector(
+        `[data-command-id="${activeCommand.id}"]`
+      )
+      if (commandElement) {
+        commandElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'start',
+        })
+      }
+    }, 100)
+    return () => clearTimeout(timeout)
   }, [activeCommand])
   const disabled = ['playing', 'recording'].includes(session.state.status)
   return (

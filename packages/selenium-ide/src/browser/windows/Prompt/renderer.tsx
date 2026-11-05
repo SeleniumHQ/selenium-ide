@@ -16,10 +16,12 @@ const Prompt = () => {
 
   React.useEffect(() => {
     answerRef.current!.focus()
-    window.addEventListener('error', (e) => {
+    const onError = (e: ErrorEvent) => {
       // @ts-expect-error this exists
       window.promptError(e.message)
-    })
+    }
+    window.addEventListener('error', onError)
+    return () => window.removeEventListener('error', onError)
   }, [])
 
   return (

@@ -41,47 +41,47 @@ export interface PlaybackState {
 }
 
 const PlaybackComponent: React.FC<PlaybackProps> = ({ playback, project }) => {
-  const [state, _setState] = React.useState<PlaybackState>({
+  const [state, setState] = React.useState<PlaybackState>({
     results: {},
     logs: [],
   })
-  const setState = (newState: Partial<PlaybackState>) =>
-    _setState({
-      ...state,
-      ...newState,
-    })
+  const mergeState = (newState: Partial<PlaybackState>) =>
+    setState((current) => ({ ...current, ...newState }))
 
   React.useEffect(() => {
     const _cons = console
     // @ts-expect-error
     global.console = {
       log: (i) => {
-        setState({
-          logs: state.logs.concat(util.format(i)),
-        })
+        setState((current) => ({
+          ...current,
+          logs: current.logs.concat(util.format(i)),
+        }))
       },
       error: _cons.error,
     }
     playback['event-emitter'].on(
       PlaybackEvents.COMMAND_STATE_CHANGED,
-      ({ id, state, message }) => {
-        setState({
-          results: { ...state.results, [id]: { state, message } },
-        })
+      ({ id, state: commandState, message }) => {
+        setState((current) => ({
+          ...current,
+          results: {
+            ...current.results,
+            [id]: { state: commandState, message },
+          },
+        }))
       }
     )
     playback['event-emitter'].on(
       PlaybackEvents.PLAYBACK_STATE_CHANGED,
       ({ state }: PlaybackEventShapes['PLAYBACK_STATE_CHANGED']) => {
-        setState({
-          testState: state,
-        })
+        setState((current) => ({ ...current, testState: state }))
       }
     )
-  }, [])
+  }, [playback])
 
   const handleTestSelected = async (test: TestShape) => {
-    setState({ test })
+    mergeState({ test })
     try {
       await (
         await playback.play(test)

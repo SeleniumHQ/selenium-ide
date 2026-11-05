@@ -10,10 +10,12 @@ const Prompt = () => {
   const acceptAlert = () => window.acceptAlert()
 
   React.useEffect(() => {
-    window.addEventListener('error', (e) => {
+    const onError = (e: ErrorEvent) => {
       // @ts-expect-error this exists
       window.alertError(e.message)
-    })
+    }
+    window.addEventListener('error', onError)
+    return () => window.removeEventListener('error', onError)
   }, [])
 
   return (

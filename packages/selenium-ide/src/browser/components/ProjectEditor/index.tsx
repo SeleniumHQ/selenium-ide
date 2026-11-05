@@ -21,8 +21,15 @@ const ProjectEditor: React.FC = () => {
   const showDrawer = use(context)
   const [pluginWindows, setPluginWindows] = React.useState<PluginWindow[]>([])
   React.useEffect(() => {
+    // Each name is one panel: a new request for a name replaces its URL
     const handler = (name: string, url: string) => {
-      setPluginWindows((prev) => prev.concat({ name, url }))
+      setPluginWindows((prev) =>
+        prev.some((pluginWindow) => pluginWindow.name === name)
+          ? prev.map((pluginWindow) =>
+              pluginWindow.name === name ? { name, url } : pluginWindow
+            )
+          : prev.concat({ name, url })
+      )
     }
     window.sideAPI.plugins.onRequestCustomEditorPanel.addListener(handler)
     return () => {
@@ -60,9 +67,9 @@ const ProjectEditor: React.FC = () => {
             </div>
           </Panel>
           {pluginWindows.map((pluginWindow, index) => (
-            <React.Fragment key={index}>
+            <React.Fragment key={pluginWindow.name}>
               <ResizeHandle id={`v-resize-${index}`} x />
-              <Panel key={index} id={pluginWindow.name}>
+              <Panel id={pluginWindow.name}>
                 <iframe
                   className="fill"
                   src={pluginWindow.url}

@@ -8,10 +8,10 @@ const consoleStyle = {
 }
 
 const SIDELogger: React.FC = () => {
-  const logContainer = React.useRef<HTMLPreElement>(null)
+  const logContainerRef = React.useRef<HTMLPreElement>(null)
 
   const handleLog = React.useCallback((level: string, log: string) => {
-    const el = logContainer.current
+    const el = logContainerRef.current
     if (!el) return
     const newLogEntry = document.createTextNode(
       `${new Date().toLocaleTimeString()} [${level}] ${log}\n`
@@ -33,7 +33,7 @@ const SIDELogger: React.FC = () => {
         <Paper className="p-1" elevation={3} square>
           <IconButton
             onClick={() => {
-              const el = logContainer.current
+              const el = logContainerRef.current
               if (el) {
                 el.textContent = '' // Safer and potentially faster than innerHTML
               }
@@ -45,7 +45,7 @@ const SIDELogger: React.FC = () => {
       </div>
       <pre
         className="fill m-0 overflow-y"
-        ref={logContainer}
+        ref={logContainerRef}
         style={consoleStyle}
       />
     </>
