@@ -57,7 +57,7 @@ jobs:
           fi
           # The same version is allowed, so a run can be started again
           current=$(node -p "require('./packages/selenium-ide/package.json').version")
-          if ! npx -y semver@7.8.5 -p -r ">=$current" "$VERSION" > /dev/null; then
+          if ! npx -y semver@7.8.6 -p -r ">=$current" "$VERSION" > /dev/null; then
             echo "$VERSION is lower than the current version $current"
             exit 1
           fi
