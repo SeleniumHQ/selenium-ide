@@ -1,6 +1,6 @@
 {
   "name": "@seleniumhq/webdriver-testkit",
-  "version": "4.1.0-beta.2",
+  "version": "4.1.0-beta.3",
   "private": true,
   "description": "Manage test driver installation",
   "author": "Tomer <tomer@corevo.io>",
