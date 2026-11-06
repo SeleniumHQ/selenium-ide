@@ -23,11 +23,10 @@ import {
   Variables,
 } from '@seleniumhq/side-runtime'
 import each from 'jest-each'
-import fs from 'fs'
-import { globSync } from 'glob'
 import { createLogger, format, transports } from 'winston'
 import { Configuration, Project } from './types'
 import testConnection from './connect'
+import { loadProjects } from './projects'
 import buildRun from './run'
 
 const metadata = require('../package.json')
@@ -70,21 +69,7 @@ const projectTitle = 'Running project $name'
 const suiteTitle = 'Running suite $name'
 const testTitle = 'Running test $name'
 
-const allMatchingProjects: Project[] = [
-  ...configuration.projects.reduce((projects, project) => {
-    // Absolute paths on Windows use backslashes, which glob treats as escapes
-    globSync(project, {
-      windowsPathsNoEscape: process.platform === 'win32',
-    }).forEach((p) => {
-      projects.add(p)
-    })
-    return projects
-  }, new Set<string>()),
-].map((p) => {
-  const project = JSON.parse(fs.readFileSync(p, 'utf8'))
-  project.path = p
-  return project
-})
+const allMatchingProjects = loadProjects(configuration.projects)
 
 if (!allMatchingProjects.length) {
   throw new Error(
@@ -95,6 +80,9 @@ if (!allMatchingProjects.length) {
 
 const projects = allMatchingProjects.filter((p: ProjectShape) => {
   const projectIsFound = Boolean(p)
+  if (projectIsFound && configuration.testId) {
+    return p.tests.some((test) => test.id === configuration.testId)
+  }
   if (projectIsFound) {
     const hasSuites = p.suites.filter(
       (suite) =>
@@ -155,6 +143,15 @@ if (configuration.debugConnectionMode) {
       }
       beforeAll(runHook('onBeforePlayAll'))
       afterAll(runHook('onAfterPlayAll'))
+      if (configuration.testId) {
+        const picked = project.tests.filter(
+          (test) => test.id === configuration.testId
+        )
+        each(picked).test(testTitle, async (test: TestShape) => {
+          await runner.run(project, test, new Variables())
+        })
+        return
+      }
       const suites = project.suites.filter(
         (suite) =>
           suite.tests.length &&

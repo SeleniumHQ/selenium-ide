@@ -35,6 +35,16 @@ or
 Will only run tests matching the filter
 ```selenium-side-runner --filter mytest```
 
+### Pick a test from a list
+
+Lists the tests in the projects and asks which one to run. It needs a terminal, so don't use it in CI.
+```selenium-side-runner --interactive my-project.side```
+
+### Print each step
+
+Prints each command as it finishes, with ✓ (passed), ✕ (failed), ○ (undetermined) or - (skipped). A failed command also shows its error.
+```selenium-side-runner --steps my-project.side```
+
 ### Changing the base URL
 
 Change the base URL that the tests were recorded with, note that it will not affect tests that used absolute URLs.

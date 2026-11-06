@@ -29,6 +29,7 @@ import { WebDriverExecutorConstructorArgs } from '@seleniumhq/side-runtime/dist/
 import { TestShape } from '@seleniumhq/side-model'
 import fs from 'fs/promises'
 import path from 'path'
+import { formatStep } from './steps'
 import { Configuration, Project } from './types'
 
 export interface HoistedThings {
@@ -168,6 +169,7 @@ const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
           PlaybackEvents.COMMAND_STATE_CHANGED,
           ({
             command,
+            message,
             state,
           }: PlaybackEventShapes['COMMAND_STATE_CHANGED']) => {
             const cmd = command
@@ -175,6 +177,9 @@ const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
               .filter((v) => !!v)
               .join('|')
             logger.debug(`${state} ${niceString}`)
+            const step =
+              configuration.steps && formatStep(test.name, cmd, state, message)
+            if (step) logger.info(step)
           }
         )
         try {

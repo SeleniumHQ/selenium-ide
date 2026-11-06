@@ -40,6 +40,8 @@ export interface SideRunnerCLIConfig {
   filter: string
   // Forcibly run the project, regardless of project's version
   force: boolean
+  // Pick the test to run from a list
+  interactive: boolean
   // Options to configure Jest
   jestOptions: string
   // Maximum amount of workers that will run your tests, defaults to number of cores
@@ -52,6 +54,8 @@ export interface SideRunnerCLIConfig {
   retries: number
   // Webdriver remote server
   server: string
+  // Print each command as it finishes
+  steps: boolean
   // The maximimum amount of time, in milliseconds, to spend attempting to locate
   // an element. (default: ${DEFAULT_TIMEOUT})
   timeout: number
@@ -67,7 +71,7 @@ export type Configuration = Required<
 > &
   Pick<
     SideRunnerCLIConfig,
-    'debugStartup' | 'debug' | 'force' | 'proxyType' | 'retries'
+    'debugStartup' | 'debug' | 'force' | 'proxyType' | 'retries' | 'steps'
   > & {
     capabilities: Record<string, JSON>
     debugConnectionMode: boolean
@@ -77,4 +81,6 @@ export type Configuration = Required<
     path: string
     screenshotFailureDirectory?: string
     jestTimeout: number
+    // Runs only this test (set by --interactive)
+    testId?: string
   }
