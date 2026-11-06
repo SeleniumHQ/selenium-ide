@@ -45,6 +45,11 @@ describe('step lines', () => {
       '✕ login › assertText | id=title | Hello: Timed out'
     )
   })
+  it('puts a multi-line error on one line', () => {
+    expect(
+      formatStep('login', command, 'failed', 'Not found\n  at line 1\n')
+    ).toBe('✕ login › assertText | id=title | Hello: Not found at line 1')
+  })
   it('prints nothing while a command runs', () => {
     expect(formatStep('login', command, 'pending')).toBeUndefined()
     expect(formatStep('login', command, 'executing')).toBeUndefined()

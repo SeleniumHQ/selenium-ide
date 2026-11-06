@@ -41,7 +41,10 @@ export const formatStep = (
   const step = [command.command, command.target, command.value]
     .filter((v) => !!v)
     .join(' | ')
+  // Keeps one line per step, even for multi-line errors
   const detail =
-    (state === 'failed' || state === 'errored') && message ? `: ${message}` : ''
+    (state === 'failed' || state === 'errored') && message
+      ? `: ${message.trim().replace(/\s*\n\s*/g, ' ')}`
+      : ''
   return `${mark} ${testName} › ${step}${detail}`
 }
