@@ -42,7 +42,7 @@ Lists the tests in the projects and asks which one to run. It needs a terminal, 
 
 ### Print each step
 
-Prints each command as it finishes, with ✓ (passed), ✕ (failed) or ○ (undetermined). A failed command also shows its error.
+Prints each command as it finishes, with ✓ (passed), ✕ (failed), ○ (undetermined) or - (skipped). A failed command also shows its error.
 ```selenium-side-runner --steps my-project.side```
 
 ### Changing the base URL

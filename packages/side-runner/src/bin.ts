@@ -250,6 +250,12 @@ if (options.interactive) {
     // eslint-disable-next-line n/no-process-exit
     process.exit(1)
   }
+  // Connection mode runs no tests, so there is nothing to pick
+  if (configuration.debugConnectionMode) {
+    console.error("--interactive can't be used with --debug-connection-mode")
+    // eslint-disable-next-line n/no-process-exit
+    process.exit(1)
+  }
   pickTest(loadProjects(configuration.projects))
     .then(({ projectPath, testId }) => {
       // The path is globbed again in the test runner, so escape it

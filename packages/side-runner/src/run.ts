@@ -29,6 +29,7 @@ import { WebDriverExecutorConstructorArgs } from '@seleniumhq/side-runtime/dist/
 import { TestShape } from '@seleniumhq/side-model'
 import fs from 'fs/promises'
 import path from 'path'
+import { formatStep } from './steps'
 import { Configuration, Project } from './types'
 
 export interface HoistedThings {
@@ -46,16 +47,6 @@ export interface TestRunner {
     variables?: Variables,
     persistedDriver?: WebDriverExecutor['driver']
   ) => Promise<void>
-}
-
-// The mark printed for each finished command with --steps
-const stepMarks: Partial<
-  Record<PlaybackEventShapes['COMMAND_STATE_CHANGED']['state'], string>
-> = {
-  errored: '✕',
-  failed: '✕',
-  passed: '✓',
-  undetermined: '○',
 }
 
 const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
@@ -186,17 +177,9 @@ const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
               .filter((v) => !!v)
               .join('|')
             logger.debug(`${state} ${niceString}`)
-            const mark = stepMarks[state]
-            if (configuration.steps && mark) {
-              const step = [cmd.command, cmd.target, cmd.value]
-                .filter((v) => !!v)
-                .join(' | ')
-              const detail =
-                (state === 'failed' || state === 'errored') && message
-                  ? `: ${message}`
-                  : ''
-              logger.info(`${mark} ${test.name} › ${step}${detail}`)
-            }
+            const step =
+              configuration.steps && formatStep(test.name, cmd, state, message)
+            if (step) logger.info(step)
           }
         )
         try {
