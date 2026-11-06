@@ -19,6 +19,7 @@ import { spawn } from 'child_process'
 import { Command } from 'commander'
 import crypto from 'crypto'
 import fs from 'fs'
+import { escape } from 'glob'
 import merge from 'lodash/fp/merge'
 import os from 'os'
 import path from 'path'
@@ -26,6 +27,8 @@ import resolveBin from 'resolve-bin'
 import util from 'util'
 import Capabilities from './capabilities'
 import Config from './config'
+import { pickTest } from './pick-test'
+import { loadProjects } from './projects'
 import ParseProxy from './proxy'
 import { Configuration, SideRunnerAPI } from './types'
 
@@ -102,6 +105,8 @@ program
     '--force',
     "Forcibly run the project, regardless of project's version"
   )
+  .option('-i, --interactive', 'Pick the test to run from a list')
+  .option('--steps', 'Print each command as it finishes')
   .option('-d, --debug', 'Print debug logs')
   .option('-D, --debug-startup', 'Print debug startup logs')
   .option('-X, --debug-connection-mode', 'Debug driver connection mode')
@@ -135,6 +140,7 @@ let configuration: Configuration = {
   runId: crypto.randomBytes(16).toString('hex'),
   path: path.join(__dirname, '../../'),
   server: '',
+  steps: false,
   jestTimeout: options.jestTimeout,
   timeout: DEFAULT_TIMEOUT,
 }
@@ -170,6 +176,7 @@ configuration = merge(configuration, {
       ? Capabilities.parseString(options.proxyOptions)
       : options.proxyOptions,
   server: options.server,
+  steps: options.steps,
   timeout: options.timeout,
 })
 
@@ -196,40 +203,69 @@ if (options.screenshotFailureDirectory) {
   }
 }
 
-configuration.debugStartup &&
-  console.debug('Configuration:', util.inspect(configuration))
+const runJest = () => {
+  configuration.debugStartup &&
+    console.debug('Configuration:', util.inspect(configuration))
 
-// All the stuff that goes into a big wrapped jest command
-const jest = 'node ' + resolveBin.sync('jest')
-const jestArgs = [
-  '--config=' + path.join(__dirname, '..', 'runner.jest.config.js'),
-  '--maxConcurrency=' + configuration.maxWorkers,
-]
-  .concat(
-    options.outputDirectory
-      ? [
-          '--json',
-          '--outputFile=' + path.join(options.outputDirectory, outputFilename),
-        ]
-      : []
-  )
-  .concat(options.jestOptions.slice(1, -1).split(' ').filter(Boolean))
-  .concat(['--runTestsByPath', path.join(__dirname, 'main.test.js')])
+  // All the stuff that goes into a big wrapped jest command
+  const jest = 'node ' + resolveBin.sync('jest')
+  const jestArgs = [
+    '--config=' + path.join(__dirname, '..', 'runner.jest.config.js'),
+    '--maxConcurrency=' + configuration.maxWorkers,
+  ]
+    .concat(
+      options.outputDirectory
+        ? [
+            '--json',
+            '--outputFile=' +
+              path.join(options.outputDirectory, outputFilename),
+          ]
+        : []
+    )
+    .concat(options.jestOptions.slice(1, -1).split(' ').filter(Boolean))
+    .concat(['--runTestsByPath', path.join(__dirname, 'main.test.js')])
 
-const jestEnv = {
-  ...process.env,
-  SE_CONFIGURATION: JSON.stringify(configuration),
+  const jestEnv = {
+    ...process.env,
+    SE_CONFIGURATION: JSON.stringify(configuration),
+  }
+
+  configuration.debugStartup &&
+    console.debug('Jest command:', jest, jestArgs, jestEnv)
+  spawn(jest, jestArgs, {
+    cwd: process.cwd(),
+    env: jestEnv,
+    shell: true,
+    stdio: 'inherit',
+  }).on('exit', (code) => {
+    // This is my bin, my process
+    // eslint-disable-next-line n/no-process-exit
+    process.exit(code as number)
+  })
 }
 
-configuration.debugStartup &&
-  console.debug('Jest command:', jest, jestArgs, jestEnv)
-spawn(jest, jestArgs, {
-  cwd: process.cwd(),
-  env: jestEnv,
-  shell: true,
-  stdio: 'inherit',
-}).on('exit', (code) => {
-  // This is my bin, my process
-  // eslint-disable-next-line n/no-process-exit
-  process.exit(code as number)
-})
+if (options.interactive) {
+  if (!process.stdin.isTTY || !process.stdout.isTTY) {
+    console.error('--interactive needs a terminal')
+    // eslint-disable-next-line n/no-process-exit
+    process.exit(1)
+  }
+  pickTest(loadProjects(configuration.projects))
+    .then(({ projectPath, testId }) => {
+      // The path is globbed again in the test runner, so escape it
+      configuration.projects = [
+        escape(projectPath, {
+          windowsPathsNoEscape: process.platform === 'win32',
+        }),
+      ]
+      configuration.testId = testId
+      runJest()
+    })
+    .catch((err) => {
+      console.error(err.message ?? err)
+      // eslint-disable-next-line n/no-process-exit
+      process.exit(1)
+    })
+} else {
+  runJest()
+}

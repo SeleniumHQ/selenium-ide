@@ -48,6 +48,16 @@ export interface TestRunner {
   ) => Promise<void>
 }
 
+// The mark printed for each finished command with --steps
+const stepMarks: Partial<
+  Record<PlaybackEventShapes['COMMAND_STATE_CHANGED']['state'], string>
+> = {
+  errored: '✕',
+  failed: '✕',
+  passed: '✓',
+  undetermined: '○',
+}
+
 const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
   getDriverSync: () => {
     const executor = new WebDriverExecutor({
@@ -168,6 +178,7 @@ const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
           PlaybackEvents.COMMAND_STATE_CHANGED,
           ({
             command,
+            message,
             state,
           }: PlaybackEventShapes['COMMAND_STATE_CHANGED']) => {
             const cmd = command
@@ -175,6 +186,17 @@ const buildRun = ({ configuration, logger }: HoistedThings): TestRunner => ({
               .filter((v) => !!v)
               .join('|')
             logger.debug(`${state} ${niceString}`)
+            const mark = stepMarks[state]
+            if (configuration.steps && mark) {
+              const step = [cmd.command, cmd.target, cmd.value]
+                .filter((v) => !!v)
+                .join(' | ')
+              const detail =
+                (state === 'failed' || state === 'errored') && message
+                  ? `: ${message}`
+                  : ''
+              logger.info(`${mark} ${test.name} › ${step}${detail}`)
+            }
           }
         )
         try {
