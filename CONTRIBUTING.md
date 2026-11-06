@@ -91,8 +91,8 @@ It:
 Check the draft release, edit the notes if needed, and publish it. Publishing it creates the
 tag (`v4.1.0`).
 
-The GitHub release is named after the version (`4.1.0`). A pre-release such as `4.1.0-beta.2`
-goes to the `beta` dist-tag on npm.
+The GitHub release is named after the version (`4.1.0`). Every release goes to the `latest`
+dist-tag on npm, pre-releases such as `4.1.0-beta.2` too.
 
 To set the version by hand:
 
