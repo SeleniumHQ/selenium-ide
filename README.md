@@ -10,7 +10,7 @@ Selenium IDE as an electron application written to enable recording and playback
 Installation can be performed in a variety of ways:
 
 1. Prepackaged binaries are available to be installed directly as [GitHub releases](https://github.com/SeleniumHQ/selenium-ide/releases).
-2. Selenium-ide can be installed via npm `npm install -g selenium-ide` and run via `selenium-ide` directly. For a beta, use `npm install -g selenium-ide@beta`.
+2. Selenium-ide can be installed via npm `npm install -g selenium-ide` and run via `selenium-ide` directly. This installs the newest release, betas included.
 3. The application can be built manually using the below instructions.
 
 ### Unsigned builds

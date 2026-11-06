@@ -28,7 +28,6 @@ jobs:
       contents: write
     outputs:
       version: ${{ steps.version.outputs.version }}
-      dist-tag: ${{ steps.version.outputs.dist-tag }}
       sha: ${{ steps.commit.outputs.sha }}
     steps:
       # The latest trunk, so a run started again sees its own version commit
@@ -66,11 +65,7 @@ jobs:
             echo "The tag v$VERSION already exists"
             exit 1
           fi
-          # A pre-release (e.g. 4.1.0-beta.1) goes to the beta dist-tag, so
-          # npm install keeps getting the latest stable version
-          if [[ "$VERSION" == *-* ]]; then tag=beta; else tag=latest; fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "dist-tag=$tag" >> "$GITHUB_OUTPUT"
       - name: Set the version on every package and commit it
         id: commit
         shell: bash
@@ -179,5 +174,7 @@ jobs:
         run: pnpm run build
         env:
           NODE_ENV: "production"
+      # Every release, pre-releases too (e.g. 4.1.0-beta.3), goes to the latest
+      # dist-tag, so npm install gets the newest version
       - name: Publish packages to npm
-        run: pnpm -r publish --no-git-checks --access public --tag ${{ needs.prepare.outputs.dist-tag }}
+        run: pnpm -r publish --no-git-checks --access public --tag latest
