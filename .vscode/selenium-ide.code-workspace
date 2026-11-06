@@ -10,7 +10,6 @@
     { "path": "../packages/code-export-ruby-rspec" },
     { "path": "../packages/selenium-ide" },
     { "path": "../packages/side-api" },
-    { "path": "../packages/side-cli" },
     { "path": "../packages/side-code-export" },
     { "path": "../packages/side-commons" },
     { "path": "../packages/side-example-suite" },
