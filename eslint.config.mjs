@@ -109,7 +109,7 @@ export default [
     rules: {
       'import-x/no-unresolved': 'error',
       // import-x/no-unresolved checks imports in TypeScript; eslint-plugin-n
-      // can't resolve packages that only have "exports", such as ink
+      // can't resolve packages that only have "exports"
       'n/no-missing-import': 'off',
       '@typescript-eslint/array-type': ['error', { default: 'array' }],
       '@typescript-eslint/no-empty-object-type': 'error',

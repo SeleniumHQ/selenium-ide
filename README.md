@@ -94,8 +94,6 @@ via the IPC protocols.
 
 - side-runner: NodeJS Task Runner. Built with typescript.
 
-- side-cli: Experimental cli using react and ink.
-
 - side-runtime: Playback system wrapper. Takes side files and executes
 them. Used by both selenium-ide and side-runner.
 
