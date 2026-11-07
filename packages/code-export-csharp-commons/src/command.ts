@@ -194,6 +194,25 @@ function emitNestedVariable() {
         '} else if (value is System.Collections.IList items && int.TryParse(key, out var index) && index < items.Count) {',
     },
     { level: 2, statement: 'value = items[index];' },
+    // storeJson keeps objects as JsonElement
+    {
+      level: 1,
+      statement:
+        '} else if (value is System.Text.Json.JsonElement json && json.ValueKind == System.Text.Json.JsonValueKind.Object && json.TryGetProperty(key, out var property)) {',
+    },
+    { level: 2, statement: 'value = property;' },
+    {
+      level: 1,
+      statement:
+        '} else if (value is System.Text.Json.JsonElement array && array.ValueKind == System.Text.Json.JsonValueKind.Array && key == "length") {',
+    },
+    { level: 2, statement: 'value = array.GetArrayLength();' },
+    {
+      level: 1,
+      statement:
+        '} else if (value is System.Text.Json.JsonElement elements && elements.ValueKind == System.Text.Json.JsonValueKind.Array && int.TryParse(key, out var position) && position < elements.GetArrayLength()) {',
+    },
+    { level: 2, statement: 'value = elements[position];' },
     { level: 1, statement: '} else {' },
     { level: 2, statement: 'return "${" + name + "}";' },
     { level: 1, statement: '}' },

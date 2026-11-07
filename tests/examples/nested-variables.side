@@ -169,6 +169,46 @@
           "value": "age ${user.age}"
         },
         {
+          "id": "14cada9e-c272-488a-bfe4-dec21431be5c",
+          "comment": "",
+          "command": "assert",
+          "target": "user.items[2].id",
+          "targets": [],
+          "value": "x"
+        },
+        {
+          "id": "76845004-9618-4f21-b380-c12da02b30f6",
+          "comment": "",
+          "command": "storeJson",
+          "target": "{\"city\": {\"name\": \"Paris\"}, \"tags\": [\"a\", \"b\"]}",
+          "targets": [],
+          "value": "place"
+        },
+        {
+          "id": "a8673b1c-751f-4ecc-bf1d-d97a5886abee",
+          "comment": "",
+          "command": "store",
+          "target": "${place.city.name} ${place.tags[1]} ${place.tags.length}",
+          "targets": [],
+          "value": "placeText"
+        },
+        {
+          "id": "06addb1a-0a28-4381-9b3f-a8ab2e84dead",
+          "comment": "",
+          "command": "assert",
+          "target": "placeText",
+          "targets": [],
+          "value": "Paris b 2"
+        },
+        {
+          "id": "323e35de-7457-4120-a511-6f2af9c0ef73",
+          "comment": "",
+          "command": "run",
+          "target": "nestedVariable",
+          "targets": [],
+          "value": ""
+        },
+        {
           "id": "a7d86b80-986e-4065-a0d4-9a6395b4c381",
           "comment": "",
           "command": "store",
@@ -191,6 +231,20 @@
           "target": "exact",
           "targets": [],
           "value": "exact Grace"
+        }
+      ]
+    },
+    {
+      "id": "40f95ba1-5d9a-4a4d-b26e-500b66a6103f",
+      "name": "nestedVariable",
+      "commands": [
+        {
+          "id": "8e830c72-221f-4f1e-bbcc-d75eae890fbc",
+          "comment": "",
+          "command": "echo",
+          "target": "a reused test named like the helper",
+          "targets": [],
+          "value": ""
         }
       ]
     }

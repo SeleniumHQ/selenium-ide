@@ -66,6 +66,24 @@ describe('Code Export Java JUnit', () => {
     })
     expect(results.body).toMatchSnapshot()
   })
+  it('should declare the nested variable helper for an assert', async () => {
+    const project = readFile('single-test.side')
+    const test = {
+      ...project.tests[0],
+      commands: [
+        { id: '1', command: 'assert', target: 'user.name', value: 'Ada' },
+      ],
+    }
+    const results = await languageExport.emit.test({
+      ...options(project),
+      tests: [test],
+      test,
+    })
+    expect(results.body).toContain('public Object nestedVariable(String name')
+    expect(results.body).toContain(
+      'nestedVariable("user.name", "user", "name")'
+    )
+  })
   it('should export a suite', async () => {
     const project = readFile('single-suite.side')
     const results = await languageExport.emit.suite({

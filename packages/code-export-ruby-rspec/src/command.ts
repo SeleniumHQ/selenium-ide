@@ -228,8 +228,8 @@ function emitAssert(varName: string, value: string) {
     _value = value
   }
   const result = _value
-    ? `expect(@vars['${varName}']).to eq(${_value})`
-    : `expect(@vars['${varName}']).to eq('${value}')`
+    ? `expect(${variableLookup(varName)}).to eq(${_value})`
+    : `expect(${variableLookup(varName)}).to eq('${value}')`
   return Promise.resolve(result)
 }
 

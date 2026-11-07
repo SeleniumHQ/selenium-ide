@@ -150,7 +150,7 @@ const variableInString = {
 function variableLookup(varName: string) {
   const keys = nestedVariableKeys(varName)
   return keys.length
-    ? `nestedVariable(${[varName, ...keys].map((key) => `"${key}"`).join(', ')})`
+    ? `nested_variable(${[varName, ...keys].map((key) => `"${key}"`).join(', ')})`
     : `vars["${varName}"]`
 }
 
@@ -186,7 +186,8 @@ function emitNestedVariable() {
     { level: 0, statement: 'return value' },
   ]
   return Promise.resolve({
-    name: 'nestedVariable',
+    // Reused test names have no underscore, so they can't clash
+    name: 'nested_variable',
     commands,
     generateMethodDeclaration,
   })
@@ -237,7 +238,9 @@ async function emitNewWindowHandling(
 }
 
 function emitAssert(varName: string, value: string) {
-  return Promise.resolve(`assert(vars["${varName}"].toString() == "${value}")`)
+  return Promise.resolve(
+    `assert(${variableLookup(varName)}.toString() == "${value}")`
+  )
 }
 
 function emitAssertAlert(alertText: string) {

@@ -16,7 +16,7 @@
 // under the License.
 
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
-import { hasNestedVariable } from './preprocessor'
+import { hasNestedVariable, nestedVariableKeys } from './preprocessor'
 
 export function deduplicateReusedTestMethods(testMethods: TestShape[]) {
   return testMethods.filter((entry, index) => {
@@ -69,7 +69,11 @@ export const findCommandThatReadsNestedVariable = (
     test,
     tests,
     (command) =>
-      hasNestedVariable(command.target) || hasNestedVariable(command.value)
+      hasNestedVariable(command.target) ||
+      hasNestedVariable(command.value) ||
+      // assert and verify take a variable name as their target
+      (['assert', 'verify'].includes(command.command) &&
+        nestedVariableKeys(command.target ?? '').length > 0)
   )
 
 export function findReusedTestMethods(

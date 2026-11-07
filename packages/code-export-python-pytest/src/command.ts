@@ -236,8 +236,8 @@ function emitAssert(varName: string, value: string) {
     _value = value
   }
   const result = _value
-    ? `assert(self.vars["${varName}"] == ${_value})`
-    : `assert(self.vars["${varName}"] == "${value}")`
+    ? `assert(${variableLookup(varName)} == ${_value})`
+    : `assert(${variableLookup(varName)} == "${value}")`
   return Promise.resolve(result)
 }
 
