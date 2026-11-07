@@ -1,0 +1,42 @@
+--- a/atoms/events.js
++++ b/atoms/events.js
+@@ -412,7 +412,7 @@
+   var doc = goog.dom.getOwnerDocument(target);
+   var event;
+ 
+-  if (goog.userAgent.GECKO) {
++  if (goog.userAgent.GECKO && !bot.userAgent.isEngineVersion(93)) {
+     var view = goog.dom.getWindow(doc);
+     var keyCode = args.charCode ? 0 : args.keyCode;
+     event = doc.createEvent('KeyboardEvent');
+@@ -434,10 +434,15 @@
+     event.ctrlKey = args.ctrlKey;
+     event.metaKey = args.metaKey;
+     event.shiftKey = args.shiftKey;
+-    event.keyCode = args.charCode || args.keyCode;
+-    if (goog.userAgent.WEBKIT || goog.userAgent.EDGE) {
+-      event.charCode = (this == bot.events.EventType.KEYPRESS) ?
+-          event.keyCode : 0;
++    if (goog.userAgent.GECKO) {
++      event.keyCode = args.charCode ? 0 : args.keyCode;
++      event.charCode = args.charCode;
++    } else {
++      event.keyCode = args.charCode || args.keyCode;
++      if (goog.userAgent.WEBKIT || goog.userAgent.EDGE) {
++        event.charCode = (this == bot.events.EventType.KEYPRESS) ?
++            event.keyCode : 0;
++      }
+     }
+   }
+ 
+--- a/atoms/keyboard.js
++++ b/atoms/keyboard.js
+@@ -493,7 +493,7 @@
+   if (key != bot.Keyboard.Keys.ENTER) {
+     return;
+   }
+-  if (goog.userAgent.GECKO ||
++  if ((goog.userAgent.GECKO && !bot.userAgent.isEngineVersion(93)) ||
+       !bot.dom.isElement(this.getElement(), goog.dom.TagName.INPUT)) {
+     return;
+   }
