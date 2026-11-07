@@ -1,11 +1,11 @@
-.name span:before {
+.name span::before {
   content: '';
   display: inline-block;
   width: 20px;
   text-align: center;
   font-weight: bold;
 }
-.name.passed span:before{
+.name.passed span::before {
   content: '✓';
 }
 .name.failed span::before {

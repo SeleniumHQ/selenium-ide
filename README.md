@@ -25,17 +25,17 @@ We are using [SideeX](http://sideex.org/) as a start point. The SideeX team was 
 
 - `git` has to be in `$PATH` for the installation to pass
 
-- [yarn](https://yarnpkg.com/en/docs/install) `npm` might work as well (untested)
+- Node.js 22 or 24
 
-- [peru](https://github.com/buildinspace/peru#installation)
+- [Yarn 1](https://classic.yarnpkg.com/en/docs/install) (`npm install -g yarn@1`)
 
 ## Building
 
-`peru` requires a POSIX machine to work, for the time being you can only properly build the extension on macOS and Linux.
+The build needs a POSIX shell, so build the extension on macOS or Linux.
 
 - Install the dependencies
-`peru sync`  
-`yarn` or if using Node 10 `yarn --ignore-engines`
+`yarn sync:selenium` to get the Selenium Core scripts and atoms
+`yarn --ignore-engines`
 - Build the extension  
 `yarn build` and then
 `yarn watch` for faster incremental builds

@@ -4,7 +4,6 @@ _MACOSX/
 .DS_Store
 build
 packages/selenium-ide/selenium
-.peru
 .idea
 .tern-port
 selenium-ide.pem

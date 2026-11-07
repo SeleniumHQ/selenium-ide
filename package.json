@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "start": "cd packages/selenium-ide && yarn start",
+    "sync:selenium": "./scripts/sync-selenium.sh",
     "build": "lerna run build --ignore selenium-ide-extension-boilerplate",
     "build:ext": "cd packages/selenium-ide && yarn build:dev",
     "build:runner": "cd packages/selenium-side-runner && yarn build",
@@ -23,7 +24,7 @@
     "lint:scripts": "eslint \"packages/*/src/**/*.js\" \"packages/*/src/**/*.jsx\" \"packages/*/__tests__/**/*.js\" \"packages/*/tests/**/*.js\" \"packages/*/__mocks__/**/*.js\" \"website/**/*.js\" --ignore-pattern=\"extension-boilerplate\" --ignore-pattern=\"node_modules\"",
     "lint:styles": "stylelint \"packages/selenium-ide/src/neo/**/*.css\"",
     "watch": "lerna run --no-bail --parallel watch",
-    "release-prep": "yarn && peru sync && yarn test && env NODE_ENV=staging yarn build:ext && yarn test:ext && yarn lint",
+    "release-prep": "yarn && yarn sync:selenium && yarn test && env NODE_ENV=staging yarn build:ext && yarn test:ext && yarn lint",
     "preinstall": "node ./scripts/check-yarn.js",
     "postpublish": "yarn build:ext:prod && npx ./gh-release.js"
   },
