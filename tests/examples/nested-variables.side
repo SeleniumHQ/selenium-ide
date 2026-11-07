@@ -1,0 +1,142 @@
+{
+  "id": "0162d2f7-9f87-428d-a460-b9cea0f2f4ef",
+  "version": "2.0",
+  "name": "Nested Variables",
+  "url": "http://localhost:8080",
+  "tests": [
+    {
+      "id": "da25877c-a363-4310-84e0-bfeee9054f8b",
+      "name": "nested variables",
+      "commands": [
+        {
+          "id": "b6a68309-b7a2-4477-adf9-1a37d96fc186",
+          "comment": "",
+          "command": "open",
+          "target": "/store/attributes.html",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "07057f78-4279-4f87-96a9-89a4e2dbc018",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return { name: 'Ada', items: [1, 2, { id: 'x' }] }",
+          "targets": [],
+          "value": "user"
+        },
+        {
+          "id": "9cf9763a-c8a8-4502-b286-cd9bb6b736af",
+          "comment": "",
+          "command": "store",
+          "target": "${user.name}",
+          "targets": [],
+          "value": "name"
+        },
+        {
+          "id": "0e67d6af-7105-453e-b548-b15154ca44bc",
+          "comment": "",
+          "command": "assert",
+          "target": "name",
+          "targets": [],
+          "value": "Ada"
+        },
+        {
+          "id": "9f381514-9487-4071-9edb-a5f4be15bbaf",
+          "comment": "",
+          "command": "store",
+          "target": "Hi ${user.name}!",
+          "targets": [],
+          "value": "greeting"
+        },
+        {
+          "id": "4179fbce-c964-462f-ac08-2f09069abeb0",
+          "comment": "",
+          "command": "assert",
+          "target": "greeting",
+          "targets": [],
+          "value": "Hi Ada!"
+        },
+        {
+          "id": "c68d07e4-7314-4670-afd7-31cf882e6658",
+          "comment": "",
+          "command": "store",
+          "target": "item ${user.items.0}",
+          "targets": [],
+          "value": "first"
+        },
+        {
+          "id": "393c71f6-29ed-4329-84c0-95303266f0e3",
+          "comment": "",
+          "command": "assert",
+          "target": "first",
+          "targets": [],
+          "value": "item 1"
+        },
+        {
+          "id": "7b17f06e-76eb-487b-89a0-cdfcc2ac1387",
+          "comment": "",
+          "command": "store",
+          "target": "${user.items[2].id}",
+          "targets": [],
+          "value": "id"
+        },
+        {
+          "id": "49a00991-6d31-49d5-8798-b7ff07bba3b2",
+          "comment": "",
+          "command": "assert",
+          "target": "id",
+          "targets": [],
+          "value": "x"
+        },
+        {
+          "id": "7983209b-23ef-4991-8a52-0d8d77a2b6bf",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return ${user.items[1]} + 1",
+          "targets": [],
+          "value": "three"
+        },
+        {
+          "id": "eb47daa7-cbbc-4fe0-a672-d4639b6cfe13",
+          "comment": "",
+          "command": "assert",
+          "target": "three",
+          "targets": [],
+          "value": "3"
+        },
+        {
+          "id": "b0155dc6-d8d1-428c-b459-0877f1b4c8fa",
+          "comment": "",
+          "command": "type",
+          "target": "id=test",
+          "targets": [],
+          "value": "${user.items[2].id}"
+        },
+        {
+          "id": "feeeffb9-a314-4d6f-92eb-e651023384f3",
+          "comment": "",
+          "command": "assertValue",
+          "target": "id=test",
+          "targets": [],
+          "value": "x"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "500a45b0-879f-4f6e-86bd-edffe5a45243",
+      "name": "nested variables",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300,
+      "tests": [
+        "da25877c-a363-4310-84e0-bfeee9054f8b"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost:8080/"
+  ],
+  "plugins": []
+}

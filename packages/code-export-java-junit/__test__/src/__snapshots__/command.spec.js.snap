@@ -162,6 +162,8 @@ exports[`command code emitter should emit \`drag and drop to object\` command 1`
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"System.out.println(\\"blah\\");"`;
 
+exports[`command code emitter should emit \`echo\` command with nested variables 1`] = `"System.out.println(\\"name = \\" + String.valueOf(((Map<?, ?>) vars.get(\\"user\\")).get(\\"name\\")) + \\", id = \\" + String.valueOf(((Map<?, ?>) ((List<?>) ((Map<?, ?>) vars.get(\\"user\\")).get(\\"items\\")).get(2)).get(\\"id\\")));"`;
+
 exports[`command code emitter should emit \`echo\` command with variables 1`] = `"System.out.println(String.valueOf(vars.get(\\"blah\\")));"`;
 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
@@ -195,6 +197,8 @@ Object {
 exports[`command code emitter should emit \`execute async script\` command 1`] = `"vars.put(\\"myVar\\", js.executeAsyncScript(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\"));"`;
 
 exports[`command code emitter should emit \`execute script\` command 1`] = `"vars.put(\\"myVar\\", js.executeScript(\\"javascript\\"));"`;
+
+exports[`command code emitter should emit \`execute script\` command with a nested variable 1`] = `"vars.put(\\"three\\", js.executeScript(\\"return arguments[0] + 1\\", ((List<?>) ((Map<?, ?>) vars.get(\\"user\\")).get(\\"items\\")).get(1)));"`;
 
 exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"vars.put(\\"myVar\\", js.executeScript(\\"return 'a'\\"));"`;
 

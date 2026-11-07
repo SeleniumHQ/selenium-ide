@@ -19,8 +19,10 @@ import {
   defaultPreprocessor,
   scriptPreprocessor,
   keysPreprocessor,
+  nestedVariableLookup,
   preprocessParameter,
   resolveVariables,
+  variablePath,
 } from '../../../src/code-export/preprocessor'
 
 describe('preprocessors', () => {
@@ -176,6 +178,52 @@ describe('preprocessors', () => {
       return expect(
         keys.map((key) => resolveVariables(key, variableLookup))
       ).toEqual(['test', 'vars.get("var").toString()', 'foo', `Key['ENTER']`])
+    })
+  })
+
+  describe('nested variables', () => {
+    it('splits a nested name into the variable and its keys', () => {
+      expect(variablePath('items[0].name')).toEqual({
+        name: 'items',
+        keys: [0, 'name'],
+      })
+      expect(variablePath('user.items.2')).toEqual({
+        name: 'user',
+        keys: ['items', 2],
+      })
+    })
+    it('keeps other names whole', () => {
+      expect(variablePath('name')).toEqual({ name: 'name', keys: [] })
+      expect(variablePath('my-var.x')).toEqual({ name: 'my-var.x', keys: [] })
+      expect(variablePath('items[a]')).toEqual({ name: 'items[a]', keys: [] })
+    })
+    it('builds the lookup of each key', () => {
+      expect(
+        nestedVariableLookup(
+          'items[0].name',
+          (name) => `vars["${name}"]`,
+          (value, key) =>
+            typeof key === 'number' ? `${value}[${key}]` : `${value}.${key}`
+        )
+      ).toBe('vars["items"][0].name')
+    })
+    it('marks nested names in parameters', () => {
+      const target = defaultPreprocessor('Hi ${user.name} ${items[0]}')
+      expect(resolveVariables(target, (name) => `<${name}>`)).toBe(
+        'Hi <user.name> <items[0]>'
+      )
+    })
+    it('leaves names that are not variables as text', () => {
+      expect(defaultPreprocessor('${a.} ${a[b]} ${.a}')).toBe(
+        '${a.} ${a[b]} ${.a}'
+      )
+    })
+    it('finds nested names in keys', () => {
+      expect(
+        keysPreprocessor('a${user.name}${KEY_ENTER}', variableLookup).map(
+          (key) => resolveVariables(key, variableLookup)
+        )
+      ).toEqual(['a', 'vars.get("user.name").toString()', `Key['ENTER']`])
     })
   })
 })

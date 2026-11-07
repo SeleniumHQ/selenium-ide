@@ -23,6 +23,7 @@ import {
   ProcessedCommandEmitter,
   ScriptShape,
   hasVariable,
+  nestedVariableLookup,
 } from 'side-code-export'
 // eslint-disable-next-line n/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
@@ -147,7 +148,12 @@ const variableInString = {
 }
 
 function variableLookup(varName: string) {
-  return `self.vars["${varName}"]`
+  return nestedVariableLookup(
+    varName,
+    (name) => `self.vars["${name}"]`,
+    (value, key) =>
+      typeof key === 'number' ? `${value}[${key}]` : `${value}["${key}"]`
+  )
 }
 
 function variableSetter(varName: string, value: string) {
@@ -259,7 +265,7 @@ function generateExpressionScript(script: ScriptShape) {
 
 function generateScriptArguments(script: ScriptShape) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map((varName) => `self.vars["${varName}"]`)
+    .map(variableLookup)
     .join(',')}`
 }
 

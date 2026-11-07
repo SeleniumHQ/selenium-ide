@@ -25,6 +25,7 @@ import {
   ProcessedCommandEmitter,
   ScriptShape,
   hasVariable,
+  nestedVariableLookup,
 } from 'side-code-export'
 import location from './location'
 import selection from './selection'
@@ -148,7 +149,20 @@ const variableInString = {
 
 // String.valueOf turns a null value into "null" instead of failing
 function variableLookup(varName: string) {
-  return `String.valueOf(vars.get("${varName}"))`
+  return `String.valueOf(${variableValue(varName)})`
+}
+
+// The stored value of a variable. Nested names read the lists and maps
+// that executeScript returns.
+function variableValue(varName: string) {
+  return nestedVariableLookup(
+    varName,
+    (name) => `vars.get("${name}")`,
+    (value, key) =>
+      typeof key === 'number'
+        ? `((List<?>) ${value}).get(${key})`
+        : `((Map<?, ?>) ${value}).get("${key}")`
+  )
 }
 
 function variableSetter(varName: string, value: string) {
@@ -486,7 +500,7 @@ async function emitExecuteAsyncScript(script: ScriptShape, varName: string) {
 
 function generateScriptArguments(script: ScriptShape) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map((varName) => `vars.get("${varName}")`)
+    .map(variableValue)
     .join(',')}`
 }
 

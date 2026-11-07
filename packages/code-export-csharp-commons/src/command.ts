@@ -23,6 +23,7 @@ import {
   EmitterContext,
   ScriptShape,
   hasVariable,
+  nestedVariableLookup,
 } from 'side-code-export'
 // eslint-disable-next-line n/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
@@ -148,7 +149,20 @@ const variableInString = {
 
 // Convert.ToString turns a null value into an empty string instead of failing
 function variableLookup(varName: string) {
-  return `Convert.ToString(vars["${varName}"])`
+  return `Convert.ToString(${variableValue(varName)})`
+}
+
+// The stored value of a variable. Nested names read the lists and
+// dictionaries that ExecuteScript returns.
+function variableValue(varName: string) {
+  return nestedVariableLookup(
+    varName,
+    (name) => `vars["${name}"]`,
+    (value, key) =>
+      typeof key === 'number'
+        ? `((IReadOnlyList<object>)${value})[${key}]`
+        : `((IDictionary<string, object>)${value})["${key}"]`
+  )
 }
 
 function variableSetter(varName: string, value: string) {
@@ -494,7 +508,7 @@ async function emitExecuteAsyncScript(script: ScriptShape, varName: string) {
 
 function generateScriptArguments(script: ScriptShape) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map((varName: string) => `vars["${varName}"]`)
+    .map(variableValue)
     .join(',')}`
 }
 

@@ -80,13 +80,49 @@ export function preprocessParameter(
 export const hasVariable = (param: string) =>
   typeof param === 'string' && param.includes(VARIABLE_START)
 
+// A variable name, with optional .key or [index] parts that read nested
+// values, like items[0].name
+const VARIABLE_NAME = String.raw`\w+(?:\.\w+|\[\d+\])*`
+const VARIABLE_PART = /\.(\w+)|\[(\d+)\]/g
+
+/**
+ * Splits a variable name into the stored variable and the keys of a nested
+ * value: items[0].name gives { name: 'items', keys: [0, 'name'] }. Keys made
+ * of digits are list indexes. Other names are returned whole.
+ */
+export function variablePath(variableName: string) {
+  const match = /^(\w+)((?:\.\w+|\[\d+\])+)$/.exec(variableName)
+  if (!match) return { name: variableName, keys: [] as (string | number)[] }
+  const keys: (string | number)[] = []
+  const regexp = new RegExp(VARIABLE_PART)
+  let part
+  while ((part = regexp.exec(match[2]))) {
+    const key = part[1] ?? part[2]
+    keys.push(/^\d+$/.test(key) ? Number(key) : key)
+  }
+  return { name: match[1], keys }
+}
+
+/**
+ * Builds the lookup of a variable name. A nested name like items[0].name
+ * starts with the lookup of the stored variable and reads each key in turn.
+ */
+export function nestedVariableLookup(
+  variableName: string,
+  lookup: (name: string) => string,
+  readKey: (value: string, key: string | number) => string
+) {
+  const { name, keys } = variablePath(variableName)
+  return keys.reduce(readKey, lookup(name))
+}
+
 export function defaultPreprocessor(
   param: string,
   _variableLookup?: VariableLookup
 ) {
   if (!param) return ''
   return param.replace(
-    /\$\{(\w+)\}/g,
+    new RegExp(`\\$\\{(${VARIABLE_NAME})\\}`, 'g'),
     (_match, name) => `${VARIABLE_START}${name}${VARIABLE_END}`
   )
 }
@@ -210,7 +246,7 @@ export function keysPreprocessor(
   variableLookup: VariableLookup = () => ''
 ): string[] {
   let keys = []
-  let match = str.match(/\$\{\w+\}/g)
+  let match = str.match(new RegExp(`\\$\\{${VARIABLE_NAME}\\}`, 'g'))
   if (!match) {
     keys.push(str)
   } else {
