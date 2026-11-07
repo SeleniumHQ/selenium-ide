@@ -23,7 +23,7 @@ import {
   ProcessedCommandEmitter,
   ScriptShape,
   hasVariable,
-  nestedVariableLookup,
+  nestedVariableKeys,
 } from 'side-code-export'
 // eslint-disable-next-line n/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
@@ -148,16 +148,48 @@ const variableInString = {
 }
 
 function variableLookup(varName: string) {
-  return nestedVariableLookup(
-    varName,
-    (name) => `vars["${name}"]`,
-    (value, key) =>
-      typeof key === 'number' ? `${value}[${key}]` : `${value}["${key}"]`
-  )
+  const keys = nestedVariableKeys(varName)
+  return keys.length
+    ? `nestedVariable(${[varName, ...keys].map((key) => `"${key}"`).join(', ')})`
+    : `vars["${varName}"]`
 }
 
 function variableSetter(varName: string, value: string) {
   return varName ? `vars["${varName}"] = ${value}` : ''
+}
+
+// Reads a nested name like items[0].name the way playback does: a variable
+// with the exact name first, then each key. Leaves the name as text when a
+// key is missing.
+function emitNestedVariable() {
+  const generateMethodDeclaration = (name: string) => ({
+    body: `function ${name}(name, ...keys) {`,
+    terminatingKeyword: '}',
+  })
+  const commands = [
+    {
+      level: 0,
+      statement:
+        'if (Object.prototype.hasOwnProperty.call(vars, name)) return vars[name]',
+    },
+    { level: 0, statement: 'let value = vars' },
+    { level: 0, statement: 'for (const key of keys) {' },
+    {
+      level: 1,
+      statement:
+        "if (value === null || typeof value !== 'object' || !Object.prototype.hasOwnProperty.call(value, key)) {",
+    },
+    { level: 2, statement: 'return "${" + name + "}"' },
+    { level: 1, statement: '}' },
+    { level: 1, statement: 'value = value[key]' },
+    { level: 0, statement: '}' },
+    { level: 0, statement: 'return value' },
+  ]
+  return Promise.resolve({
+    name: 'nestedVariable',
+    commands,
+    generateMethodDeclaration,
+  })
 }
 
 function emitWaitForWindow() {
@@ -1068,6 +1100,6 @@ async function emitWaitForText(locator: string, text: string) {
 export default {
   emit,
   emitters,
-  extras: { emitNewWindowHandling, emitWaitForWindow },
+  extras: { emitNewWindowHandling, emitWaitForWindow, emitNestedVariable },
   register,
 }

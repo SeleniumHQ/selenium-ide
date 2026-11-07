@@ -158,7 +158,7 @@ exports[`command code emitter should emit \`drag and drop to object\` command 1`
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"console.log(\\"blah\\")"`;
 
-exports[`command code emitter should emit \`echo\` command with nested variables 1`] = `"console.log(\\"name = \\" + String(vars[\\"user\\"][\\"name\\"]) + \\", id = \\" + String(vars[\\"user\\"][\\"items\\"][2][\\"id\\"]))"`;
+exports[`command code emitter should emit \`echo\` command with nested variables 1`] = `"console.log(\\"name = \\" + String(nestedVariable(\\"user.name\\", \\"user\\", \\"name\\")) + \\", id = \\" + String(nestedVariable(\\"user.items[2].id\\", \\"user\\", \\"items\\", \\"2\\", \\"id\\")))"`;
 
 exports[`command code emitter should emit \`echo\` command with variables 1`] = `"console.log(String(vars[\\"blah\\"]))"`;
 
@@ -194,7 +194,7 @@ exports[`command code emitter should emit \`execute async script\` command 1`] =
 
 exports[`command code emitter should emit \`execute script\` command 1`] = `"vars[\\"myVar\\"] = await driver.executeScript(\\"javascript\\")"`;
 
-exports[`command code emitter should emit \`execute script\` command with a nested variable 1`] = `"vars[\\"three\\"] = await driver.executeScript(\\"return arguments[0] + 1\\", vars[\\"user\\"][\\"items\\"][1])"`;
+exports[`command code emitter should emit \`execute script\` command with a nested variable 1`] = `"vars[\\"three\\"] = await driver.executeScript(\\"return arguments[0] + 1\\", nestedVariable(\\"user.items.1\\", \\"user\\", \\"items\\", \\"1\\"))"`;
 
 exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"vars[\\"myVar\\"] = await driver.executeScript(\\"return 'a'\\")"`;
 

@@ -20,7 +20,7 @@
           "id": "07057f78-4279-4f87-96a9-89a4e2dbc018",
           "comment": "",
           "command": "executeScript",
-          "target": "return { name: 'Ada', items: [1, 2, { id: 'x' }] }",
+          "target": "return { name: 'Ada', items: [1, 2, { id: 'x' }], codes: { 200: 'OK' } }",
           "targets": [],
           "value": "user"
         },
@@ -119,6 +119,78 @@
           "target": "id=test",
           "targets": [],
           "value": "x"
+        },
+        {
+          "id": "7abea335-6610-4d12-bbd0-425d12f625ae",
+          "comment": "",
+          "command": "store",
+          "target": "count ${user.items.length}",
+          "targets": [],
+          "value": "count"
+        },
+        {
+          "id": "9dd73c88-3311-4879-a30a-a6025f6dba8e",
+          "comment": "",
+          "command": "assert",
+          "target": "count",
+          "targets": [],
+          "value": "count 3"
+        },
+        {
+          "id": "a3516e04-1500-4de3-8653-01901c3484cf",
+          "comment": "",
+          "command": "store",
+          "target": "code ${user.codes.200}",
+          "targets": [],
+          "value": "code"
+        },
+        {
+          "id": "e3bed694-65ca-4248-a56f-71311c4039c3",
+          "comment": "",
+          "command": "assert",
+          "target": "code",
+          "targets": [],
+          "value": "code OK"
+        },
+        {
+          "id": "194db53c-11f1-42f7-af9e-cc11e996bf0b",
+          "comment": "",
+          "command": "store",
+          "target": "age ${user.age}",
+          "targets": [],
+          "value": "age"
+        },
+        {
+          "id": "e95ec72f-7aea-4c0e-8c68-176cf60b5861",
+          "comment": "",
+          "command": "assert",
+          "target": "age",
+          "targets": [],
+          "value": "age ${user.age}"
+        },
+        {
+          "id": "a7d86b80-986e-4065-a0d4-9a6395b4c381",
+          "comment": "",
+          "command": "store",
+          "target": "Grace",
+          "targets": [],
+          "value": "user.name"
+        },
+        {
+          "id": "7bfce554-6ca1-4ebd-b563-8180eccd0529",
+          "comment": "",
+          "command": "store",
+          "target": "exact ${user.name}",
+          "targets": [],
+          "value": "exact"
+        },
+        {
+          "id": "2c306b6f-e8ad-40eb-a048-a4bdab69042b",
+          "comment": "",
+          "command": "assert",
+          "target": "exact",
+          "targets": [],
+          "value": "exact Grace"
         }
       ]
     }

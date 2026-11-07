@@ -23,7 +23,7 @@ import {
   ProcessedCommandEmitter,
   ScriptShape,
   hasVariable,
-  nestedVariableLookup,
+  nestedVariableKeys,
 } from 'side-code-export'
 // eslint-disable-next-line n/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
@@ -148,16 +148,49 @@ const variableInString = {
 }
 
 function variableLookup(varName: string) {
-  return nestedVariableLookup(
-    varName,
-    (name) => `self.vars["${name}"]`,
-    (value, key) =>
-      typeof key === 'number' ? `${value}[${key}]` : `${value}["${key}"]`
-  )
+  const keys = nestedVariableKeys(varName)
+  return keys.length
+    ? `self.nested_variable(${[varName, ...keys].map((key) => `"${key}"`).join(', ')})`
+    : `self.vars["${varName}"]`
 }
 
 function variableSetter(varName: string, value: string) {
   return varName ? `self.vars["${varName}"] = ${value}` : ''
+}
+
+// Reads a nested name like items[0].name the way playback does: a variable
+// with the exact name first, then each key. Leaves the name as text when a
+// key is missing.
+function emitNestedVariable() {
+  const generateMethodDeclaration = (name: string) =>
+    `def ${name}(self, name, *keys):`
+  const commands = [
+    { level: 0, statement: 'if name in self.vars:' },
+    { level: 1, statement: 'return self.vars[name]' },
+    { level: 0, statement: 'value = self.vars' },
+    { level: 0, statement: 'for key in keys:' },
+    { level: 1, statement: 'if isinstance(value, dict) and key in value:' },
+    { level: 2, statement: 'value = value[key]' },
+    {
+      level: 1,
+      statement: 'elif isinstance(value, list) and key == "length":',
+    },
+    { level: 2, statement: 'value = len(value)' },
+    {
+      level: 1,
+      statement:
+        'elif isinstance(value, list) and key.isdigit() and int(key) < len(value):',
+    },
+    { level: 2, statement: 'value = value[int(key)]' },
+    { level: 1, statement: 'else:' },
+    { level: 2, statement: 'return "${" + name + "}"' },
+    { level: 0, statement: 'return value' },
+  ]
+  return Promise.resolve({
+    name: 'nested_variable',
+    commands,
+    generateMethodDeclaration,
+  })
 }
 
 function emitWaitForWindow() {
@@ -1042,5 +1075,5 @@ export default {
   emit,
   emitters,
   register,
-  extras: { emitNewWindowHandling, emitWaitForWindow },
+  extras: { emitNewWindowHandling, emitWaitForWindow, emitNestedVariable },
 }

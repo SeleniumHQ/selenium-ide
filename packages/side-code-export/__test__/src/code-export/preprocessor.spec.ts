@@ -18,11 +18,11 @@
 import {
   defaultPreprocessor,
   scriptPreprocessor,
+  hasNestedVariable,
   keysPreprocessor,
-  nestedVariableLookup,
+  nestedVariableKeys,
   preprocessParameter,
   resolveVariables,
-  variablePath,
 } from '../../../src/code-export/preprocessor'
 
 describe('preprocessors', () => {
@@ -182,30 +182,24 @@ describe('preprocessors', () => {
   })
 
   describe('nested variables', () => {
-    it('splits a nested name into the variable and its keys', () => {
-      expect(variablePath('items[0].name')).toEqual({
-        name: 'items',
-        keys: [0, 'name'],
-      })
-      expect(variablePath('user.items.2')).toEqual({
-        name: 'user',
-        keys: ['items', 2],
-      })
+    it('splits a nested name into its keys', () => {
+      expect(nestedVariableKeys('items[0].name')).toEqual([
+        'items',
+        '0',
+        'name',
+      ])
+      expect(nestedVariableKeys('user.items.2')).toEqual(['user', 'items', '2'])
     })
-    it('keeps other names whole', () => {
-      expect(variablePath('name')).toEqual({ name: 'name', keys: [] })
-      expect(variablePath('my-var.x')).toEqual({ name: 'my-var.x', keys: [] })
-      expect(variablePath('items[a]')).toEqual({ name: 'items[a]', keys: [] })
+    it('gives no keys for other names', () => {
+      expect(nestedVariableKeys('name')).toEqual([])
+      expect(nestedVariableKeys('my-var.x')).toEqual([])
+      expect(nestedVariableKeys('items[a]')).toEqual([])
     })
-    it('builds the lookup of each key', () => {
-      expect(
-        nestedVariableLookup(
-          'items[0].name',
-          (name) => `vars["${name}"]`,
-          (value, key) =>
-            typeof key === 'number' ? `${value}[${key}]` : `${value}.${key}`
-        )
-      ).toBe('vars["items"][0].name')
+    it('finds parameters that read nested names', () => {
+      expect(hasNestedVariable('Hi ${user.name}')).toBe(true)
+      expect(hasNestedVariable('${items[0]}')).toBe(true)
+      expect(hasNestedVariable('${name} user.name')).toBe(false)
+      expect(hasNestedVariable(undefined)).toBe(false)
     })
     it('marks nested names in parameters', () => {
       const target = defaultPreprocessor('Hi ${user.name} ${items[0]}')

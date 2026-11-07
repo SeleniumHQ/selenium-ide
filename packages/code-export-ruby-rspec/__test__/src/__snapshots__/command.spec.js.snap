@@ -126,7 +126,7 @@ dropped = @driver.find_element(:link_text, 'dropped')
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"puts('blah')"`;
 
-exports[`command code emitter should emit \`echo\` command with nested variables 1`] = `"puts('name = ' + @vars['user']['name'].to_s + ', id = ' + @vars['user']['items'][2]['id'].to_s)"`;
+exports[`command code emitter should emit \`echo\` command with nested variables 1`] = `"puts('name = ' + nested_variable('user.name', 'user', 'name').to_s + ', id = ' + nested_variable('user.items[2].id', 'user', 'items', '2', 'id').to_s)"`;
 
 exports[`command code emitter should emit \`echo\` command with variables 1`] = `"puts(@vars['blah'].to_s)"`;
 
@@ -160,7 +160,7 @@ exports[`command code emitter should emit \`execute async script\` command 1`] =
 
 exports[`command code emitter should emit \`execute script\` command 1`] = `"@vars['myVar'] = @driver.execute_script('javascript')"`;
 
-exports[`command code emitter should emit \`execute script\` command with a nested variable 1`] = `"@vars['three'] = @driver.execute_script('return arguments[0] + 1', @vars['user']['items'][1])"`;
+exports[`command code emitter should emit \`execute script\` command with a nested variable 1`] = `"@vars['three'] = @driver.execute_script('return arguments[0] + 1', nested_variable('user.items.1', 'user', 'items', '1'))"`;
 
 exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"@vars['myVar'] = @driver.execute_script('return \\\\'a\\\\'')"`;
 

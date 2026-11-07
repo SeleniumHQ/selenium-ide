@@ -25,7 +25,11 @@ import {
 } from './preprocessor'
 import doRender, { PartialRenderParameters } from './render'
 import { registerMethod } from './register'
-import { findReusedTestMethods, findCommandThatOpensWindow } from './find'
+import {
+  findReusedTestMethods,
+  findCommandThatOpensWindow,
+  findCommandThatReadsNestedVariable,
+} from './find'
 import {
   Commands,
   CommandShape,
@@ -480,25 +484,25 @@ async function emitTest(
   const render = (...args: PartialRenderParameters) =>
     doRender(commandPrefixPadding, ...args)
 
-  // handle extra dynamic emitters that aren't tied to an explicit command
-  if (emitter.extras) {
-    for (const emitter_name in emitter.extras) {
-      if (
-        emitter_name === 'emitWaitForWindow' &&
-        findCommandThatOpensWindow(test, tests)
-      ) {
-        const method = await emitter.extras[emitter_name]()
-        const result = await emitMethod(method, {
-          context,
-          level: testLevel,
-          render,
-          overrideCommandEmitting: true,
-        })
-        await registerMethod(method.name, result, {
-          generateMethodDeclaration: method.generateMethodDeclaration,
-          hooks,
-        })
-      }
+  // Helper methods that the test needs
+  const helpers = [
+    ['emitWaitForWindow', findCommandThatOpensWindow],
+    ['emitNestedVariable', findCommandThatReadsNestedVariable],
+  ] as const
+  for (const [helperName, isNeeded] of helpers) {
+    const emitHelper = emitter.extras?.[helperName]
+    if (emitHelper && isNeeded(test, tests)) {
+      const method = await emitHelper()
+      const result = await emitMethod(method, {
+        context,
+        level: testLevel,
+        render,
+        overrideCommandEmitting: true,
+      })
+      await registerMethod(method.name, result, {
+        generateMethodDeclaration: method.generateMethodDeclaration,
+        hooks,
+      })
     }
   }
 

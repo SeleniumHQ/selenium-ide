@@ -16,6 +16,7 @@
 // under the License.
 
 import { CommandShape, TestShape } from '@seleniumhq/side-model'
+import { hasNestedVariable } from './preprocessor'
 
 export function deduplicateReusedTestMethods(testMethods: TestShape[]) {
   return testMethods.filter((entry, index) => {
@@ -27,27 +28,25 @@ export function deduplicateReusedTestMethods(testMethods: TestShape[]) {
   })
 }
 
-export function findCommandThatOpensWindow(
+// Finds a command in a test, or in the tests it runs, that matches
+function findCommand(
   test: TestShape,
   tests: TestShape[],
+  matches: (command: CommandShape) => boolean,
   searchedTests: TestShape[] = []
 ): CommandShape | null {
   searchedTests.push(test)
   for (const command of test.commands) {
-    if (command.opensWindow) {
+    if (matches(command)) {
       return command
     }
     if (command.command === 'run') {
       const nestedTests = findReusedTestMethods(test, tests)
-      for (const nestedTest in nestedTests) {
-        if (searchedTests.indexOf(nestedTests[nestedTest]) !== -1) {
+      for (const nestedTest of nestedTests) {
+        if (searchedTests.indexOf(nestedTest) !== -1) {
           continue
         }
-        const cmd = findCommandThatOpensWindow(
-          nestedTests[nestedTest],
-          tests,
-          searchedTests
-        )
+        const cmd = findCommand(nestedTest, tests, matches, searchedTests)
         if (cmd) {
           return cmd
         }
@@ -56,6 +55,22 @@ export function findCommandThatOpensWindow(
   }
   return null
 }
+
+export const findCommandThatOpensWindow = (
+  test: TestShape,
+  tests: TestShape[]
+) => findCommand(test, tests, (command) => Boolean(command.opensWindow))
+
+export const findCommandThatReadsNestedVariable = (
+  test: TestShape,
+  tests: TestShape[]
+) =>
+  findCommand(
+    test,
+    tests,
+    (command) =>
+      hasNestedVariable(command.target) || hasNestedVariable(command.value)
+  )
 
 export function findReusedTestMethods(
   test: TestShape,

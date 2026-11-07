@@ -80,41 +80,25 @@ export function preprocessParameter(
 export const hasVariable = (param: string) =>
   typeof param === 'string' && param.includes(VARIABLE_START)
 
-// A variable name, with optional .key or [index] parts that read nested
-// values, like items[0].name
-const VARIABLE_NAME = String.raw`\w+(?:\.\w+|\[\d+\])*`
-const VARIABLE_PART = /\.(\w+)|\[(\d+)\]/g
+// A variable name can have .key or [index] parts that read nested values,
+// like items[0].name
+const NAME_PART = String.raw`(?:\.\w+|\[\d+\])`
+const VARIABLE_NAME = String.raw`\w+${NAME_PART}*`
+const NESTED_NAME = String.raw`\w+${NAME_PART}+`
 
 /**
- * Splits a variable name into the stored variable and the keys of a nested
- * value: items[0].name gives { name: 'items', keys: [0, 'name'] }. Keys made
- * of digits are list indexes. Other names are returned whole.
+ * Splits a nested name into its keys, starting with the variable name:
+ * items[0].name gives ['items', '0', 'name']. Other names give [].
  */
-export function variablePath(variableName: string) {
-  const match = /^(\w+)((?:\.\w+|\[\d+\])+)$/.exec(variableName)
-  if (!match) return { name: variableName, keys: [] as (string | number)[] }
-  const keys: (string | number)[] = []
-  const regexp = new RegExp(VARIABLE_PART)
-  let part
-  while ((part = regexp.exec(match[2]))) {
-    const key = part[1] ?? part[2]
-    keys.push(/^\d+$/.test(key) ? Number(key) : key)
-  }
-  return { name: match[1], keys }
+export function nestedVariableKeys(variableName: string) {
+  if (!new RegExp(`^${NESTED_NAME}$`).test(variableName)) return []
+  return variableName.split(/[.[\]]+/).filter(Boolean)
 }
 
-/**
- * Builds the lookup of a variable name. A nested name like items[0].name
- * starts with the lookup of the stored variable and reads each key in turn.
- */
-export function nestedVariableLookup(
-  variableName: string,
-  lookup: (name: string) => string,
-  readKey: (value: string, key: string | number) => string
-) {
-  const { name, keys } = variablePath(variableName)
-  return keys.reduce(readKey, lookup(name))
-}
+// Whether a parameter reads a nested name, like ${items[0].name}
+export const hasNestedVariable = (param: unknown) =>
+  typeof param === 'string' &&
+  new RegExp(String.raw`\$\{${NESTED_NAME}\}`).test(param)
 
 export function defaultPreprocessor(
   param: string,
