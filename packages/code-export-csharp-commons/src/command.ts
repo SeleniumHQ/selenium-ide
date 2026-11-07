@@ -23,6 +23,7 @@ import {
   EmitterContext,
   ScriptShape,
   hasVariable,
+  nestedVariableKeys,
 } from 'side-code-export'
 // eslint-disable-next-line n/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
@@ -148,11 +149,81 @@ const variableInString = {
 
 // Convert.ToString turns a null value into an empty string instead of failing
 function variableLookup(varName: string) {
-  return `Convert.ToString(vars["${varName}"])`
+  return `Convert.ToString(${variableValue(varName)})`
+}
+
+// The stored value of a variable. Nested names go through nestedVariable.
+function variableValue(varName: string) {
+  const keys = nestedVariableKeys(varName)
+  return keys.length
+    ? `nestedVariable(${[varName, ...keys].map((key) => `"${key}"`).join(', ')})`
+    : `vars["${varName}"]`
 }
 
 function variableSetter(varName: string, value: string) {
   return varName ? `vars["${varName}"] = ${value};` : ''
+}
+
+// Reads a nested name like items[0].name the way playback does: a variable
+// with the exact name first, then each key. Leaves the name as text when a
+// key is missing.
+function emitNestedVariable() {
+  const generateMethodDeclaration = (name: string) =>
+    `public object ${name}(string name, params string[] keys) {`
+  const commands = [
+    { level: 0, statement: 'if (vars.ContainsKey(name)) {' },
+    { level: 1, statement: 'return vars[name];' },
+    { level: 0, statement: '}' },
+    { level: 0, statement: 'object value = vars;' },
+    { level: 0, statement: 'foreach (var key in keys) {' },
+    {
+      level: 1,
+      statement:
+        'if (value is IDictionary<string, object> map && map.ContainsKey(key)) {',
+    },
+    { level: 2, statement: 'value = map[key];' },
+    {
+      level: 1,
+      statement:
+        '} else if (value is System.Collections.IList list && key == "length") {',
+    },
+    { level: 2, statement: 'value = list.Count;' },
+    {
+      level: 1,
+      statement:
+        '} else if (value is System.Collections.IList items && int.TryParse(key, out var index) && index < items.Count) {',
+    },
+    { level: 2, statement: 'value = items[index];' },
+    // storeJson keeps objects as JsonElement
+    {
+      level: 1,
+      statement:
+        '} else if (value is System.Text.Json.JsonElement json && json.ValueKind == System.Text.Json.JsonValueKind.Object && json.TryGetProperty(key, out var property)) {',
+    },
+    { level: 2, statement: 'value = property;' },
+    {
+      level: 1,
+      statement:
+        '} else if (value is System.Text.Json.JsonElement array && array.ValueKind == System.Text.Json.JsonValueKind.Array && key == "length") {',
+    },
+    { level: 2, statement: 'value = array.GetArrayLength();' },
+    {
+      level: 1,
+      statement:
+        '} else if (value is System.Text.Json.JsonElement elements && elements.ValueKind == System.Text.Json.JsonValueKind.Array && int.TryParse(key, out var position) && position < elements.GetArrayLength()) {',
+    },
+    { level: 2, statement: 'value = elements[position];' },
+    { level: 1, statement: '} else {' },
+    { level: 2, statement: 'return "${" + name + "}";' },
+    { level: 1, statement: '}' },
+    { level: 0, statement: '}' },
+    { level: 0, statement: 'return value;' },
+  ]
+  return Promise.resolve({
+    name: 'nestedVariable',
+    commands,
+    generateMethodDeclaration,
+  })
 }
 
 function emitWaitForWindow() {
@@ -494,7 +565,7 @@ async function emitExecuteAsyncScript(script: ScriptShape, varName: string) {
 
 function generateScriptArguments(script: ScriptShape) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map((varName: string) => `vars["${varName}"]`)
+    .map(variableValue)
     .join(',')}`
 }
 
@@ -1164,5 +1235,5 @@ export default {
   variableSetter,
   emit,
   register,
-  extras: { emitWaitForWindow, emitNewWindowHandling },
+  extras: { emitWaitForWindow, emitNewWindowHandling, emitNestedVariable },
 }

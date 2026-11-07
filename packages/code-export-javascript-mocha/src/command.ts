@@ -23,6 +23,7 @@ import {
   ProcessedCommandEmitter,
   ScriptShape,
   hasVariable,
+  nestedVariableKeys,
 } from 'side-code-export'
 // eslint-disable-next-line n/no-unpublished-import
 import { CommandShape } from '@seleniumhq/side-model'
@@ -147,11 +148,49 @@ const variableInString = {
 }
 
 function variableLookup(varName: string) {
-  return `vars["${varName}"]`
+  const keys = nestedVariableKeys(varName)
+  return keys.length
+    ? `nested_variable(${[varName, ...keys].map((key) => `"${key}"`).join(', ')})`
+    : `vars["${varName}"]`
 }
 
 function variableSetter(varName: string, value: string) {
   return varName ? `vars["${varName}"] = ${value}` : ''
+}
+
+// Reads a nested name like items[0].name the way playback does: a variable
+// with the exact name first, then each key. Leaves the name as text when a
+// key is missing.
+function emitNestedVariable() {
+  const generateMethodDeclaration = (name: string) => ({
+    body: `function ${name}(name, ...keys) {`,
+    terminatingKeyword: '}',
+  })
+  const commands = [
+    {
+      level: 0,
+      statement:
+        'if (Object.prototype.hasOwnProperty.call(vars, name)) return vars[name]',
+    },
+    { level: 0, statement: 'let value = vars' },
+    { level: 0, statement: 'for (const key of keys) {' },
+    {
+      level: 1,
+      statement:
+        "if (value === null || typeof value !== 'object' || !Object.prototype.hasOwnProperty.call(value, key)) {",
+    },
+    { level: 2, statement: 'return "${" + name + "}"' },
+    { level: 1, statement: '}' },
+    { level: 1, statement: 'value = value[key]' },
+    { level: 0, statement: '}' },
+    { level: 0, statement: 'return value' },
+  ]
+  return Promise.resolve({
+    // Reused test names have no underscore, so they can't clash
+    name: 'nested_variable',
+    commands,
+    generateMethodDeclaration,
+  })
 }
 
 function emitWaitForWindow() {
@@ -199,7 +238,9 @@ async function emitNewWindowHandling(
 }
 
 function emitAssert(varName: string, value: string) {
-  return Promise.resolve(`assert(vars["${varName}"].toString() == "${value}")`)
+  return Promise.resolve(
+    `assert(${variableLookup(varName)}.toString() == "${value}")`
+  )
 }
 
 function emitAssertAlert(alertText: string) {
@@ -269,7 +310,7 @@ function generateExpressionScript(script: ScriptShape) {
 
 function generateScriptArguments(script: ScriptShape) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map((varName) => `vars["${varName}"]`)
+    .map(variableLookup)
     .join(',')}`
 }
 
@@ -1062,6 +1103,6 @@ async function emitWaitForText(locator: string, text: string) {
 export default {
   emit,
   emitters,
-  extras: { emitNewWindowHandling, emitWaitForWindow },
+  extras: { emitNewWindowHandling, emitWaitForWindow, emitNestedVariable },
   register,
 }

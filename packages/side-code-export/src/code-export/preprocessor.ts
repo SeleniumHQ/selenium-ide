@@ -80,13 +80,33 @@ export function preprocessParameter(
 export const hasVariable = (param: string) =>
   typeof param === 'string' && param.includes(VARIABLE_START)
 
+// A variable name can have .key or [index] parts that read nested values,
+// like items[0].name
+const NAME_PART = String.raw`(?:\.\w+|\[\d+\])`
+const VARIABLE_NAME = String.raw`\w+${NAME_PART}*`
+const NESTED_NAME = String.raw`\w+${NAME_PART}+`
+
+/**
+ * Splits a nested name into its keys, starting with the variable name:
+ * items[0].name gives ['items', '0', 'name']. Other names give [].
+ */
+export function nestedVariableKeys(variableName: string) {
+  if (!new RegExp(`^${NESTED_NAME}$`).test(variableName)) return []
+  return variableName.split(/[.[\]]+/).filter(Boolean)
+}
+
+// Whether a parameter reads a nested name, like ${items[0].name}
+export const hasNestedVariable = (param: unknown) =>
+  typeof param === 'string' &&
+  new RegExp(String.raw`\$\{${NESTED_NAME}\}`).test(param)
+
 export function defaultPreprocessor(
   param: string,
   _variableLookup?: VariableLookup
 ) {
   if (!param) return ''
   return param.replace(
-    /\$\{(\w+)\}/g,
+    new RegExp(`\\$\\{(${VARIABLE_NAME})\\}`, 'g'),
     (_match, name) => `${VARIABLE_START}${name}${VARIABLE_END}`
   )
 }
@@ -210,7 +230,7 @@ export function keysPreprocessor(
   variableLookup: VariableLookup = () => ''
 ): string[] {
   let keys = []
-  let match = str.match(/\$\{\w+\}/g)
+  let match = str.match(new RegExp(`\\$\\{${VARIABLE_NAME}\\}`, 'g'))
   if (!match) {
     keys.push(str)
   } else {

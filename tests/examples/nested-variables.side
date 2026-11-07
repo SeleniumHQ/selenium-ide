@@ -1,0 +1,268 @@
+{
+  "id": "0162d2f7-9f87-428d-a460-b9cea0f2f4ef",
+  "version": "2.0",
+  "name": "Nested Variables",
+  "url": "http://localhost:8080",
+  "tests": [
+    {
+      "id": "da25877c-a363-4310-84e0-bfeee9054f8b",
+      "name": "nested variables",
+      "commands": [
+        {
+          "id": "b6a68309-b7a2-4477-adf9-1a37d96fc186",
+          "comment": "",
+          "command": "open",
+          "target": "/store/attributes.html",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "07057f78-4279-4f87-96a9-89a4e2dbc018",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return { name: 'Ada', items: [1, 2, { id: 'x' }], codes: { 200: 'OK' } }",
+          "targets": [],
+          "value": "user"
+        },
+        {
+          "id": "9cf9763a-c8a8-4502-b286-cd9bb6b736af",
+          "comment": "",
+          "command": "store",
+          "target": "${user.name}",
+          "targets": [],
+          "value": "name"
+        },
+        {
+          "id": "0e67d6af-7105-453e-b548-b15154ca44bc",
+          "comment": "",
+          "command": "assert",
+          "target": "name",
+          "targets": [],
+          "value": "Ada"
+        },
+        {
+          "id": "9f381514-9487-4071-9edb-a5f4be15bbaf",
+          "comment": "",
+          "command": "store",
+          "target": "Hi ${user.name}!",
+          "targets": [],
+          "value": "greeting"
+        },
+        {
+          "id": "4179fbce-c964-462f-ac08-2f09069abeb0",
+          "comment": "",
+          "command": "assert",
+          "target": "greeting",
+          "targets": [],
+          "value": "Hi Ada!"
+        },
+        {
+          "id": "c68d07e4-7314-4670-afd7-31cf882e6658",
+          "comment": "",
+          "command": "store",
+          "target": "item ${user.items.0}",
+          "targets": [],
+          "value": "first"
+        },
+        {
+          "id": "393c71f6-29ed-4329-84c0-95303266f0e3",
+          "comment": "",
+          "command": "assert",
+          "target": "first",
+          "targets": [],
+          "value": "item 1"
+        },
+        {
+          "id": "7b17f06e-76eb-487b-89a0-cdfcc2ac1387",
+          "comment": "",
+          "command": "store",
+          "target": "${user.items[2].id}",
+          "targets": [],
+          "value": "id"
+        },
+        {
+          "id": "49a00991-6d31-49d5-8798-b7ff07bba3b2",
+          "comment": "",
+          "command": "assert",
+          "target": "id",
+          "targets": [],
+          "value": "x"
+        },
+        {
+          "id": "7983209b-23ef-4991-8a52-0d8d77a2b6bf",
+          "comment": "",
+          "command": "executeScript",
+          "target": "return ${user.items[1]} + 1",
+          "targets": [],
+          "value": "three"
+        },
+        {
+          "id": "eb47daa7-cbbc-4fe0-a672-d4639b6cfe13",
+          "comment": "",
+          "command": "assert",
+          "target": "three",
+          "targets": [],
+          "value": "3"
+        },
+        {
+          "id": "b0155dc6-d8d1-428c-b459-0877f1b4c8fa",
+          "comment": "",
+          "command": "type",
+          "target": "id=test",
+          "targets": [],
+          "value": "${user.items[2].id}"
+        },
+        {
+          "id": "feeeffb9-a314-4d6f-92eb-e651023384f3",
+          "comment": "",
+          "command": "assertValue",
+          "target": "id=test",
+          "targets": [],
+          "value": "x"
+        },
+        {
+          "id": "7abea335-6610-4d12-bbd0-425d12f625ae",
+          "comment": "",
+          "command": "store",
+          "target": "count ${user.items.length}",
+          "targets": [],
+          "value": "count"
+        },
+        {
+          "id": "9dd73c88-3311-4879-a30a-a6025f6dba8e",
+          "comment": "",
+          "command": "assert",
+          "target": "count",
+          "targets": [],
+          "value": "count 3"
+        },
+        {
+          "id": "a3516e04-1500-4de3-8653-01901c3484cf",
+          "comment": "",
+          "command": "store",
+          "target": "code ${user.codes.200}",
+          "targets": [],
+          "value": "code"
+        },
+        {
+          "id": "e3bed694-65ca-4248-a56f-71311c4039c3",
+          "comment": "",
+          "command": "assert",
+          "target": "code",
+          "targets": [],
+          "value": "code OK"
+        },
+        {
+          "id": "194db53c-11f1-42f7-af9e-cc11e996bf0b",
+          "comment": "",
+          "command": "store",
+          "target": "age ${user.age}",
+          "targets": [],
+          "value": "age"
+        },
+        {
+          "id": "e95ec72f-7aea-4c0e-8c68-176cf60b5861",
+          "comment": "",
+          "command": "assert",
+          "target": "age",
+          "targets": [],
+          "value": "age ${user.age}"
+        },
+        {
+          "id": "14cada9e-c272-488a-bfe4-dec21431be5c",
+          "comment": "",
+          "command": "assert",
+          "target": "user.items[2].id",
+          "targets": [],
+          "value": "x"
+        },
+        {
+          "id": "76845004-9618-4f21-b380-c12da02b30f6",
+          "comment": "",
+          "command": "storeJson",
+          "target": "{\"city\": {\"name\": \"Paris\"}, \"tags\": [\"a\", \"b\"]}",
+          "targets": [],
+          "value": "place"
+        },
+        {
+          "id": "a8673b1c-751f-4ecc-bf1d-d97a5886abee",
+          "comment": "",
+          "command": "store",
+          "target": "${place.city.name} ${place.tags[1]} ${place.tags.length}",
+          "targets": [],
+          "value": "placeText"
+        },
+        {
+          "id": "06addb1a-0a28-4381-9b3f-a8ab2e84dead",
+          "comment": "",
+          "command": "assert",
+          "target": "placeText",
+          "targets": [],
+          "value": "Paris b 2"
+        },
+        {
+          "id": "323e35de-7457-4120-a511-6f2af9c0ef73",
+          "comment": "",
+          "command": "run",
+          "target": "nestedVariable",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "a7d86b80-986e-4065-a0d4-9a6395b4c381",
+          "comment": "",
+          "command": "store",
+          "target": "Grace",
+          "targets": [],
+          "value": "user.name"
+        },
+        {
+          "id": "7bfce554-6ca1-4ebd-b563-8180eccd0529",
+          "comment": "",
+          "command": "store",
+          "target": "exact ${user.name}",
+          "targets": [],
+          "value": "exact"
+        },
+        {
+          "id": "2c306b6f-e8ad-40eb-a048-a4bdab69042b",
+          "comment": "",
+          "command": "assert",
+          "target": "exact",
+          "targets": [],
+          "value": "exact Grace"
+        }
+      ]
+    },
+    {
+      "id": "40f95ba1-5d9a-4a4d-b26e-500b66a6103f",
+      "name": "nestedVariable",
+      "commands": [
+        {
+          "id": "8e830c72-221f-4f1e-bbcc-d75eae890fbc",
+          "comment": "",
+          "command": "echo",
+          "target": "a reused test named like the helper",
+          "targets": [],
+          "value": ""
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "500a45b0-879f-4f6e-86bd-edffe5a45243",
+      "name": "nested variables",
+      "persistSession": false,
+      "parallel": false,
+      "timeout": 300,
+      "tests": [
+        "da25877c-a363-4310-84e0-bfeee9054f8b"
+      ]
+    }
+  ],
+  "urls": [
+    "http://localhost:8080/"
+  ],
+  "plugins": []
+}

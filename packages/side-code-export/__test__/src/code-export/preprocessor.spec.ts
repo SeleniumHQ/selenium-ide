@@ -18,7 +18,9 @@
 import {
   defaultPreprocessor,
   scriptPreprocessor,
+  hasNestedVariable,
   keysPreprocessor,
+  nestedVariableKeys,
   preprocessParameter,
   resolveVariables,
 } from '../../../src/code-export/preprocessor'
@@ -176,6 +178,46 @@ describe('preprocessors', () => {
       return expect(
         keys.map((key) => resolveVariables(key, variableLookup))
       ).toEqual(['test', 'vars.get("var").toString()', 'foo', `Key['ENTER']`])
+    })
+  })
+
+  describe('nested variables', () => {
+    it('splits a nested name into its keys', () => {
+      expect(nestedVariableKeys('items[0].name')).toEqual([
+        'items',
+        '0',
+        'name',
+      ])
+      expect(nestedVariableKeys('user.items.2')).toEqual(['user', 'items', '2'])
+    })
+    it('gives no keys for other names', () => {
+      expect(nestedVariableKeys('name')).toEqual([])
+      expect(nestedVariableKeys('my-var.x')).toEqual([])
+      expect(nestedVariableKeys('items[a]')).toEqual([])
+    })
+    it('finds parameters that read nested names', () => {
+      expect(hasNestedVariable('Hi ${user.name}')).toBe(true)
+      expect(hasNestedVariable('${items[0]}')).toBe(true)
+      expect(hasNestedVariable('${name} user.name')).toBe(false)
+      expect(hasNestedVariable(undefined)).toBe(false)
+    })
+    it('marks nested names in parameters', () => {
+      const target = defaultPreprocessor('Hi ${user.name} ${items[0]}')
+      expect(resolveVariables(target, (name) => `<${name}>`)).toBe(
+        'Hi <user.name> <items[0]>'
+      )
+    })
+    it('leaves names that are not variables as text', () => {
+      expect(defaultPreprocessor('${a.} ${a[b]} ${.a}')).toBe(
+        '${a.} ${a[b]} ${.a}'
+      )
+    })
+    it('finds nested names in keys', () => {
+      expect(
+        keysPreprocessor('a${user.name}${KEY_ENTER}', variableLookup).map(
+          (key) => resolveVariables(key, variableLookup)
+        )
+      ).toEqual(['a', 'vars.get("user.name").toString()', `Key['ENTER']`])
     })
   })
 })

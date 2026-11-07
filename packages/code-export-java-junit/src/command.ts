@@ -25,6 +25,7 @@ import {
   ProcessedCommandEmitter,
   ScriptShape,
   hasVariable,
+  nestedVariableKeys,
 } from 'side-code-export'
 import location from './location'
 import selection from './selection'
@@ -148,11 +149,64 @@ const variableInString = {
 
 // String.valueOf turns a null value into "null" instead of failing
 function variableLookup(varName: string) {
-  return `String.valueOf(vars.get("${varName}"))`
+  return `String.valueOf(${variableValue(varName)})`
+}
+
+// The stored value of a variable. Nested names go through nestedVariable.
+function variableValue(varName: string) {
+  const keys = nestedVariableKeys(varName)
+  return keys.length
+    ? `nestedVariable(${[varName, ...keys].map((key) => `"${key}"`).join(', ')})`
+    : `vars.get("${varName}")`
 }
 
 function variableSetter(varName: string, value: string) {
   return varName ? `vars.put("${varName}", ${value});` : ''
+}
+
+// Reads a nested name like items[0].name the way playback does: a variable
+// with the exact name first, then each key. Leaves the name as text when a
+// key is missing.
+function emitNestedVariable() {
+  const generateMethodDeclaration = (name: string) =>
+    `public Object ${name}(String name, String... keys) {`
+  const commands = [
+    { level: 0, statement: 'if (vars.containsKey(name)) {' },
+    { level: 1, statement: 'return vars.get(name);' },
+    { level: 0, statement: '}' },
+    { level: 0, statement: 'Object value = vars;' },
+    { level: 0, statement: 'for (String key : keys) {' },
+    {
+      level: 1,
+      statement:
+        'if (value instanceof Map && ((Map<?, ?>) value).containsKey(key)) {',
+    },
+    { level: 2, statement: 'value = ((Map<?, ?>) value).get(key);' },
+    {
+      level: 1,
+      statement: '} else if (value instanceof List && key.equals("length")) {',
+    },
+    { level: 2, statement: 'value = ((List<?>) value).size();' },
+    {
+      level: 1,
+      statement:
+        '} else if (value instanceof List && key.matches("\\\\d{1,9}") && Integer.parseInt(key) < ((List<?>) value).size()) {',
+    },
+    {
+      level: 2,
+      statement: 'value = ((List<?>) value).get(Integer.parseInt(key));',
+    },
+    { level: 1, statement: '} else {' },
+    { level: 2, statement: 'return "${" + name + "}";' },
+    { level: 1, statement: '}' },
+    { level: 0, statement: '}' },
+    { level: 0, statement: 'return value;' },
+  ]
+  return Promise.resolve({
+    name: 'nestedVariable',
+    commands,
+    generateMethodDeclaration,
+  })
 }
 
 function emitWaitForWindow() {
@@ -486,7 +540,7 @@ async function emitExecuteAsyncScript(script: ScriptShape, varName: string) {
 
 function generateScriptArguments(script: ScriptShape) {
   return `${script.argv.length ? ', ' : ''}${script.argv
-    .map((varName) => `vars.get("${varName}")`)
+    .map(variableValue)
     .join(',')}`
 }
 
@@ -1163,5 +1217,5 @@ export default {
   emit,
   emitters,
   register,
-  extras: { emitNewWindowHandling, emitWaitForWindow },
+  extras: { emitNewWindowHandling, emitWaitForWindow, emitNestedVariable },
 }

@@ -18,6 +18,8 @@ export type LanguageExportExtras = {
     commands: ExportCommandShape[]
     generateMethodDeclaration: LanguageEmitterOpts['generateMethodDeclaration']
   }>
+  // Reads nested names like items[0].name, for languages that support them
+  emitNestedVariable?: LanguageExportExtras['emitWaitForWindow']
   emitNewWindowHandling: (
     command: CommandShape,
     emittedCommand: string,

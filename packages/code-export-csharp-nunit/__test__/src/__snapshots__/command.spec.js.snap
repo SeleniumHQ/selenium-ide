@@ -160,6 +160,8 @@ exports[`command code emitter should emit \`drag and drop to object\` command 1`
 
 exports[`command code emitter should emit \`echo\` command 1`] = `"Console.WriteLine(\\"blah\\");"`;
 
+exports[`command code emitter should emit \`echo\` command with nested variables 1`] = `"Console.WriteLine(\\"name = \\" + Convert.ToString(nestedVariable(\\"user.name\\", \\"user\\", \\"name\\")) + \\", id = \\" + Convert.ToString(nestedVariable(\\"user.items[2].id\\", \\"user\\", \\"items\\", \\"2\\", \\"id\\")));"`;
+
 exports[`command code emitter should emit \`echo\` command with variables 1`] = `"Console.WriteLine(Convert.ToString(vars[\\"blah\\"]));"`;
 
 exports[`command code emitter should emit \`edit content\` command 1`] = `
@@ -193,6 +195,8 @@ Object {
 exports[`command code emitter should emit \`execute async script\` command 1`] = `"vars[\\"myVar\\"] = js.ExecuteAsyncScript(\\"var callback = arguments[arguments.length - 1];javascript.then(callback).catch(callback);\\");"`;
 
 exports[`command code emitter should emit \`execute script\` command 1`] = `"vars[\\"myVar\\"] = js.ExecuteScript(\\"javascript\\");"`;
+
+exports[`command code emitter should emit \`execute script\` command with a nested variable 1`] = `"vars[\\"three\\"] = js.ExecuteScript(\\"return arguments[0] + 1\\", nestedVariable(\\"user.items.1\\", \\"user\\", \\"items\\", \\"1\\"));"`;
 
 exports[`command code emitter should emit \`execute script\` command with return string value 1`] = `"vars[\\"myVar\\"] = js.ExecuteScript(\\"return 'a'\\");"`;
 

@@ -265,6 +265,22 @@ describe('command code emitter', () => {
     }
     return expect(prettify(command)).resolves.toMatchSnapshot()
   })
+  it('should emit `echo` command with nested variables', () => {
+    const command = {
+      command: 'echo',
+      target: 'name = ${user.name}, id = ${user.items[2].id}',
+      value: '',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
+  it('should emit `execute script` command with a nested variable', () => {
+    const command = {
+      command: 'executeScript',
+      target: 'return ${user.items.1} + 1',
+      value: 'three',
+    }
+    return expect(prettify(command)).resolves.toMatchSnapshot()
+  })
   it('should emit `edit content` command', () => {
     const command = {
       command: 'editContent',
