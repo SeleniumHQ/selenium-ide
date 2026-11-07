@@ -8,33 +8,38 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [ '22', '24' ]
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v7
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v7
         with:
-          node-version: '12.x'
-      - name: Install Peru
-        run: pip3 install peru
-      - name: Sync Peru
-        run: peru sync
+          node-version: ${{ matrix.node }}
+      - name: Install Yarn 1
+        run: npm install -g yarn@1.22.22
+      - name: Sync Selenium files
+        run: ./scripts/sync-selenium.sh
       - name: Install dependencies
-        run: yarn --ignore-engines
-      - name: Install depedencies to website
-        run: cd website && yarn && cd ..
+        run: yarn --ignore-engines --frozen-lockfile
+      - name: Install website dependencies
+        run: cd website && yarn --frozen-lockfile
       - name: Build packages via lerna
         run: yarn run lerna run build --ignore selenium-ide-extension --ignore selenium-ide-extension-boilerplate
       - name: Build Selenium IDE
         run: NODE_ENV="staging" yarn build:ext
+      - name: Build Selenium IDE (production)
+        run: yarn build:ext:prod
       - name: Start Docker Compose
-        run: docker-compose up -d
+        run: docker compose up -d
       - name: Run linter
         run: yarn lint
-        continue-on-error: true
       - name: Run tests
-        run: yarn test
+        run: yarn test --ci
       - name: Run webdriver tests
-        run: yarn test:webdriver
+        run: yarn test:webdriver --ci
       - name: Run selenium tests
         run: yarn test:runner --server http://localhost:4444/wd/hub --force

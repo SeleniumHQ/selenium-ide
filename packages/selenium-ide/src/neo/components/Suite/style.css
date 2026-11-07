@@ -1,14 +1,14 @@
-.project .title:before {
+.project .title::before {
   content: '';
   display: inline-block;
   width: 20px;
   text-align: center;
   font-weight: bold;
 }
-.project > a.passed .title:before{
+.project > a.passed .title::before {
   content: '✓';
 }
-.project a.failed .title:before {
+.project a.failed .title::before {
   content: '✗';
 }
 

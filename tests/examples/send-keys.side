@@ -2,72 +2,66 @@
   "id": "8e43685a-112a-455b-a6b2-748a19071100",
   "version": "1.1",
   "name": "send-keys",
-  "url": "https://www.google.com",
-  "tests": [{
-    "id": "58cc1d1f-7920-47ee-a0eb-336a3ebdf069",
-    "name": "send keys",
-    "commands": [{
-      "id": "161321ce-3c63-4283-989e-d20117a97eb8",
-      "comment": "",
-      "command": "open",
-      "target": "/webhp",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "d6702ef2-8787-4252-9861-5aa28d65ab4e",
-      "comment": "",
-      "command": "type",
-      "target": "name=q",
-      "targets": [
-        ["id=lst-ib", "id"],
-        ["name=q", "name"],
-        ["css=#lst-ib", "css"],
-        ["xpath=//input[@id='lst-ib']", "xpath:attributes"],
-        ["xpath=//div[@id='gs_lc0']/input", "xpath:idRelative"],
-        ["xpath=//div[2]/div/input", "xpath:position"]
-      ],
-      "value": "selenium ide"
-    }, {
-      "id": "1b4d1d17-2e2e-4557-9cfa-260189c4b6a7",
-      "comment": "",
-      "command": "sendKeys",
-      "target": "name=q",
-      "targets": [
-        ["id=lst-ib", "id"],
-        ["name=q", "name"],
-        ["css=#lst-ib", "css"],
-        ["xpath=//input[@id='lst-ib']", "xpath:attributes"],
-        ["xpath=//div[@id='gs_lc0']/input", "xpath:idRelative"],
-        ["xpath=//div[2]/div/input", "xpath:position"]
-      ],
-      "value": "${KEY_ENTER}"
-    }, {
-      "id": "5628fe89-f130-40cb-b52e-244a41cd6516",
-      "comment": "",
-      "command": "click",
-      "target": "css=.g a[href='https://www.selenium.dev/selenium-ide/']",
-      "targets": [],
-      "value": ""
-    }, {
-      "id": "fa9bae47-4a7e-4e92-9e02-e6863c13aaf1",
-      "comment": "",
-      "command": "assertTitle",
-      "target": "Selenium IDE · Open source record and playback test automation for the web",
-      "targets": [],
-      "value": ""
-    }]
-  }],
-  "suites": [{
-    "id": "87b889f7-70eb-4a6c-a97b-297c27cbad73",
-    "name": "checks",
-    "parallel": false,
-    "timeout": 3000,
-    "tests": ["58cc1d1f-7920-47ee-a0eb-336a3ebdf069"]
-  }],
-  "urls": ["https://en.wikipedia.org/", "https://www.google.com/"],
-  "plugins": [{
-    "id": "nknickobkcecmkiiefhjmiaihliikohm",
-    "name": "Applitools",
-    "version": "1.0.0"
-  }]
+  "url": "http://nginx",
+  "tests": [
+    {
+      "id": "58cc1d1f-7920-47ee-a0eb-336a3ebdf069",
+      "name": "send keys",
+      "commands": [
+        {
+          "id": "d0efab8d-0769-47de-a71c-f75efd652527",
+          "comment": "",
+          "command": "open",
+          "target": "/form.html",
+          "targets": [],
+          "value": ""
+        },
+        {
+          "id": "e576f564-9da2-4a5b-8482-24b9a4a5de78",
+          "comment": "",
+          "command": "type",
+          "target": "css=input",
+          "targets": [],
+          "value": "selenium ide"
+        },
+        {
+          "id": "fd64861b-ff34-49fa-af3d-720504e7b8f0",
+          "comment": "",
+          "command": "sendKeys",
+          "target": "css=input",
+          "targets": [],
+          "value": "${KEY_ENTER}"
+        },
+        {
+          "id": "76a5ef4a-f1b5-407b-b3e7-7bb915178c84",
+          "comment": "",
+          "command": "assertText",
+          "target": "css=h1",
+          "targets": [],
+          "value": "Success!"
+        }
+      ]
+    }
+  ],
+  "suites": [
+    {
+      "id": "87b889f7-70eb-4a6c-a97b-297c27cbad73",
+      "name": "checks",
+      "parallel": false,
+      "timeout": 3000,
+      "tests": [
+        "58cc1d1f-7920-47ee-a0eb-336a3ebdf069"
+      ]
+    }
+  ],
+  "urls": [
+    "http://nginx/"
+  ],
+  "plugins": [
+    {
+      "id": "nknickobkcecmkiiefhjmiaihliikohm",
+      "name": "Applitools",
+      "version": "1.0.0"
+    }
+  ]
 }
