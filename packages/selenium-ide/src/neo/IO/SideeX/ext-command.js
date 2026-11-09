@@ -823,8 +823,6 @@ export default class ExtCommand {
     this.setFirstTab(win.tabs[0])
     this.windowSession.generalUsePlayingWindowId = win.id
     this.windowSession.setOpenedWindow(win.id)
-    const backgroundWindow = await browser.runtime.getBackgroundPage()
-    backgroundWindow.master[win.id] = this.windowSession.ideWindowId
   }
 
   setFirstTab(tab) {

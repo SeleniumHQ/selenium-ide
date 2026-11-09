@@ -16,6 +16,7 @@
 // under the License.
 
 import browser from 'webextension-polyfill'
+import { addOpenedWindow, takeOpenedWindows } from '../../common/opened-windows'
 
 export class WindowSession {
   // tabs opened during IDE session
@@ -45,9 +46,7 @@ export class WindowSession {
   // set window as opened in the session
   setOpenedWindow(windowId) {
     this.openedWindowIds[windowId] = true
-    browser.runtime.getBackgroundPage().then(backgroundWindow => {
-      backgroundWindow.openedWindowIds.push(windowId)
-    })
+    addOpenedWindow(windowId)
   }
 
   getTabIdsByIdentifier(identifier) {
@@ -106,9 +105,7 @@ export class WindowSession {
       await browser.windows.remove(windowId)
     }
     this.openedWindowIds = {}
-    browser.runtime.getBackgroundPage().then(backgroundWindow => {
-      backgroundWindow.openedWindowIds = []
-    })
+    await takeOpenedWindows()
   }
 
   async focusIDEWindow() {
