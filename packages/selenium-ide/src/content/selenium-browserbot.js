@@ -478,7 +478,14 @@ BrowserBot.prototype.selectWindow = function(target) {
   else if (locatorType == 'name') {
     this._selectWindowByName(locatorValue)
   } else if (locatorType == 'var') {
-    let win = this.getCurrentWindow()[locatorValue]
+    // A name or a path of names, like `popup` or `window.opener`
+    let win = locatorValue
+      .split('.')
+      .filter((name, i) => !(i === 0 && name === 'window'))
+      .reduce(
+        (object, name) => (object == null ? object : object[name]),
+        this.getCurrentWindow()
+      )
     if (win) {
       this._selectWindowByName(win.name)
     } else {

@@ -4,7 +4,7 @@
   "name": "Selenium IDE",
   "version": "3.17.4",
   "version_name": "3.17.4",
-  "minimum_chrome_version": "135",
+  "minimum_chrome_version": "138",
   "homepage_url": "https://github.com/SeleniumHQ/selenium-ide",
   "icons": {
     "16": "icons/icon16.png",

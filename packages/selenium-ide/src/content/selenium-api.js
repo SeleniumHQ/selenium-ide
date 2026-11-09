@@ -229,15 +229,16 @@ Selenium.prototype.reset = function() {
   this.browserbot.resetPopups()
 }
 
-// Runs JavaScript from a test. Returns a promise of `{ value, isPromise, type }`.
-Selenium.prototype.eval = function(script, argv = [], isExpression = false) {
-  return runUserScript(script, argv, isExpression)
+// Runs JavaScript from a test. See runUserScript for the options.
+Selenium.prototype.eval = function(script, argv = [], options) {
+  return runUserScript(script, argv, options)
 }
 
 Selenium.prototype.doEvaluateConditional = function(script) {
-  return this.eval(script.script, script.argv, true).then(
-    result => !!result.value
-  )
+  return this.eval(script.script, script.argv, {
+    isExpression: true,
+    result: 'boolean',
+  }).then(result => result.isPromise || result.value)
 }
 
 Selenium.prototype.doVerifyChecked = function(locator) {
@@ -3037,7 +3038,7 @@ Selenium.prototype.preprocessParameter = function(value) {
             'parameter preprocessing using javascript{} tag is deprecated, please use execute script',
         },
       })
-      return this.eval(match[1]).then(
+      return this.eval(match[1], [], { result: 'value' }).then(
         ({ value }) => (value == null ? null : value.toString())
       )
     }
@@ -3261,7 +3262,9 @@ Selenium.prototype.doDeleteAllVisibleCookies = function() {
 }*/
 
 Selenium.prototype.doExecuteScript = async function(script, varName) {
-  const { value, isPromise } = await this.eval(script.script, script.argv)
+  const { value, isPromise } = await this.eval(script.script, script.argv, {
+    result: varName ? 'value' : 'none',
+  })
   if (isPromise) {
     throw new Error('Expected sync operation, instead received Promise')
   }
@@ -3271,7 +3274,11 @@ Selenium.prototype.doExecuteScript = async function(script, varName) {
 }
 
 Selenium.prototype.doExecuteAsyncScript = async function(script, varName) {
-  const { value, isPromise, type } = await this.eval(script.script, script.argv)
+  const { value, isPromise, type } = await this.eval(
+    script.script,
+    script.argv,
+    { result: varName ? 'value' : 'none', awaitPromise: true }
+  )
   if (!isPromise) {
     throw new Error(`Expected async operation, instead received ${type}`)
   }

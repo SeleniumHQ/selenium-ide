@@ -17,11 +17,24 @@
 
 import browser from 'webextension-polyfill'
 
-// Runs JavaScript from a test in this frame and returns
-// `{ value, isPromise, type }`. Extension code can't use eval in Manifest V3,
-// so the background runs the script with userScripts.execute. Errors are
-// caught inside the script, because the browser doesn't return Error objects.
-export async function runUserScript(script, argv = [], isExpression = false) {
+// Runs JavaScript from a test in this frame. Extension code can't use eval in
+// Manifest V3, so the background runs the script with userScripts.execute.
+// The script catches its own errors, because the browser doesn't return
+// Error objects.
+//
+// Options:
+// - isExpression: the script is an expression, not a function body
+// - result: what to send back: 'none', 'boolean' or 'value'. A value is
+//   copied as JSON, like messages between the page and the IDE.
+// - awaitPromise: wait for a returned promise and send back its result.
+//   Otherwise a returned promise is only reported with `isPromise`.
+//
+// Returns `{ value, isPromise, type }`.
+export async function runUserScript(
+  script,
+  argv = [],
+  { isExpression = false, result = 'none', awaitPromise = false } = {}
+) {
   const fn = isExpression
     ? `(...arguments) => (\n${script}\n)`
     : `(...arguments) => {\n${script}\n}`
@@ -30,25 +43,41 @@ export async function runUserScript(script, argv = [], isExpression = false) {
   const toError = e => ({
     error: e && e.message !== undefined ? String(e.message) : String(e),
   })
+  const typeOf = value => {
+    if (!value) return String(value)
+    try {
+      if (value.constructor && value.constructor.name) return value.constructor.name
+    } catch (e) {}
+    return Object.prototype.toString.call(value).slice(8, -1)
+  }
+  const send = (value, extra) => {
+    const out = Object.assign({ type: typeOf(value) }, extra)
+    if (${JSON.stringify(result)} === 'boolean') out.value = !!value
+    if (${JSON.stringify(result)} === 'value' && value !== undefined) {
+      out.value = JSON.parse(JSON.stringify(value))
+    }
+    return out
+  }
   try {
     const value = (${fn})(...JSON.parse(${args}))
     if (value && typeof value.then === 'function') {
+      if (!${awaitPromise}) return { isPromise: true, type: 'Promise' }
       return Promise.resolve(value).then(
-        value => ({ value, isPromise: true }),
+        value => send(value, { isPromise: true }),
         toError
-      )
+      ).catch(toError)
     }
-    return { value, type: value ? value.constructor.name : String(value) }
+    return send(value)
   } catch (e) {
     return toError(e)
   }
 })()`
-  const result = await browser.runtime.sendMessage({ runUserScript: code })
-  if (!result) {
+  const response = await browser.runtime.sendMessage({ runUserScript: code })
+  if (!response) {
     throw new Error('The script did not return a result')
   }
-  if (result.error !== undefined) {
-    throw new Error(result.error)
+  if (response.error !== undefined) {
+    throw new Error(response.error)
   }
-  return result
+  return response
 }

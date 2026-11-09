@@ -59,10 +59,12 @@ function doCommands(request, _sender, sendResponse) {
         document.body.setAttribute('SideeXPlayingFlag', true)
         // Parameters and commands can run JavaScript from the test, which
         // is asynchronous, so every command is handled as a promise.
-        Promise.all([
-          selenium.preprocessParameter(request.target),
-          selenium.preprocessParameter(request.value),
-        ])
+        // The target is resolved before the value, in case both run scripts
+        Promise.resolve(selenium.preprocessParameter(request.target))
+          .then(async target => [
+            target,
+            await selenium.preprocessParameter(request.value),
+          ])
           .then(([target, value]) => selenium['do' + upperCase](target, value))
           .then(function() {
             document.body.removeAttribute('SideeXPlayingFlag')
