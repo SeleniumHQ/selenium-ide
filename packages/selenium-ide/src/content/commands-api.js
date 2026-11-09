@@ -60,7 +60,8 @@ function doCommands(request, _sender, sendResponse) {
         // Parameters and commands can run JavaScript from the test, which
         // is asynchronous, so every command is handled as a promise.
         // The target is resolved before the value, in case both run scripts
-        Promise.resolve(selenium.preprocessParameter(request.target))
+        Promise.resolve()
+          .then(() => selenium.preprocessParameter(request.target))
           .then(async target => [
             target,
             await selenium.preprocessParameter(request.value),
