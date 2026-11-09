@@ -25,9 +25,20 @@ const autoprefixer = require('autoprefixer')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+// Closure code is loaded without eval: Manifest V3 doesn't allow it.
+function closureLoader(options) {
+  return [
+    path.resolve(__dirname, 'scripts/closure-no-eval-loader.js'),
+    {
+      loader: 'closure-loader',
+      options: Object.assign({ eval: false }, options),
+    },
+  ]
+}
+
 module.exports = {
   context: path.resolve(__dirname, 'src'),
-  devtool: isProduction ? 'source-map' : 'cheap-eval-source-map',
+  devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
   entry: {
     polyfills: ['./content/setup'],
     playback: ['./content/commands-api'],
@@ -71,8 +82,7 @@ module.exports = {
           },
           {
             test: /google-closure-library\/closure\/goog\/.*\.js/,
-            loader: 'closure-loader',
-            options: {
+            use: closureLoader({
               paths: [
                 path.resolve(
                   __dirname,
@@ -85,7 +95,7 @@ module.exports = {
               ],
               watch: false,
               es6mode: true,
-            },
+            }),
             exclude: [/google-closure-library\/closure\/goog\/base\.js$/],
           },
           {
@@ -94,24 +104,21 @@ module.exports = {
               path.resolve(__dirname, 'selenium'),
               path.resolve(__dirname, 'src'),
             ],
-            use: {
-              loader: 'closure-loader',
-              options: {
-                es6mode: true,
-                watch: false,
-                paths: [
-                  path.resolve(
-                    __dirname,
-                    '../../node_modules/google-closure-library/closure/goog'
-                  ),
-                  path.resolve(
-                    __dirname,
-                    '../../node_modules/google-closure-library/closure/goog/debug'
-                  ),
-                  path.resolve(__dirname, 'selenium/selenium-atoms'),
-                ],
-              },
-            },
+            use: closureLoader({
+              es6mode: true,
+              watch: false,
+              paths: [
+                path.resolve(
+                  __dirname,
+                  '../../node_modules/google-closure-library/closure/goog'
+                ),
+                path.resolve(
+                  __dirname,
+                  '../../node_modules/google-closure-library/closure/goog/debug'
+                ),
+                path.resolve(__dirname, 'selenium/selenium-atoms'),
+              ],
+            }),
           },
           {
             test: /third_party\/wgxpath\/.*\.js$/,
@@ -119,19 +126,16 @@ module.exports = {
               path.resolve(__dirname, 'selenium'),
               path.resolve(__dirname, 'src'),
             ],
-            use: {
-              loader: 'closure-loader',
-              options: {
-                es6mode: true,
-                watch: false,
-                paths: [
-                  path.resolve(
-                    __dirname,
-                    '../../node_modules/google-closure-library/closure/goog'
-                  ),
-                ],
-              },
-            },
+            use: closureLoader({
+              es6mode: true,
+              watch: false,
+              paths: [
+                path.resolve(
+                  __dirname,
+                  '../../node_modules/google-closure-library/closure/goog'
+                ),
+              ],
+            }),
           },
           {
             test: /atoms\/.*\.js$/,
@@ -139,25 +143,22 @@ module.exports = {
               path.resolve(__dirname, 'selenium'),
               path.resolve(__dirname, 'src'),
             ],
-            use: {
-              loader: 'closure-loader',
-              options: {
-                es6mode: true,
-                watch: false,
-                paths: [
-                  path.resolve(
-                    __dirname,
-                    '../../node_modules/google-closure-library/closure/goog'
-                  ),
-                  path.resolve(
-                    __dirname,
-                    '../../node_modules/google-closure-library/closure/goog/debug'
-                  ),
-                  path.resolve(__dirname, 'selenium/third_party/wgxpath'),
-                  path.resolve(__dirname, 'selenium/atoms'),
-                ],
-              },
-            },
+            use: closureLoader({
+              es6mode: true,
+              watch: false,
+              paths: [
+                path.resolve(
+                  __dirname,
+                  '../../node_modules/google-closure-library/closure/goog'
+                ),
+                path.resolve(
+                  __dirname,
+                  '../../node_modules/google-closure-library/closure/goog/debug'
+                ),
+                path.resolve(__dirname, 'selenium/third_party/wgxpath'),
+                path.resolve(__dirname, 'selenium/atoms'),
+              ],
+            }),
           },
           {
             test: /closure-polyfill\.js$/,
@@ -165,21 +166,18 @@ module.exports = {
               path.resolve(__dirname, 'selenium'),
               path.resolve(__dirname, 'src'),
             ],
-            use: {
-              loader: 'closure-loader',
-              options: {
-                es6mode: true,
-                watch: false,
-                paths: [
-                  path.resolve(
-                    __dirname,
-                    '../../node_modules/google-closure-library/closure/goog'
-                  ),
-                  path.resolve(__dirname, 'selenium/atoms'),
-                  path.resolve(__dirname, 'selenium/selenium-atoms'),
-                ],
-              },
-            },
+            use: closureLoader({
+              es6mode: true,
+              watch: false,
+              paths: [
+                path.resolve(
+                  __dirname,
+                  '../../node_modules/google-closure-library/closure/goog'
+                ),
+                path.resolve(__dirname, 'selenium/atoms'),
+                path.resolve(__dirname, 'selenium/selenium-atoms'),
+              ],
+            }),
           },
           // Process JS with Babel.
           {
