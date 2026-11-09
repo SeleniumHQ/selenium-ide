@@ -75,6 +75,7 @@ export default function seed(store, numberOfSuites = 0) {
   )
 
   const controlFlowIfTest = store.createTestCase('control flow if')
+  controlFlowIfTest.createCommand(undefined, 'open', '/')
   controlFlowIfTest.createCommand(
     undefined,
     'executeScript',
@@ -106,6 +107,7 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowIfTest.createCommand(undefined, 'assert', 'output', 'a')
 
   const controlFlowElseIfTest = store.createTestCase('control flow else if')
+  controlFlowElseIfTest.createCommand(undefined, 'open', '/')
   controlFlowElseIfTest.createCommand(
     undefined,
     'executeScript',
@@ -137,6 +139,7 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowElseIfTest.createCommand(undefined, 'assert', 'output', 'b')
 
   const controlFlowElseTest = store.createTestCase('control flow else')
+  controlFlowElseTest.createCommand(undefined, 'open', '/')
   controlFlowElseTest.createCommand(
     undefined,
     'executeScript',
@@ -168,6 +171,7 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowElseTest.createCommand(undefined, 'assert', 'output', 'c')
 
   const controlFlowDoTest = store.createTestCase('control flow do')
+  controlFlowDoTest.createCommand(undefined, 'open', '/')
   controlFlowDoTest.createCommand(
     undefined,
     'executeScript',
@@ -185,6 +189,7 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowDoTest.createCommand(undefined, 'assert', 'check', '3')
 
   const controlFlowTimesTest = store.createTestCase('control flow times')
+  controlFlowTimesTest.createCommand(undefined, 'open', '/')
   controlFlowTimesTest.createCommand(
     undefined,
     'executeScript',
@@ -202,6 +207,7 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowTimesTest.createCommand(undefined, 'assert', 'check', '3')
 
   const controlFlowWhileTest = store.createTestCase('control flow while')
+  controlFlowWhileTest.createCommand(undefined, 'open', '/')
   controlFlowWhileTest.createCommand(
     undefined,
     'executeScript',
@@ -219,6 +225,7 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowWhileTest.createCommand(undefined, 'assert', 'check', '3')
 
   const controlFlowForEachTest = store.createTestCase('control flow for each')
+  controlFlowForEachTest.createCommand(undefined, 'open', '/')
   controlFlowForEachTest.createCommand(
     undefined,
     'executeScript',
@@ -255,6 +262,7 @@ export default function seed(store, numberOfSuites = 0) {
   const controlFlowForEachNestedTest = store.createTestCase(
     'control flow for each (nested)'
   )
+  controlFlowForEachNestedTest.createCommand(undefined, 'open', '/')
   controlFlowForEachNestedTest.createCommand(
     undefined,
     'executeScript',
@@ -290,6 +298,7 @@ export default function seed(store, numberOfSuites = 0) {
   controlFlowForEachNestedTest.createCommand(undefined, 'assert', 'count', '15')
 
   const executeScriptTest = store.createTestCase('execute script')
+  executeScriptTest.createCommand(undefined, 'open', '/')
   executeScriptTest.createCommand(
     undefined,
     'executeScript',
@@ -301,6 +310,7 @@ export default function seed(store, numberOfSuites = 0) {
   executeScriptTest.createCommand(undefined, 'echo', '${blah}')
 
   const executeScriptArray = store.createTestCase('execute script array')
+  executeScriptArray.createCommand(undefined, 'open', '/')
   executeScriptArray.createCommand(
     undefined,
     'executeScript',
@@ -316,6 +326,7 @@ export default function seed(store, numberOfSuites = 0) {
   executeScriptArray.createCommand(undefined, 'assert', 'y', '2')
 
   const executeScriptObject = store.createTestCase('execute script object')
+  executeScriptObject.createCommand(undefined, 'open', '/')
   executeScriptObject.createCommand(
     undefined,
     'executeScript',
@@ -333,6 +344,7 @@ export default function seed(store, numberOfSuites = 0) {
   const executeScriptPrimitives = store.createTestCase(
     'execute script primitives'
   )
+  executeScriptPrimitives.createCommand(undefined, 'open', '/')
   executeScriptPrimitives.createCommand(
     undefined,
     'executeScript',
@@ -667,6 +679,7 @@ export default function seed(store, numberOfSuites = 0) {
   )
 
   const storeJson = store.createTestCase('store json')
+  storeJson.createCommand(undefined, 'open', '/')
   storeJson.createCommand(undefined, 'storeJson', `[{"a":0}]`, 'blah')
   storeJson.createCommand(
     undefined,
@@ -716,6 +729,7 @@ export default function seed(store, numberOfSuites = 0) {
   )
 
   const accessVariableForEach = store.createTestCase('access variable for each')
+  accessVariableForEach.createCommand(undefined, 'open', '/')
   accessVariableForEach.createCommand(
     undefined,
     'executeScript',

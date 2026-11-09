@@ -478,7 +478,7 @@ BrowserBot.prototype.selectWindow = function(target) {
   else if (locatorType == 'name') {
     this._selectWindowByName(locatorValue)
   } else if (locatorType == 'var') {
-    let win = this.getCurrentWindow().eval(locatorValue)
+    let win = this.getCurrentWindow()[locatorValue]
     if (win) {
       this._selectWindowByName(win.name)
     } else {
