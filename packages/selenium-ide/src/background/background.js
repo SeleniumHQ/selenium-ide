@@ -29,9 +29,40 @@ async function getIdeWindowId() {
 }
 
 function setIdeWindowId(windowId) {
-  return windowId === undefined
-    ? browser.storage.session.remove('ideWindowId')
-    : browser.storage.session.set({ ideWindowId: windowId })
+  return serialize(
+    () =>
+      windowId === undefined
+        ? browser.storage.session.remove('ideWindowId')
+        : browser.storage.session.set({ ideWindowId: windowId })
+  )
+}
+
+// Changes to the IDE window state run one at a time, so a check and the
+// update that follows it can't interleave with another change.
+let queue = Promise.resolve()
+function serialize(fn) {
+  const run = queue.then(fn)
+  queue = run.catch(() => {})
+  return run
+}
+
+// Clears the state of an IDE window that is gone: removes the context menus
+// and closes the windows opened for playback. Does nothing if another IDE
+// window has replaced it.
+function endIdeSession(windowId) {
+  return serialize(async () => {
+    if (windowId !== (await getIdeWindowId())) return
+    await browser.storage.session.remove('ideWindowId')
+    browser.contextMenus.removeAll()
+    const openedWindowIds = await takeOpenedWindows()
+    await Promise.all(
+      openedWindowIds.map(windowId =>
+        browser.windows.remove(windowId).catch(() => {
+          /* Window was removed previously by the user */
+        })
+      )
+    )
+  })
 }
 
 if (isStaging) {
@@ -49,7 +80,7 @@ async function openPanel(tab) {
       return
     } catch (e) {
       // The window was closed while the background was stopped
-      await setIdeWindowId(undefined)
+      await endIdeSession(ideWindowId)
     }
   }
   if (!clickEnabled) {
@@ -159,19 +190,7 @@ function pointIsValid(point) {
 
 browser.browserAction.onClicked.addListener(openPanel)
 
-browser.windows.onRemoved.addListener(async function(windowId) {
-  if (windowId !== (await getIdeWindowId())) return
-  await setIdeWindowId(undefined)
-  browser.contextMenus.removeAll()
-  const openedWindowIds = await takeOpenedWindows()
-  await Promise.all(
-    openedWindowIds.map(windowId =>
-      browser.windows.remove(windowId).catch(() => {
-        /* Window was removed previously by the user */
-      })
-    )
-  )
-})
+browser.windows.onRemoved.addListener(endIdeSession)
 
 // The content script opens a port when the user opens the context menu, and
 // the chosen menu item is sent back through it.
