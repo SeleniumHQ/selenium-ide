@@ -478,7 +478,18 @@ BrowserBot.prototype.selectWindow = function(target) {
   else if (locatorType == 'name') {
     this._selectWindowByName(locatorValue)
   } else if (locatorType == 'var') {
-    let win = this.getCurrentWindow().eval(locatorValue)
+    // A name or a path, like `popup`, `window.opener` or `frames[0]`
+    const names = windowPath(locatorValue)
+    if (!names) {
+      throw new SeleniumError(
+        "Window locator var= takes a name or a path like window.opener, window['x'] or frames[0], not: " +
+          locatorValue
+      )
+    }
+    let win = names.reduce(
+      (object, name) => (object == null ? object : object[name]),
+      this.getCurrentWindow()
+    )
     if (win) {
       this._selectWindowByName(win.name)
     } else {
@@ -487,6 +498,24 @@ BrowserBot.prototype.selectWindow = function(target) {
   } else {
     throw new SeleniumError('Window locator not recognized: ' + locatorType)
   }
+}
+
+// Splits a window path like `window.opener`, `window['x']` or `frames[0]`
+// into property names. A leading `window` is the current window. Returns
+// null for anything else, like `popups[name]`, since the path isn't run as
+// JavaScript.
+function windowPath(path) {
+  const re = /(?:^|\.)\s*([A-Za-z_$][\w$]*)\s*|\[\s*(?:'([^']*)'|"([^"]*)"|(\d+))\s*\]\s*/y
+  const names = []
+  while (re.lastIndex < path.length) {
+    const match = re.exec(path)
+    if (!match) return null
+    names.push(
+      [match[1], match[2], match[3], match[4]].find(n => n !== undefined)
+    )
+  }
+  if (!names.length) return null
+  return names[0] === 'window' ? names.slice(1) : names
 }
 
 BrowserBot.prototype.selectPopUp = function(windowId) {

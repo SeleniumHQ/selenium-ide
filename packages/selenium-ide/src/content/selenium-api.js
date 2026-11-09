@@ -23,12 +23,8 @@ import { escapeHTML } from './escape'
 import BrowserBot, { browserVersion } from './selenium-browserbot'
 import goog, { bot, core } from './closure-polyfill'
 import PatternMatcher from './PatternMatcher'
-import {
-  getTagName,
-  getTimeoutTime,
-  extractExceptionMessage,
-  lowerFirstChar,
-} from './utils'
+import { runUserScript } from './user-script'
+import { getTagName, getTimeoutTime, lowerFirstChar } from './utils'
 
 // TODO: stop navigating this.browserbot.document() ... it breaks encapsulation
 
@@ -233,35 +229,16 @@ Selenium.prototype.reset = function() {
   this.browserbot.resetPopups()
 }
 
-Selenium.prototype.eval = function(
-  script,
-  argv = [],
-  scoped = true,
-  isExpression = false
-) {
-  // we are still stringifying here, but we are not supporting passing HTMLElements anyway :)
-  // Single quotes are important! JSON.stringifies uses double quotes, to avoid syntax error we use single quotes!!
-  if (isExpression) {
-    return window.eval(
-      scoped
-        ? `((...arguments) => (${script}))(...JSON.parse('${JSON.stringify(
-            argv
-          )}'))`
-        : script
-    )
-  } else {
-    return window.eval(
-      scoped
-        ? `((...arguments) => {${script}})(...JSON.parse('${JSON.stringify(
-            argv
-          )}'))`
-        : script
-    )
-  }
+// Runs JavaScript from a test. See runUserScript for the options.
+Selenium.prototype.eval = function(script, argv = [], options) {
+  return runUserScript(script, argv, options)
 }
 
 Selenium.prototype.doEvaluateConditional = function(script) {
-  return !!this.eval(script.script, script.argv, true, true)
+  return this.eval(script.script, script.argv, {
+    isExpression: true,
+    result: 'boolean',
+  }).then(result => result.isPromise || result.value)
 }
 
 Selenium.prototype.doVerifyChecked = function(locator) {
@@ -2029,32 +2006,6 @@ Selenium.prototype.getText = function(locator) {
   return bot.dom.getVisibleText(element).trim()
 }
 
-Selenium.prototype.getEval = function(script) {
-  /** Gets the result of evaluating the specified JavaScript snippet.  The snippet may
-   * have multiple lines, but only the result of the last line will be returned.
-   *
-   * <p>Note that, by default, the snippet will run in the context of the "selenium"
-   * object itself, so <code>this</code> will refer to the Selenium object.  Use <code>window</code> to
-   * refer to the window of your application, e.g. <code>window.document.getElementById('foo')</code></p>
-   *
-   * <p>If you need to use
-   * a locator to refer to a single element in your application page, you can
-   * use <code>this.browserbot.findElement("id=foo")</code> where "id=foo" is your locator.</p>
-   *
-   * @param script the JavaScript snippet to run
-   * @return string the results of evaluating the snippet
-   */
-  try {
-    //LOG.info('script is: ' + script);
-    let result = this.eval(script)
-    // Selenium RC doesn't allow returning null
-    if (null == result) return 'null'
-    return result
-  } catch (e) {
-    throw new SeleniumError('Threw an exception: ' + extractExceptionMessage(e))
-  }
-}
-
 Selenium.prototype.isChecked = function(locator) {
   /**
    * Gets whether a toggle-button (checkbox/radio) is checked.  Fails if the specified element doesn't exist or isn't a toggle-button.
@@ -3010,27 +2961,6 @@ Selenium.prototype.doIgnoreAttributesWithoutValue = function(ignore) {
   this.browserbot.setIgnoreAttributesWithoutValue(ignore)
 }
 
-Selenium.prototype.doWaitForCondition = function(script, timeout) {
-  /**
-   * Runs the specified JavaScript snippet repeatedly until it evaluates to "true".
-   * The snippet may have multiple lines, but only the result of the last line
-   * will be considered.
-   *
-   * <p>Note that, by default, the snippet will be run in the runner's test window, not in the window
-   * of your application.  To get the window of your application, you can use
-   * the JavaScript snippet <code>selenium.browserbot.getCurrentWindow()</code>, and then
-   * run your JavaScript in there</p>
-   * @param script the JavaScript snippet to run
-   * @param timeout a timeout in milliseconds, after which this command will return with an error
-   */
-
-  return Selenium.decorateFunctionWithTimeout(function() {
-    return this.eval(script)
-  }, timeout)
-}
-
-Selenium.prototype.doWaitForCondition.dontCheckAlertsAndConfirms = true
-
 Selenium.prototype.doSetTimeout = function(timeout) {
   /**
    * Specifies the amount of time that Selenium will wait for actions to complete.
@@ -3108,8 +3038,9 @@ Selenium.prototype.preprocessParameter = function(value) {
             'parameter preprocessing using javascript{} tag is deprecated, please use execute script',
         },
       })
-      let result = this.eval(match[1])
-      return result == null ? null : result.toString()
+      return this.eval(match[1], [], { result: 'value' }).then(
+        ({ value }) => (value == null ? null : value.toString())
+      )
     }
   }
   return value
@@ -3330,9 +3261,11 @@ Selenium.prototype.doDeleteAllVisibleCookies = function() {
     //LOG.setLogLevelThreshold(logLevel);
 }*/
 
-Selenium.prototype.doExecuteScript = function(script, varName) {
-  const value = this.eval(script.script, script.argv)
-  if (value && value.constructor.name === 'Promise') {
+Selenium.prototype.doExecuteScript = async function(script, varName) {
+  const { value, isPromise } = await this.eval(script.script, script.argv, {
+    result: varName ? 'value' : 'none',
+  })
+  if (isPromise) {
     throw new Error('Expected sync operation, instead received Promise')
   }
   if (varName) {
@@ -3340,20 +3273,18 @@ Selenium.prototype.doExecuteScript = function(script, varName) {
   }
 }
 
-Selenium.prototype.doExecuteAsyncScript = function(script, varName) {
-  const value = this.eval(script.script, script.argv)
-  if (value && value.constructor.name !== 'Promise') {
-    throw new Error(
-      `Expected async operation, instead received ${
-        value ? value.constructor.name : value
-      }`
-    )
+Selenium.prototype.doExecuteAsyncScript = async function(script, varName) {
+  const { value, isPromise, type } = await this.eval(
+    script.script,
+    script.argv,
+    { result: varName ? 'value' : 'none', awaitPromise: true }
+  )
+  if (!isPromise) {
+    throw new Error(`Expected async operation, instead received ${type}`)
   }
-  return Promise.resolve(value).then(v => {
-    if (varName) {
-      return browser.runtime.sendMessage({ storeStr: v, storeVar: varName })
-    }
-  })
+  if (varName) {
+    return browser.runtime.sendMessage({ storeStr: value, storeVar: varName })
+  }
 }
 
 Selenium.prototype.doRunScript = function(script) {
@@ -3367,7 +3298,7 @@ Selenium.prototype.doRunScript = function(script) {
    * an exception.
    * @param script the JavaScript snippet to run
    */
-  this.eval(script.script, script.argv)
+  return this.eval(script.script, script.argv)
 }
 
 Selenium.prototype.doRollup = function(rollupName, kwargs) {

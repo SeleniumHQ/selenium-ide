@@ -18,6 +18,7 @@
 import browser from 'webextension-polyfill'
 import { isStaging } from '../common/utils'
 import { takeOpenedWindows } from '../common/opened-windows'
+import { executeUserScript } from './user-scripts'
 
 let clickEnabled = true
 
@@ -208,6 +209,12 @@ browser.runtime.onConnect.addListener(function(m) {
 })
 
 browser.runtime.onMessage.addListener(handleInternalMessage)
+
+browser.runtime.onMessage.addListener((message, sender) => {
+  if (message.runUserScript !== undefined) {
+    return executeUserScript(message.runUserScript, sender)
+  }
+})
 
 function handleInternalMessage(message) {
   if (message.restart && message.controller && message.controller.id) {
