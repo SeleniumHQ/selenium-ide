@@ -103,6 +103,7 @@ Recorder.addEventHandler('type', 'change', function(event) {
           event.target.value
         )
       }
+      this.recordingState.textareaEnter = null
     }
   }
   this.recordingState.typeLock = 0
@@ -298,11 +299,13 @@ Recorder.addEventHandler(
         // When the page blocks the new line, Enter submits the textarea (like
         // a search box), so record the text and the Enter before the page
         // changes. A plain Enter only adds a new line and is recorded by type.
+        // Read the text now: the page can clear it when it handles Enter.
         const target = event.target
+        const value = target.value
         setTimeout(() => {
           if (!event.defaultPrevented) return
-          this.recordingState.textareaEnter = { target, value: target.value }
-          record('type', locatorBuilders.buildAll(target), target.value)
+          this.recordingState.textareaEnter = { target, value }
+          record('type', locatorBuilders.buildAll(target), value)
           record('sendKeys', locatorBuilders.buildAll(target), '${KEY_ENTER}')
         }, 0)
       }
