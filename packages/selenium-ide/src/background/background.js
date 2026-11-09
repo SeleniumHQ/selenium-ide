@@ -17,29 +17,73 @@
 
 import browser from 'webextension-polyfill'
 import { isStaging } from '../common/utils'
+import { takeOpenedWindows } from '../common/opened-windows'
 
-let ideWindowId = undefined
-let master = {}
 let clickEnabled = true
 
-window.master = master
-window.openedWindowIds = []
+// The background can stop and start again at any time, so the IDE window id
+// is kept in session storage instead of a variable.
+async function getIdeWindowId() {
+  const { ideWindowId } = await browser.storage.session.get('ideWindowId')
+  return ideWindowId
+}
 
-if (isStaging) openPanel({ windowId: 0 })
+function setIdeWindowId(windowId) {
+  return serialize(
+    () =>
+      windowId === undefined
+        ? browser.storage.session.remove('ideWindowId')
+        : browser.storage.session.set({ ideWindowId: windowId })
+  )
+}
 
-function openPanel(tab) {
+// Changes to the IDE window state run one at a time, so a check and the
+// update that follows it can't interleave with another change.
+let queue = Promise.resolve()
+function serialize(fn) {
+  const run = queue.then(fn)
+  queue = run.catch(() => {})
+  return run
+}
+
+// Clears the state of an IDE window that is gone: removes the context menus
+// and closes the windows opened for playback. Does nothing if another IDE
+// window has replaced it.
+function endIdeSession(windowId) {
+  return serialize(async () => {
+    if (windowId !== (await getIdeWindowId())) return
+    await browser.storage.session.remove('ideWindowId')
+    browser.contextMenus.removeAll()
+    const openedWindowIds = await takeOpenedWindows()
+    await Promise.all(
+      openedWindowIds.map(windowId =>
+        browser.windows.remove(windowId).catch(() => {
+          /* Window was removed previously by the user */
+        })
+      )
+    )
+  })
+}
+
+if (isStaging) {
+  browser.runtime.onInstalled.addListener(() => openPanel({ windowId: 0 }))
+}
+
+async function openPanel(tab) {
   let contentWindowId = tab.windowId
-  if (ideWindowId) {
-    browser.windows
-      .update(ideWindowId, {
+  const ideWindowId = await getIdeWindowId()
+  if (ideWindowId !== undefined) {
+    try {
+      await browser.windows.update(ideWindowId, {
         focused: true,
       })
-      .catch(function() {
-        ideWindowId == undefined
-        openPanel(tab)
-      })
-    return
-  } else if (!clickEnabled) {
+      return
+    } catch (e) {
+      // The window was closed while the background was stopped
+      await endIdeSession(ideWindowId)
+    }
+  }
+  if (!clickEnabled) {
     return
   }
 
@@ -69,7 +113,6 @@ function openPanel(tab) {
                 count++
                 return
               } else {
-                master[contentWindowId] = panelWindowInfo.id
                 resolve(panelWindowInfo)
                 clearInterval(interval)
               }
@@ -77,8 +120,8 @@ function openPanel(tab) {
         }, 200)
       })
     })
-    .then(function bridge(panelWindowInfo) {
-      ideWindowId = panelWindowInfo.id
+    .then(async function bridge(panelWindowInfo) {
+      await setIdeWindowId(panelWindowInfo.id)
       return browser.tabs.sendMessage(panelWindowInfo.tabs[0].id, {
         selfWindowId: panelWindowInfo.id,
         commWindowId: contentWindowId,
@@ -108,7 +151,7 @@ function openWindowFromStorageResolution() {
       return browser.windows.create(
         Object.assign(
           {
-            url: browser.extension.getURL('index.html'),
+            url: browser.runtime.getURL('index.html'),
             type: 'popup',
           },
           opts
@@ -120,7 +163,7 @@ function openWindowFromStorageResolution() {
       return browser.windows.create(
         Object.assign(
           {
-            url: browser.extension.getURL('index.html'),
+            url: browser.runtime.getURL('index.html'),
             type: 'popup',
           },
           opts
@@ -147,77 +190,60 @@ function pointIsValid(point) {
 
 browser.browserAction.onClicked.addListener(openPanel)
 
-browser.windows.onRemoved.addListener(function(windowId) {
-  let keys = Object.keys(master)
-  for (let key of keys) {
-    if (master[key] === windowId) {
-      delete master[key]
-      if (keys.length === 1) {
-        browser.contextMenus.removeAll()
-      }
-    }
-  }
-  if (windowId === ideWindowId) {
-    ideWindowId = undefined
-    Promise.all(
-      window.openedWindowIds.map(windowId =>
-        browser.windows.remove(windowId).catch(() => {
-          /* Window was removed previously by the user */
-        })
-      )
-    ).then(() => {
-      window.openedWindowIds = []
-    })
-  }
-})
+browser.windows.onRemoved.addListener(endIdeSession)
 
+// The content script opens a port when the user opens the context menu, and
+// the chosen menu item is sent back through it.
 let port
 
 browser.contextMenus.onClicked.addListener(function(info) {
-  port.postMessage({ cmd: info.menuItemId })
+  if (port) port.postMessage({ cmd: info.menuItemId })
 })
 
 browser.runtime.onConnect.addListener(function(m) {
   port = m
+  m.onDisconnect.addListener(() => {
+    if (port === m) port = undefined
+  })
 })
 
 browser.runtime.onMessage.addListener(handleInternalMessage)
 
 function handleInternalMessage(message) {
   if (message.restart && message.controller && message.controller.id) {
-    ideWindowId = undefined
-
-    browser.runtime
-      .sendMessage({
-        uri: '/private/close',
-        verb: 'post',
-        payload: null,
-      })
-      .then(() => {
-        openPanel({ windowId: 0 }).then(() => {
-          var payload = { ...message }
-          delete payload.restart
-
-          const newMessage = {
-            uri: '/private/connect',
-            verb: 'post',
-            payload: payload,
-          }
-          browser.runtime
-            .sendMessage(newMessage)
-            .then(
-              browser.runtime.sendMessage(message.controller.id, {
-                connected: true,
-              })
-            )
-            .catch(() => {
-              browser.runtime.sendMessage(
-                message.controller.id,
-                'Error Connecting to Selenium IDE'
-              )
-            })
+    setIdeWindowId(undefined).then(() =>
+      browser.runtime
+        .sendMessage({
+          uri: '/private/close',
+          verb: 'post',
+          payload: null,
         })
-      })
+        .then(() => {
+          openPanel({ windowId: 0 }).then(() => {
+            var payload = { ...message }
+            delete payload.restart
+
+            const newMessage = {
+              uri: '/private/connect',
+              verb: 'post',
+              payload: payload,
+            }
+            browser.runtime
+              .sendMessage(newMessage)
+              .then(
+                browser.runtime.sendMessage(message.controller.id, {
+                  connected: true,
+                })
+              )
+              .catch(() => {
+                browser.runtime.sendMessage(
+                  message.controller.id,
+                  'Error Connecting to Selenium IDE'
+                )
+              })
+          })
+        })
+    )
   }
 }
 
