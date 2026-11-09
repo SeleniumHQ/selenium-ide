@@ -90,7 +90,19 @@ Recorder.addEventHandler('type', 'change', function(event) {
         )
       }
     } else if ('textarea' == tagName) {
-      record('type', locatorBuilders.buildAll(event.target), event.target.value)
+      // Skip the value already recorded when Enter submitted the textarea
+      const enter = this.recordingState.textareaEnter
+      if (
+        !enter ||
+        enter.target != event.target ||
+        enter.value != event.target.value
+      ) {
+        record(
+          'type',
+          locatorBuilders.buildAll(event.target),
+          event.target.value
+        )
+      }
     }
   }
   this.recordingState.typeLock = 0
@@ -282,6 +294,17 @@ Recorder.addEventHandler(
             this.recordingState.preventType = true
           }
         }
+      } else if (tagName == 'textarea' && key == 13) {
+        // When the page blocks the new line, Enter submits the textarea (like
+        // a search box), so record the text and the Enter before the page
+        // changes. A plain Enter only adds a new line and is recorded by type.
+        const target = event.target
+        setTimeout(() => {
+          if (!event.defaultPrevented) return
+          this.recordingState.textareaEnter = { target, value: target.value }
+          record('type', locatorBuilders.buildAll(target), target.value)
+          record('sendKeys', locatorBuilders.buildAll(target), '${KEY_ENTER}')
+        }, 0)
       }
     }
   },
