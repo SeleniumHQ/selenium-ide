@@ -9,10 +9,13 @@
      var view = goog.dom.getWindow(doc);
      var keyCode = args.charCode ? 0 : args.keyCode;
      event = doc.createEvent('KeyboardEvent');
-@@ -423,6 +423,22 @@
-     if (this.type_ == bot.events.EventType.KEYPRESS && args.preventDefault) {
-       event.preventDefault();
-     }
+@@ -420,6 +420,26 @@
+         args.ctrlKey, args.altKey, args.shiftKey, args.metaKey, keyCode,
+         args.charCode);
+     // https://bugzilla.mozilla.org/show_bug.cgi?id=501496
++    if (this.type_ == bot.events.EventType.KEYPRESS && args.preventDefault) {
++      event.preventDefault();
++    }
 +  } else if (goog.userAgent.GECKO) {
 +    // Values set on an event after it's created aren't seen by the page when
 +    // the event comes from an extension, so pass them to the constructor.
@@ -29,9 +32,10 @@
 +      keyCode: args.charCode ? 0 : args.keyCode,
 +      charCode: args.charCode
 +    });
-   } else {
-     if (bot.userAgent.IE_DOC_PRE9) {
-       event = doc.createEventObject();
++    // A keypress after a canceled keydown is canceled too, as in Firefox.
+     if (this.type_ == bot.events.EventType.KEYPRESS && args.preventDefault) {
+       event.preventDefault();
+     }
 --- a/atoms/keyboard.js
 +++ b/atoms/keyboard.js
 @@ -493,7 +493,7 @@
