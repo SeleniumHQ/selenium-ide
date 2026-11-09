@@ -1,6 +1,6 @@
 {
   "description": "Selenium Record and Playback tool for ease of getting acquainted with Selenium WebDriver.",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Selenium IDE",
   "version": "3.17.4",
   "version_name": "3.17.4",
@@ -11,7 +11,7 @@
     "64": "icons/icon64.png",
     "128": "icons/icon128.png"
   },
-  "browser_action": {
+  "action": {
     "default_icon": {
       "16": "icons/icon_menu16.png",
       "32": "icons/icon_menu32.png",
@@ -26,7 +26,9 @@
     "downloads",
     "webNavigation",
     "storage",
-    "debugger",
+    "debugger"
+  ],
+  "host_permissions": [
     "<all_urls>"
   ],
   "externally_connectable": {
@@ -35,15 +37,24 @@
     ]
   },
   "web_accessible_resources": [
-    "icons/icon128.png",
-    "icons/icon_light128.png",
-    "assets/prompt.js",
-    "assets/indicator.js",
-    "assets/highlight.css",
-    "bootstrap.html",
-    "indicator.html"
+    {
+      "resources": [
+        "icons/icon128.png",
+        "icons/icon_light128.png",
+        "assets/prompt.js",
+        "assets/indicator.js",
+        "assets/highlight.css",
+        "bootstrap.html",
+        "indicator.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
   ],
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -63,8 +74,20 @@
     }
   ],
   "background": {
+    "service_worker": "assets/background.js",
     "scripts": [
       "assets/background.js"
     ]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{a6fd85ed-e919-4a43-a5af-8da18bda539f}",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
   }
 }

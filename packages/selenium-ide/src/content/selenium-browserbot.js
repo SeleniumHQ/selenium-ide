@@ -2247,7 +2247,7 @@ BrowserBot.prototype.close = function() {
   ) {
     this.topFrame.close()
   } else {
-    this.getCurrentWindow().eval('window.top.close();')
+    this.getCurrentWindow().top.close()
   }
 }
 

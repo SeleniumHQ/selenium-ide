@@ -188,7 +188,7 @@ function pointIsValid(point) {
   return point >= 0 && point.constructor.name === 'Number'
 }
 
-browser.browserAction.onClicked.addListener(openPanel)
+browser.action.onClicked.addListener(openPanel)
 
 browser.windows.onRemoved.addListener(endIdeSession)
 
