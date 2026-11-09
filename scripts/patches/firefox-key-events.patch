@@ -9,26 +9,29 @@
      var view = goog.dom.getWindow(doc);
      var keyCode = args.charCode ? 0 : args.keyCode;
      event = doc.createEvent('KeyboardEvent');
-@@ -434,10 +434,15 @@
-     event.ctrlKey = args.ctrlKey;
-     event.metaKey = args.metaKey;
-     event.shiftKey = args.shiftKey;
--    event.keyCode = args.charCode || args.keyCode;
--    if (goog.userAgent.WEBKIT || goog.userAgent.EDGE) {
--      event.charCode = (this == bot.events.EventType.KEYPRESS) ?
--          event.keyCode : 0;
-+    if (goog.userAgent.GECKO) {
-+      event.keyCode = args.charCode ? 0 : args.keyCode;
-+      event.charCode = args.charCode;
-+    } else {
-+      event.keyCode = args.charCode || args.keyCode;
-+      if (goog.userAgent.WEBKIT || goog.userAgent.EDGE) {
-+        event.charCode = (this == bot.events.EventType.KEYPRESS) ?
-+            event.keyCode : 0;
-+      }
+@@ -423,6 +423,22 @@
+     if (this.type_ == bot.events.EventType.KEYPRESS && args.preventDefault) {
+       event.preventDefault();
      }
-   }
- 
++  } else if (goog.userAgent.GECKO) {
++    // Values set on an event after it's created aren't seen by the page when
++    // the event comes from an extension, so pass them to the constructor.
++    var KeyboardEventCtor = goog.dom.getWindow(doc).KeyboardEvent;
++    event = new KeyboardEventCtor(this.type_, {
++      bubbles: this.bubbles_,
++      cancelable: this.cancelable_,
++      view: goog.dom.getWindow(doc),
++      altKey: args.altKey,
++      ctrlKey: args.ctrlKey,
++      metaKey: args.metaKey,
++      shiftKey: args.shiftKey,
++      key: args.key || '',
++      keyCode: args.charCode ? 0 : args.keyCode,
++      charCode: args.charCode
++    });
+   } else {
+     if (bot.userAgent.IE_DOC_PRE9) {
+       event = doc.createEventObject();
 --- a/atoms/keyboard.js
 +++ b/atoms/keyboard.js
 @@ -493,7 +493,7 @@
@@ -40,3 +43,43 @@
        !bot.dom.isElement(this.getElement(), goog.dom.TagName.INPUT)) {
      return;
    }
+@@ -863,6 +863,31 @@
+ * @return {boolean} Whether the event fired successfully or was cancelled.
+ * @private
+ */
++/**
++ * Names for the KeyboardEvent key property of keys without a character.
++ * @private {!Object<number, string>}
++ */
++bot.Keyboard.KEY_NAMES_ = {
++  8: 'Backspace', 9: 'Tab', 13: 'Enter', 16: 'Shift', 17: 'Control',
++  18: 'Alt', 19: 'Pause', 20: 'CapsLock', 27: 'Escape', 33: 'PageUp',
++  34: 'PageDown', 35: 'End', 36: 'Home', 37: 'ArrowLeft', 38: 'ArrowUp',
++  39: 'ArrowRight', 40: 'ArrowDown', 45: 'Insert', 46: 'Delete', 91: 'Meta',
++  92: 'Meta', 112: 'F1', 113: 'F2', 114: 'F3', 115: 'F4', 116: 'F5',
++  117: 'F6', 118: 'F7', 119: 'F8', 120: 'F9', 121: 'F10', 122: 'F11',
++  123: 'F12', 224: 'Meta'
++};
++
++
++/**
++ * @param {number} code Key code.
++ * @return {string} Name of the key, or 'Unidentified'.
++ * @private
++ */
++bot.Keyboard.keyName_ = function(code) {
++  return bot.Keyboard.KEY_NAMES_[code] || 'Unidentified';
++};
++
++
+ bot.Keyboard.prototype.fireKeyEvent_ = function(type, key, opt_preventDefault) {
+   if (goog.isNull(key.code)) {
+     throw new bot.Error(bot.ErrorCode.UNKNOWN_ERROR,
+@@ -877,6 +902,7 @@
+     keyCode: key.code,
+     charCode: (key.character && type == bot.events.EventType.KEYPRESS) ?
+         this.getChar_(key).charCodeAt(0) : 0,
++    key: key.character ? this.getChar_(key) : bot.Keyboard.keyName_(key.code),
+     preventDefault: !!opt_preventDefault
+   };
+ 
