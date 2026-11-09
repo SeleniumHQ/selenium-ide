@@ -738,124 +738,72 @@ Selenium.prototype.doWaitForText = function(locator, text) {
 }
 
 // xian
+function setNewPageValue() {
+  window.new_page = true
+}
+
+function setDOMModifiedTime() {
+  window.domModifiedTime = Date.now()
+}
+
+// Marks when the page is about to unload, tracks XHR requests and records
+// when the DOM last changed. The checks below read these values between
+// commands.
 Selenium.prototype.doWaitPreparation = function() {
-  // function setNewPageValue(e) {
-  //     window.new_page = true;
-  // };
-  // window.addEventListener("beforeunload", setNewPageValue, false);
-
-  // if (window.XMLHttpRequest) {
-  //     // only override XMLHttpRequest once
-  //     if (!window.origXMLHttpRequest || !window.ajax_obj) {
-  //         // it's new page, so set the new window's XMLHttpRequest, and all of the obj in the ajax_obj
-  //         // are last window's instance, so clear it
-  //         window.ajax_obj = [];
-
-  //         window.origXMLHttpRequest = window.XMLHttpRequest;
-
-  //         window.XMLHttpRequest = function() {
-  //             var xhr = new window.origXMLHttpRequest();
-  //             window.ajax_obj.push(xhr);
-  //             return xhr;
-  //         }
-  //     }
-  // }
-
-  // function setDOMModifiedTime() {
-  //     window.domModifiedTime = Date.now();
-  // }
-  // var _win = window.document.body;
-  // _win.addEventListener("DOMNodeInserted", setDOMModifiedTime, false);
-  // _win.addEventListener("DOMNodeInsertedIntoDocument", setDOMModifiedTime, false);
-  // _win.addEventListener("DOMNodeRemoved", setDOMModifiedTime, false);
-  // _win.addEventListener("DOMNodeRemovedFromDocument", setDOMModifiedTime, false);
-  // _win.addEventListener("DOMSubtreeModified", setDOMModifiedTime, false);
-
-  this.eval(
-    'function setNewPageValue(e) {window.new_page = true;};\
-                window.addEventListener("beforeunload", setNewPageValue, false);\
-                if (window.XMLHttpRequest) {if (!window.origXMLHttpRequest || !window.ajax_obj) {\
-                window.ajax_obj = []; window.origXMLHttpRequest = window.XMLHttpRequest;\
-                window.XMLHttpRequest = function() { var xhr = new window.origXMLHttpRequest();\
-                window.ajax_obj.push(xhr); return xhr;}}} function setDOMModifiedTime() {\
-                window.domModifiedTime = Date.now();}var _win = window.document.body;\
-                _win.addEventListener("DOMNodeInserted", setDOMModifiedTime, false);\
-                _win.addEventListener("DOMNodeInsertedIntoDocument", setDOMModifiedTime, false);\
-                _win.addEventListener("DOMNodeRemoved", setDOMModifiedTime, false);\
-                _win.addEventListener("DOMNodeRemovedFromDocument", setDOMModifiedTime, false);\
-                _win.addEventListener("DOMSubtreeModified", setDOMModifiedTime, false);',
-    [],
+  window.addEventListener('beforeunload', setNewPageValue, false)
+  if (window.XMLHttpRequest) {
+    if (!window.origXMLHttpRequest || !window.ajax_obj) {
+      window.ajax_obj = []
+      window.origXMLHttpRequest = window.XMLHttpRequest
+      window.XMLHttpRequest = function() {
+        let xhr = new window.origXMLHttpRequest()
+        window.ajax_obj.push(xhr)
+        return xhr
+      }
+    }
+  }
+  let body = window.document.body
+  body.addEventListener('DOMNodeInserted', setDOMModifiedTime, false)
+  body.addEventListener(
+    'DOMNodeInsertedIntoDocument',
+    setDOMModifiedTime,
     false
   )
+  body.addEventListener('DOMNodeRemoved', setDOMModifiedTime, false)
+  body.addEventListener('DOMNodeRemovedFromDocument', setDOMModifiedTime, false)
+  body.addEventListener('DOMSubtreeModified', setDOMModifiedTime, false)
 }
 
 Selenium.prototype.doPrePageWait = function() {
-  window.sideex_new_page = this.eval(
-    '(function() {return window.new_page;}())',
-    [],
-    false
-  )
+  window.sideex_new_page = window.new_page
 }
 
 Selenium.prototype.doPageWait = function() {
-  // if (window.document.readyState == "complete") {
-  //     return true;
-  // } else {
-  //     return false;
-  // }
-
-  let expression =
-    'if(window.document.readyState=="complete"){return true;}else{return false;}'
-  window.sideex_page_done = this.eval(
-    '(function() {' + expression + '}())',
-    [],
-    false
-  )
+  window.sideex_page_done = window.document.readyState == 'complete'
 }
 
 Selenium.prototype.doAjaxWait = function() {
-  // // check ajax wait
-  // if (window.ajax_obj) {
-  //     if (window.ajax_obj.length == 0) {
-  //         return true;
-  //     } else {
-  //         for (var index in window.ajax_obj) {
-  //         // if readyState is 1~3, then keep waiting
-  //             if (window.ajax_obj[index].readyState !== 4 &&
-  //                 window.ajax_obj[index].readyState !== undefined &&
-  //                 window.ajax_obj[index].readyState !== 0) {
-  //                     return false;
-  //             }
-  //         }
-  //         return true;
-  //     }
-  // } else {
-  //     if (window.origXMLHttpRequest) {
-  //         window.origXMLHttpRequest = "";
-  //     }
-  //     return true;
-  // }
+  window.sideex_ajax_done = isAjaxDone()
+}
 
-  let expression =
-    'if (window.ajax_obj) { if (window.ajax_obj.length == 0) {return true;} else {\
-                      for (var index in window.ajax_obj) {\
-                      if (window.ajax_obj[index].readyState !== 4 &&\
-                      window.ajax_obj[index].readyState !== undefined &&\
-                      window.ajax_obj[index].readyState !== 0) {return false;}}return true;}}\
-                      else {if (window.origXMLHttpRequest) {window.origXMLHttpRequest = "";}return true;}'
-  window.sideex_ajax_done = this.eval(
-    '(function() {' + expression + '}())',
-    [],
-    false
-  )
+function isAjaxDone() {
+  if (window.ajax_obj) {
+    // readyState 1 to 3 means the request is still running
+    return window.ajax_obj.every(
+      xhr =>
+        xhr.readyState === 4 ||
+        xhr.readyState === undefined ||
+        xhr.readyState === 0
+    )
+  }
+  if (window.origXMLHttpRequest) {
+    window.origXMLHttpRequest = ''
+  }
+  return true
 }
 
 Selenium.prototype.doDomWait = function() {
-  window.sideex_dom_time = this.eval(
-    '(function() {return window.domModifiedTime;}())',
-    [],
-    false
-  )
+  window.sideex_dom_time = window.domModifiedTime
 }
 
 Selenium.prototype.doClick = function(locator) {
