@@ -448,7 +448,7 @@ importers:
         version: 12.1.7(@types/react@19.3.0)(react@19.3.1)
       react-resizable-panels:
         specifier: ^4.18.0
-        version: 4.22.1(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 4.24.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       scroll-into-view-if-needed:
         specifier: ^3.1.0
         version: 3.2.1
@@ -5485,8 +5485,8 @@ packages:
   react-is@19.3.1:
     resolution: {integrity: sha512-RRieF6IyxQBkcK6pP8xOHprLTPW6QjRkbGdImtqNme+/hYVwCZkLQLdlZGOhUqXwkS9IEynaGvPJtv6XB/cz0Q==}
 
-  react-resizable-panels@4.22.1:
-    resolution: {integrity: sha512-qIMatwlXKgcW/W96gjssjEpVekfaZN+S5hjfOvatczyKWk24yGGEtJJZ/gAqRtc2DmTgVFFcoqwwsqST0j39Yg==}
+  react-resizable-panels@4.24.0:
+    resolution: {integrity: sha512-u2v5CzyeDSLZ94+itR1CYVbzT+Hql4uIsqUXbsE3wZ0vUN7tNxBZUXKaVeryDSxRKo2/a0rfVopdijv/dUbqfw==}
     peerDependencies:
       '@types/react': ^18.2.6 || ^19.0.0
       react: ^18.0.0 || ^19.0.0
@@ -12351,7 +12351,7 @@ snapshots:
 
   react-is@19.3.1: {}
 
-  react-resizable-panels@4.22.1(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
+  react-resizable-panels@4.24.0(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
