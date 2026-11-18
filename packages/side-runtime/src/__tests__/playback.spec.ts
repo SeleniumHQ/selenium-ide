@@ -1530,7 +1530,7 @@ describe('Playback', () => {
         },
       ],
     }
-    const startCommand = async (executor: FakeExecutor) => {
+    const startCommand = async (executor: FakeExecutor, testToPlay = test) => {
       let finish: (err?: Error) => void = () => {}
       executor.doOpen.mockImplementationOnce(
         () =>
@@ -1541,7 +1541,7 @@ describe('Playback', () => {
       const playback = new Playback({
         executor,
       } as unknown as any)
-      const running = await playback.play(test)
+      const running = await playback.play(testToPlay)
       while (!executor.doOpen.mock.calls.length) {
         await psetTimeout(1)
       }
@@ -1571,6 +1571,37 @@ describe('Playback', () => {
       const stopping = playback.stop()
       finish()
       await Promise.all([pausing, stopping])
+    })
+
+    it('should finish pausing when playback ends before cancel settles', async () => {
+      const executor = new FakeExecutor({})
+      executor.cancel.mockImplementation(() => new Promise(() => {}))
+      const { finish, playback } = await startCommand(executor)
+      const pausing = playback.pause()
+      finish()
+      await pausing
+    })
+
+    it('should pause at the next command before cancel settles', async () => {
+      const executor = new FakeExecutor({})
+      executor.cancel.mockImplementation(() => new Promise(() => {}))
+      const { finish, playback } = await startCommand(executor, {
+        ...test,
+        commands: [...test.commands, { ...test.commands[0], id: 'b' }],
+      })
+      const pausing = playback.pause()
+      finish()
+      await pausing
+      expect(executor.doOpen).toHaveBeenCalledTimes(1)
+      await playback.stop()
+    })
+
+    it('should report a failed cancel', async () => {
+      const executor = new FakeExecutor({})
+      executor.cancel.mockRejectedValueOnce(new Error('cancel failed'))
+      const { finish, playback } = await startCommand(executor)
+      await expect(playback.pause()).rejects.toThrow('cancel failed')
+      finish()
     })
 
     it('should not pause the next playback', async () => {

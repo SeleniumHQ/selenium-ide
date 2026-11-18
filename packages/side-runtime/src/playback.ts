@@ -670,13 +670,18 @@ export default class Playback {
       return
     }
     this[state].pausing = true
-    if (!graceful) {
-      await this.executor.cancel()
-    }
     this[state].isPlaying = false
-    await new Promise((res) => {
+    const paused = new Promise((res) => {
       this[state].pausingResolve = res
     })
+    if (graceful) {
+      await paused
+      return
+    }
+    // cancel only settles if the running command polls again, so pausing
+    // doesn't wait for it. A failed cancel is still reported.
+    const cancelled = Promise.resolve(this.executor.cancel())
+    await Promise.race([paused, cancelled.then(() => paused)])
   }
 
   async _pause() {
