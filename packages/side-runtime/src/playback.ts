@@ -655,6 +655,14 @@ export default class Playback {
     this[state].lastSentCommandState = undefined
     this[state].callstack = undefined
     this[state].testID = undefined
+    this.currentExecutingNode = undefined
+
+    // playback can end before it reaches the next command, where a pause
+    // request is normally handled
+    this[state].pausing = false
+    const { pausingResolve } = this[state]
+    this[state].pausingResolve = undefined
+    pausingResolve?.()
   }
 
   async pause({ graceful } = { graceful: false }) {
