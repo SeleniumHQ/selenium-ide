@@ -1517,6 +1517,119 @@ describe('Playback', () => {
     })
   })
 
+  describe('pause when playback ends', () => {
+    const test = {
+      id: '1',
+      name: 'Test',
+      commands: [
+        {
+          id: 'a',
+          command: 'open',
+          target: '',
+          value: '',
+        },
+      ],
+    }
+    const startCommand = async (executor: FakeExecutor, testToPlay = test) => {
+      let finish: (err?: Error) => void = () => {}
+      executor.doOpen.mockImplementationOnce(
+        () =>
+          new Promise<void>((res, rej) => {
+            finish = (err) => (err ? rej(err) : res())
+          })
+      )
+      const playback = new Playback({
+        executor,
+      } as unknown as any)
+      const running = await playback.play(testToPlay)
+      while (!executor.doOpen.mock.calls.length) {
+        await psetTimeout(1)
+      }
+      return { finish: (err?: Error) => finish(err), playback, running }
+    }
+
+    it('should finish pausing when the last command passes', async () => {
+      const executor = new FakeExecutor({})
+      const { finish, playback } = await startCommand(executor)
+      const pausing = playback.pause()
+      finish()
+      await pausing
+    })
+
+    it('should finish pausing when the running command fails', async () => {
+      const executor = new FakeExecutor({})
+      const { finish, playback } = await startCommand(executor)
+      const pausing = playback.pause()
+      finish(new Error('command failed'))
+      await pausing
+    })
+
+    it('should finish pausing when playback is stopped', async () => {
+      const executor = new FakeExecutor({})
+      const { finish, playback } = await startCommand(executor)
+      const pausing = playback.pause()
+      const stopping = playback.stop()
+      finish()
+      await Promise.all([pausing, stopping])
+    })
+
+    it('should finish pausing when playback ends before cancel settles', async () => {
+      const executor = new FakeExecutor({})
+      executor.cancel.mockImplementation(() => new Promise(() => {}))
+      const { finish, playback } = await startCommand(executor)
+      const pausing = playback.pause()
+      finish()
+      await pausing
+    })
+
+    it('should pause at the next command before cancel settles', async () => {
+      const executor = new FakeExecutor({})
+      executor.cancel.mockImplementation(() => new Promise(() => {}))
+      const { finish, playback } = await startCommand(executor, {
+        ...test,
+        commands: [...test.commands, { ...test.commands[0], id: 'b' }],
+      })
+      const pausing = playback.pause()
+      finish()
+      await pausing
+      expect(executor.doOpen).toHaveBeenCalledTimes(1)
+      await playback.stop()
+    })
+
+    it('should report a failed cancel', async () => {
+      const executor = new FakeExecutor({})
+      executor.cancel.mockRejectedValueOnce(new Error('cancel failed'))
+      const { finish, playback } = await startCommand(executor)
+      await expect(playback.pause()).rejects.toThrow('cancel failed')
+      finish()
+    })
+
+    it('should not pause the next playback', async () => {
+      const executor = new FakeExecutor({})
+      const { finish, playback } = await startCommand(executor)
+      const pausing = playback.pause()
+      finish()
+      await pausing
+      executor.doOpen.mockImplementation(async () => {})
+      await (
+        await playback.play(test)
+      )()
+      expect(executor.doOpen).toHaveBeenCalledTimes(2)
+    })
+
+    it('should ignore pause after playback failed', async () => {
+      const executor = new FakeExecutor({})
+      const { finish, playback, running } = await startCommand(executor)
+      finish(new Error('command failed'))
+      await expect(running()).rejects.toThrow('command failed')
+      await playback.pause()
+      executor.doOpen.mockImplementation(async () => {})
+      await (
+        await playback.play(test)
+      )()
+      expect(executor.doOpen).toHaveBeenCalledTimes(2)
+    })
+  })
   describe('pause on exceptions', () => {
     it('should pause until the command is fixed', async () => {
       const test = {
