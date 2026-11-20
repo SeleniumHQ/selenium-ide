@@ -415,7 +415,7 @@ importers:
         version: 16.0.1
       electron-chromedriver:
         specifier: ^45.2.1
-        version: 45.3.3(supports-color@8.1.1)
+        version: 45.3.4(supports-color@8.1.1)
       electron-log:
         specifier: ^5.4.4
         version: 5.4.4
@@ -494,7 +494,7 @@ importers:
         version: 7.1.5(webpack@5.112.2)
       electron:
         specifier: ^45.2.1
-        version: 45.3.3(supports-color@8.1.1)
+        version: 45.3.4(supports-color@8.1.1)
       electron-builder:
         specifier: ^26.18.0
         version: 26.18.0(electron-builder-squirrel-windows@26.18.0)(supports-color@8.1.1)
@@ -558,7 +558,7 @@ importers:
         version: 4.17.27
       electron:
         specifier: ^45.2.1
-        version: 45.3.3(supports-color@8.1.1)
+        version: 45.3.4(supports-color@8.1.1)
 
   packages/side-code-export:
     dependencies:
@@ -3473,8 +3473,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  electron-chromedriver@45.3.3:
-    resolution: {integrity: sha512-RGNZjoSQ262eWy4VSc0FDqbw8pp4TUvQ+GfIkQ8LKLu35hIoqdjJp6OwA24uePqFhB2MxRFO/iJzSCQmfyQUNw==}
+  electron-chromedriver@45.3.4:
+    resolution: {integrity: sha512-IpvkHlKETgHklO6hHSYnPPcWTn/jVbJ1nlLRRZMUlIqD0OBXlSscglvGa99waxwpM5J6YjcDketa0jl0F61Y0g==}
     engines: {node: '>=10.12.0'}
     hasBin: true
 
@@ -3502,8 +3502,8 @@ packages:
     resolution: {integrity: sha512-bO3y10YikuUwUuDUQRM4KfwNkKhnpVO7IPdbsrejwN9/AABJzzTQ4GeHwyzNSrVO+tEH3/Np255a3sVZpZDjvg==}
     engines: {node: '>=8.0.0'}
 
-  electron@45.3.3:
-    resolution: {integrity: sha512-YS01j/AMWGbPAfbXijkLOUJGFhmrIg6pf9An8+LzY1PIc5sjwqEcSMsEBXgUQiWw1lSfPCP7RpxbvkN1JQRD8A==}
+  electron@45.3.4:
+    resolution: {integrity: sha512-cqU5u6arfGd9KJvCODjj32ckxkDQbweTL3v8J51tAsKGmDWYKcAqszvie0NDKBIGl6Ze19QTL74yIAUHrqNDig==}
     engines: {node: '>= 22.12.0'}
     hasBin: true
 
@@ -9977,7 +9977,7 @@ snapshots:
       - electron-builder-squirrel-windows
       - supports-color
 
-  electron-chromedriver@45.3.3(supports-color@8.1.1):
+  electron-chromedriver@45.3.4(supports-color@8.1.1):
     dependencies:
       '@electron/get': 2.0.3(supports-color@8.1.1)
       extract-zip: 2.0.1(supports-color@8.1.1)
@@ -10036,7 +10036,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  electron@45.3.3(supports-color@8.1.1):
+  electron@45.3.4(supports-color@8.1.1):
     dependencies:
       '@electron-internal/extract-zip': 1.0.8
       '@electron/get': 5.1.0(supports-color@8.1.1)
