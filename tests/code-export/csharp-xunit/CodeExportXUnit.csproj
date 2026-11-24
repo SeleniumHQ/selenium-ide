@@ -10,6 +10,6 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
     <PackageReference Include="xunit.v3" Version="4.0.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
-    <PackageReference Include="Selenium.WebDriver" Version="4.53.0" />
+    <PackageReference Include="Selenium.WebDriver" Version="4.54.0" />
   </ItemGroup>
 </Project>
